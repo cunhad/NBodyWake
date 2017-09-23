@@ -1,8 +1,8 @@
 function [ nodes_list redshift_list  ] = preprocessing_many_nodes( path,spec,aux_path)
-%   This functions pre selects part of the data from the cubic particle
-%   distribution made by the cubep3m code. It also insert the wake at the
-%   center if there is a wake. The last entry specifies the percentage of
-%   the data we what to analyse (edges are removed)
+%   This function takes the phase space output from CUBEP3M and returns
+%   all the list of nodes and redshifts produced by that simulation
+
+
 %(example ) [ nodes_list redshift_list ] = preprocessing_many_nodes( '/home/acer/Documents/storage/guillimin/','32Mpc_96c_zi63_nowakes','/' )
 
 

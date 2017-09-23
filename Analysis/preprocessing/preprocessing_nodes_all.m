@@ -1,8 +1,7 @@
 function [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in header Pos Vel i_node j_node k_node number_node_dim ] = preprocessing_nodes_all( path,spec,aux_path,filename)
-%   This functions pre selects part of the data from the cubic particle
-%   distribution made by the cubep3m code. It also insert the wake at the
-%   center if there is a wake. The last entry specifies the percentage of
-%   the data we what to analyse (edges are removed)
+%   This function takes the phase space output from CUBEP3M and returns
+%   all relevant information plus the global positions and velocity of all particles at the
+%   corresponding redshift and node volume
 
 %(example)[ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in header Pos Vel i_node j_node k_node number_node_dim] = preprocessing_nodes_all('/home/asus/Dropbox/extras/storage/guillimin/old/','32Mpc_96c_48p_zi63_nowakes','/','63.000xv0.dat' );
 

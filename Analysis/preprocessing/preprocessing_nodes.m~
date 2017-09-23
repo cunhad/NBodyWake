@@ -1,8 +1,7 @@
-function [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( path,spec,aux_path,filename,percentage_analysed)
-%   This functions pre selects part of the data from the cubic particle
-%   distribution made by the cubep3m code. It also insert the wake at the
-%   center if there is a wake. The last entry specifies the percentage of
-%   the data we what to analyse (edges are removed)
+function [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( path,spec,aux_path,filename)
+%   This function takes the phase space output from CUBEP3M and returns
+%   some relevant information plus the positions of all particles at the
+%   corresponding redshift and node volume
 
 %(example) [ size_box nc zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes('/home/acer/Documents/storage/','40Mpc_192c_zi65_nowakes','/','0.000xv0.dat',1.0 );
 
@@ -78,7 +77,7 @@ particles=(directory.bytes-48)/24;
 headear = fread(fid, [12 1], 'float32','l') ;
 data=fread(fid, [6 particles], 'float32','l');
 Pos = data(1:3,:);
-Pos=transpose(Pos);
+%Pos=transpose(Pos);
 %Pos=mod(Pos,nc);
  
 %in this part we will get the position of the wake taking into acount the
@@ -95,9 +94,9 @@ Pos=transpose(Pos);
  i_node=mod(res,number_node_dim);
  
  
- Pos(:,1)=Pos(:,1)+(nc/number_node_dim)*i_node;
- Pos(:,2)=Pos(:,2)+(nc/number_node_dim)*j_node;
- Pos(:,3)=Pos(:,3)+(nc/number_node_dim)*k_node;
+ Pos(1,:)=Pos(1,:)+(nc/number_node_dim)*i_node;
+ Pos(2,:)=Pos(2,:)+(nc/number_node_dim)*j_node;
+ Pos(3,:)=Pos(3,:)+(nc/number_node_dim)*k_node;
  
  
 %  XM=nc;
