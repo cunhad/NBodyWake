@@ -1,0 +1,23 @@
+function [  ] = proj2d_dm_plot_all( path,spec,aux_path,lenght_factor,resol_factor,pivot,rot_angle,lim )
+% reads data of the 2d projections aconding to the input specifications and
+% plot the result for all files in the folder
+
+%   (example) proj2d_plot_all( '/home/asus/Dropbox/extras/storage/guillimin/old/','32Mpc_96c_48p_zi63_nowakes','/',1,1,[0,0,0],[0,0],'minmax')
+%   (example) proj2d_plot_all( '/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/',1,1,[0,0,0],[0,0],[-1 2])
+
+cd('../preprocessing');
+
+path_in=strcat(path,spec,aux_path);
+[ nodes_list redshift_list ] = preprocessing_many_nodes(path,spec,aux_path);
+
+cd('../2dproj');
+
+for rds = 1 : length(redshift_list)
+    
+    filename = dir(strcat(path_in,char(redshift_list(rds)),'xv0','.dat'));
+    filename=filename.name;
+    proj2d_plot( path,spec,aux_path,filename,lenght_factor,resol_factor,pivot,rot_angle,lim);
+    
+end
+
+end

@@ -3,7 +3,8 @@ function [ nodes_list redshift_list  ] = preprocessing_many_nodes( path,spec,aux
 %   all the list of nodes and redshifts produced by that simulation
 
 
-%(example ) [ nodes_list redshift_list ] = preprocessing_many_nodes( '/home/acer/Documents/storage/guillimin/','32Mpc_96c_zi63_nowakes','/' )
+%(example ) [ nodes_list redshift_list ] = preprocessing_many_nodes( '/home/asus/Dropbox/extras/storage/guillimin/old/','32Mpc_96c_48p_zi63_nowakes','/','63.000xv0.dat' )
+%(example ) [ nodes_list redshift_list ] = preprocessing_many_nodes( '/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','65.000xv0.dat')
 
 
  path_in=strcat(path,spec,aux_path);

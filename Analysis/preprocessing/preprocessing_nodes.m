@@ -4,6 +4,9 @@ function [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z pat
 %   corresponding redshift and node volume
 
 %(example) [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( '/home/asus/Dropbox/extras/storage/guillimin/old/','32Mpc_96c_48p_zi63_nowakes','/','63.000xv0.dat')
+%(example) [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( '/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','65.000xv0.dat')
+
+
 
 %   Detailed explanation:
 

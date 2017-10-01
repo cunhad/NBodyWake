@@ -1,9 +1,10 @@
-function [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( path,spec,aux_path,filename)
-%   This function takes the phase space output from CUBEP3M and returns
-%   some relevant information plus the positions of all particles at the
+function [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos mass Radiusd halos] = preprocessing_halo_nodes( path,spec,aux_path,filename)
+%   This function takes the halo data output from CUBEP3M and returns
+%   some relevant information plus the global positions of all halos at the
 %   corresponding redshift and node volume
 
-%(example) [ size_box nc zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes('/home/acer/Documents/storage/','40Mpc_192c_zi65_nowakes','/','0.000xv0.dat',1.0 );
+
+%(example) [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos mass Radiusd halos] = preprocessing_halo_nodes('/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','0.000halo0.dat')
 
 %   Detailed explanation:
 
@@ -41,7 +42,7 @@ np = str2num(np);
   %extracts the redshift of the file to be analised
  
  z=char(filename);
- z=str2num(z(1:end-7));
+ z=str2num(z(1:end-9));
  
  % extracts the informations of the wake if there is one
  
@@ -73,18 +74,44 @@ np = str2num(np);
  
 fid = fopen(path_file_in);
 directory = dir(path_file_in);
-particles=(directory.bytes-48)/24;
-headear = fread(fid, [12 1], 'float32','l') ;
-data=fread(fid, [6 particles], 'float32','l');
-Pos = data(1:3,:);
+% files_list = dir(strcat(path,spec,aux_path,'*PID0.dat'));
+fread(fid,1, 'int32','l');
+
+% if length(files_list) > 0
+    
+
+
+
+% else
+%     halos=(directory.bytes-4)/(4*28);
+% data=fread(fid,[28 halos], 'float32','l');
+% 
+% end
+
+     halos=(directory.bytes-4)/(4*422);
+     data=fread(fid,[422 halos], 'float32','l');
+
+ if(~isempty(data))
+     
+
+
+Pos = data(4:6,:);
 %Pos=transpose(Pos);
 %Pos=mod(Pos,nc);
+
+Radiusd= data(16,:);
+%Radiusd=transpose(Radiusd);
+
+
+%the mass is in grid units
+mass=data(17,:);
+%mass=transpose(mass);
  
 %in this part we will get the position of the wake taking into acount the
 %node structure
 
  node=char(filename);
- node=str2num(node(strfind(filename, 'xv')+2:strfind(filename,'.dat')-1));
+ node=str2num(node(strfind(filename, 'halo')+4:strfind(filename,'.dat')-1));
  [ nodes_list redshift_list ] = preprocessing_many_nodes(path,spec,aux_path);
  
  number_node_dim=nthroot(numel(nodes_list), 3);
@@ -123,6 +150,13 @@ Pos = data(1:3,:);
 %  conditions=conditionsx|conditionsy|conditionsz;
 %  Pos(conditions,:)=[];
 
-
+ else
+ 
+ Pos=[0;0;0];
+ mass=0;
+ Radiusd=0;
+ halos=0;
+ 
+end
 end
 
