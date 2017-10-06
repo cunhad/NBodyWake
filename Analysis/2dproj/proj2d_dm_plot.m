@@ -61,8 +61,8 @@ title({strcat('Density contrast of the 2d projection'),strcat('at z =',num2str(z
 hold off;
 
 if (~ischar(lim))
-    mkdir(path_out,strcat(num2str(lim(1)),'-',num2str(lim(2)),'lim','/'));
-    saveas(fig,strcat(path_out,num2str(lim(1)),'-',num2str(lim(2)),'lim','/','_',num2str(find(str2num(char(redshift_list))==z)),'_2dproj_z',num2str(z),'_plot.png'));
+    mkdir(path_out,strcat(num2str(lim(1)),'_',num2str(lim(2)),'lim','/'));
+    saveas(fig,strcat(path_out,num2str(lim(1)),'_',num2str(lim(2)),'lim','/','_',num2str(find(str2num(char(redshift_list))==z)),'_2dproj_z',num2str(z),'_plot.png'));
 else
     mkdir(path_out,strcat('minmax/'));
     saveas(fig,strcat(path_out,'minmax/','_',num2str(find(str2num(char(redshift_list))==z)),'_2dproj_z',num2str(z),'_plot.png'));

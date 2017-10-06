@@ -1,8 +1,8 @@
 function [ cell_bins1d_y cell_bins1d_z  count_sum Pos_halos mass_halos radius_halos count_sum_h_number count_sum_h_mass count_sum_dmdc] = proj2d_halos_data_out( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle)
 %Computes the 2d projections aconding to the input specifications and stores (and returns) the resulting data
 
-%   (example) [ cell_bins1d_y cell_bins1d_z  count_sum Pos_halos mass_halos radius_halos] = proj2d_halos_data_out( '/home/asus/Dropbox/extras/storage/guillimin/old/', '/home/asus/Dropbox/extras/storage/guillimin/old/','32Mpc_96c_48p_zi63_nowakes','/','','0.000halo0.dat',1,1,[0,0,0],[0,0])
-%   (example) [ cell_bins1d_y cell_bins1d_z  count_sum Pos_halos mass_halos radius_halos] = proj2d_data_out( '/home/asus/Dropbox/extras/storage/','/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','','0.000halo0.dat',1,1,[0,0,0],[0,0])
+%   (example) [ cell_bins1d_y cell_bins1d_z  count_sum Pos_halos mass_halos radius_halos count_sum_h_number count_sum_h_mass count_sum_dmdc] = proj2d_halos_data_out( '/home/asus/Dropbox/extras/storage/guillimin/old/', '/home/asus/Dropbox/extras/storage/guillimin/old/','32Mpc_96c_48p_zi63_nowakes','/','','31.000halo0.dat',1,1,[0,0,0],[0,0])
+%   (example) [ cell_bins1d_y cell_bins1d_z  count_sum Pos_halos mass_halos radius_halos count_sum_h_number count_sum_h_mass count_sum_dmdc] = proj2d_halos_data_out( '/home/asus/Dropbox/extras/storage/','/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','','0.000halo0.dat',1,1,[0,0,0],[0,0])
 
 
 
@@ -17,7 +17,7 @@ cd('../preprocessing');
 mass=mass*(np/nc)^3;
 
 cell_bins1d_y=[(nc/2)-(nc/(2*lenght_factor))+pivot(2):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(2)];
-cell_bins1d_z=[(nc/2)-(nc/(2*lenght_factor))+pivot(2):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(2)];
+cell_bins1d_z=[(nc/2)-(nc/(2*lenght_factor))+pivot(3):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(3)];
 cell_bins1d_y(end)=[];
 cell_bins1d_z(end)=[];
 
@@ -40,7 +40,7 @@ path_in=strcat(root,spec,aux_path);
 for node = 1 : length(nodes_list)
     
     cell_bins1d_y=[(nc/2)-(nc/(2*lenght_factor))+pivot(2):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(2)];
-    cell_bins1d_z=[(nc/2)-(nc/(2*lenght_factor))+pivot(2):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(2)];
+    cell_bins1d_z=[(nc/2)-(nc/(2*lenght_factor))+pivot(3):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(3)];
     
     file_name = dir(strcat(path_in,num2str(z),'*halo',char(nodes_list(node)),'.dat'));
     filename=file_name.name;
@@ -71,6 +71,8 @@ for node = 1 : length(nodes_list)
     conditionsz=Pos_h(3,:)<=liminf|Pos_h(3,:)>=limsup;
     conditions=conditionsx|conditionsy|conditionsz;
     Pos_h(:,conditions)=[];
+    mass(conditions)=[];
+    Radiusd(conditions)=[];
     
     Pos_h(1,:)=Pos_h(1,:)+(nc/2)+pivot(1);
     Pos_h(2,:)=Pos_h(2,:)+(nc/2)+pivot(2);
@@ -101,12 +103,7 @@ for node = 1 : length(nodes_list)
         
         %    cell_bins1d(end)=[];
         count_sum_h_mass=count_sum_h_mass+count_h_m;  
-    else
-        
-        Pos_halos=0;  
-        mass_halos=0;
-        radius_halos=0;
-        
+       
         
     end
     
@@ -147,6 +144,14 @@ for node = 1 : length(nodes_list)
   
     
 end
+
+    if (isempty(Pos_h))
+        
+        Pos_halos=0;  
+        mass_halos=0;
+        radius_halos=0;
+        
+    end
 
 %to particle mass unit
 

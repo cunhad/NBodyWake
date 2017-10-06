@@ -1,7 +1,7 @@
 function [  ] = proj2d_halos_plot( root,root_data_out,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,lim) 
 % reads data of the halos 2d projections aconding to the input specifications and plot the result
 
-%   (example) proj2d_halos_plot( '/home/asus/Dropbox/extras/storage/guillimin/old/','/home/asus/Dropbox/extras/storage/guillimin/old/','/home/asus/Dropbox/extras/storage/guillimin/old/','32Mpc_96c_48p_zi63_nowakes','/','','0.000halo0.dat',1,1,[0,0,0],[0,0],'minmax')
+%   (example) proj2d_halos_plot( '/home/asus/Dropbox/extras/storage/guillimin/old/','/home/asus/Dropbox/extras/storage/guillimin/old/','/home/asus/Dropbox/extras/storage/guillimin/old/','32Mpc_96c_48p_zi63_nowakes','/','','31.000halo0.dat',1,1,[0,0,0],[0,0],'minmax')
 %   (example) proj2d_halos_plot( '/home/asus/Dropbox/extras/storage/', '/home/asus/Dropbox/extras/storage/', '/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','','0.000halo0.dat',1,1,[0,0,0],[0,0],[-1 2])
 
 

@@ -1,0 +1,44 @@
+function [  ] = deltasq_many_files_CAMB_savefig( )
+
+%(example) deltasq_many_files_CAMB_savefig();
+
+path_input_ps=strcat('../../CAMB/transfer_functions/');
+
+files_list = dir(strcat(path_input_ps,'*.dat'));
+sorted_files_list={files_list.name};
+cd('../processing');
+sorted_files_list=sort_nat(sorted_files_list);
+
+cd('../preprocessing');
+
+for k = 1 :  length(sorted_files_list)
+    
+    fig=figure('Visible', 'off');
+    filename=char(sorted_files_list(k));
+    [ dat_input ] = import_( strcat(path_input_ps,filename), '%f %f ',2 );
+    z = filename(28:end-4);
+    
+
+%form the dimensionless power spectrum
+
+dat_input(:,2)=(1/(2*pi^2))*(dat_input(:,1).^3).*dat_input(:,2);
+
+%semilogx(dat_input(:,1),dat_input(:,2),'DisplayName',strcat('z = ',num2str(z)),'LineWidth',2);
+loglog(dat_input(:,1),dat_input(:,2),'DisplayName',strcat('z = ',z),'LineWidth',2);
+
+
+title(strcat('Dimensionless power spectrum from CAMB'),'interpreter', 'latex', 'fontsize', 20);
+ylabel('$\Delta^2\ (k)$', 'interpreter', 'latex', 'fontsize', 20);
+xlabel('$k (Mpc^{-1})$', 'interpreter', 'latex', 'fontsize', 20);
+legend('show');
+
+mkdir(path_input_ps,strcat('Analysis/','deltasq/'));
+path_file_out=strcat(path_input_ps,'Analysis/','deltasq/','_',num2str(k),'_delstasq_z',z,'.jpg');
+saveas(fig,path_file_out);
+
+end
+
+cd('../../Analysis/power_spectrum');
+
+
+end
