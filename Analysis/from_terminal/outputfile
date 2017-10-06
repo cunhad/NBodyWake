@@ -1,0 +1,55 @@
+----------------------------------------
+Begin PBS Prologue Fri Oct  6 02:10:55 EDT 2017 1507270255
+Job ID:		532324.gm-1r16-n04.guillimin.clumeq.ca
+Username:	cunhad
+Group:		smj-701-01
+Nodes:		sw-2r15-n63
+End PBS Prologue Fri Oct  6 02:10:57 EDT 2017 1507270257
+----------------------------------------
+MATLAB is selecting SOFTWARE OPENGL rendering.
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2016 The MathWorks, Inc.
+                   R2016b (9.1.0.441655) 64-bit (glnxa64)
+                             September 7, 2016
+
+ 
+To get started, type one of these: helpwin, helpdesk, or demo.
+For product information, visit www.mathworks.com.
+ 
+Starting parallel pool (parpool) using the 'local' profile ... [Warning: The cluster failed to cancel the job execution. The error was: Unable
+to read file '/gs/home/cunhad/.matlab/local_cluster_jobs/R2016b/Job87.in.mat'.
+No such file or directory.] 
+[> In parallel.internal.cluster.CJSJobMethods.cancelOneJob (line 53)
+  In parallel.job.CJSCommunicatingJob/cancelOneJob (line 99)
+  In parallel.Job/cancel (line 1164)
+  In parallel.Cluster/hDeleteOneJob (line 847)
+  In parallel.internal.pool.InteractiveClient>iDeleteJobs (line 846)
+  In parallel.internal.pool.InteractiveClient/pStopLabsAndDisconnect (line 583)
+  In parallel.internal.pool.InteractiveClient>iCleanupIfStartupFailed (line 911)
+  In parallel.internal.pool.InteractiveClient>@()iCleanupIfStartupFailed(obj) (line 283)
+  In onCleanup/delete (line 60)
+  In parallel.internal.pool.InteractiveClient/start (line 230)
+  In parallel.Pool>iStartClient (line 567)
+  In parallel.Pool.hBuildPool (line 446)
+  In parallel.internal.pool.doParpool (line 15)
+  In parpool (line 89)
+  In box_statistics_dm_per_node (line 16)] 
+
+----------------------------------------
+Begin PBS Epilogue Fri Oct  6 02:11:43 EDT 2017 1507270303
+Job ID:		532324.gm-1r16-n04.guillimin.clumeq.ca
+Username:	cunhad
+Group:		smj-701-01
+Job Name:	bx1_nwk_sp4_n1
+Session:	16748
+Limits:		neednodes=1:ppn=12,nodes=1:ppn=12,pmem=2700mb,walltime=120:00:00
+Resources:	cput=00:00:20,energy_used=0,mem=511832kb,vmem=4350132kb,walltime=00:00:51
+Queue:		sw-parallel
+Account:	smj-701-aa
+Exit code:	0
+Nodes:	sw-2r15-n63
+Killing leftovers...
+
+End PBS Epilogue Fri Oct  6 02:11:43 EDT 2017 1507270303
+----------------------------------------
