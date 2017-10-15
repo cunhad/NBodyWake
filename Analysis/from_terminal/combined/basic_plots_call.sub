@@ -1,0 +1,14 @@
+#!/bin/bash
+#PBS -l nodes=1:ppn=1:mics=1
+#PBS -l walltime=10:00:00
+#PBS -A smj-701-aa
+#PBS -o outputfile
+#PBS -e errorfile
+#PBS -N plb_wk1_sp1
+
+
+export PATH=$PATH:/software/CentOS-6/applications/matlab-2016b/bin
+
+cd /home/cunhad/production/NBodyWake/Analysis/from_terminal/combined
+
+bash basic_plots_main.sub

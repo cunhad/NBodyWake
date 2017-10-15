@@ -1,0 +1,30 @@
+#PBS -l nodes=1:ppn=12
+#PBS -l walltime=120:00:00
+#PBS -A smj-701-aa
+#PBS -o outputfile
+#PBS -e errorfile
+#PBS -N bx3_nwk_sp1
+
+
+root_per_node_out_=/gs/project/smj-701-aa/disrael/cubep3m/simulations/
+spec_=64Mpc_1024c_512p_zi63_nowakem
+aux_path_=/sample0001/
+aux_path_per_node_out=
+NSIDE_=64
+
+
+
+root_per_node_out="'$root_per_node_out_'"
+spec="'$spec_'"
+aux_path="'$aux_path_'"
+aux_path_per_node_out="'$aux_path_out_'"
+NSIDE="'$NSIDE_'"
+
+
+export PATH=$PATH:/software/CentOS-6/applications/matlab-2016b/bin
+
+cd ~/production/NBodyWake/Analysis/wake_detection/box_statistics
+
+export OMP_NUM_THREADS=12
+
+matlab -nosplash -nodesktop -r "box_statistics_dm_from_tot_to_analysis($root_per_node_out,$spec,$aux_path,$aux_path_per_node_out,$NSIDE_);  exit;"
