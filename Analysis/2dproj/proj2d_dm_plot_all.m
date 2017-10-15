@@ -2,8 +2,7 @@ function [  ] = proj2d_dm_plot_all( root,root_data_out,root_out,spec,aux_path,au
 % reads data of the 2d projections aconding to the input specifications and
 % plot the result for all files in the folder
 
-% (example) proj2d_dm_plot_all('/home/asus/Dropbox/extras/storage/guillimin/old/','/home/asus/Dropbox/extras/storage/guillimin/old/','/home/asus/Dropbox/extras/storage/guillimin/old/','32Mpc_96c_48p_zi63_nowakes','/','',1,1,[0,0,0],[0,0],'minmax');
-% (example) proj2d_dm_plot_all('/home/asus/Dropbox/extras/storage/','/home/asus/Dropbox/extras/storage/','/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','',1,1,[0,0,0],[0,0],[-1 2]);
+% (example) proj2d_dm_plot_all('/home/asus/Dropbox/extras/storage/guillimin/test/','/home/asus/Dropbox/extras/storage/guillimin/test/','/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','',1,1,[0,0,0],[0,0],'minmax');
 
 cd('../preprocessing');
 

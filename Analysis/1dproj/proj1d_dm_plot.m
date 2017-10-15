@@ -1,9 +1,7 @@
 function [  ] = proj2d_dm_plot( root,root_data_out,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,lim) 
 % reads data of the 2d projections aconding to the input specifications and plot the result
 
-%(example) proj1d_dm_plot('/home/asus/Dropbox/extras/storage/guillimin/old/','/home/asus/Dropbox/extras/storage/guillimin/old/','/home/asus/Dropbox/extras/storage/guillimin/old/','32Mpc_96c_48p_zi63_nowakes','/','','63.000xv0.dat',1,1,[0,0,0],[0,0],'minmax');
-%(example) proj1d_dm_plot('/home/asus/Dropbox/extras/storage/','/home/asus/Dropbox/extras/storage/','/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','','65.000xv0.dat',1,1,[0,0,0],[0,0],[-1 2]);
-
+%(example) proj1d_dm_plot('/home/asus/Dropbox/extras/storage/guillimin/guillimin/test/','/home/asus/Dropbox/extras/storage/guillimin/guillimin/test/','/home/asus/Dropbox/extras/storage/guillimin/guillimin/test/','proj2d_dm_plot_all('/home/asus/Dropbox/extras/storage/guillimin/test/','/home/asus/Dropbox/extras/storage/guillimin/test/','/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','',1,1,[0,0,0],[0,0],'minmax');','/','','0.000xv0.dat',1,1,[0,0,0],[0,0],'minmax');
 
 
 path_in=strcat(root,spec,aux_path);
