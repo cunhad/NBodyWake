@@ -3,15 +3,17 @@
 #PBS -A smj-701-aa
 #PBS -o outputfile
 #PBS -e errorfile
-#PBS -N bx1_nwk_sp4_n7
+##PBS -N bx1_nwk_sp6_n"${ARG1}"
+
+# execute as: for i in {0..7}; do qsub -A smj-701-aa run_box_statistics_dm_per_node.sub -N bx1_nwk_sp6_n$i -v ARG1=$i; done
 
 root_=/gs/project/smj-701-aa/disrael/cubep3m/simulations/
 root_out_=$root_
 spec_=64Mpc_1024c_512p_zi63_nowakem
-aux_path_=/sample0001/
+aux_path_=/sample0010/
 aux_path_out=
 NSIDE_=64
-node_=7
+node_=${ARG1}
 num_cores_=12
 
 

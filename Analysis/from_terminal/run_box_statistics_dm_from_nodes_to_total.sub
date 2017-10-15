@@ -1,3 +1,11 @@
+#PBS -l nodes=1:ppn=12
+#PBS -l walltime=120:00:00
+#PBS -A smj-701-aa
+#PBS -o outputfile
+#PBS -e errorfile
+#PBS -N bx1_nwk_sp4_n7
+
+
 root_per_node_out_=/gs/project/smj-701-aa/disrael/cubep3m/simulations/
 spec_=64Mpc_1024c_512p_zi63_nowakem
 aux_path_=/sample0001/

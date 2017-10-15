@@ -5,7 +5,7 @@ function [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z pat
 
 
 %(example) [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos mass Radiusd halos] = preprocessing_halo_nodes('/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','0.000halo0.dat')
-
+%(example) [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos mass Radiusd halos] = preprocessing_halo_nodes('/gs/project/smj-701-aa/disrael/cubep3m/simulations/','64Mpc_1024c_512p_zi63_nowakem','/sample0001/','0.000halo0.dat')
 %   Detailed explanation:
 
 %reads the specifications and extract the information on variables
@@ -121,9 +121,9 @@ mass=data(17,:);
  i_node=mod(res,number_node_dim);
  
  
- Pos(1,:)=Pos(1,:)+(nc/number_node_dim)*i_node;
- Pos(2,:)=Pos(2,:)+(nc/number_node_dim)*j_node;
- Pos(3,:)=Pos(3,:)+(nc/number_node_dim)*k_node;
+%  Pos(1,:)=Pos(1,:)+(nc/number_node_dim)*i_node;
+%  Pos(2,:)=Pos(2,:)+(nc/number_node_dim)*j_node;
+%  Pos(3,:)=Pos(3,:)+(nc/number_node_dim)*k_node;
  
  
 %  XM=nc;
