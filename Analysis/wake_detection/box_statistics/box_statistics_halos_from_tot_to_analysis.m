@@ -1,4 +1,4 @@
-function [  ] = b_0_1_000db_000t_box_statistics_halos_from_tot( root_per_node_out,spec,aux_path,aux_path_per_node_out,NSIDE )
+function [  ] = box_statistics_halos_from_tot_to_analysis( root_per_node_out,spec,aux_path,aux_path_per_node_out,NSIDE )
 
 % (example) box_statistics_halos_from_tot_to_analysis('/home/asus/Dropbox/extras/storage/guillimin/old/','32Mpc_96c_48p_zi63_nowakes','/','',4);
 % (example) box_statistics_halos_from_tot_to_analysis('/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','',4);    
