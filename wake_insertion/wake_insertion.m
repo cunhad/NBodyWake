@@ -21,7 +21,7 @@ files_list={files_list.name};
 
 filename=cell2mat(files_list(1));
 
-[ size_box nc zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( path,spec,aux_path,filename,percentage_analysed);
+[ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( path,spec,aux_path,filename);
 
 LinConv=nc/size_box; %spatial linear convertion factor from comoving to simulation
 TimConv=(3*((1+z)^(2))*Hzero*(OmegaM^1/2))/2;  %Convert time in simulation units to seconds
@@ -36,7 +36,7 @@ cd('../preprocessing');
 Gmu_exp=floor(log10(Gmu_insert));
 Gmu_coef=Gmu_insert/(1*10^Gmu_exp);
 
-spec_out=strcat(num2str(size_box),'Mpc_',num2str(nc),'c_','zi',num2str(zi),'_wakeGmu',num2str(Gmu_coef),'t10m',num2str(-Gmu_exp),'zi',num2str(z_insert),'s',aux_path);
+spec_out=strcat(num2str(size_box),'Mpc_',num2str(nc),'c_',num2str(np),'p_','zi',num2str(zi),'_wakeGmu',num2str(Gmu_coef),'t10m',num2str(-Gmu_exp),'zi',num2str(z_insert),'s',aux_path);
 mkdir(path,spec_out);
 
 
@@ -51,8 +51,8 @@ mkdir(path,spec_out);
 %         data=fread(fid, [6 particles], 'float32','l');
 
         filename=cell2mat(files_list(node));
-        [ size_box nc zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in header Pos Vel i_node j_node k_node number_node_dim] = preprocessing_nodes_all( path,spec,aux_path,filename,percentage_analysed);
-        data=transpose(Pos);
+        [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in header Pos Vel i_node j_node k_node number_node_dim] = preprocessing_nodes_all( path,spec,aux_path,filename);
+%        data=transpose(Pos);
         data(4:6,:)=Vel;
         
         %displace towards the wake

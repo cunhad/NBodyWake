@@ -1,8 +1,8 @@
 z_insert=31.0
-Gmu_insert="6E-6"
+Gmu_insert="1E-5"
 
-path_=/home/acer/Documents/storage/guillimin/test2/
-spec_=64Mpc_256c_zi63_nowakes
+path_=/gs/project/smj-701-aa/disrael/cubep3m/simulations/test/
+spec_=64Mpc_96c_48p_zi63_nowakes
 aux_path_=/
 percentage_analysed_=1.0
 
