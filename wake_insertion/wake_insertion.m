@@ -1,8 +1,10 @@
-function [ ] = wake_insertion( path,spec,aux_path ,percentage_analysed,z_insert,Gmu_insert)
+function [  ] = wake_insertion( path,spec,aux_path ,z_insert,Gmu_insert)
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
 
 %(example ) [ sorted_files_list ] =wake_insertion( '/home/acer/Documents/storage/guillimin/','32Mpc_96c_zi63_nowakes','/',1.0 ,31,6E-6);
+%(example ) wake_insertion( '/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/',0,6E-6);
+
 
 cd('../parameters')
 
@@ -52,9 +54,9 @@ mkdir(path,spec_out);
 
         filename=cell2mat(files_list(node));
         [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in header Pos Vel i_node j_node k_node number_node_dim] = preprocessing_nodes_all( path,spec,aux_path,filename);
-%        data=transpose(Pos);
-        data(4:6,:)=Vel;
-        
+        data=Pos;
+         data(4:6,:)=Vel;
+%         
         %displace towards the wake
         
         dist_to_wake3=data(3,:)-nc/2; %is the vector that points to the wake at Z=nc/2 plane
