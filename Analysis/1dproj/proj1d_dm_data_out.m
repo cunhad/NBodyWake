@@ -81,9 +81,9 @@ path_out=strcat(strcat(root_out,spec,aux_path),'data/',aux_path_out,num2str(leng
 mkdir(strcat(root_out,spec,aux_path),strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2))),'ra','/','1dproj/dm/'));
 
 
-mkdir(path_out,'dc/');
+mkdir(path_out,'nc/');
 
-dlmwrite(strcat(path_out,'dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_z',num2str(z),'_data.txt'),count_sum,'delimiter','\t');
+dlmwrite(strcat(path_out,'nc/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_z',num2str(z),'_data.txt'),count_sum,'delimiter','\t');
 
 
 cd('../1dproj');
