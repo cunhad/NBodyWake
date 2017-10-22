@@ -4,7 +4,7 @@
 #PBS -A smj-701-aa
 #PBS -o outputfile
 #PBS -e errorfile
-#PBS -N plb_wk1_sp1
+#PBS -N plb_wk8_sp1
 
 
 export PATH=$PATH:/software/CentOS-6/applications/matlab-2016b/bin

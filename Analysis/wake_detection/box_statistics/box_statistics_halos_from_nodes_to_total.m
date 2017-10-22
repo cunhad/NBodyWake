@@ -6,7 +6,7 @@ function [  ] = box_statistics_halos_from_nodes_to_total( root_per_node_out,spec
 
 pivot=[0,0,0]; %this is the position od the origin of the rotation point with respect to the center of the box
 lenght_factor=2;
-resol_factor=1;
+resol_factor=2;
 
 path_per_node_data_h=strcat(strcat(root_per_node_out,spec,aux_path),'data/',aux_path_per_node_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/halos/');
    

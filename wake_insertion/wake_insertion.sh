@@ -1,9 +1,9 @@
-z_insert=31.0
-Gmu_insert="1E-5"
+z_insert=15.0
+Gmu_insert="8E-7"
 
-path_=/gs/project/smj-701-aa/disrael/cubep3m/simulations/test/
-spec_=64Mpc_96c_48p_zi63_nowakes
-aux_path_=/
+path_=/gs/project/smj-701-aa/disrael/cubep3m/simulations/
+spec_=64Mpc_1024c_512p_zi63_nowakem
+aux_path_=/sample0001/
 
 path="'$path_'"
 spec="'$spec_'"

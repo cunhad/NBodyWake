@@ -6,7 +6,7 @@ function [  ] = box_statistics_halos_from_tot_to_analysis( root_per_node_out,spe
 
 pivot=[0,0,0]; %this is the position od the origin of the rotation point with respect to the center of the box
 lenght_factor=2;
-resol_factor=1;
+resol_factor=2;
 
 %reads the specifications and extract the information on variables
 spec_arr = strsplit(spec,'_');

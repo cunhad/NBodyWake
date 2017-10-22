@@ -1,0 +1,17 @@
+{Error using parpool (line 103)
+Failed to start a parallel pool. (For information in addition to the causing
+error, validate the profile 'local' in the Cluster Profile Manager.)
+
+Error in box_statistics_dm_per_node (line 16)
+p = parpool(num_cores);
+
+Caused by:
+    Error using parallel.internal.pool.InteractiveClient>iThrowWithCause (line
+    665)
+    Failed to start pool.
+        Error using parallel.internal.pool.InteractiveClient>iAddFilesAndPaths
+        (line 689)
+        Unable to read MAT-file
+        /gs/home/cunhad/.matlab/local_cluster_jobs/R2016b/Job192.in.mat. File
+        might be corrupt.
+} 

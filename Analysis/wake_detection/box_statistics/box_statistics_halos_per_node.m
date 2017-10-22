@@ -9,7 +9,7 @@ function [  ] = box_statistics_halos_per_node( root,root_out,spec,aux_path,aux_p
 
 pivot=[0,0,0]; %this is the position od the origin of the rotation point with respect to the center of the box
 lenght_factor=2;
-resol_factor=1;
+resol_factor=2;
 
 
 p = parpool(num_cores);
