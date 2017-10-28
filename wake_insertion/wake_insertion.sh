@@ -1,5 +1,5 @@
 z_insert=15.0
-Gmu_insert="8E-7"
+Gmu_insert="1E-7"
 
 path_=/gs/project/smj-701-aa/disrael/cubep3m/simulations/
 spec_=64Mpc_1024c_512p_zi63_nowakem
