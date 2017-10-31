@@ -89,7 +89,7 @@ hold off;
 
 %plot the filtered 1d propjection
 
-proj1d_dc_icwt=dlmread(char(strcat(path_data,strcat('filter_1dproj/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_z',num2str(z),'_wavelet_filter_data.txt')));
+proj1d_dc_icwt=dlmread(char(strcat(path_data,strcat('filter_1dproj_',num2str(cutoff),'MpcCut/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_z',num2str(z),'_wavelet_filter_data.txt')));
 
 fig=figure('Visible', 'off');
 set(gcf, 'Position', [0 0 800 400]);
@@ -153,16 +153,16 @@ set(txt,'Parent',ax1,'interpreter', 'latex');
 hold off;
 
 if (~ischar(lim1d))
-    mkdir(path_out,strcat(num2str(lim1d(1)),'_',num2str(lim1d(2)),'lim','/','wavelet/filter_1dproj/'));
-    saveas(fig,strcat(path_out,num2str(lim1d(1)),'_',num2str(lim1d(2)),'lim','/','wavelet/filter_1dproj/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_mcwt_z_z',num2str(z),'_plot.png'));
+    mkdir(path_out,strcat(num2str(lim1d(1)),'_',num2str(lim1d(2)),'lim','/','wavelet/filter_1dproj_',num2str(cutoff),'MpcCut/'));
+    saveas(fig,strcat(path_out,num2str(lim1d(1)),'_',num2str(lim1d(2)),'lim','/','wavelet/filter_1dproj_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_mcwt_z_z',num2str(z),'_plot.png'));
 else
-    mkdir(path_out,strcat('minmax/wavelet/','filter_1dproj/'));
-    saveas(fig,strcat(path_out,'minmax/wavelet/','filter_1dproj/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_mcwt_z_z',num2str(z),'_plot.png'));
+    mkdir(path_out,strcat('minmax/wavelet/','filter_1dproj_',num2str(cutoff),'MpcCut/'));
+    saveas(fig,strcat(path_out,'minmax/wavelet/','filter_1dproj_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_mcwt_z_z',num2str(z),'_plot.png'));
 end
 
 %plot the filtered wavelet coeficients
 
-filt_proj1d_dc_cwt=dlmread(char(strcat(path_data,strcat('filtered_cwt/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_z',num2str(z),'_wavelet_filter_data.txt')));
+filt_proj1d_dc_cwt=dlmread(char(strcat(path_data,strcat('filtered_cwt_',num2str(cutoff),'MpcCut/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_z',num2str(z),'_wavelet_filter_data.txt')));
 
 gcc_to_mpc=size_box/nc;
 pvz=pivot(3)*gcc_to_mpc;
@@ -206,19 +206,19 @@ set(txt,'Parent',ax1,'interpreter', 'latex');
 
 if (~ischar(lim_cwt))
     if (~ischar(lim1d))
-        mkdir(path_out,strcat(num2str(lim1d(1)),'_',num2str(lim1d(2)),'lim','/','wavelet/filtered_abs/',num2str(lim_cwt(1)),'_',num2str(lim_cwt(2)),'lim','/'));
-        saveas(fig,strcat(path_out,num2str(lim1d(1)),'_',num2str(lim1d(2)),'lim','/','wavelet/filtered_abs/',num2str(lim_cwt(1)),'_',num2str(lim_cwt(2)),'lim','/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_filtered_mcwt_z_z',num2str(z),'_plot.png'));
+        mkdir(path_out,strcat(num2str(lim1d(1)),'_',num2str(lim1d(2)),'lim','/','wavelet/filtered_abs_',num2str(cutoff),'MpcCut/',num2str(lim_cwt(1)),'_',num2str(lim_cwt(2)),'lim','/'));
+        saveas(fig,strcat(path_out,num2str(lim1d(1)),'_',num2str(lim1d(2)),'lim','/','wavelet/filtered_abs_',num2str(cutoff),'MpcCut/',num2str(lim_cwt(1)),'_',num2str(lim_cwt(2)),'lim','/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_filtered_mcwt_z_z',num2str(z),'_plot.png'));
     else
-        mkdir(path_out,strcat('minmax/wavelet/','filtered_abs/',num2str(lim_cwt(1)),'_',num2str(lim_cwt(2)),'lim','/'));
-        saveas(fig,strcat(path_out,'minmax/wavelet/','filtered_abs/',num2str(lim_cwt(1)),'_',num2str(lim_cwt(2)),'lim','/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_filtered_mcwt_z_z',num2str(z),'_plot.png'));
+        mkdir(path_out,strcat('minmax/wavelet/','filtered_abs_',num2str(cutoff),'MpcCut/',num2str(lim_cwt(1)),'_',num2str(lim_cwt(2)),'lim','/'));
+        saveas(fig,strcat(path_out,'minmax/wavelet/','filtered_abs_',num2str(cutoff),'MpcCut/',num2str(lim_cwt(1)),'_',num2str(lim_cwt(2)),'lim','/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_filtered_mcwt_z_z',num2str(z),'_plot.png'));
     end
 else
     if (~ischar(lim1d))
-        mkdir(path_out,strcat(num2str(lim1d(1)),'_',num2str(lim1d(2)),'lim','/','wavelet/filtered_abs/minmax/'));
-        saveas(fig,strcat(path_out,num2str(lim1d(1)),'_',num2str(lim1d(2)),'lim','/','wavelet/filtered_abs/minmax/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_filtered_mcwt_z_z',num2str(z),'_plot.png'));
+        mkdir(path_out,strcat(num2str(lim1d(1)),'_',num2str(lim1d(2)),'lim','/','wavelet/filtered_abs_',num2str(cutoff),'MpcCut/minmax/'));
+        saveas(fig,strcat(path_out,num2str(lim1d(1)),'_',num2str(lim1d(2)),'lim','/','wavelet/filtered_abs_',num2str(cutoff),'MpcCut/minmax/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_filtered_mcwt_z_z',num2str(z),'_plot.png'));
     else
-        mkdir(path_out,strcat('minmax/wavelet/','filtered_abs/minmax/'));
-        saveas(fig,strcat(path_out,'minmax/wavelet/','filtered_abs/minmax/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_filtered_mcwt_z_z',num2str(z),'_plot.png'));
+        mkdir(path_out,strcat('minmax/wavelet/','filtered_abs_',num2str(cutoff),'MpcCut/minmax/'));
+        saveas(fig,strcat(path_out,'minmax/wavelet/','filtered_abs_',num2str(cutoff),'MpcCut/minmax/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_filtered_mcwt_z_z',num2str(z),'_plot.png'));
     end
 end
 

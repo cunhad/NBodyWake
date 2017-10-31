@@ -50,15 +50,15 @@ dlmwrite(strcat(path_out,'scale/','_',num2str(find(str2num(char(redshift_list))=
 
 i_dc_cwt = icwt(dc_cwt,periods,[periods(1) seconds(cutoff)],'waveletparameters',[3 3.01]);
      
-mkdir(path_orig_data,strcat('wavelet/dc/filter_1dproj/'));
-dlmwrite(strcat(path_orig_data,strcat('wavelet/dc/filter_1dproj/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_z',num2str(z),'_wavelet_filter_data.txt'),i_dc_cwt,'delimiter','\t');
+mkdir(path_orig_data,strcat('wavelet/dc/filter_1dproj_',num2str(cutoff),'MpcCut/'));
+dlmwrite(strcat(path_orig_data,strcat('wavelet/dc/filter_1dproj_',num2str(cutoff),'MpcCut/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_z',num2str(z),'_wavelet_filter_data.txt'),i_dc_cwt,'delimiter','\t');
 
 %filtered wavelet coeficients
 
 [filtered_dc_cwt,periods] = cwt(i_dc_cwt,seconds(size_box/(np*resol_factor)),'waveletparameters',[3 3.01]);
 
-mkdir(path_orig_data,strcat('wavelet/dc/filtered_cwt/'));
-dlmwrite(strcat(path_orig_data,strcat('wavelet/dc/filtered_cwt/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_z',num2str(z),'_wavelet_filter_data.txt'),filtered_dc_cwt,'delimiter','\t');
+mkdir(path_orig_data,strcat('wavelet/dc/filtered_cwt_',num2str(cutoff),'MpcCut/'));
+dlmwrite(strcat(path_orig_data,strcat('wavelet/dc/filtered_cwt_',num2str(cutoff),'MpcCut/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_z',num2str(z),'_wavelet_filter_data.txt'),filtered_dc_cwt,'delimiter','\t');
 
 
      
