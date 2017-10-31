@@ -18,7 +18,11 @@ cd('../preprocessing');
 filename_xv=filename;
 [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in header i_node j_node k_node number_node_dim ] = preprocessing_nodes_all_but_phasespace( root,spec,aux_path,strcat(filename_xv(1:strfind(filename,'halo')-1),'xv',filename_xv(strfind(filename,'halo')+4:end)));
 
-cd('../1dproj');
+cd('../../parameters')
+
+[ vSgammaS displacement vel_pert] = wake( Gmu,z);
+
+cd('../Analysis/1dproj');
 
 proj1d_halos_data_out( root,root_data_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle);
 
@@ -38,17 +42,19 @@ else
     Radius=[];
 end
 
-proj2d_h_mass_dc_wrt_dmavr=dlmread(char(strcat(path_data,'h_mass_dc_wrt_dmavr/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_halos_dmdc_z',num2str(z),'_data.txt')));
+proj1d_h_mass_dc_wrt_dmavr=dlmread(char(strcat(path_data,'h_mass_dc_wrt_dmavr/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_halos_dmdc_z',num2str(z),'_data.txt')));
 
-proj2d_h_mass_dc=dlmread(char(strcat(path_data,'mass/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_halos_mass_z',num2str(z),'_data.txt')));
+proj1d_h_mass_dc=dlmread(char(strcat(path_data,'mass/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_halos_mass_z',num2str(z),'_data.txt')));
 
-proj2d_h_number=dlmread(char(strcat(path_data,'number/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_halos_n_z',num2str(z),'_data.txt')));
+proj1d_h_number=dlmread(char(strcat(path_data,'number/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_halos_n_z',num2str(z),'_data.txt')));
 
 
 %plot the 1d projection of the halo density contrast with respect to the
 %total DM content.
 
 fig=figure('Visible', 'off');
+set(gcf, 'Position', [0 0 800 400])
+ax2 = axes('Position',[0.2 0.2 0.6 0.6]);
 
 hold on;
 
@@ -56,22 +62,48 @@ gcc_to_mpc=size_box/nc;
 pvy=pivot(2)*gcc_to_mpc;
 pvz=pivot(3)*gcc_to_mpc;
 
+xlim ([-inf inf]);
+
 cell_bins1d_z=[(size_box/2)-(size_box/(2*lenght_factor))+pvz:size_box/(np*resol_factor):(size_box/2)+(size_box/(2*lenght_factor))+pvz];
 cell_bins1d_z(end)=[];
 if (~ischar(lim))
-    plot(cell_bins1d_z,proj2d_h_mass_dc_wrt_dmavr,'DisplayName',strcat('z = ',num2str(z)),'LineWidth',2);
+    plot(ax2,cell_bins1d_z,proj1d_h_mass_dc_wrt_dmavr,'DisplayName',strcat('z = ',num2str(z)),'LineWidth',2);
     ylim(lim);
 else 
-    plot(cell_bins1d_z,proj2d_h_mass_dc_wrt_dmavr,'DisplayName',strcat('z = ',num2str(z)),'LineWidth',2);
+    plot(ax2,cell_bins1d_z,proj1d_h_mass_dc_wrt_dmavr,'DisplayName',strcat('z = ',num2str(z)),'LineWidth',2);
 end
 
-xlabel('$Z(Mpc)$', 'interpreter', 'latex', 'fontsize', 20);
-ylabel('Density contrast', 'interpreter', 'latex', 'fontsize', 20);
+xlabel(ax2,'$Z(Mpc)$', 'interpreter', 'latex', 'fontsize', 20);
+ylabel(ax2,'Density contrast', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
 set(gca,'linewidth',2);
 
-title({strcat('Density contrast of the halo 1d projection'),'with respect to total DM',strcat('at z =',num2str(z),' for $G\mu=$ ',num2str(Gmu,'%.1E'))},'interpreter', 'latex', 'fontsize', 20);
+title(ax2,{strcat('Density contrast of the halo 1d projection'),'with respect to total DM'},'interpreter', 'latex', 'fontsize', 20);
+
+descr = {strcat('z = ',num2str(z));
+    strcat('$G\mu = $ ',num2str(Gmu,'%.1E'));
+    strcat('lenghtFactor = ',num2str(lenght_factor));
+    strcat('resolFactor = ',num2str(resol_factor));
+    strcat('$(\theta,\phi)$ = (',num2str(rot_angle(1)),',',num2str(rot_angle(2)),')' );
+    strcat('box displ wrt centre  = ');
+    strcat('(',num2str(pivot(1)),',',num2str(pivot(2)),',',num2str(pivot(3)),')',' (cell unit)');
+    strcat('boxDensContr = ');
+    num2str((sum(proj1d)-(np)^3)/((np)^3));
+    strcat('boxSize/dim = ',num2str(size_box/lenght_factor),'\ Mpc'); 
+    strcat('cell/dim = ',num2str(np/lenght_factor));
+    strcat('sliceSize = ',num2str(size_box/(np/(resol_factor))),'\ Mpc');
+    strcat('avrPartInHalo/slice = ');
+    strcat(num2str( mean(proj1d)*(mean(proj1d_h_mass_dc_wrt_dmavr)+1)/(resol_factor)));
+    strcat('expectedWakeThick = ');
+    strcat( num2str(displacement),'\ Mpc');
+    strcat('wakeThickResol = ');
+    strcat( num2str(displacement/(size_box/(np/(resol_factor)))));
+    strcat('peak =',num2str(max(proj1d_h_mass_dc_wrt_dmavr)))};
+ax1 = axes('Position',[0 0 1 1],'Visible','off');
+txt=text(0.82,0.5,descr);
+set(txt,'Parent',ax1,'interpreter', 'latex');
+
 hold off;
 
 if (~ischar(lim))
@@ -85,12 +117,14 @@ end
 
 
 
-%plot the density contrast 2d projection of the halo mass
+%plot the density contrast 1d projection of the halo mass
 
 fig=figure('Visible', 'off');
+set(gcf, 'Position', [0 0 800 400])
+ax2 = axes('Position',[0.2 0.2 0.6 0.6]);
 
-average=mean2(proj2d_h_mass_dc);
-proj2d_h_mass_dc=(proj2d_h_mass_dc-average)/average;
+average=mean2(proj1d_h_mass_dc);
+proj1d_h_mass_dc=(proj1d_h_mass_dc-average)/average;
 
 
 hold on;
@@ -99,20 +133,52 @@ gcc_to_mpc=size_box/nc;
 pvy=pivot(2)*gcc_to_mpc;
 pvz=pivot(3)*gcc_to_mpc;
 
+
+xlim ([-inf inf]);
+
+
 if (~ischar(lim))
-    plot(cell_bins1d_z,proj2d_h_mass_dc,'DisplayName',strcat('z = ',num2str(z)),'LineWidth',2);
+    plot(ax2,cell_bins1d_z,proj1d_h_mass_dc,'DisplayName',strcat('z = ',num2str(z)),'LineWidth',2);
     ylim(lim);
 else 
-    plot(cell_bins1d_z,proj2d_h_mass_dc,'DisplayName',strcat('z = ',num2str(z)),'LineWidth',2);
+    plot(ax2,cell_bins1d_z,proj1d_h_mass_dc,'DisplayName',strcat('z = ',num2str(z)),'LineWidth',2);
 end
 
-xlabel('$Z(Mpc)$', 'interpreter', 'latex', 'fontsize', 20);
-ylabel('Density contrast', 'interpreter', 'latex', 'fontsize', 20);
+xlabel(ax2,'$Z(Mpc)$', 'interpreter', 'latex', 'fontsize', 20);
+ylabel(ax2,'Density contrast', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
 set(gca,'linewidth',2);
 
-title({strcat('Density contrast of the'),strcat('1d halo mass projection'),strcat('at z =',num2str(z),' for $G\mu=$ ',num2str(Gmu,'%.1E'))},'interpreter', 'latex', 'fontsize', 20);
+title(ax2,{strcat('Density contrast of the'),strcat('1d projection of the halo mass')},'interpreter', 'latex', 'fontsize', 20);
+
+
+
+descr = {strcat('z = ',num2str(z));
+    strcat('$G\mu = $ ',num2str(Gmu,'%.1E'));
+    strcat('lenghtFactor = ',num2str(lenght_factor));
+    strcat('resolFactor = ',num2str(resol_factor));
+    strcat('$(\theta,\phi)$ = (',num2str(rot_angle(1)),',',num2str(rot_angle(2)),')' );
+    strcat('box displ wrt centre  = ');
+    strcat('(',num2str(pivot(1)),',',num2str(pivot(2)),',',num2str(pivot(3)),')',' (cell unit)');
+    strcat('boxDensContr = ');
+    num2str((sum(proj1d)-(np)^3)/((np)^3));
+    strcat('boxSize/dim = ',num2str(size_box/lenght_factor),'\ Mpc'); 
+    strcat('cell/dim = ',num2str(np/lenght_factor));
+    strcat('sliceSize = ',num2str(size_box/(np/(resol_factor))),'\ Mpc');
+    strcat('avrPartInHalo/slice = ');
+    strcat(num2str( mean(proj1d)*(mean(proj1d_h_mass_dc_wrt_dmavr)+1)/(resol_factor)));
+    strcat('expectedWakeThick = ');
+    strcat( num2str(displacement),'\ Mpc');
+    strcat('wakeThickResol = ');
+    strcat( num2str(displacement/(size_box/(np/(resol_factor)))));
+    strcat('peak =',num2str(max(proj1d_h_mass_dc)));
+    strcat('$\sigma$ = ',num2str(std(proj1d_h_mass_dc)));
+    strcat('$peak/ \sigma$ = ',num2str(max(proj1d_h_mass_dc)/std(proj1d_h_mass_dc)))};
+ax1 = axes('Position',[0 0 1 1],'Visible','off');
+txt=text(0.82,0.5,descr);
+set(txt,'Parent',ax1,'interpreter', 'latex');
+
 hold off;
 
 if (~ischar(lim))
@@ -124,9 +190,12 @@ else
 end
 
 
-%plot the 2d projection of the halo number
+%plot the 1d projection of the halo number
 
 fig=figure('Visible', 'off');
+set(gcf, 'Position', [0 0 800 400])
+ax2 = axes('Position',[0.2 0.2 0.6 0.6]);
+
 
 hold on;
 
@@ -134,15 +203,43 @@ gcc_to_mpc=size_box/nc;
 pvy=pivot(2)*gcc_to_mpc;
 pvz=pivot(3)*gcc_to_mpc;
 
-plot(cell_bins1d_z,proj2d_h_number,'DisplayName',strcat('z = ',num2str(z)),'LineWidth',2);
+xlim ([-inf inf]);
 
-xlabel('$Z(Mpc)$', 'interpreter', 'latex', 'fontsize', 20);
-ylabel('Density contrast', 'interpreter', 'latex', 'fontsize', 20);
+proj1d_h_number_dc=(proj1d_h_number-mean(proj1d_h_number))/mean(proj1d_h_number);
+
+plot(ax2,cell_bins1d_z,proj1d_h_number_dc,'DisplayName',strcat('z = ',num2str(z)),'LineWidth',2);
+
+xlabel(ax2,'$Z(Mpc)$', 'interpreter', 'latex', 'fontsize', 20);
+ylabel(ax2,'Density contrast', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
 set(gca,'linewidth',2);
 
-title({strcat('Halo number'),strcat('of 1d count projection'),strcat('at z =',num2str(z),' for $G\mu=$ ',num2str(Gmu,'%.1E'))},'interpreter', 'latex', 'fontsize', 20);
+title(ax2,{strcat('Density contrast of the'),strcat('1d projection of the halo number')},'interpreter', 'latex', 'fontsize', 20);
+descr = {strcat('z = ',num2str(z));
+    strcat('$G\mu = $ ',num2str(Gmu,'%.1E'));
+    strcat('lenghtFactor = ',num2str(lenght_factor));
+    strcat('resolFactor = ',num2str(resol_factor));
+    strcat('$(\theta,\phi)$ = (',num2str(rot_angle(1)),',',num2str(rot_angle(2)),')' );
+    strcat('box displ wrt centre  = ');
+    strcat('(',num2str(pivot(1)),',',num2str(pivot(2)),',',num2str(pivot(3)),')',' (cell unit)');
+    strcat('boxDensContr = ');
+    num2str((sum(proj1d)-(np)^3)/((np)^3));
+    strcat('boxSize/dim = ',num2str(size_box/lenght_factor),'\ Mpc'); 
+    strcat('cell/dim = ',num2str(np/lenght_factor));
+    strcat('sliceSize = ',num2str(size_box/(np/(resol_factor))),'\ Mpc');
+    strcat('avrHalo/slice = ');
+    strcat(num2str( mean(proj1d_h_number)/(resol_factor)));
+    strcat('expectedWakeThick = ');
+    strcat( num2str(displacement),'\ Mpc');
+    strcat('wakeThickResol = ');
+    strcat( num2str(displacement/(size_box/(np))));
+    strcat('peak =',num2str(max(proj1d_h_number_dc)));
+    strcat('$\sigma$ = ',num2str(std(proj1d_h_number_dc)));
+    strcat('$peak/ \sigma$ = ',num2str(max(proj1d_h_number_dc)/std(proj1d_h_number_dc)))};
+ax1 = axes('Position',[0 0 1 1],'Visible','off');
+txt=text(0.82,0.5,descr);
+set(txt,'Parent',ax1,'interpreter', 'latex');
 hold off;
 
 

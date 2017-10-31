@@ -105,6 +105,9 @@ Radiusd= data(16,:);
 
 %the mass is in grid units
 mass=data(17,:);
+%the mass in particle units
+mass=mass*(np/nc)^3;
+
 %mass=transpose(mass);
  
 %in this part we will get the position of the wake taking into acount the

@@ -9,7 +9,11 @@ cd('../../preprocessing');
 
 [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in header i_node j_node k_node number_node_dim ] = preprocessing_nodes_all_but_phasespace( root,spec,aux_path,filename);
 
-cd('../wake_detection/lets');
+cd('../../parameters')
+
+[ vSgammaS displacement vel_pert] = wake( Gmu,z);
+
+cd('../Analysis/wake_detection/lets');
 
 mkdir(root_out);
 mkdir(root_out,strcat(spec,aux_path));
@@ -29,17 +33,38 @@ gcc_to_mpc=size_box/nc;
 pvz=pivot(3)*gcc_to_mpc;
 
 fig=figure('Visible', 'off');
-hp = pcolor( -size_box/(2*lenght_factor) +size_box/(2)+pvz:size_box/(lenght_factor*length(proj1d_dc_cwt(1,:))):size_box/(2*lenght_factor) +size_box/(2)+pvz-size_box/(lenght_factor*length(proj1d_dc_cwt(1,:))),scale,abs(proj1d_dc_cwt)); hp.EdgeColor = 'none';
+set(gcf, 'Position', [0 0 800 600]);
+ax2 = axes('Position',[0.15 0.15 0.65 0.65]);
+hp = pcolor(ax2, -size_box/(2*lenght_factor) +size_box/(2)+pvz:size_box/(lenght_factor*length(proj1d_dc_cwt(1,:))):size_box/(2*lenght_factor) +size_box/(2)+pvz-size_box/(lenght_factor*length(proj1d_dc_cwt(1,:))),scale,abs(proj1d_dc_cwt)); hp.EdgeColor = 'none';
 if (~ischar(lim_cwt))
     caxis(lim_cwt);
 end
 colorbar;
 
-
 hold on;
 set(gca,'YScale','log');
-xlabel('$Z(Mpc)$', 'interpreter', 'latex', 'fontsize', 20); ylabel('Scale parameter (Mpc)', 'interpreter', 'latex', 'fontsize', 20);
-title(strcat('Continuous wavelet transformation (Morse)'),'interpreter', 'latex', 'fontsize', 20);
+xlabel(ax2,'$Z(Mpc)$', 'interpreter', 'latex', 'fontsize', 20); ylabel(ax2,'Scale parameter (Mpc)', 'interpreter', 'latex', 'fontsize', 20);
+title(strcat({'Continuous wavelet transformation of the ','density contrast of the 1d projected','dark matter mass (absolute value)'}),'interpreter', 'latex', 'fontsize', 20);
+descr = {strcat('z = ',num2str(z));
+    strcat('$G\mu = $ ',num2str(Gmu,'%.1E'));
+    strcat('lenghtFactor = ',num2str(lenght_factor));
+    strcat('resolFactor = ',num2str(resol_factor));
+    strcat('$(\theta,\phi)$ = (',num2str(rot_angle(1)),',',num2str(rot_angle(2)),')' );
+    strcat('box displ wrt centre  = ');
+    strcat('(',num2str(pivot(1)),',',num2str(pivot(2)),',',num2str(pivot(3)),')',' (cell unit)');
+    strcat('boxSize/dim = ',num2str(size_box/lenght_factor),'\ Mpc'); 
+    strcat('cell/dim = ',num2str(np/lenght_factor));
+    strcat('sliceSize = ',num2str(size_box/(np/(resol_factor))),'\ Mpc');
+    strcat('expectedWakeThick = ');
+    strcat( num2str(displacement),'\ Mpc');
+    strcat('wakeThickResol = ');
+    strcat( num2str(displacement/(size_box/(np))));
+    strcat('wavelet basis = Morse')};
+%axes(ax1); % sets ax1 to current axes
+%fig.CurrentAxes = ax1;
+ax1 = axes('Position',[0 0 1 1],'Visible','off');
+txt=text(0.82,0.5,descr);
+set(txt,'Parent',ax1,'interpreter', 'latex');
 
 if (~ischar(lim_cwt))
     if (~ischar(lim1d))
@@ -67,6 +92,8 @@ hold off;
 proj1d_dc_icwt=dlmread(char(strcat(path_data,strcat('filter_1dproj/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_z',num2str(z),'_wavelet_filter_data.txt')));
 
 fig=figure('Visible', 'off');
+set(gcf, 'Position', [0 0 800 400]);
+ax2 = axes('Position',[0.2 0.2 0.6 0.6]);
 
 hold on;
 
@@ -77,24 +104,52 @@ pvz=pivot(3)*gcc_to_mpc;
 cell_bins1d_z=[(size_box/2)-(size_box/(2*lenght_factor))+pvz:size_box/(np*resol_factor):(size_box/2)+(size_box/(2*lenght_factor))+pvz];
 cell_bins1d_z(end)=[];
 
+xlim ([-inf inf]);
+
 if (~ischar(lim1d))
-    plot(cell_bins1d_z,proj1d_dc_icwt,'DisplayName',strcat('z = ',num2str(z)),'LineWidth',2);
+    plot(ax2,cell_bins1d_z,proj1d_dc_icwt,'DisplayName',strcat('z = ',num2str(z)),'LineWidth',2);
     ylim(lim1d);
    % xlim([-size_box/(2*lenght_factor)+size_box/(2)+pvy size_box/(2*lenght_factor)+size_box/(2)+pvy]);
 
 else 
-    plot(cell_bins1d_z,proj1d_dc_icwt,'DisplayName',strcat('z = ',num2str(z)),'LineWidth',2);
+    plot(ax2,cell_bins1d_z,proj1d_dc_icwt,'DisplayName',strcat('z = ',num2str(z)),'LineWidth',2);
     %xlim([-size_box/(2*lenght_factor)+size_box/(2)+pvy size_box/(2*lenght_factor)+size_box/(2)+pvy]);
 
 end
 
-xlabel('$Z(Mpc)$', 'interpreter', 'latex', 'fontsize', 20);
-ylabel('Density contrast', 'interpreter', 'latex', 'fontsize', 20);
+xlabel(ax2,'$Z(Mpc)$', 'interpreter', 'latex', 'fontsize', 20);
+ylabel(ax2,'Density contrast', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
 set(gca,'linewidth',2);
 
-title({strcat('Density contrast of the filtered 1dprojection'),strcat('at z =',num2str(z),' for $G\mu=$ ',num2str(Gmu,'%.1E'),', cuttof =',num2str(cutoff),'Mpc')},'interpreter', 'latex', 'fontsize', 20);
+title(ax2,{strcat('Density contrast of the'),'filtered 1dprojection'},'interpreter', 'latex', 'fontsize', 20);
+descr = {strcat('z = ',num2str(z));
+    strcat('$G\mu = $ ',num2str(Gmu,'%.1E'));
+    strcat('lenghtFactor = ',num2str(lenght_factor));
+    strcat('resolFactor = ',num2str(resol_factor));
+    strcat('$(\theta,\phi)$ = (',num2str(rot_angle(1)),',',num2str(rot_angle(2)),')' );
+    strcat('box displ wrt centre  = ');
+    strcat('(',num2str(pivot(1)),',',num2str(pivot(2)),',',num2str(pivot(3)),')',' (cell unit)');
+    strcat('boxSize/dim = ',num2str(size_box/lenght_factor),'\ Mpc'); 
+    strcat('cell/dim = ',num2str(np/lenght_factor));
+    strcat('sliceSize = ',num2str(size_box/(np/(resol_factor))),'\ Mpc');
+    strcat('expectedWakeThick = ');
+    strcat( num2str(displacement),'\ Mpc');
+    strcat('wakeThickResol = ');
+    strcat( num2str(displacement/(size_box/(np))));
+    strcat('expecPartic/slice = ');
+    strcat(num2str(((np/lenght_factor)^2)/resol_factor));
+    strcat('peak =',num2str(max(proj1d_dc_icwt)));
+    strcat('$\sigma$ = ',num2str(std(proj1d_dc_icwt)));
+    strcat('$peak/ \sigma$ = ',num2str(max(proj1d_dc_icwt)/std(proj1d_dc_icwt)));
+    strcat('wavelet basis = Morse');
+    strcat('cutoff = ',num2str(cutoff),'Mpc')};
+%axes(ax1); % sets ax1 to current axes
+%fig.CurrentAxes = ax1;
+ax1 = axes('Position',[0 0 1 1],'Visible','off');
+txt=text(0.82,0.5,descr);
+set(txt,'Parent',ax1,'interpreter', 'latex');
 hold off;
 
 if (~ischar(lim1d))
@@ -113,7 +168,9 @@ gcc_to_mpc=size_box/nc;
 pvz=pivot(3)*gcc_to_mpc;
 
 fig=figure('Visible', 'off');
-hp = pcolor( -size_box/(2*lenght_factor) +size_box/(2)+pvz:size_box/(lenght_factor*length(proj1d_dc_cwt(1,:))):size_box/(2*lenght_factor) +size_box/(2)+pvz-size_box/(lenght_factor*length(proj1d_dc_cwt(1,:))),scale,abs(filt_proj1d_dc_cwt)); hp.EdgeColor = 'none';
+set(gcf, 'Position', [0 0 800 600]);
+ax2 = axes('Position',[0.15 0.15 0.65 0.65]);
+hp = pcolor( ax2,-size_box/(2*lenght_factor) +size_box/(2)+pvz:size_box/(lenght_factor*length(proj1d_dc_cwt(1,:))):size_box/(2*lenght_factor) +size_box/(2)+pvz-size_box/(lenght_factor*length(proj1d_dc_cwt(1,:))),scale,abs(filt_proj1d_dc_cwt)); hp.EdgeColor = 'none';
 if (~ischar(lim_cwt))
     caxis(lim_cwt);
 end
@@ -122,8 +179,30 @@ colorbar;
 
 hold on;
 set(gca,'YScale','log');
-xlabel('$Z(Mpc)$', 'interpreter', 'latex', 'fontsize', 20); ylabel('Scale parameter (Mpc)', 'interpreter', 'latex', 'fontsize', 20);
-title(strcat('Continuous wavelet transformation (Morse)'),'interpreter', 'latex', 'fontsize', 20);
+xlabel(ax2,'$Z(Mpc)$', 'interpreter', 'latex', 'fontsize', 20); ylabel('Scale parameter (Mpc)', 'interpreter', 'latex', 'fontsize', 20);
+title(strcat({'filtered continuous wavelet transformation of the ','density contrast of the 1d projected','dark matter mass (absolute value)'}),'interpreter', 'latex', 'fontsize', 20);
+
+descr = {strcat('z = ',num2str(z));
+    strcat('$G\mu = $ ',num2str(Gmu,'%.1E'));
+    strcat('lenghtFactor = ',num2str(lenght_factor));
+    strcat('resolFactor = ',num2str(resol_factor));
+    strcat('$(\theta,\phi)$ = (',num2str(rot_angle(1)),',',num2str(rot_angle(2)),')' );
+    strcat('box displ wrt centre  = ');
+    strcat('(',num2str(pivot(1)),',',num2str(pivot(2)),',',num2str(pivot(3)),')',' (cell unit)');
+    strcat('boxSize/dim = ',num2str(size_box/lenght_factor),'\ Mpc'); 
+    strcat('cell/dim = ',num2str(np/lenght_factor));
+    strcat('sliceSize = ',num2str(size_box/(np/(resol_factor))),'\ Mpc');
+    strcat('expectedWakeThick = ');
+    strcat( num2str(displacement),'\ Mpc');
+    strcat('wakeThickResol = ');
+    strcat( num2str(displacement/(size_box/(np))));
+    strcat('wavelet basis = Morse');
+    strcat('cutoff = ',num2str(cutoff),'Mpc')};
+%axes(ax1); % sets ax1 to current axes
+%fig.CurrentAxes = ax1;
+ax1 = axes('Position',[0 0 1 1],'Visible','off');
+txt=text(0.82,0.5,descr);
+set(txt,'Parent',ax1,'interpreter', 'latex');
 
 if (~ischar(lim_cwt))
     if (~ischar(lim1d))

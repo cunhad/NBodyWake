@@ -50,7 +50,8 @@ for node = 1 : length(nodes_list)
     
     %to particle mass
     
-    mass=mass*(np/nc)^3;
+    %mass=mass*(np/nc)^3;
+    %mass=mass/2;
     
     Pos_h=mod(Pos_h,nc);    
     Pos_h(1,:)=Pos_h(1,:)-(nc/2)-pivot(1);
@@ -154,7 +155,6 @@ end
 
 %to particle mass unit
 
-count_sum_h_mass=count_sum_h_mass;
 
 average=mean2(count_sum);
 count_sum_dmdc=(count_sum_h_mass-average)/average;

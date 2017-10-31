@@ -13,7 +13,11 @@ cd('../preprocessing');
 
 [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in header i_node j_node k_node number_node_dim ] = preprocessing_nodes_all_but_phasespace( root,spec,aux_path,filename);
 
-cd('../2dproj');
+cd('../../parameters')
+
+[ vSgammaS displacement vel_pert] = wake( Gmu,z);
+
+cd('../Analysis/2dproj');
 
 mkdir(root_out);
 mkdir(root_out,strcat(spec,aux_path));
@@ -29,12 +33,15 @@ proj2d=dlmread(char(strcat(path_data,'dc/','_',num2str(find(str2num(char(redshif
 %computes the density contrast
 
 average=mean2(proj2d);
-proj2d=(proj2d-average)/average;
+proj2d_dc=(proj2d-average)/average;
 
 %cell_bins1d=[0:nc/(np*resol_factor):nc/lenght_factor];
 %cell_bins1d(end)=[];
  
 fig=figure('Visible', 'off');
+set(gcf, 'Position', [0 0 800 600]);
+ax2 = axes('Position',[0.15 0.15 0.65 0.65]);
+
 
 hold on;
 
@@ -45,19 +52,40 @@ pvz=pivot(3)*gcc_to_mpc;
 axis([-size_box/(2*lenght_factor)+size_box/(2)+pvy size_box/(2*lenght_factor)+size_box/(2)+pvy -size_box/(2*lenght_factor)+size_box/(2)+pvz size_box/(2*lenght_factor)+size_box/(2)+pvz])
 if (~ischar(lim))
     clims = lim;
-    imagesc([-size_box/(2*lenght_factor)+size_box/(2)+pvy size_box/(2*lenght_factor)+size_box/(2)+pvy],[ -size_box/(2*lenght_factor)+size_box/(2)+pvz size_box/(2*lenght_factor)+size_box/(2)+pvz],proj2d,clims);
+    imagesc(ax2,[-size_box/(2*lenght_factor)+size_box/(2)+pvy size_box/(2*lenght_factor)+size_box/(2)+pvy],[ -size_box/(2*lenght_factor)+size_box/(2)+pvz size_box/(2*lenght_factor)+size_box/(2)+pvz],proj2d_dc,clims);
 else 
-    imagesc([-size_box/(2*lenght_factor)+size_box/(2)+pvy size_box/(2*lenght_factor)+size_box/(2)+pvy],[ -size_box/(2*lenght_factor)+size_box/(2)+pvz size_box/(2*lenght_factor)+size_box/(2)+pvz],proj2d);
+    imagesc(ax2,[-size_box/(2*lenght_factor)+size_box/(2)+pvy size_box/(2*lenght_factor)+size_box/(2)+pvy],[ -size_box/(2*lenght_factor)+size_box/(2)+pvz size_box/(2*lenght_factor)+size_box/(2)+pvz],proj2d_dc);
 end
 set(gca,'dataAspectRatio',[1 1 1]);
 colorbar;
-xlabel('$z(Mpc)$', 'interpreter', 'latex', 'fontsize', 20);
-ylabel('$y(Mpc)$', 'interpreter', 'latex', 'fontsize', 20);
+xlabel(ax2,'$z(Mpc)$', 'interpreter', 'latex', 'fontsize', 20);
+ylabel(ax2,'$y(Mpc)$', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
 set(gca,'linewidth',2);
-title({strcat('Density contrast of the 2d projection'),strcat('at z =',num2str(z),' for $G\mu=$ ',num2str(Gmu,'%.1E'))},'interpreter', 'latex', 'fontsize', 20);
-hold off;
+title(ax2,{strcat('Density contrast of the 2d projection'),'of dark matter mass'},'interpreter', 'latex', 'fontsize', 20);
+descr = {strcat('z = ',num2str(z));
+    strcat('$G\mu = $ ',num2str(Gmu,'%.1E'));
+    strcat('lenghtFactor = ',num2str(lenght_factor));
+    strcat('resolFactor = ',num2str(resol_factor));
+    strcat('$(\theta,\phi)$ = (',num2str(rot_angle(1)),',',num2str(rot_angle(2)),')' );
+    strcat('box displ wrt centre  = ');
+    strcat('(',num2str(pivot(1)),',',num2str(pivot(2)),',',num2str(pivot(3)),')',' (cell unit)');
+    strcat('boxDensContr = ');
+    num2str((sum(sum(proj2d))-(np)^3)/((np)^3));
+    strcat('boxSize/dim = ',num2str(size_box/lenght_factor),'\ Mpc'); 
+    strcat('cell/dim = ',num2str(np/lenght_factor));
+    strcat('resolution = ',num2str(size_box/(np)),'\ Mpc');
+    strcat('expectedWakeThick = ');
+    strcat( num2str(displacement),'\ Mpc');
+    strcat('wakeThickResol = ');
+    strcat( num2str(displacement/(size_box/(np/(resol_factor)))))};
+    
+%axes(ax1); % sets ax1 to current axes
+%fig.CurrentAxes = ax1;
+ax1 = axes('Position',[0 0 1 1],'Visible','off');
+txt=text(0.82,0.5,descr);
+set(txt,'Parent',ax1,'interpreter', 'latex');
 
 if (~ischar(lim))
     mkdir(path_out,strcat(num2str(lim(1)),'_',num2str(lim(2)),'lim','/'));

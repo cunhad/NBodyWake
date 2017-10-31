@@ -48,7 +48,7 @@ for node = 1 : length(nodes_list)
     
 
     
-    mass=mass*(np/nc)^3;
+    %mass=mass*(np/nc)^3;
     
     Pos_h=mod(Pos_h,nc);    
     Pos_h(1,:)=Pos_h(1,:)-(nc/2)-pivot(1);
