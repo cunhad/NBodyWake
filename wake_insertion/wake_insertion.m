@@ -18,10 +18,12 @@ cd('../Analysis/preprocessing');
 [ nodes_list redshift_list  ] = preprocessing_many_nodes(path,spec,aux_path );
 
 path_in=strcat(path,spec,aux_path);
-files_list = dir(strcat(path_in,num2str(z_insert),'*','xv*.dat'));
+files_list = dir(strcat(path_in,num2str(z_insert,'%.3f'),'*','xv*.dat'));
 files_list={files_list.name};
-
 filename=cell2mat(files_list(1));
+
+files_list_pid = dir(strcat(path_in,num2str(z_insert,'%.3f'),'*','PID*.dat'));
+files_list_pid={files_list_pid.name};
 
 [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( path,spec,aux_path,filename);
 
@@ -32,13 +34,15 @@ TimConv=(3*((1+z)^(2))*Hzero*(OmegaM^1/2))/2;  %Convert time in simulation units
 cd('../processing');
 
 files_list=sort_nat(files_list);
+files_list_pid=sort_nat(files_list_pid);
+
 
 cd('../preprocessing');
 
 Gmu_exp=floor(log10(Gmu_insert));
 Gmu_coef=Gmu_insert/(1*10^Gmu_exp);
 
-spec_out=strcat(num2str(size_box),'Mpc_',num2str(nc),'c_',num2str(np),'p_','zi',num2str(zi),'_wakeGmu',num2str(Gmu_coef),'t10m',num2str(-Gmu_exp),'zi',num2str(z_insert),'s',aux_path);
+spec_out=strcat(num2str(size_box),'Mpc_',num2str(nc),'c_',num2str(np),'p_','zi',num2str(zi),'_wakeGmu',num2str(Gmu_coef),'t10m',num2str(-Gmu_exp),'zi',num2str(z_insert),multiplicity_of_files,aux_path);
 mkdir(path,spec_out);
 
 
@@ -80,6 +84,14 @@ mkdir(path,spec_out);
         fwrite(file_out,header,'float32','l');
         fwrite(file_out,data,'float32','l');
         fclose(file_out);
+        
+        %copy pids
+        
+        
+        
+        copyfile(strcat(path,spec,aux_path,cell2mat(files_list_pid(node))),strcat(path,spec_out,cell2mat(files_list_pid(node)))) ;
+        
+        
 %         file_name = dir(strcat(path_in,char(redshift_list(rds)),'xv',char(nodes_list(node)),'.dat'));
 %         filename=file_name.name;
 %         [ size_box nc zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( path,spec,aux_path,filename,percentage_analysed);
