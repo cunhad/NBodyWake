@@ -1,18 +1,18 @@
-function [  ] = box_statistics_dm_per_node_vol_par( root,root_out,spec,aux_path,aux_path_out,NSIDE,node ,num_cores,vol_subdivision)
+function [  ] = box_statistics_dm_per_node_angle_subdiv( root,root_out,spec,aux_path,aux_path_out,NSIDE,node ,angle_subdivision,ind_a_subdiv)
 
-%(example)  box_statistics_dm_per_node_vol_par('/home/asus/Dropbox/extras/storage/', '/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','',4,0,4,1);
-%(example)  box_statistics_dm_per_node_vol_par('/home/asus/Dropbox/extras/storage/guillimin/old/','/home/asus/Dropbox/extras/storage/guillimin/old/','32Mpc_96c_48p_zi63_nowakes','/','',4,0,4,1);
-
+%(example)  box_statistics_dm_per_node_angle_subdiv('/home/asus/Dropbox/extras/storage/guillimin/test/', '/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','',4,0,4,1);
+%(example)  for i=1:4; box_statistics_dm_per_node_angle_subdiv('/home/asus/Dropbox/extras/storage/guillimin/test/', '/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','',4,0,4,i); end;
 
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
+% num_cores=4;
 
 pivot=[0,0,0]; %this is the position od the origin of the rotation point with respect to the center of the box
 lenght_factor=2;
 resol_factor=2;
 
-p = parpool(num_cores);
+% p = parpool(num_cores);
 tic;
 
 path_in=strcat(root,spec,aux_path);
@@ -54,12 +54,18 @@ for k = 1  :   number_of_redshifts
     
     [m n] = size(Pos);
     
-    int_div=fix(n/vol_subdivision);
     
-    for i=1:vol_subdivision+1
+    int_div=fix(number_of_angle_nuple/angle_subdivision);
+    
+    counter(1)=1;
+    
+    for i=2:angle_subdivision+1
         counter(i)=((i-1)*int_div);
     end
-    counter(vol_subdivision+2)=n;
+    counter(angle_subdivision+2)=number_of_angle_nuple;
+    
+    
+    
     
     %         Pos=transpose(Pos);
     
@@ -67,53 +73,26 @@ for k = 1  :   number_of_redshifts
     
     proj1d_angles=zeros(number_of_angle_nuple,length(bins)-1);
     
-%             rxj=zeros(3,counter(j+1)-counter(j));
-%rxj=zeros(3,:);
-%     
-%     for j=1:vol_subdivision+1
-%         
-% 
-%         
-%                 
-%         
-% %         rxj(j,1,:)=Pos(1,counter(j)+1:counter(j+1))-(nc/2)-pivot(1);
-% %         rxj(j,2,:)=Pos(2,counter(j)+1:counter(j+1))-(nc/2)-pivot(2);
-% %         rxj(j,3,:)=Pos(3,counter(j)+1:counter(j+1))-(nc/2)-pivot(3);
-% 
-%          rxj(1,:)=Pos(1,counter(j)+1:counter(j+1))-(nc/2)-pivot(1);
-%          rxj(2,:)=Pos(2,counter(j)+1:counter(j+1))-(nc/2)-pivot(2);
-%          rxj(3,:)=Pos(3,counter(j)+1:counter(j+1))-(nc/2)-pivot(3);
-% 
-%         
-%     end
     
-    for j=1:vol_subdivision+1
+    
+    for i=counter(ind_a_subdiv):counter(ind_a_subdiv+1)
+        %     for i=1:number_of_angle_nuple
+        %   for i=1:1
         
-        rxj=zeros(3,counter(j+1)-counter(j));
         
-         rxj(1,:)=Pos(1,counter(j)+1:counter(j+1))-(nc/2)-pivot(1);
-         rxj(2,:)=Pos(2,counter(j)+1:counter(j+1))-(nc/2)-pivot(2);
-         rxj(3,:)=Pos(3,counter(j)+1:counter(j+1))-(nc/2)-pivot(3);
         
-%         red_x=squeeze(rxj(j,:,:));
-
+        theta=angles(1,i);
+        phi=angles(2,i);
         
-        parfor i=1:number_of_angle_nuple
-            %     for i=1:number_of_angle_nuple
-            %   for i=1:1
-            
-            
-            rx=rxj;
-            
-            hist1d_cor=zeros(1,length(bins)-1);
-
+        hist1d_cor=zeros(1,length(bins)-1);
+        
 
             
-            theta=angles(1,i);
-            phi=angles(2,i);
+            rx=[];
             
-            
-            
+            rx(1,:)=Pos(1,:)-(nc/2)-pivot(1);
+            rx(2,:)=Pos(2,:)-(nc/2)-pivot(2);
+            rx(3,:)=Pos(3,:)-(nc/2)-pivot(3);
             
             Ry = [cos(theta) 0 sin(theta); 0 1 0; -sin(theta) 0 cos(theta)];
             Rz = [cos(phi) -sin(phi) 0; sin(phi) cos(phi) 0; 0 0 1];
@@ -153,14 +132,12 @@ for k = 1  :   number_of_redshifts
                 hist1d_cor=hist1d_cor+count;
                 
                 % display(hist1d_cor);
-               proj1d_angles(i,:)=proj1d_angles(i,:)+hist1d_cor(1,:);
-
+                
                 
             end
-                    fprintf('done for z= %f , j= $i and  i= %d\n',z, j,i);
-
             
-        end
+            
+     
         
         % proj=transpose(proj);
         
@@ -177,9 +154,9 @@ for k = 1  :   number_of_redshifts
         % average=mean2(hist1d_cor);
         % hist1d_cor=(hist1d_cor-average)/average;
         
+        proj1d_angles(i,:)=hist1d_cor(:);
         
-        
-%         fprintf('done for z= %f and  i= %d\n',z, i);
+        fprintf('done for z= %f and  i= %d\n',z, i);
         %display(proj);
         
     end
@@ -189,9 +166,9 @@ for k = 1  :   number_of_redshifts
     
     mkdir(path_out,'npart_per_node_1dproj/');
     
-    dlmwrite(strcat(path_out,'npart_per_node_1dproj/','1dproj_angle_z',num2str(z),'_node',num2str(node),'_NSIDE',num2str(NSIDE),'.txt'),proj1d_angles,'delimiter','\t');
+    dlmwrite(strcat(path_out,'npart_per_node_1dproj/','1dproj_angle_z',num2str(z),'_node',num2str(node),'_subang',num2str(ind_a_subdiv),'_NSIDE',num2str(NSIDE),'.txt'),proj1d_angles,'delimiter','\t');
     
-    
+       
     
 end
 

@@ -1,7 +1,7 @@
 function [  ] = box_statistics_dm_from_tot_to_analysis( root_per_node_out,spec,aux_path,aux_path_per_node_out,NSIDE )
 
-%(example) box_statistics_dm_from_tot_to_analysis('/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','',4);
-%(example) box_statistics_dm_from_tot_to_analysis('/home/asus/Dropbox/extras/storage/guillimin/old/','32Mpc_96c_48p_zi63_nowakes','/','',4);
+%(example) box_statistics_dm_from_tot_to_analysis('/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','',4);
+
 
 pivot=[0,0,0]; %this is the position od the origin of the rotation point with respect to the center of the box
 lenght_factor=2;
@@ -86,6 +86,8 @@ cd('../preprocessing');
 for rds = 1 : length(redshift_list)  
     
     count=dlmread(strcat(path_total_out,'_1dproj_dc_angle_z',char(redshift_list(rds)),'_total_nodes','_NSIDE',num2str(NSIDE),'.txt'));
+    
+    %analys=count;
     
     count=transpose(count);
     
@@ -177,6 +179,10 @@ for rds = 1 : length(redshift_list)
 %         %fig=figure;
 %         
 %      hold on;
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %computes the noise and sig to noise
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
       st = std(count);
       st = transpose(st);

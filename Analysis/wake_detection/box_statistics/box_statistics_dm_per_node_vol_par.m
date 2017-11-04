@@ -1,8 +1,6 @@
 function [  ] = box_statistics_dm_per_node_vol_par( root,root_out,spec,aux_path,aux_path_out,NSIDE,node ,num_cores,vol_subdivision)
 
-%(example)  box_statistics_dm_per_node_vol_par('/home/asus/Dropbox/extras/storage/', '/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','',4,0,4,1);
-%(example)  box_statistics_dm_per_node_vol_par('/home/asus/Dropbox/extras/storage/guillimin/old/','/home/asus/Dropbox/extras/storage/guillimin/old/','32Mpc_96c_48p_zi63_nowakes','/','',4,0,4,1);
-
+%(example)  box_statistics_dm_per_node_vol_par('/home/asus/Dropbox/extras/storage/guillimin/test/', '/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','',4,0,4,1);
 
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here

@@ -1,13 +1,12 @@
-function [  ] = b_0_1_000db_000t_box_statistics_halos_from_tot( root_per_node_out,spec,aux_path,aux_path_per_node_out,NSIDE )
+function [  ] = box_statistics_dm_from_tot_to_analysis_wwavel( root_per_node_out,spec,aux_path,aux_path_per_node_out,NSIDE,cutoff )
 
-% (example) box_statistics_halos_from_tot_to_analysis('/home/asus/Dropbox/extras/storage/guillimin/old/','32Mpc_96c_48p_zi63_nowakes','/','',4);
-% (example) box_statistics_halos_from_tot_to_analysis('/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','',4);    
+%(example) box_statistics_dm_from_tot_to_analysis_wwavel('/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','',4,10);
 
 
 pivot=[0,0,0]; %this is the position od the origin of the rotation point with respect to the center of the box
 lenght_factor=2;
-resol_factor=1;
-
+resol_factor=2;
+    
 %reads the specifications and extract the information on variables
 spec_arr = strsplit(spec,'_');
 
@@ -24,14 +23,14 @@ nc = spec_arr(2);
 nc = char(nc);
 nc = nc(1:end-1);
 nc = str2num(nc);
-
+ 
 %extract the number of particle per dimension
 
 np = spec_arr(3);
 np = char(np);
 np = np(1:end-1);
 np = str2num(np);
- 
+
 %extract the initial redshift of the simulation
   
  zi = spec_arr(4);
@@ -58,23 +57,14 @@ np = str2num(np);
      multiplicity_of_files=char(wake_spec(end));
  end
  
- 
-path_total_out=strcat(strcat(root_per_node_out,spec,aux_path),'data/',aux_path_per_node_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/halos/all_nodes_1dproj/');
-path_analysis_out=strcat(strcat(root_per_node_out,spec,aux_path),'data/',aux_path_per_node_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/halos/all_nodes_1dproj_analysis/');
+    
 
-% 
-% path_in=strcat(root_per_node_out,spec,aux_path,'data/','stat/','box_statistics/','halos/','total/');
-% path_data_out=strcat(root_per_node_out,spec,aux_path,'data/','stat/','box_statistics/','halos/');
-% path_analysis_out=strcat(root_per_node_out,spec,aux_path,'Analysis/stat/box_statistics/','halos/');
+path_total_out=strcat(strcat(root_per_node_out,spec,aux_path),'data/',aux_path_per_node_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/dc_all_nodes_1dproj/');
+path_analysis_out=strcat(strcat(root_per_node_out,spec,aux_path),'data/',aux_path_per_node_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/dc_all_nodes_1dproj_analysis/');
 
 
-% path_out=strcat(path,spec,aux_path,strcat('Analysis/','stat/box_statistics/'));
-%for guillimin
-% path_out=strcat('/gs/scratch/cunhad/',spec,aux_path);
 
-
-files_list = dir(strcat(path_total_out,'number/','*','_NSIDE',num2str(NSIDE),'.txt'));
-%files_list = dir(strcat(path_in,'*'));
+files_list = dir(strcat(path_total_out,'*','_NSIDE',num2str(NSIDE),'.txt'));
 sorted_files_list={files_list.name};
 
 cd('../../processing');
@@ -87,59 +77,30 @@ angles = dlmread(strcat('../../python/angles',num2str(NSIDE),'.txt'));
 
 sorted_files_list=sort_nat(sorted_files_list);
 
-display(sorted_files_list);
-
 [aux1 aux2] = size(num2str(NSIDE));
 aux3=aux2+22;
-redshift_list=cellfun(@(x) x(26:end-aux3),sorted_files_list,'UniformOutput', false);
+redshift_list=cellfun(@(x) x(19:end-aux3),sorted_files_list,'UniformOutput', false);
 
 cd('../preprocessing');
 
 for rds = 1 : length(redshift_list)  
     
-    count_n=dlmread(strcat(path_total_out,'number/','_1dproj_num_count_angle_z',char(redshift_list(rds)),'_total_nodes','_NSIDE',num2str(NSIDE),'.txt'));
-    count_mass_dc=dlmread(strcat(path_total_out,'mass/','_1dproj_mass_dc_angle_z',char(redshift_list(rds)),'_total_nodes','_NSIDE',num2str(NSIDE),'.txt'));
-    count_mass_dc_wrt_dm_avr=dlmread(strcat(path_total_out,'mass_dc_wrt_dm_avr/','_1dproj_mass_dc_wrt_dm_avr_angle_z',char(redshift_list(rds)),'_total_nodes','_NSIDE',num2str(NSIDE),'.txt'));
-
+    dmdc=dlmread(strcat(path_total_out,'_1dproj_dc_angle_z',char(redshift_list(rds)),'_total_nodes','_NSIDE',num2str(NSIDE),'.txt'));
     
+    %analys=count;
     
-    count_n=transpose(count_n);
-    count_mass_dc=transpose(count_mass_dc);
-    count_mass_dc_wrt_dm_avr=transpose(count_mass_dc_wrt_dm_avr);
-    
-    
-    %     average=mean(count);
-    %     count(:,:)=(count(:,:)-average(1,:))./average(1,:);
+    dmdc=transpose(dmdc);
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %computes the peaks
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    maxi=max(count_n);
+    maxi=max(dmdc);
     maxi=transpose(maxi);
     
-    mkdir(path_analysis_out,strcat('number/max_1dproj/'));
-    dlmwrite(strcat(path_analysis_out,'number/max_1dproj/','_',num2str(rds,strcat('%0',num2str(1+floor(length(redshift_list)/10)),'d')),'_1dproj_halos_max_z',char(redshift_list(rds)),'_NSIDE',num2str(NSIDE),'.txt'),maxi,'delimiter','\t');
+    mkdir(path_analysis_out,strcat('max_1dproj/'));
+    dlmwrite(strcat(path_analysis_out,'max_1dproj/','_',num2str(rds,strcat('%0',num2str(1+floor(length(redshift_list)/10)),'d')),'_1dproj_max_z',char(redshift_list(rds)),'_NSIDE',num2str(NSIDE),'.txt'),maxi,'delimiter','\t');
 
-    
-    
-    maxi_dc=max(count_mass_dc);
-    maxi_dc=transpose(maxi_dc);
-    
-    mkdir(path_analysis_out,strcat('dc/max_1dproj/'));
-    dlmwrite(strcat(path_analysis_out,'dc/max_1dproj/','_',num2str(rds,strcat('%0',num2str(1+floor(length(redshift_list)/10)),'d')),'_1dproj_halos_dc_max_z',char(redshift_list(rds)),'_NSIDE',num2str(NSIDE),'.txt'),maxi_dc,'delimiter','\t');
-
-    
-    
-    
-    maxi_dc_wrt_dm_avr=max(count_mass_dc_wrt_dm_avr);
-    maxi_dc_wrt_dm_avr=transpose(maxi_dc_wrt_dm_avr);
-    
-    mkdir(path_analysis_out,strcat('dc_wrt_dm_avr/max_1dproj/'));
-    dlmwrite(strcat(path_analysis_out,'dc_wrt_dm_avr/max_1dproj/','_',num2str(rds,strcat('%0',num2str(1+floor(length(redshift_list)/10)),'d')),'_1dproj_halos_dc_wrt_dm_avr_max_z',char(redshift_list(rds)),'_NSIDE',num2str(NSIDE),'.txt'),maxi_dc,'delimiter','\t');
-
-    
-    
 % %     % histogram fo the peaks 
 %     
 % %     maxi=transpose(maxi);
@@ -219,24 +180,48 @@ for rds = 1 : length(redshift_list)
 %         
 %      hold on;
 
-      st = std(count_n);
+      st = std(dmdc);
       st = transpose(st);
 
-      mkdir(path_analysis_out,strcat('number/sigma/'));  
-      dlmwrite(strcat(path_analysis_out,'number/sigma/','_',num2str(rds,strcat('%0',num2str(1+floor(length(redshift_list)/10)),'d')),'_1dproj_halos_std_z',char(redshift_list(rds)),'_NSIDE',num2str(NSIDE),'.txt'),st,'delimiter','\t');
+      mkdir(path_analysis_out,strcat('sigma/'));  
+      dlmwrite(strcat(path_analysis_out,'sigma/','_',num2str(rds,strcat('%0',num2str(1+floor(length(redshift_list)/10)),'d')),'_1dproj_std_z',char(redshift_list(rds)),'_NSIDE',num2str(NSIDE),'.txt'),st,'delimiter','\t');
       
-      mkdir(path_analysis_out,strcat('number/sig_to_noise/'));  
-      dlmwrite(strcat(path_analysis_out,'number/sig_to_noise/','_',num2str(rds,strcat('%0',num2str(1+floor(length(redshift_list)/10)),'d')),'_1dproj_sig_halos_to_noise_z',char(redshift_list(rds)),'_NSIDE',num2str(NSIDE),'.txt'),maxi(:,1)./st(:,1),'delimiter','\t')
-      
-      st_dc = std(count_mass_dc);
-      st_dc = transpose(st_dc);
-
-      mkdir(path_analysis_out,strcat('dc/sigma/'));  
-      dlmwrite(strcat(path_analysis_out,'dc/sigma/','_',num2str(rds,strcat('%0',num2str(1+floor(length(redshift_list)/10)),'d')),'_1dproj_halos_std_dc_z',char(redshift_list(rds)),'_NSIDE',num2str(NSIDE),'.txt'),st_dc,'delimiter','\t');
-      
-      mkdir(path_analysis_out,strcat('dc/sig_to_noise/'));  
-      dlmwrite(strcat(path_analysis_out,'dc/sig_to_noise/','_',num2str(rds,strcat('%0',num2str(1+floor(length(redshift_list)/10)),'d')),'_1dproj_sig_dc_halos_to_noise_z',char(redshift_list(rds)),'_NSIDE',num2str(NSIDE),'.txt'),maxi_dc(:,1)./st_dc(:,1),'delimiter','\t')
+      mkdir(path_analysis_out,strcat('sig_to_noise/'));  
+      dlmwrite(strcat(path_analysis_out,'sig_to_noise/','_',num2str(rds,strcat('%0',num2str(1+floor(length(redshift_list)/10)),'d')),'_1dproj_sig_to_noise_z',char(redshift_list(rds)),'_NSIDE',num2str(NSIDE),'.txt'),maxi(:,1)./st(:,1),'delimiter','\t')
+   
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %computes the pleak, noise and sig to noise with wavelet filter
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
+    [dc_cwt1,periods] = cwt(dmdc(:,1),seconds(size_box/(np*resol_factor)),'waveletparameters',[3 3.01]);
+    wavelet_coef= size(dc_cwt1,1);
+    angles_n=size(dmdc,2);
+    bin_n=size(dmdc,1);
+    
+    dc_cwt=zeros(wavelet_coef,bin_n,angles_n);
+    i_dc_cwt=zeros(bin_n,angles_n);
+    
+    for i=1:angles_n
+    [dc_cwt(:,:,i),periods] = cwt(dmdc(:,i),seconds(size_box/(np*resol_factor)),'waveletparameters',[3 3.01]);   
+    i_dc_cwt(:,i) = icwt(dc_cwt(:,:,i),periods,[periods(1) seconds(cutoff)],'waveletparameters',[3 3.01]);    
+    end
+    
+    
+    
+    maxi_wf=max(i_dc_cwt);
+    maxi_wf=transpose(maxi_wf);
+    
+    mkdir(path_analysis_out,strcat('max_1dproj/','wav_filter_',num2str(cutoff),'Mpc_cut/'));
+    dlmwrite(strcat(path_analysis_out,'max_1dproj/','wav_filter_',num2str(cutoff),'Mpc_cut/','_',num2str(rds,strcat('%0',num2str(1+floor(length(redshift_list)/10)),'d')),'_1dproj_max_z',char(redshift_list(rds)),'_NSIDE',num2str(NSIDE),'.txt'),maxi_wf,'delimiter','\t');
+
+    st_wf = std(i_dc_cwt);
+      st_wf = transpose(st_wf);
+
+      mkdir(path_analysis_out,strcat('sigma/','wav_filter_',num2str(cutoff),'Mpc_cut/'));  
+      dlmwrite(strcat(path_analysis_out,'sigma/','wav_filter_',num2str(cutoff),'Mpc_cut/','_',num2str(rds,strcat('%0',num2str(1+floor(length(redshift_list)/10)),'d')),'_1dproj_std_z',char(redshift_list(rds)),'_NSIDE',num2str(NSIDE),'.txt'),st_wf,'delimiter','\t');
+      
+      mkdir(path_analysis_out,strcat('sig_to_noise/','wav_filter_',num2str(cutoff),'Mpc_cut/'));  
+      dlmwrite(strcat(path_analysis_out,'sig_to_noise/','wav_filter_',num2str(cutoff),'Mpc_cut/','_',num2str(rds,strcat('%0',num2str(1+floor(length(redshift_list)/10)),'d')),'_1dproj_sig_to_noise_z',char(redshift_list(rds)),'_NSIDE',num2str(NSIDE),'.txt'),maxi(:,1)./st_wf(:,1),'delimiter','\t')
 
     
 end
