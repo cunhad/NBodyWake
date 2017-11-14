@@ -1,6 +1,6 @@
-function [  ] = box_statistics_dm_from_nodes_to_total_angle_subdiv( root_per_node_out,spec,aux_path,aux_path_per_node_out,NSIDE )
+function [ nodes_list ind_part_list ] = box_statistics_dm_from_nodes_to_total_part( root_per_node_out,spec,aux_path,aux_path_per_node_out,NSIDE,part )
 
-%(example) box_statistics_dm_from_nodes_to_total_angle_subdiv('/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','',4);
+%(example) box_statistics_dm_from_nodes_to_total_part('/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','',4,8);
 
 
 pivot=[0,0,0]; %this is the position od the origin of the rotation point with respect to the center of the box
@@ -16,7 +16,7 @@ path_per_node_out=strcat(strcat(root_per_node_out,spec,aux_path),'data/',aux_pat
 % path_out=strcat('/gs/scratch/cunhad/',spec,aux_path);
 
 
-files_list = dir(strcat(path_per_node_out,'*','node0','_subang1','_NSIDE',num2str(NSIDE),'.txt'));
+files_list = dir(strcat(path_per_node_out,'*','node0','_partID1','_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'));
 %files_list = dir(strcat(path_in,'*'));
 sorted_files_list={files_list.name};
 
@@ -31,30 +31,32 @@ angles = dlmread(strcat('../../python/angles',num2str(NSIDE),'.txt'));
 sorted_files_list=sort_nat(sorted_files_list);
 
 [aux1 aux2] = size(num2str(NSIDE));
-aux3=aux2+24;
-redshift_list=cellfun(@(x) x(15:end-aux3),sorted_files_list,'UniformOutput', false);
+[aux1 aux3] = size(num2str(part));
+aux4=aux2+30+aux3;
+redshift_list=cellfun(@(x) x(15:end-aux4),sorted_files_list,'UniformOutput', false);
 
-files_list2 = dir(strcat(path_per_node_out,'1dproj_angle_z',char(redshift_list(1)),'_node','*_subang1_NSIDE',num2str(NSIDE),'.txt'));
+files_list2 = dir(strcat(path_per_node_out,'1dproj_angle_z',char(redshift_list(1)),'_node','*_partID1','_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'));
 sorted_files_list2={files_list2.name};
-nodes_list=cellfun(@(x) x(4+cell2mat(strfind(sorted_files_list2(1:1), 'node')):-1+cell2mat(strfind(sorted_files_list2(1:1), '_subang1_NSIDE'))),sorted_files_list2,'UniformOutput', false);
-
+for i=1:length(sorted_files_list2)
+nodes_list(1,i)= cellfun(@(x) x(4+cell2mat(strfind(sorted_files_list2(1:i), 'node')):-1+cell2mat(strfind(sorted_files_list2(1:i), '_partID1'))),sorted_files_list2(1,i),'UniformOutput', false);
+end
 nodes_list=sort_nat(nodes_list);
-
-files_list3 = dir(strcat(path_per_node_out,'1dproj_angle_z',char(redshift_list(1)),'_node0','_subang','*','_NSIDE',num2str(NSIDE),'.txt'));
+% 
+files_list3 = dir(strcat(path_per_node_out,'1dproj_angle_z',char(redshift_list(1)),'_node0','_partID','*','_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'));
 sorted_files_list3={files_list3.name};
 
 for i=1:length(sorted_files_list3)
-ind_ang_list(1,i)=cellfun(@(x) x(7+cell2mat(strfind(sorted_files_list3(1,i), '_subang')):-1+cell2mat(strfind(sorted_files_list3(1,i), '_NSIDE'))),sorted_files_list3(1,i),'UniformOutput', false);
+ind_part_list(1,i)=cellfun(@(x) x(7+cell2mat(strfind(sorted_files_list3(1,i), '_partID')):-1+cell2mat(strfind(sorted_files_list3(1,i), '_parts'))),sorted_files_list3(1,i),'UniformOutput', false);
 end
 
-ind_ang_list=sort_nat(ind_ang_list);
+ind_part_list=sort_nat(ind_part_list);
 
 
 for rds = 1 : length(redshift_list)
 
 
     %display(char(strcat(path_per_node_out,'1dproj_angle_z',char(redshift_list(1)),'_node',char(nodes_list(1)),'_NSIDE',num2str(NSIDE),'.txt')));
-    [rows columns] = size(dlmread(char(strcat(path_per_node_out,'1dproj_angle_z',char(redshift_list(1)),'_node',char(nodes_list(1)),'_subang',char(ind_ang_list(1)),'_NSIDE',num2str(NSIDE),'.txt'))));
+    [rows columns] = size(dlmread(char(strcat(path_per_node_out,'1dproj_angle_z',char(redshift_list(1)),'_node',char(nodes_list(1)),'_partID',char(ind_part_list(1)),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'))));
 
     %display(rows);
     %display(columns);
@@ -63,9 +65,9 @@ for rds = 1 : length(redshift_list)
 
     for node = 1 : length(nodes_list)
 
-        for angles_indx = 1:length(ind_ang_list)
+        for part_indx = 1:length(ind_part_list)
 
-        filename=char(strcat(path_per_node_out,'1dproj_angle_z',char(redshift_list(rds)),'_node',char(nodes_list(node)),'_subang',char(ind_ang_list(angles_indx)),'_NSIDE',num2str(NSIDE),'.txt'));
+        filename=char(strcat(path_per_node_out,'1dproj_angle_z',char(redshift_list(rds)),'_node',char(nodes_list(node)),'_partID',char(ind_part_list(part_indx)),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'));
         display(filename);
 
         [rows columns] = size(dlmread(filename));
