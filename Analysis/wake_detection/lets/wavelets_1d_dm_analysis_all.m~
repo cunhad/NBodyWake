@@ -1,4 +1,4 @@
-function [  ] = wavelets_1d_dm_plot_all( root,root_data_out,root_out,spec,aux_path,aux_path_out,lenght_factor,resol_factor,pivot,rot_angle,lim1d,lim_cwt,cutoff  )
+function [  ] = wavelets_1d_dm_analysis_all( root,root_data_out,root_plot_out,root_snan_out,spec,aux_path,aux_path_data_out,aux_path_plot_out,aux_path_snan_out,lenght_factor,resol_factor,pivot,rot_angle,lim1d,lim_cwt,cutoff,data_stream,info,analysis,z_id_range)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -15,8 +15,7 @@ for rds = 1 : length(redshift_list)
     
     filename = dir(strcat(path_in,char(redshift_list(rds)),'xv0','.dat'));
     filename=filename.name;
-    wavelets_1d_dm_plot( root,root_data_out,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,lim1d,lim_cwt,cutoff );
+    wavelets_1d_dm_plot( root,root_data_out,root_plot_out,root_snan_out,spec,aux_path,aux_path_data_out,aux_path_plot_out,aux_path_snan_out,filename,lenght_factor,resol_factor,pivot,rot_angle,lim1d,lim_cwt,cutoff );
     
 
 end
-

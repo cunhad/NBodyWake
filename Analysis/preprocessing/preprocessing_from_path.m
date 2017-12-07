@@ -1,4 +1,4 @@
-function [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in i_node j_node k_node number_node_dim ] = preprocessing_nodes_all_but_phasespace( path,spec,aux_path,filename)
+function [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw ] = preprocessing_from_path( path,spec,aux_path)
 %   This function takes the phase space output from CUBEP3M and returns
 %   all relevant information but the global positions and velocity of all particles at the
 %   corresponding redshift and node volume
@@ -42,10 +42,7 @@ np = str2num(np);
  zi = zi(3:end);
  zi = str2num(zi);
  
-  %extracts the redshift of the file to be analised
- 
- z=char(filename);
- z=str2num(z(1:end-7));
+
  
  % extracts the informations of the wake if there is one
  
@@ -66,14 +63,7 @@ np = str2num(np);
      multiplicity_of_files=char(wake_spec(end));
  end
  
- %extract the information of the multiplicity of the files to be analysed
- 
- if multiplicity_of_files=='s'
-     path_file_in=strcat(path,spec,aux_path,filename);
- end
- if multiplicity_of_files=='m'
-     path_file_in=strcat(path,spec,aux_path,filename);
- end
+
  
 % fid = fopen(path_file_in);
 % directory = dir(path_file_in);
@@ -85,20 +75,7 @@ np = str2num(np);
 %Pos=transpose(Pos);
 %Pos=mod(Pos,nc);
  
-%in this part we will get the position of the wake taking into acount the
-%node structure
 
- node=char(filename);
- node=str2num(node(strfind(filename, 'xv')+2:strfind(filename,'.dat')-1));
- [ nodes_list redshift_list ] = preprocessing_many_nodes(path,spec,aux_path);
- 
- number_node_dim=nthroot(numel(nodes_list), 3);
- k_node=floor(node/number_node_dim^2);
- res=mod(node,number_node_dim^2);
- j_node=floor(res/number_node_dim);
- i_node=mod(res,number_node_dim);
- 
- 
 %  Pos(1,:)=Pos(1,:)+(nc/number_node_dim)*i_node;
 %  Pos(2,:)=Pos(2,:)+(nc/number_node_dim)*j_node;
 %  Pos(3,:)=Pos(3,:)+(nc/number_node_dim)*k_node;

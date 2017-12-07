@@ -155,6 +155,10 @@ for k = 1  :   number_of_redshifts
     
     dlmwrite(strcat(path_out,'npart_per_node_1dproj/','1dproj_angle_z',num2str(z),'_node',num2str(node),'_partID',num2str(part_id),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),proj1d_angles,'delimiter','\t');
     
+%     fileID = fopen(strcat(path_out,'npart_per_node_1dproj/','1dproj_angle_z',num2str(z),'_node',num2str(node),'_partID',num2str(part_id),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
+%     fwrite(fileID,proj1d_angles, 'float32','l');
+%     fclose(fileID);
+    
    % display(strcat(path_out,'npart_per_node_1dproj/','1dproj_angle_z',num2str(z),'_node',num2str(node),'_partID',num2str(part_id),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'));
     
 end
