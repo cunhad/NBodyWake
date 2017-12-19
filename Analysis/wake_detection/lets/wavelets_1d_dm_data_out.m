@@ -1,9 +1,9 @@
-function [ dc_cwt periods i_dc_cwt filtered_dc_cwt] = wavelets_1d_dm_data_out( root,root_data,spec,aux_path,aux_path_data,filename,lenght_factor,resol_factor,pivot,rot_angle,cutoff,data_stream)
+function [ dc_cwt,periods,i_dc_cwt,filtered_dc_cwt] = wavelets_1d_dm_data_out( root,root_data,spec,aux_path,aux_path_data,filename,lenght_factor,resol_factor,pivot,rot_angle,cutoff,data_stream)
  
 %Computes the filetered 1d projections aconding to the input specifications and stores (and/or returns) the resulting data
 
 
-%(example) [ dc_cwt periods i_dc_cwt filtered_dc_cwt] = wavelets_1d_dm_data_out('/home/asus/Dropbox/extras/storage/guillimin/test/','/home/asus/Dropbox/extras/storage/guillimin/test/data/','64Mpc_96c_48p_zi63_nowakem','/sample0001/','','0.000xv0.dat',1,1,[0,0,0],[0,0],10,[1,3]);
+%(example) [ dc_cwt periods i_dc_cwt filtered_dc_cwt] = wavelets_1d_dm_data_out('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','0.000xv0.dat',1,1,[0,0,0],[0,0],10,[1]);
 %(example) wavelets_1d_dm_data_out('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','15.000xv0.dat',1,1,[0,0,0],[0,0],0.8);
 
 % NBody output should be stored as root+spec+aux_path (root directory, specification in the form size_numberofcellsperdimension_number_particlesperdimension_initialredshift_wakespecification&multiplicity, aux_path is the sample number )
@@ -39,7 +39,6 @@ path_in=strcat(root,spec,aux_path);
 cd('../../preprocessing');
 
 [ nodes_list redshift_list ] = preprocessing_many_nodes(root,spec,aux_path );
-redshift_list=flip(redshift_list);
 
 [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in i_node j_node k_node number_node_dim ] = preprocessing_nodes_all_but_phasespace( root,spec,aux_path,filename);
 

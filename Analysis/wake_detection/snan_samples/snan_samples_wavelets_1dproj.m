@@ -3,7 +3,7 @@ function [   ] = snan_samples_wavelets_1dproj(root,root_snan_in,root_snan_out,sp
 %reads the data from wavelets_proj1d_dm_analysis for the signal to noise analysis
 %and creates the corresponding figures
 
-%(example) snan_samples_wavelets_1dproj('/home/asus/Dropbox/extras/storage/guillimin/test/','/home/asus/Dropbox/extras/storage/guillimin/test/snan/','/home/asus/Dropbox/extras/storage/guillimin/test/snan_out/','64Mpc_96c_48p_zi63_nowakem','/sample0001/','','',1,1,[0,0,0],[0,0],10,'all','all',[1,2,3],[1,2,3]);
+%(example) snan_samples_wavelets_1dproj('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/snan/','/home/asus/Dropbox/extras/storage/graham/small_res/snan_out/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','',1,1,[0,0,0],[0,0],10,'all','all',[1,2,3],[1,2,3]);
 
 % NBody output should be stored as root+spec+aux_path (root directory, specification in the form size_numberofcellsperdimension_number_particlesperdimension_initialredshift_wakespecification&multiplicity, aux_path is the sample number )
 
@@ -167,6 +167,8 @@ for sample=sample_id_range
             txt=text(0.1,0.8,tit);
             set(txt,'Parent',ax2,'interpreter', 'latex','fontsize', 20);
             descr = {strcat('$G\mu = $ ',num2str(Gmu,'%.1E'));
+                strcat('z of wake insertion = ',num2str(ziw));
+                strcat('z of simulation init = ',num2str(zi));
                 strcat('lenghtFactor = ',num2str(lenght_factor));
                 strcat('resolFactor = ',num2str(resol_factor));
                 strcat('$(\theta,\phi)$ = (',num2str(rot_angle(1)),',',num2str(rot_angle(2)),')' );
@@ -242,6 +244,8 @@ if ismember(2,analysis)
             txt=text(0.1,0.8,tit);
             set(txt,'Parent',ax2,'interpreter', 'latex','fontsize', 20);
                 descr = {strcat('$G\mu = $ ',num2str(Gmu,'%.1E'));
+                strcat('z of wake insertion = ',num2str(ziw));
+                strcat('z of simulation init = ',num2str(zi));
                 strcat('lenghtFactor = ',num2str(lenght_factor));
                 strcat('resolFactor = ',num2str(resol_factor));
                 strcat('$(\theta,\phi)$ = (',num2str(rot_angle(1)),',',num2str(rot_angle(2)),')' );
@@ -310,6 +314,8 @@ if ismember(3,analysis)
         txt=text(0.1,0.8,tit);
         set(txt,'Parent',ax2,'interpreter', 'latex','fontsize', 20);
         descr = {strcat('$G\mu = $ ',num2str(Gmu,'%.1E'));
+                strcat('z of wake insertion = ',num2str(ziw));
+                strcat('z of simulation init = ',num2str(zi));
                 strcat('lenghtFactor = ',num2str(lenght_factor));
                 strcat('resolFactor = ',num2str(resol_factor));
                 strcat('$(\theta,\phi)$ = (',num2str(rot_angle(1)),',',num2str(rot_angle(2)),')' );

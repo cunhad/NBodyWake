@@ -54,11 +54,9 @@ function [  ] = wavelets_1d_dm_analysis( root,root_data_out,root_plot_out,root_s
 
 cd('../../preprocessing');
 
-[ nodes_list redshift_list ] = preprocessing_many_nodes(root,spec,aux_path );
+[~,redshift_list,~,size_box,nc,np,zi,~,~,Gmu,ziw] = preprocessing_info(root,spec,aux_path );
 
-redshift_list=flip(redshift_list);
-
-[ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in i_node j_node k_node number_node_dim ] = preprocessing_nodes_all_but_phasespace( root,spec,aux_path,filename);
+[  ~,~,~,~,z ] = preprocessing_filename_info( root,spec,aux_path,filename);
 
 cd('../../parameters')
 
@@ -77,7 +75,7 @@ tot_path_out=strcat(root_plot_out,spec,aux_path,'plot/',aux_path_plot_out,num2st
 
 
 if ismember(0,data_stream)    
-   [proj1d_dc_cwt periods proj1d_dc_icwt filt_proj1d_dc_cwt] = wavelets_1d_dm_data_out( root,root_data_out,spec,aux_path,aux_path_data_out,filename,lenght_factor,resol_factor,pivot,rot_angle,cutoff,0);
+   [proj1d_dc_cwt,periods,proj1d_dc_icwt,filt_proj1d_dc_cwt] = wavelets_1d_dm_data_out( root,root_data_out,spec,aux_path,aux_path_data_out,filename,lenght_factor,resol_factor,pivot,rot_angle,cutoff,0);
     scale=seconds(periods);
 else    
     path_data=strcat(strcat(root_data_out,spec,aux_path),'data/',aux_path_data_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2))),'ra','/','1dproj/dm/wavelet/dc/');
@@ -122,6 +120,8 @@ if ismember(0,info)
     title(strcat({'Histogram of the continuous wavelet transformation ','of the density contrast of the 1d projected','dark matter mass (absolute value)'}),'interpreter', 'latex', 'fontsize', 20);
     descr = {strcat('z = ',num2str(z));
         strcat('$G\mu = $ ',num2str(Gmu,'%.1E'));
+        strcat('z of wake insertion = ',num2str(ziw));
+        strcat('z of simulation init = ',num2str(zi));
         strcat('lenghtFactor = ',num2str(lenght_factor));
         strcat('resolFactor = ',num2str(resol_factor));
         strcat('$(\theta,\phi)$ = (',num2str(rot_angle(1)),',',num2str(rot_angle(2)),')' );
@@ -218,6 +218,8 @@ if ismember(2,info)
     title(strcat({'Continuous wavelet transformation of the ','density contrast of the 1d projected','dark matter mass (absolute value)'}),'interpreter', 'latex', 'fontsize', 20);
     descr = {strcat('z = ',num2str(z));
         strcat('$G\mu = $ ',num2str(Gmu,'%.1E'));
+        strcat('z of wake insertion = ',num2str(ziw));
+        strcat('z of simulation init = ',num2str(zi));
         strcat('lenghtFactor = ',num2str(lenght_factor));
         strcat('resolFactor = ',num2str(resol_factor));
         strcat('$(\theta,\phi)$ = (',num2str(rot_angle(1)),',',num2str(rot_angle(2)),')' );
@@ -275,8 +277,8 @@ end
 
 if ismember(0,info)    
     fig=figure('Visible', 'off');
-    set(gcf, 'Position', [0 0 800 400]);
-    ax2 = axes('Position',[0.2 0.2 0.6 0.6]);
+    set(gcf, 'Position', [0 0 800 450]);
+    ax2 = axes('Position',[0.15 0.2 0.6 0.6]);
     
     hold on;
     
@@ -304,6 +306,8 @@ if ismember(0,info)
     title(ax2,{strcat('Density contrast of the'),'filtered 1dprojection'},'interpreter', 'latex', 'fontsize', 20);
     descr = {strcat('z = ',num2str(z));
         strcat('$G\mu = $ ',num2str(Gmu,'%.1E'));
+        strcat('z of wake insertion = ',num2str(ziw));
+        strcat('z of simulation init = ',num2str(zi));
         strcat('lenghtFactor = ',num2str(lenght_factor));
         strcat('resolFactor = ',num2str(resol_factor));
         strcat('$(\theta,\phi)$ = (',num2str(rot_angle(1)),',',num2str(rot_angle(2)),')' );
@@ -424,6 +428,8 @@ if ismember(2,info)
     title(ax2,{strcat('Density contrast of the'),'filtered 1dprojection'},'interpreter', 'latex', 'fontsize', 20);
     descr = {strcat('z = ',num2str(z));
         strcat('$G\mu = $ ',num2str(Gmu,'%.1E'));
+        strcat('z of wake insertion = ',num2str(ziw));
+        strcat('z of simulation init = ',num2str(zi));
         strcat('lenghtFactor = ',num2str(lenght_factor));
         strcat('resolFactor = ',num2str(resol_factor));
         strcat('$(\theta,\phi)$ = (',num2str(rot_angle(1)),',',num2str(rot_angle(2)),')' );
@@ -496,6 +502,8 @@ if ismember(0,info)
     
     descr = {strcat('z = ',num2str(z));
         strcat('$G\mu = $ ',num2str(Gmu,'%.1E'));
+        strcat('z of wake insertion = ',num2str(ziw));
+        strcat('z of simulation init = ',num2str(zi));
         strcat('lenghtFactor = ',num2str(lenght_factor));
         strcat('resolFactor = ',num2str(resol_factor));
         strcat('$(\theta,\phi)$ = (',num2str(rot_angle(1)),',',num2str(rot_angle(2)),')' );
@@ -591,6 +599,8 @@ if ismember(2,info)
     
     descr = {strcat('z = ',num2str(z));
         strcat('$G\mu = $ ',num2str(Gmu,'%.1E'));
+        strcat('z of wake insertion = ',num2str(ziw));
+        strcat('z of simulation init = ',num2str(zi));
         strcat('lenghtFactor = ',num2str(lenght_factor));
         strcat('resolFactor = ',num2str(resol_factor));
         strcat('$(\theta,\phi)$ = (',num2str(rot_angle(1)),',',num2str(rot_angle(2)),')' );

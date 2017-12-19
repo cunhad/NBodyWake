@@ -2,7 +2,7 @@ function [  ] = wavelets_1d_dm_analysis_all( root,root_data_out,root_plot_out,ro
 % reads (and/or generate) data of the filtered 1d projections aconding to the input specifications and
 % plot the result for all files in the folder
 
-% (example) wavelets_1d_dm_analysis_all('/home/asus/Dropbox/extras/storage/guillimin/test/','/home/asus/Dropbox/extras/storage/guillimin/test/data/','/home/asus/Dropbox/extras/storage/guillimin/test/plot/','/home/asus/Dropbox/extras/storage/guillimin/test/snan/','64Mpc_96c_48p_zi63_nowakem','/sample0001/','','','',1,1,[0,0,0],[0,0],'minmax','minmax',10,[1,3],[0,1,2],1,'all');
+% (example) wavelets_1d_dm_analysis_all('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','/home/asus/Dropbox/extras/storage/graham/small_res/snan/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','','',1,1,[0,0,0],[0,0],'minmax','minmax',10,[1,3],[0,1,2],1,'all');
 
 % NBody output should be stored as root+spec+aux_path (root directory, specification in the form size_numberofcellsperdimension_number_particlesperdimension_initialredshift_wakespecification&multiplicity, aux_path is the sample number )
 
@@ -60,9 +60,7 @@ function [  ] = wavelets_1d_dm_analysis_all( root,root_data_out,root_plot_out,ro
 cd('../../preprocessing');
 
 path_in=strcat(root,spec,aux_path);
-[ nodes_list redshift_list ] = preprocessing_many_nodes(root,spec,aux_path);
-
-redshift_list=flip(redshift_list);
+[~,redshift_list,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec,aux_path );
 
 cd('../wake_detection/lets');
 
@@ -72,8 +70,7 @@ end
 
 for rds = z_id_range
     
-    filename = dir(strcat(path_in,char(redshift_list(rds)),'xv0','.dat'));
-    filename=filename.name;
+    filename = strcat(char(redshift_list(rds)),'xv0','.dat');
     wavelets_1d_dm_analysis( root,root_data_out,root_plot_out,root_snan_out,spec,aux_path,aux_path_data_out,aux_path_plot_out,aux_path_snan_out,filename,lenght_factor,resol_factor,pivot,rot_angle,lim1d,lim_cwt,cutoff,data_stream,info,analysis);
     
 

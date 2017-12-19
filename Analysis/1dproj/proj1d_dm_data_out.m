@@ -1,7 +1,7 @@
 function [ count_sum ] = proj1d_dm_data_out( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,data_stream)
 %Computes the 1d projections aconding to the input specifications and stores (and/or returns) the resulting data
 
-%   (example) [ count_sum ] = proj1d_dm_data_out('/home/asus/Dropbox/extras/storage/guillimin/test/','/home/asus/Dropbox/extras/storage/guillimin/test/data/','64Mpc_96c_48p_zi63_nowakem','/sample0001/','','0.000xv0.dat',1,1,[0,0,0],[0,0],[1,3]);
+%   (example) [ count_sum ] = proj1d_dm_data_out('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','0.000xv0.dat',1,1,[0,0,0],[0,0],[1,2]);
 
 % NBody output should be stored as root+spec+aux_path (root directory, specification in the form size_numberofcellsperdimension_number_particlesperdimension_initialredshift_wakespecification&multiplicity, aux_path is the sample number )
 
@@ -29,9 +29,8 @@ function [ count_sum ] = proj1d_dm_data_out( root,root_out,spec,aux_path,aux_pat
 
 cd('../preprocessing');
 
-[ nodes_list redshift_list ] = preprocessing_many_nodes(root,spec,aux_path );
+[ nodes_list,redshift_list ] = preprocessing_many_nodes(root,spec,aux_path );
 
-redshift_list=flip(redshift_list);
 
 [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( root,spec,aux_path,filename);
 

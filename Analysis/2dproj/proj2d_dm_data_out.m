@@ -1,7 +1,7 @@
-function [ cell_bins1d_y cell_bins1d_z  count_sum] = proj2d_dm_data_out( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle)
+function [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_dm_data_out( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,data_stream)
 %Computes the 2d projections aconding to the input specifications and stores (and returns) the resulting data
 
-%   (example) [ cell_bins1d  count_sum] = proj2d_dm_data_out('/home/asus/Dropbox/extras/storage/guillimin/test/','/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','','0.000xv0.dat',1,1,[0,0,0],[0,0]);
+%   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_dm_data_out('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','0.000xv0.dat',1,1,[0,0,0],[0,0],[1,2]);
 
 
 cd('../preprocessing');
@@ -72,16 +72,29 @@ end
 % average=mean2(count_sum);
 % count_sum=(count_sum-average)/average;
 
-mkdir(root_out);
-mkdir(root_out,strcat(spec,aux_path));
+if ~ismember(0,data_stream)
+    
+    mkdir(root_out);
+    mkdir(root_out,strcat(spec,aux_path));
+    
+    path_out=strcat(strcat(root_out,spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2))),'ra','/','2dproj/dm/');
+    mkdir(strcat(root_out,spec,aux_path),strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2))),'ra','/','2dproj/dm/'));
+    
+    
+    mkdir(path_out,'dc/');
+    
+   
+    if ismember(1,data_stream)        
+        fileID = fopen(strcat(path_out,'dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_2dproj_z',num2str(z),'_data.bin'),'w');
+        fwrite(fileID,count_sum, 'float32','l');
+        fclose(fileID);
+    end
 
-path_out=strcat(strcat(root_out,spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2))),'ra','/','2dproj/dm/');
-mkdir(strcat(root_out,spec,aux_path),strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2))),'ra','/','2dproj/dm/'));
-
-
-mkdir(path_out,'dc/');
-
-dlmwrite(strcat(path_out,'dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_2dproj_z',num2str(z),'_data.txt'),count_sum,'delimiter','\t');
+    if ismember(2,data_stream)
+        dlmwrite(strcat(path_out,'dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_2dproj_z',num2str(z),'_data.txt'),count_sum,'delimiter','\t');
+    end
+    
+end
 
 
 cd('../2dproj');

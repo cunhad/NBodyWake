@@ -30,6 +30,7 @@ cd('../processing');
 
 nodes_list=sort_nat(nodes_list);
 redshift_list=sort_nat(redshift_list);
+redshift_list=flip(redshift_list);
 
 cd('../preprocessing');
 

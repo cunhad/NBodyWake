@@ -178,7 +178,7 @@ fig1=figure('Visible', 'off');
 %figure('position', [0 0 1 2]);
 %set(gcf, 'PaperPositionMode', 'manual');
 %set(gcf, 'PaperPosition', [0 0 600 400]);
-set(gcf, 'Position', [0 0 800 400]);
+set(gcf, 'Position', [0 0 600 400]);
 
 hold on;
 
@@ -204,9 +204,9 @@ end
 
 % xlabel('$Z(Mpc)$', 'interpreter', 'latex', 'fontsize', 20);
 % ylabel('Density contrast', 'interpreter', 'latex', 'fontsize', 20);
-set(gca,'FontName','FixedWidth');
-set(gca,'FontSize',16);
-set(gca,'linewidth',2);
+% set(gca,'FontName','FixedWidth');
+% set(gca,'FontSize',16);
+% set(gca,'linewidth',2);
 
 %legend('Location','eastoutside');
 %legend([strcat('peak =',num2str(maxi)),'//',strcat('sigma =',num2str(st)),strcat('peak/sigma =',num2str(maxi/st))],'interpreter', 'latex');
@@ -224,7 +224,7 @@ fig2=figure('Visible', 'off');
 %figure('position', [0 0 1 2]);
 %set(gcf, 'PaperPositionMode', 'manual');
 %set(gcf, 'PaperPosition', [0 0 600 400]);
-set(gcf, 'Position', [0 0 800 400]);
+set(gcf, 'Position', [0 0 600 400]);
 
 hold on;
 
