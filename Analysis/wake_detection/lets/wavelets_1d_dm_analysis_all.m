@@ -2,7 +2,8 @@ function [  ] = wavelets_1d_dm_analysis_all( root,root_data_out,root_plot_out,ro
 % reads (and/or generate) data of the filtered 1d projections aconding to the input specifications and
 % plot the result for all files in the folder
 
-% (example) wavelets_1d_dm_analysis_all('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','/home/asus/Dropbox/extras/storage/graham/small_res/snan/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','','',1,1,[0,0,0],[0,0],'minmax','minmax',10,[1,3],[0,1,2],1,'all');
+% (example) wavelets_1d_dm_analysis_all('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','/home/asus/Dropbox/extras/storage/graham/small_res/snan/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','','',1,1,[0,0,0],[0,0],'minmax','minmax',10,[1,3],[0,2,3],1,'all');
+% (example) wavelets_1d_dm_analysis_all('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/data/','/home/asus/Dropbox/extras/storage/guillimin/plot/','/home/asus/Dropbox/extras/storage/guillimin/snan/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','','',1,1,[0,0,0],[0,0],'minmax','minmax',0.8,[1,3],[0,2,3],1,'all');
 
 % NBody output should be stored as root+spec+aux_path (root directory, specification in the form size_numberofcellsperdimension_number_particlesperdimension_initialredshift_wakespecification&multiplicity, aux_path is the sample number )
 

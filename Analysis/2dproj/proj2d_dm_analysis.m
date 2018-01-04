@@ -2,13 +2,47 @@ function [  ] = proj2d_dm_analysis( root,root_data_out,root_plot_out,spec,aux_pa
 % reads data of the 2d projections aconding to the input specifications and plot the result
 
 %(example) proj2d_dm_analysis('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','','0.000xv0.dat',1,1,[0,0,0],[0,0],'minmax',[1,3],[0,1,2,3]);
+%(example) proj2d_dm_analysis('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/data/','/home/asus/Dropbox/extras/storage/guillimin/plot/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','','15.000xv0.dat',1,1,[0,0,0],[0,0],'minmax',[1,3],[0,1,2,3]);
+
+% NBody output should be stored as root+spec+aux_path (root directory, specification in the form size_numberofcellsperdimension_number_particlesperdimension_initialredshift_wakespecification&multiplicity, aux_path is the sample number )
+
+% plot will be stored in  root_plot_out+spec+aux_path+aux_path_plot_out
+
+% if specified, data will be stored in  root_data_out+spec+aux_path+aux_path_data_out
+
+% if specified, signal to noise analysis will be stored in  root_snan_out+spec+aux_path+aux_path_snan_out
+
+% filename is the output file from the nbody simulation
+
+% lenght_factor = the analysis cube will have a lateral size given by the
+% lateral size of the simulation cube divided by this number
+
+% resol_factor= the bin will hte the particle bin size divided by this
+%number
+
+% pivot = a 3d array containing the translation wrt to the center of the
+% cube (in grid cell units)
+
+%rot_angle = 2d aray containing the theta and phy spherical angles pointing
+%to the direction where the new z axis will be rotated
+
+%lim= limits on the y axis of the plot, in array format. If set to 'minmax'
+%will display between the min and max values
+
+% data_stream=[1,2,3]
+% if data_stream = 0, no data output generated and readed, the data is
+% passed directily to this program
+% if data_stream = 1, reads data binaries 
+% if data_stream = 2, reads data text 
+% if data_stream = 3, generates the data output in binary or text if 1 or 2 options are given, respectively
 
 
+% info=[0,1,2,3]
+% if info=0, histogram of each plot is generated
+% if info=1, minimal plots are generated
+% if info=2 complete plots are generated
+% if info=3 complete plots plus info text are generated
 
-%info=0 -> plots the histogram as well
-%info=1 -> just the box display and colourbars separeted,
-%info=2 -> just the box, title and colorbar
-%info=3 -> above plus extra information
 
 path_in=strcat(root,spec,aux_path);
 

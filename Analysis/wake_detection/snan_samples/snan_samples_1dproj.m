@@ -4,6 +4,7 @@ function [   ] = snan_samples_1dproj(root,root_snan_in,root_snan_out,spec,aux_pa
 %and creates the corresponding figures
 
 %(example) snan_samples_1dproj('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/snan/','/home/asus/Dropbox/extras/storage/graham/small_res/snan_out/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','',1,1,[0,0,0],[0,0],'all','all',[1,2,3],[1,2,3]);
+%(example) snan_samples_1dproj('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/snan/','/home/asus/Dropbox/extras/storage/guillimin/snan_samples/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','',1,1,[0,0,0],[0,0],'all','all',[1,2,3],[1,2,3]);
 
 % NBody output should be stored as root+spec+aux_path (root directory, specification in the form size_numberofcellsperdimension_number_particlesperdimension_initialredshift_wakespecification&multiplicity, aux_path is the sample number )
 
@@ -45,9 +46,8 @@ function [   ] = snan_samples_1dproj(root,root_snan_in,root_snan_out,spec,aux_pa
 cd('../../preprocessing');
 
 path_in=strcat(root,spec,aux_path);
-[ nodes_list redshift_list ] = preprocessing_many_nodes(root,spec,aux_path);
-
-redshift_list=flip(redshift_list);
+% [ nodes_list redshift_list ] = preprocessing_many_nodes(root,spec,aux_path);
+[~,redshift_list,~,size_box,~,np,zi,~,~,Gmu,ziw] = preprocessing_info(root,spec,aux_path );
 
  cd('../processing');
 

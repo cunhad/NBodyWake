@@ -3,6 +3,29 @@ function [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_dm_data_out( root,roo
 
 %   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_dm_data_out('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','0.000xv0.dat',1,1,[0,0,0],[0,0],[1,2]);
 
+% NBody output should be stored as root+spec+aux_path (root directory, specification in the form size_numberofcellsperdimension_number_particlesperdimension_initialredshift_wakespecification&multiplicity, aux_path is the sample number )
+
+% if specified, data will be stored in  root_out+spec+aux_path+aux_path_out
+
+% filename is the output file from the nbody simulation
+
+% lenght_factor = the analysis cube will have a lateral size given by the
+% lateral size of the simulation cube divided by this number
+
+% resol_factor= the bin will hte the particle bin size divided by this
+%number
+
+% pivot = a 3d array containing the translation wrt to the center of the
+% cube (in grid cell units)
+
+%rot_angle = 2d aray containing the theta and phy spherical angles pointing
+%to the direction where the new z axis will be rotated
+
+
+% data_stream=[0,1,2]
+% if data_stream = 0, no output
+% if data_stream = 1, binaries generated
+% if data_stream = 2, text files generated
 
 cd('../preprocessing');
 

@@ -33,6 +33,8 @@ function [ dc_cwt,periods,i_dc_cwt,filtered_dc_cwt] = wavelets_1d_dm_data_out( r
 % if data_stream = 2, text files generated
 
 
+
+
 %tic;
 path_in=strcat(root,spec,aux_path);
 
