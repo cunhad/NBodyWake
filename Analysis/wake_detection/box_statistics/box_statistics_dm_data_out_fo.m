@@ -1,9 +1,9 @@
-function [ stn_proj1d_angles,stn_filtered_proj1d_angles] = box_statistics_dm_data_out( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,data_stream,filter,cutoff)
+function [ stn_proj1d_angles,stn_filtered_proj1d_angles] = box_statistics_dm_data_out_fo( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part_mem_per_outputfile,part_fileout_number,part_fileout_id,num_cores,data_stream,filter,cutoff)
 
 %(example)  box_statistics_dm_per_node_part('/home/asus/Dropbox/extras/storage/', '/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','',4,0,1,1);
 %(example)  for i=1:8; box_statistics_dm_per_node_part('/home/asus/Dropbox/extras/storage/guillimin/test/','/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','',4,0,8,i); end;
 
-%(example)  [stn_proj1d_angles,stn_filtered_proj1d_angles] = box_statistics_dm_data_out('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/data_test/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','0.000xv0.dat',2,1,[0,0,0],4,1,4,[1,2],[0,1],10);
+%(example)  [stn_proj1d_angles,stn_filtered_proj1d_angles] = box_statistics_dm_data_out_fo('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/data_test/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','0.000xv0.dat',2,1,[0,0,0],4,1,2,1,4,[1,2],[0,1],10);
 
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
@@ -13,6 +13,9 @@ function [ stn_proj1d_angles,stn_filtered_proj1d_angles] = box_statistics_dm_dat
 % if filter = 0 , no wavelet filter
 % if filter = 1
 % if filter = 2
+
+
+
 myCluster = parcluster('local');
 myCluster.NumWorkers=num_cores;
 saveProfile(myCluster);
@@ -20,6 +23,8 @@ saveProfile(myCluster);
 
 p = parpool(num_cores);
 tic;
+
+part=part_mem_per_outputfile*part_fileout_number;
 
 cd('../../preprocessing');
 
@@ -49,7 +54,10 @@ proj1d_angles=zeros(number_of_angle_nuple,length(bins)-1);
 
 if ismember(0,filter)
     %for k = 3:-1:1
-    for part_id = 1  :   part
+    
+    for part_men_per_out_id= 1 : part_mem_per_outputfile
+        
+        part_id = part_mem_per_outputfile*(part_fileout_id-1)+part_men_per_out_id;
         %for k = 1  : 1
         
         cd('../preprocessing');
@@ -146,18 +154,16 @@ if ismember(0,filter)
             
         end
     end
+    
 end
 
 proj1d_angles=transpose(proj1d_angles);
 
 max_proj1d_angles=max(proj1d_angles);
 average=mean(proj1d_angles,1);
+
 std_proj1d_angles=std(proj1d_angles);
 stn_proj1d_angles=(max_proj1d_angles(:)-average(:))./std_proj1d_angles(:);
-
-% max_proj1d_angles=max(proj1d_angles);
-% std_proj1d_angles=std(proj1d_angles);
-% stn_proj1d_angles=max_proj1d_angles(:)./std_proj1d_angles(:);
 
 if ismember(1,filter)
     
@@ -170,8 +176,9 @@ if ismember(1,filter)
     end
     
     parfor i=1:number_of_angle_nuple
-        average=mean2(proj1d_angles(:,i));
-        proj1d=(proj1d_angles(:,i)-average)/average;
+        %average=mean2(proj1d_angles(:,i));
+        %proj1d=(proj1d_angles(:,i)-average)/average;
+        proj1d=proj1d_angles(:,i);
         [dc_cwt,periods] = cwt(proj1d,seconds(size_box/(np*resol_factor)),'waveletparameters',[3 3.01]);
         filtered_proj1d_angles(:,i) = icwt(dc_cwt,periods,[periods(low_pass) seconds(cutoff)],'waveletparameters',[3 3.01]);
     end
@@ -180,10 +187,8 @@ end
 if ismember(1,filter)
     
     max_filtered_proj1d_angles=max(filtered_proj1d_angles);
-    filt_average=mean(filtered_proj1d_angles,1);
     std_filtered_proj1d_angles=std(filtered_proj1d_angles);
-    stn_filtered_proj1d_angles=(max_filtered_proj1d_angles(:)-filt_average(:))./std_filtered_proj1d_angles(:);
-    
+    stn_filtered_proj1d_angles=max_filtered_proj1d_angles(:)./std_filtered_proj1d_angles(:);
 else
     stn_filtered_proj1d_angles=zeros(1,number_of_angle_nuple);
 end
@@ -203,12 +208,12 @@ if ~ismember(0,data_stream)
 %         fclose(fileID);
         if ismember(0,filter)
 
-        fileID = fopen(strcat(path_out,'box_1dproj/','_',num2str(find(str2num(char(redshift_list))==z)),'_stn_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
+        fileID = fopen(strcat(path_out,'box_1dproj/','_',num2str(find(str2num(char(redshift_list))==z)),'_stn_1dproj_angle_z',num2str(z),'_fon',num2str(part_fileout_number),'_foid',num2str(part_fileout_id),'_NSIDE',num2str(NSIDE),'.bin'),'w');
         fwrite(fileID,stn_proj1d_angles, 'float32','l');
         fclose(fileID);
         end
         if ismember(1,filter)
-        fileID = fopen(strcat(path_out,'box_1dproj/cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_stn_1dwproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
+        fileID = fopen(strcat(path_out,'box_1dproj/cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_stn_1dwproj_angle_z',num2str(z),'_fon',num2str(part_fileout_number),'_foid',num2str(part_fileout_id),'_NSIDE',num2str(NSIDE),'.bin'),'w');
         fwrite(fileID,stn_filtered_proj1d_angles, 'float32','l');
         fclose(fileID);
         end
@@ -217,11 +222,11 @@ if ~ismember(0,data_stream)
     if ismember(2,data_stream)
         if ismember(0,filter)
         %dlmwrite(strcat(path_out,'box_1dproj/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),proj1d_angles,'delimiter','\t');
-        dlmwrite(strcat(path_out,'box_1dproj/','_',num2str(find(str2num(char(redshift_list))==z)),'_stn_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),stn_proj1d_angles,'delimiter','\t');
+        dlmwrite(strcat(path_out,'box_1dproj/','_',num2str(find(str2num(char(redshift_list))==z)),'_stn_1dproj_angle_z',num2str(z),'_fon',num2str(part_fileout_number),'_foid',num2str(part_fileout_id),'_NSIDE',num2str(NSIDE),'.txt'),stn_proj1d_angles,'delimiter','\t');
         end
         if ismember(1,filter)
         %dlmwrite(strcat(path_out,'box_1dproj/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),proj1d_angles,'delimiter','\t');
-        dlmwrite(strcat(path_out,'box_1dproj/cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_stn_1dwproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),stn_proj1d_angles,'delimiter','\t');
+        dlmwrite(strcat(path_out,'box_1dproj/cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_stn_1dwproj_angle_z',num2str(z),'_fon',num2str(part_fileout_number),'_foid',num2str(part_fileout_id),'_NSIDE',num2str(NSIDE),'.txt'),stn_proj1d_angles,'delimiter','\t');
         end
     end
     
