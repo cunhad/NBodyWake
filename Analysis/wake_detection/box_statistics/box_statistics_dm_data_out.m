@@ -13,6 +13,7 @@ function [ proj1d_angles,filtered_proj1d_angles,out_proj1d_angles,out_dc_proj1d_
 % if filter = 0 , no wavelet filter
 % if filter = 1
 % if filter = 2
+
 myCluster = parcluster('local');
 myCluster.NumWorkers=num_cores;
 saveProfile(myCluster);
@@ -218,9 +219,9 @@ if ~ismember(0,data_stream)
     
     if ismember(1,data_stream)
 
-%         fileID = fopen(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
-%         fwrite(fileID,proj1d_angles, 'float32','l');
-%         fclose(fileID);
+        fileID = fopen(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
+        fwrite(fileID,proj1d_angles, 'float32','l');
+        fclose(fileID);
         
         fileID = fopen(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z)),'_out_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
         fwrite(fileID,out_proj1d_angles, 'float32','l');
@@ -232,9 +233,9 @@ if ~ismember(0,data_stream)
         
         if cutoff~=0 
             
-%             fileID = fopen(strcat(path_out,'cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
-%             fwrite(fileID,filtered_proj1d_angles, 'float32','l');
-%             fclose(fileID);
+            fileID = fopen(strcat(path_out,'cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
+            fwrite(fileID,filtered_proj1d_angles, 'float32','l');
+            fclose(fileID);
             
             fileID = fopen(strcat(path_out,'cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
             fwrite(fileID,out_filtered_proj1d_angles, 'float32','l');

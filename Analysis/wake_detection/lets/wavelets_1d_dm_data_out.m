@@ -40,7 +40,9 @@ path_in=strcat(root,spec,aux_path);
 
 cd('../../preprocessing');
 
-[ nodes_list redshift_list ] = preprocessing_many_nodes(root,spec,aux_path );
+[~,redshift_list,nodes_list,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec,aux_path );
+
+% [ nodes_list redshift_list ] = preprocessing_many_nodes(root,spec,aux_path );
 
 [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in i_node j_node k_node number_node_dim ] = preprocessing_nodes_all_but_phasespace( root,spec,aux_path,filename);
 

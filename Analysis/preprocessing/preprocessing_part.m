@@ -166,15 +166,15 @@ Pos = data(1:3,:);
 %node structure
 
 
- k_node=floor(node/number_node_dim^2);
- res=mod(node,number_node_dim^2);
- j_node=floor(res/number_node_dim);
- i_node=mod(res,number_node_dim);
- 
- 
- Pos(1,:)=Pos(1,:)+(nc/number_node_dim)*i_node;
- Pos(2,:)=Pos(2,:)+(nc/number_node_dim)*j_node;
- Pos(3,:)=Pos(3,:)+(nc/number_node_dim)*k_node;
+%  k_node=floor(node/number_node_dim^2);
+%  res=mod(node,number_node_dim^2);
+%  j_node=floor(res/number_node_dim);
+%  i_node=mod(res,number_node_dim);
+%  
+%  
+%  Pos(1,:)=Pos(1,:)+(nc/number_node_dim)*i_node;
+%  Pos(2,:)=Pos(2,:)+(nc/number_node_dim)*j_node;
+%  Pos(3,:)=Pos(3,:)+(nc/number_node_dim)*k_node;
  
  
 

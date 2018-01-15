@@ -1,8 +1,8 @@
 function [  ] = box_statistics_dm_analysis( root,root_data_out,root_plot_out,spec,aux_path,aux_path_data_out,aux_path_plot_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,lim,data_stream,info,analysis ,cutoff,projection_analysed,signal_analysed)
 
-%(example)  [  ] = box_statistics_dm_analysis('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/data_test/','/home/asus/Dropbox/extras/storage/graham/small_res/test_plot_box/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','','0.000xv0.dat',2,1,[0,0,0],4,1,4,'minmax',[1,3],[0,1,2,3],1,10);
+%(example)  [  ] = box_statistics_dm_analysis('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/data_test/','/home/asus/Dropbox/extras/storage/graham/small_res/test_plot_box/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','','0.000xv0.dat',2,1,[0,0,0],4,1,4,'minmax',[1,3],[0,1,2,3],1,10,[1,2,3,4],[1,2,3]);
 
-%(example)  [  ] = box_statistics_dm_analysis('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat/','/home/asus/Dropbox/extras/storage/guillimin/box_stat/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','','10.000xv0.dat',2,1,[0,0,0],4,1,4,'minmax',[1],[0,1,2,3],1,0.8,[1,2,3,4,5],[1,2,3]);
+%(example)  [  ] = box_statistics_dm_analysis('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat/','/home/asus/Dropbox/extras/storage/guillimin/box_stat/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','','10.000xv0.dat',2,1,[0,0,0],64,16,4,'minmax',[1],[0,1,2,3],1,0.8,[1,2,3,4],[1,2,3]);
 
 % 
 % path_total_out=strcat(strcat(root_per_node_out,spec,aux_path),'data/',aux_path_per_node_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/dc_all_nodes_1dproj/');
@@ -117,37 +117,46 @@ if ismember(3,projection_analysed)
         plot_molweide(transpose(out_filtered_proj1d_angles(3,:)),{'Signal to noise';'of the filtered mass amplitude'})
     end
     
+    %multiplication of the filtered amplitude and standard deviation
+    
+    if ismember(4,signal_analysed)
+        plot_molweide(transpose(out_filtered_proj1d_angles(1,:)).*transpose(out_filtered_proj1d_angles(2,:)),{'Peak of the filtered mass amplitude';'times Standard deviation';'of the filtered mass amplitude'})
+    end    
 end
 
+
+            
 if ismember(4,projection_analysed)
     if ismember(1,signal_analysed)
-        plot_molweide(transpose(out_dc_filtered_proj1d_angles(1,:)),'Peak of the dc filtered mass amplitude');
+        plot_molweide(transpose(out_filtered_dc_proj1d_angles(1,:)),'Peak of the filtered dc amplitude');
     end
     
     if ismember(2,signal_analysed)
-        plot_molweide(transpose(out_dc_filtered_proj1d_angles(2,:)),{'Standard deviation';'of the dc filtered mass amplitude'})
+        plot_molweide(transpose(out_filtered_dc_proj1d_angles(2,:)),{'Standard deviation';'of the filtered dc amplitude'})
     end
     
     if ismember(3,signal_analysed)
-        plot_molweide(transpose(out_dc_filtered_proj1d_angles(3,:)),{'Signal to noise';'of the dc filtered mass amplitude'})
+        plot_molweide(transpose(out_filtered_dc_proj1d_angles(3,:)),{'Signal to noise';'of the filtered dc amplitude'})
     end
     
 end
-            
-if ismember(5,projection_analysed)
-    if ismember(1,signal_analysed)
-        plot_molweide(transpose(out_filtered_dc_proj1d_angles(1,:)),'Peak of the dc filtered dc amplitude');
-    end
-    
-    if ismember(2,signal_analysed)
-        plot_molweide(transpose(out_filtered_dc_proj1d_angles(2,:)),{'Standard deviation';'of the dc filtered dc amplitude'})
-    end
-    
-    if ismember(3,signal_analysed)
-        plot_molweide(transpose(out_filtered_dc_proj1d_angles(3,:)),{'Signal to noise';'of the dc filtered dc amplitude'})
-    end
-    
-end
+
+%multiplication of the filtered amplitude and standard deviation
+
+% if ismember(5,projection_analysed)
+%     if ismember(1,signal_analysed)
+%         plot_molweide(transpose(out_dc_filtered_proj1d_angles(1,:)),'Peak of the dc filtered mass amplitude');
+%     end
+%     
+%     if ismember(2,signal_analysed)
+%         plot_molweide(transpose(out_dc_filtered_proj1d_angles(2,:)),{'Standard deviation';'of the dc filtered mass amplitude'})
+%     end
+%     
+%     if ismember(3,signal_analysed)
+%         plot_molweide(transpose(out_dc_filtered_proj1d_angles(3,:)),{'Signal to noise';'of the dc filtered mass amplitude'})
+%     end
+%     
+% end
 
 % if cutoff~=0
 %     

@@ -80,6 +80,8 @@ else
         if ismember(3,data_stream)
             proj1d_dm_data_out( root,root_data_out,spec,aux_path,aux_path_data_out,filename,lenght_factor,resol_factor,pivot,rot_angle,1);
         end
+        display(strcat(path_data,'nc/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_z',num2str(z),'_data.bin'));
+        %fileID = fopen(strcat(path_data,'nc/','_1','_1dproj_z',num2str(z),'_data.bin'));
         fileID = fopen(strcat(path_data,'nc/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_z',num2str(z),'_data.bin'));
         proj1d=fread(fileID,'float32','l');
         fclose(fileID);

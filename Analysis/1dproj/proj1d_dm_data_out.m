@@ -29,7 +29,8 @@ function [ count_sum ] = proj1d_dm_data_out( root,root_out,spec,aux_path,aux_pat
 
 cd('../preprocessing');
 
-[ nodes_list,redshift_list ] = preprocessing_many_nodes(root,spec,aux_path );
+% [ nodes_list,redshift_list ] = preprocessing_many_nodes(root,spec,aux_path );
+[~,redshift_list,nodes_list,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec,aux_path );
 
 
 [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( root,spec,aux_path,filename);
