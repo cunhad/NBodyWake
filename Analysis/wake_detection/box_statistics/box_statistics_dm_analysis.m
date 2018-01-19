@@ -34,13 +34,13 @@ else
             box_statistics_dm_data_out( root,root_data_out,spec,aux_path,aux_path_data_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,2,cutoff);
         end
         out_proj1d_angles=dlmread(strcat(path_data,'_',num2str(find(str2num(char(redshift_list))==z)),'_out_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'));
-        out_dc_proj1d_angles=dlmread(strcat(path_data,'_',num2str(find(str2num(char(redshift_list))==z)),'_out_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'));
+        out_dc_proj1d_angles=dlmread(strcat(path_data,'dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'));
     end
     if ismember(1,data_stream)
         if ismember(3,data_stream)
             box_statistics_dm_data_out( root,root_data_out,spec,aux_path,aux_path_data_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,1,cutoff);
         end
-        
+%         display(strcat(path_data,'_',num2str(find(str2num(char(redshift_list))==z)),'_out_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
         fileID = fopen(strcat(path_data,'_',num2str(find(str2num(char(redshift_list))==z)),'_out_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
         out_proj1d_angles=fread(fileID,[3,12*NSIDE^2],'float32','l');
         fclose(fileID);
@@ -182,7 +182,8 @@ nsideguessed = sqrt(max(sz)/12);
     
     % Plot
 J = s2let_jmax(L, B);
-zoomfactor = 1.2;
+% zoomfactor = 1.2;
+zoomfactor = 1;
 ns = ceil(sqrt(2+J-J_min+1)) ;
 ny = ns - 1 ;
 nx = ns ;

@@ -55,6 +55,12 @@ for part_id = 1  :   part
         theta=angles(1,i);
         phi=angles(2,i);
         
+%         theta=mod(theta+pi/2,pi)
+%         phi=mod(phi+pi/2,2*pi)
+        
+%         theta=theta-pi/2;
+%         phi=phi-pi/4;
+        
         hist1d_cor=zeros(1,length(bins)-1);
         
         % for j=1:1000
@@ -127,7 +133,7 @@ for part_id = 1  :   part
         
         proj1d_angles(i,:)=proj1d_angles(i,:)+hist1d_cor(1,:);
         
-        fprintf('done for z= %f and  i= %d\n',z, i);
+        fprintf('done for z= %f,part=%d and  i= %d\n',z,part_id, i);
         %display(proj);
         
     end
@@ -219,9 +225,9 @@ if ~ismember(0,data_stream)
     
     if ismember(1,data_stream)
 
-        fileID = fopen(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
-        fwrite(fileID,proj1d_angles, 'float32','l');
-        fclose(fileID);
+%         fileID = fopen(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
+%         fwrite(fileID,proj1d_angles, 'float32','l');
+%         fclose(fileID);
         
         fileID = fopen(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z)),'_out_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
         fwrite(fileID,out_proj1d_angles, 'float32','l');
@@ -233,9 +239,9 @@ if ~ismember(0,data_stream)
         
         if cutoff~=0 
             
-            fileID = fopen(strcat(path_out,'cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
-            fwrite(fileID,filtered_proj1d_angles, 'float32','l');
-            fclose(fileID);
+%             fileID = fopen(strcat(path_out,'cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
+%             fwrite(fileID,filtered_proj1d_angles, 'float32','l');
+%             fclose(fileID);
             
             fileID = fopen(strcat(path_out,'cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
             fwrite(fileID,out_filtered_proj1d_angles, 'float32','l');

@@ -143,11 +143,7 @@ for node_ID=part_files_start_ID:part_files_end_ID
         header=true;
     end
     if (part_chunck_end<=particle_sum_per_file(node_ID+1))
-        if header
-        data_file=fread(fid, [6 size_of_particle_chunk], 'float32','l');
-        else
-        data_file=fread(fid, [6 part_chunck_end-particle_sum_per_file(node_ID)], 'float32','l');            
-        end
+        data_file=fread(fid, [6 min(size_of_particle_chunk], 'float32','l');
     else 
         data_file=fread(fid, [6 Inf], 'float32','l');
     end
