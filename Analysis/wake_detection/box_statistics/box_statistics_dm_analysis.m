@@ -1,4 +1,4 @@
-function [  ] = box_statistics_dm_analysis( root,root_data_out,root_plot_out,spec,aux_path,aux_path_data_out,aux_path_plot_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,lim,data_stream,info,analysis ,cutoff,projection_analysed,signal_analysed)
+function [ out_proj1d_angles ] = box_statistics_dm_analysis( root,root_data_out,root_plot_out,spec,aux_path,aux_path_data_out,aux_path_plot_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,lim,data_stream,info,analysis ,cutoff,projection_analysed,signal_analysed)
 
 %(example)  [  ] = box_statistics_dm_analysis('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/data_test/','/home/asus/Dropbox/extras/storage/graham/small_res/test_plot_box/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','','0.000xv0.dat',2,1,[0,0,0],4,1,4,'minmax',[1,3],[0,1,2,3],1,10,[1,2,3,4],[1,2,3]);
 
@@ -182,11 +182,11 @@ nsideguessed = sqrt(max(sz)/12);
     
     % Plot
 J = s2let_jmax(L, B);
-% zoomfactor = 1.2;
-zoomfactor = 1;
+zoomfactor = 1.2;
+% zoomfactor = 20;
 ns = ceil(sqrt(2+J-J_min+1)) ;
-ny = ns - 1 ;
-nx = ns ;
+ny = 3  ;
+nx = ceil((2+J-J_min)/3 );
 figure('Position',[100 100 1300 1000])
 
 subplot(nx, ny, 1);
@@ -199,11 +199,32 @@ title(string)
 % campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
 % title('Scaling fct')
 
+% display(J_min);
+% display(J);
+% display(ns);
+
 for j = J_min:J
    subplot(nx, ny, j-J_min+2);
    s2let_hpx_plot_mollweide(f_wav{j-J_min+1});
    campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
    title(['Wavelet scale : ',int2str(j)-J_min+1])
+      
 end 
+
+% for j = J_min:J
+%    
+%          s2let_hpx_plot_mollweide_info(f_wav{j-J_min+1},1);
+% 
+% end
+
+
+s2let_hpx_plot_mollweide_info(f_wav{7},1);
+% s2let_hpx_plot_mollweide_info(f,1);
+
+% s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1}+f_wav{J-J_min}+f_wav{J-J_min-1},1);
+
+% s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1}+f_wav{J-J_min}+f_wav{J-J_min-1}+f_wav{J-J_min-2}+f_wav{J-J_min-3}+f_wav{J-J_min-4}+f_wav{J-J_min-5},1);
+
+
 
 end

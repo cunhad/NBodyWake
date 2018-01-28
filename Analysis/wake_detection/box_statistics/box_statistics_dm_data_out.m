@@ -23,9 +23,11 @@ tic;
 
 cd('../../preprocessing');
 
- [ ~,redshift_list ] = preprocessing_many_nodes(root,spec,aux_path );
+%  [ ~,redshift_list ] = preprocessing_many_nodes(root,spec,aux_path );
+ [~,redshift_list,~,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec,aux_path );
 
-angles = dlmread(strcat('../../python/angles',num2str(NSIDE),'.txt'));
+angles(1,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_t.cvs'));
+angles(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'));
 [~,number_of_angle_nuple] = size(angles);
 %
 % mkdir(root_out);

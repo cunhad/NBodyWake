@@ -1,38 +1,48 @@
 function [  ] = fracerr_deltasq_CUBEP3M_and_CAMB( root,root_out,spec,aux_path,aux_path_out )
 
-%(example) fracerr_deltasq_CUBEP3M_and_CAMB('/home/asus/Dropbox/extras/storage/','/home/asus/Dropbox/extras/storage/','40Mpc_240c_120p_zi65_nowakes','/','');
+%(example) fracerr_deltasq_CUBEP3M_and_CAMB('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/ps/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','');
+
+cd('../preprocessing');
+
+[~,redshift_list,~,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec,aux_path );
 
 path_output_delta=strcat(root,spec,aux_path);
 files_list = dir(strcat(path_output_delta,'*new.dat'));
 sorted_files_list={files_list.name};
 
 path_CAMB='../../CAMB/transfer_functions/';
-files_list_CAMB = dir(strcat(path_CAMB,'*.dat'));
-sorted_files_list_CAMB={files_list_CAMB.name};
+% files_list_CAMB = dir(strcat(path_CAMB,'*.dat'));
+% sorted_files_list_CAMB={files_list_CAMB.name};
 
-cd('../processing');
-sorted_files_list=sort_nat(sorted_files_list);
-sorted_files_list_CAMB=sort_nat(sorted_files_list_CAMB);
+% cd('../processing');
+% sorted_files_list=sort_nat(sorted_files_list);
+% sorted_files_list_CAMB=sort_nat(sorted_files_list_CAMB);
 
-cd('../preprocessing');
+% cd('../preprocessing');
 
-for k = 1 :  length(sorted_files_list)
+for rds = 1 :  length(redshift_list)
     %for k = 1 : 1
     
     fig=figure('Visible', 'off');
 
+    filename_CUBEP3M = strcat(char(redshift_list(rds)),'ngpps_new.dat');
     
-    filename=char(sorted_files_list(k));
-    dat_output = dlmread(strcat(path_output_delta,filename));
+%     filename=char(sorted_files_list(rds));
+    dat_output = dlmread(strcat(path_output_delta,filename_CUBEP3M));
     %[ dat_output ] = import_( strcat(path_output_delta,filename), '%f %f %f $f $f',5 );
-    z = filename(1:end-15);
+%     z = filename(1:end-15);
     
-    pattern=strcat('z',z);
-    logical_op=contains(sorted_files_list_CAMB,pattern);
-    filename=char(sorted_files_list_CAMB(logical_op));
+%     pattern=strcat('z',z);
+%     logical_op=contains(sorted_files_list_CAMB,pattern);
     
+    
+%     filename=char(sorted_files_list_CAMB(logical_op));
+      filename_CAMB=strcat('camb_matterpower_z',char(redshift_list(rds)),'.dat');
+
+
+
     %filename=char(sorted_files_list_CAMB(k));
-    [ dat_CAMB ] = import_( strcat(path_CAMB,filename), '%f %f ',2 );
+    [ dat_CAMB ] = import_( strcat(path_CAMB,filename_CAMB), '%f %f ',2 );
     
     
 
@@ -73,7 +83,7 @@ ylim([-1 1]);
     %hold on;
 %loglog(dat_CAMB(:,1),dat_CAMB(:,2),'DisplayName','CAMB','LineWidth',2);
 
-title({strcat('Fractional error of the'),strcat('dimensionless power spectrum at ',strcat(' z = ',z))},'interpreter', 'latex', 'fontsize', 15);
+title({strcat('Fractional error of the'),strcat('dimensionless power spectrum at ',strcat(' z = ',char(redshift_list(rds))))},'interpreter', 'latex', 'fontsize', 15);
 ylabel('$\frac{\Delta^{2}_{Nbody}-\Delta^{2}_{CAMB}}{\Delta^{2}_{CAMB}}\ (k)$', 'interpreter', 'latex', 'fontsize', 20);
 xlabel('$k (Mpc^{-1})$', 'interpreter', 'latex', 'fontsize', 20);
 %legend('show');
@@ -84,7 +94,7 @@ mkdir(root_out,strcat(spec,aux_path));
 path_out=strcat(strcat(root_out,spec,aux_path),'plot/',aux_path_out,num2str(1),'lf_',num2str(1),'rf_',strcat(num2str(0),'-',num2str(0),'-',num2str(0)),'pv_',strcat(num2str(0),'-',num2str(0)),'ra','/','power_spectrum/fractional_error/');
 mkdir(strcat(root_out,spec,aux_path),strcat('plot/',aux_path_out,num2str(1),'lf_',num2str(1),'rf_',strcat(num2str(0),'-',num2str(0),'-',num2str(0)),'pv_',strcat(num2str(0),'-',num2str(0)),'ra','/','power_spectrum/fractional_error/'));
 
-path_file_out=strcat(path_out,'_',num2str(k),'_fraceer_deltasq_CAMBcomp_z',z,'.jpg');
+path_file_out=strcat(path_out,'_',num2str(rds),'_fraceer_deltasq_CAMBcomp_z',char(redshift_list(rds)),'.jpg');
 saveas(fig,path_file_out);
 
 %hold off;
