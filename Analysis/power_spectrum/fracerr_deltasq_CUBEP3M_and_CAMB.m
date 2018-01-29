@@ -1,6 +1,6 @@
 function [  ] = fracerr_deltasq_CUBEP3M_and_CAMB( root,root_out,spec,aux_path,aux_path_out )
 
-%(example) fracerr_deltasq_CUBEP3M_and_CAMB('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/ps/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','');
+%(example) fracerr_deltasq_CUBEP3M_and_CAMB('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/check/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','');
 
 cd('../preprocessing');
 

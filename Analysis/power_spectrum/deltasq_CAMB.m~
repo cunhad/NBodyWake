@@ -46,7 +46,7 @@ ylabel('$\Delta^2\ (k)$', 'interpreter', 'latex', 'fontsize', 20);
 xlabel('$k (Mpc^{-1})$', 'interpreter', 'latex', 'fontsize', 20);
 legend('show');
 
-mkdir(path_CAMB,strcat('deltasq/'));
+mkdir(strcat(path_CAMB,'deltasq/'));
 path_file_out=strcat(path_CAMB,'deltasq/','_',num2str(rds),'_delstasq_z',char(redshift_list(rds)),'.jpg');
 saveas(fig,path_file_out);
 

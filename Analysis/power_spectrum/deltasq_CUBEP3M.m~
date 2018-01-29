@@ -1,6 +1,6 @@
 function [  ] = deltasq_CUBEP3M( root,root_out,spec,aux_path,aux_path_out )
 
-%(example) deltasq_CUBEP3M('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/check/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','' );
+%(example) deltasq_CUBEP3M('/home/asus/Dropbox/extras/storage/','/home/asus/Dropbox/extras/storage/','40Mpc_240c_120p_zi65_nowakes','/','' );
 
 cd('../preprocessing');
 
@@ -39,6 +39,8 @@ ylabel('$\Delta^2\ (k)$', 'interpreter', 'latex', 'fontsize', 20);
 xlabel('$k (Mpc^{-1})$', 'interpreter', 'latex', 'fontsize', 20);
 legend('show');
 
+mkdir(root_out);
+mkdir(root_out,strcat(spec,aux_path));
 
 mkdir(root_out);
 mkdir(root_out,strcat(spec,aux_path));
