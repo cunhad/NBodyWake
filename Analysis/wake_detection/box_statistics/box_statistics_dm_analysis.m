@@ -120,7 +120,8 @@ if ismember(3,projection_analysed)
     %multiplication of the filtered amplitude and standard deviation
     
     if ismember(4,signal_analysed)
-        plot_molweide(transpose(out_filtered_proj1d_angles(1,:)).*transpose(out_filtered_proj1d_angles(2,:)),{'Peak of the filtered mass amplitude';'times Standard deviation';'of the filtered mass amplitude'})
+%         plot_molweide(transpose(out_filtered_proj1d_angles(1,:)).*transpose(out_filtered_proj1d_angles(2,:)),{'Peak of the filtered mass amplitude';'times Standard deviation';'of the filtered mass amplitude'})
+        plot_molweide(transpose(out_filtered_proj1d_angles(1,:)).*transpose(out_filtered_proj1d_angles(2,:)),{'Original Map'})    
     end    
 end
 
@@ -187,29 +188,29 @@ zoomfactor = 1.2;
 ns = ceil(sqrt(2+J-J_min+1)) ;
 ny = 3  ;
 nx = ceil((2+J-J_min)/3 );
-figure('Position',[100 100 1300 1000])
-
-subplot(nx, ny, 1);
-s2let_hpx_plot_mollweide(f);
-campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
-title(string)
-
-% subplot(nx, ny, 2);
-% s2let_hpx_plot_mollweide(f_scal);
+% figure('Position',[100 100 1300 1000])
+% 
+% subplot(nx, ny, 1);
+% s2let_hpx_plot_mollweide(f);
 % campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
-% title('Scaling fct')
-
-% display(J_min);
-% display(J);
-% display(ns);
-
-for j = J_min:J
-   subplot(nx, ny, j-J_min+2);
-   s2let_hpx_plot_mollweide(f_wav{j-J_min+1});
-   campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
-   title(['Wavelet scale : ',int2str(j)-J_min+1])
-      
-end 
+% title(string)
+% 
+% % subplot(nx, ny, 2);
+% % s2let_hpx_plot_mollweide(f_scal);
+% % campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+% % title('Scaling fct')
+% 
+% % display(J_min);
+% % display(J);
+% % display(ns);
+% 
+% for j = J_min:J
+%    subplot(nx, ny, j-J_min+2);
+%    s2let_hpx_plot_mollweide(f_wav{j-J_min+1});
+%    campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+%    title(['Wavelet scale : ',int2str(j)-J_min+1])
+%       
+% end 
 
 % for j = J_min:J
 %    
@@ -218,13 +219,24 @@ end
 % end
 
 
-s2let_hpx_plot_mollweide_info(f_wav{7},1);
+% s2let_hpx_plot_mollweide_info(f_wav{6},1);
 % s2let_hpx_plot_mollweide_info(f,1);
 
 % s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1}+f_wav{J-J_min}+f_wav{J-J_min-1},1);
 
-% s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1}+f_wav{J-J_min}+f_wav{J-J_min-1}+f_wav{J-J_min-2}+f_wav{J-J_min-3}+f_wav{J-J_min-4}+f_wav{J-J_min-5},1);
+% s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1}+f_wav{J-J_min}+f_wav{J-J_min-1}+f_wav{J-J_min-2}+f_wav{J-J_min-3},1); %best for gmu2t10m7
+% 
+% s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1}+f_wav{J-J_min}+f_wav{J-J_min-1}+f_wav{J-J_min-2},1); %best for gmu4t10m7
+% 
+s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1}+f_wav{J-J_min}+f_wav{J-J_min-1},1); %best for Gmu8t10m7
 
+
+
+
+% s2let_hpx_plot_mollweide_info(f_wav{6},1); %no signal for gmu2t10m7
+
+
+% s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1}+f_wav{J-J_min}+f_wav{J-J_min-1}+f_wav{J-J_min-2}+f_wav{J-J_min-3},1); %best for gmu2t10m7
 
 
 end
