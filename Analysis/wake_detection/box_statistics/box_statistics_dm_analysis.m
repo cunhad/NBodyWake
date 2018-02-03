@@ -1,4 +1,4 @@
-function [ out_proj1d_angles ] = box_statistics_dm_analysis( root,root_data_out,root_plot_out,spec,aux_path,aux_path_data_out,aux_path_plot_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,lim,data_stream,info,analysis ,cutoff,projection_analysed,signal_analysed)
+function [ out_proj1d_angles ,out_filtered_proj1d_angles] = box_statistics_dm_analysis( root,root_data_out,root_plot_out,spec,aux_path,aux_path_data_out,aux_path_plot_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,lim,data_stream,info,analysis ,cutoff,projection_analysed,signal_analysed)
 
 %(example)  [  ] = box_statistics_dm_analysis('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/data_test/','/home/asus/Dropbox/extras/storage/graham/small_res/test_plot_box/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','','0.000xv0.dat',2,1,[0,0,0],4,1,4,'minmax',[1,3],[0,1,2,3],1,10,[1,2,3,4],[1,2,3]);
 
@@ -228,15 +228,16 @@ nx = ceil((2+J-J_min)/3 );
 % 
 % s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1}+f_wav{J-J_min}+f_wav{J-J_min-1}+f_wav{J-J_min-2},1); %best for gmu4t10m7
 % 
-s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1}+f_wav{J-J_min}+f_wav{J-J_min-1},1); %best for Gmu8t10m7
+% s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1}+f_wav{J-J_min}+f_wav{J-J_min-1},1); %best for Gmu8t10m7
 
 
 
 
-% s2let_hpx_plot_mollweide_info(f_wav{6},1); %no signal for gmu2t10m7
+% % s2let_hpx_plot_mollweide_info(f_wav{6},1); %no signal for gmu2t10m7
 
 
 % s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1}+f_wav{J-J_min}+f_wav{J-J_min-1}+f_wav{J-J_min-2}+f_wav{J-J_min-3},1); %best for gmu2t10m7
+s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1}+f_wav{J-J_min}+f_wav{J-J_min-1}+f_wav{J-J_min-2}+f_wav{J-J_min-3}+f_wav{J-J_min-4},1); 
 
 
 end

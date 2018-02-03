@@ -1,4 +1,4 @@
-function [ proj1d_angles,filtered_proj1d_angles,out_proj1d_angles,out_dc_proj1d_angles,out_filtered_proj1d_angles,out_filtered_dc_proj1d_angles,out_dc_filtered_proj1d_angles] = box_statistics_dm_data_out( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,data_stream,cutoff)
+function [ proj1d_angles] = box_statistics_dm_data_out( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,data_stream,cutoff)
 
 %(example)  box_statistics_dm_per_node_part('/home/asus/Dropbox/extras/storage/', '/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','',4,0,1,1);
 %(example)  for i=1:8; box_statistics_dm_per_node_part('/home/asus/Dropbox/extras/storage/guillimin/test/','/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','',4,0,8,i); end;
@@ -149,7 +149,7 @@ max_amplitude_proj1d_angles=max_proj1d_angles(:)-average_proj1d_angles(:);
 proj1d_index_max=zeros(1,number_of_angle_nuple);
 
 parfor angl=1:number_of_angle_nuple
-proj1d_index_max(1,angl)=find(proj1d_angles(:,angl)==max_proj1d_angles(1,angl));
+proj1d_index_max(1,angl)=find(proj1d_angles(:,angl)==max_proj1d_angles(1,angl),1);
 end
 proj1d_angles_snremoved=proj1d_angles;
 
@@ -178,7 +178,7 @@ max_amplitude_dc_proj1d_angles=max_dc_proj1d_angles(:);
 dc_proj1d_index_max=zeros(1,number_of_angle_nuple);
 
 parfor angl=1:number_of_angle_nuple
-dc_proj1d_index_max(1,angl)=find(dc_proj1d_angles(:,angl)==max_dc_proj1d_angles(1,angl));
+dc_proj1d_index_max(1,angl)=find(dc_proj1d_angles(:,angl)==max_dc_proj1d_angles(1,angl),1);
 end
 dc_proj1d_angles_snremoved=dc_proj1d_angles;
 
@@ -221,7 +221,7 @@ if cutoff~=0
     filtered_proj1d_index_max=zeros(1,number_of_angle_nuple);
     
     parfor angl=1:number_of_angle_nuple
-        filtered_proj1d_index_max(1,angl)=find(filtered_proj1d_angles(:,angl)==max_filtered_proj1d_angles(1,angl));
+        filtered_proj1d_index_max(1,angl)=find(filtered_proj1d_angles(:,angl)==max_filtered_proj1d_angles(1,angl),1);
     end
     filtered_proj1d_angles_snremoved=filtered_proj1d_angles;
     
@@ -269,7 +269,7 @@ if cutoff~=0
     filtered_dc_proj1d_index_max=zeros(1,number_of_angle_nuple);
     
     parfor angl=1:number_of_angle_nuple
-        filtered_dc_proj1d_index_max(1,angl)=find(filtered_dc_proj1d_angles(:,angl)==max_filtered_dc_proj1d_angles(1,angl));
+        filtered_dc_proj1d_index_max(1,angl)=find(filtered_dc_proj1d_angles(:,angl)==max_filtered_dc_proj1d_angles(1,angl),1);
     end
     filtered_dc_proj1d_angles_snremoved=filtered_dc_proj1d_angles;
     
