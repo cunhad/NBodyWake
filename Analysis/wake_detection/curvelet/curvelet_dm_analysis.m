@@ -167,56 +167,56 @@ end
 
 %save the wake possible position (angle and location)
 
-n_angle_peaks=2;
-n_1d_peaks=2
-path_data_all=strcat(strcat(root_data_out(1,1:end-1),'_all/',spec,aux_path),'data/',aux_path_data_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/');
-
-% fileID = fopen(strcat(path_data_all,'_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
-% proj1d_angles=fread(fileID,[np*resol_factor/lenght_factor ,12*NSIDE^2],'float32','l');
+% n_angle_peaks=2;
+% n_1d_peaks=2
+% path_data_all=strcat(strcat(root_data_out(1,1:end-1),'_all/',spec,aux_path),'data/',aux_path_data_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/');
+% 
+% % fileID = fopen(strcat(path_data_all,'_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
+% % proj1d_angles=fread(fileID,[np*resol_factor/lenght_factor ,12*NSIDE^2],'float32','l');
+% % fclose(fileID);
+% % 
+% % figure;
+% % plot(proj1d_angles(:,f_index_max(1:2)));
+%  
+% % fileID = fopen(strcat(path_data_all,'_',num2str(find(str2num(char(redshift_list))==z)),'_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
+% % dc_proj1d_angles=fread(fileID,[np*resol_factor/lenght_factor ,12*NSIDE^2],'float32','l');
+% % fclose(fileID);
+% % 
+% % figure;
+% % plot(dc_proj1d_angles(:,f_index_max(1:2)));
+% % 
+% % 
+% % fileID = fopen(strcat(path_data_all,'/cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
+% % filtered_proj1d_angles=fread(fileID,[np*resol_factor/lenght_factor ,12*NSIDE^2],'float32','l');
+% % fclose(fileID);
+% % 
+% % figure;
+% % plot(filtered_proj1d_angles(:,f_index_max(2)));
+% 
+% 
+% fileID = fopen(strcat(path_data_all,'/cutoff_',num2str(cutoff),'MpcCut/dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
+% filtered_dc_proj1d_angles=fread(fileID,[np*resol_factor/lenght_factor ,12*NSIDE^2],'float32','l');
 % fclose(fileID);
 % 
 % figure;
-% plot(proj1d_angles(:,f_index_max(1:2)));
- 
-% fileID = fopen(strcat(path_data_all,'_',num2str(find(str2num(char(redshift_list))==z)),'_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
-% dc_proj1d_angles=fread(fileID,[np*resol_factor/lenght_factor ,12*NSIDE^2],'float32','l');
-% fclose(fileID);
+% plot(filtered_dc_proj1d_angles(:,f_index_max(1:n_angle_peaks)));
 % 
-% figure;
-% plot(dc_proj1d_angles(:,f_index_max(1:2)));
+% peaks_tot=[];
+% for pk_angl_indx=1:n_angle_peaks
+%     [pks,locs] =findpeaks(filtered_dc_proj1d_angles(:,f_index_max(pk_angl_indx)),'NPeaks',n_1d_peaks,'SortStr','descend');
+% %     peaks=[pks,((locs-np*resol_factor/(2*lenght_factor))*2/resol_factor),thetas_max(1:n_angle_peaks),phis_max(1:n_angle_peaks)];
+%     for pk_1d_indx=1:n_1d_peaks
+%         peaks(1,1)=pks(pk_1d_indx);
+%         peaks(1,2)=(locs(pk_1d_indx)-np*resol_factor/(2*lenght_factor))*2/resol_factor;
+%         peaks(1,3)=thetas_max(pk_angl_indx);
+%         peaks(1,4)=phis_max(pk_angl_indx);
+%         peaks_tot=[peaks_tot; peaks];
+%     end
+% end
 % 
-% 
-% fileID = fopen(strcat(path_data_all,'/cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
-% filtered_proj1d_angles=fread(fileID,[np*resol_factor/lenght_factor ,12*NSIDE^2],'float32','l');
-% fclose(fileID);
-% 
-% figure;
-% plot(filtered_proj1d_angles(:,f_index_max(2)));
-
-
-fileID = fopen(strcat(path_data_all,'/cutoff_',num2str(cutoff),'MpcCut/dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
-filtered_dc_proj1d_angles=fread(fileID,[np*resol_factor/lenght_factor ,12*NSIDE^2],'float32','l');
-fclose(fileID);
-
-figure;
-plot(filtered_dc_proj1d_angles(:,f_index_max(1:n_angle_peaks)));
-
-peaks_tot=[];
-for pk_angl_indx=1:n_angle_peaks
-    [pks,locs] =findpeaks(filtered_dc_proj1d_angles(:,f_index_max(pk_angl_indx)),'NPeaks',n_1d_peaks,'SortStr','descend');
-%     peaks=[pks,((locs-np*resol_factor/(2*lenght_factor))*2/resol_factor),thetas_max(1:n_angle_peaks),phis_max(1:n_angle_peaks)];
-    for pk_1d_indx=1:n_1d_peaks
-        peaks(1,1)=pks(pk_1d_indx);
-        peaks(1,2)=(locs(pk_1d_indx)-np*resol_factor/(2*lenght_factor))*2/resol_factor;
-        peaks(1,3)=thetas_max(pk_angl_indx);
-        peaks(1,4)=phis_max(pk_angl_indx);
-        peaks_tot=[peaks_tot; peaks];
-    end
-end
-
-path_data_out_curv=strcat(strcat(root_data_out(1,1:end-1),'_curv/',spec,aux_path),'data/',aux_path_data_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/');
-mkdir(strcat(strcat(root_data_out(1,1:end-1),'_curv/',spec,aux_path),'data/',aux_path_data_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/'));
-dlmwrite(strcat(path_data_out_curv,'_',num2str(find(str2num(char(redshift_list))==z)),'_peaks_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),peaks_tot,'delimiter','\t');
+% path_data_out_curv=strcat(strcat(root_data_out(1,1:end-1),'_curv/',spec,aux_path),'data/',aux_path_data_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/');
+% mkdir(strcat(strcat(root_data_out(1,1:end-1),'_curv/',spec,aux_path),'data/',aux_path_data_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/'));
+% dlmwrite(strcat(path_data_out_curv,'_',num2str(find(str2num(char(redshift_list))==z)),'_peaks_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),peaks_tot,'delimiter','\t');
 
 end
 
@@ -272,7 +272,7 @@ nx = ceil((2+J-J_min)/3 );
 
 
 % s2let_hpx_plot_mollweide_info(f_wav{6},1);
-% s2let_hpx_plot_mollweide_info(f,1);
+s2let_hpx_plot_mollweide_info(f,1);
 
 % s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1}+f_wav{J-J_min}+f_wav{J-J_min-1},1);
 
@@ -289,7 +289,7 @@ nx = ceil((2+J-J_min)/3 );
 
 
 % s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1}+f_wav{J-J_min}+f_wav{J-J_min-1}+f_wav{J-J_min-2}+f_wav{J-J_min-3},1); %best for gmu2t10m7
-[f_index_max,f_max,thetas_max,phis_max] = s2let_hpx_plot_mollweide_findpeaks(f_wav{J-J_min+1}+f_wav{J-J_min}+f_wav{J-J_min-1}+f_wav{J-J_min-2}+f_wav{J-J_min-3}+f_wav{J-J_min-4},1); 
+% [f_index_max,f_max,thetas_max,phis_max] = s2let_hpx_plot_mollweide_findpeaks(f_wav{J-J_min+1}+f_wav{J-J_min}+f_wav{J-J_min-1}+f_wav{J-J_min-2}+f_wav{J-J_min-3}+f_wav{J-J_min-4},1); 
 
 
 
