@@ -1,10 +1,8 @@
 function [ proj1d_angles] = curvelet_dm_data_out( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor_in,resol_factor_in,lenght_factor_out,resol_factor_out,pivot_in,NSIDE_in,part_in,num_cores_in,NSIDE_out,part_out,num_cores_out,data_stream,cutoff)
 
-%(example)  curvelet_dm_per_node_part('/home/asus/Dropbox/extras/storage/', '/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','',4,0,1,1);
-%(example)  for i=1:8; curvelet_dm_per_node_part('/home/asus/Dropbox/extras/storage/guillimin/test/','/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','',4,0,8,i); end;
 
-%(example)  [proj1d_angles,filtered_proj1d_angles,out_proj1d_angles,out_dc_proj1d_angles,out_filtered_proj1d_angles,out_filtered_dc_proj1d_angles,out_dc_filtered_proj1d_angles] = curvelet_dm_data_out('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/data_test/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','0.000xv0.dat',2,1,[0,0,0],4,1,4,[1,2],10);
-%(example) curvelet_dm_data_out('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','10.000xv0.dat',2,2,4,2,[0,0,0],64,16,4,1,16,4,[1,2],0.4);
+%(example)  [proj1d_angles] = curvelet_dm_data_out('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,2,2,2,[0,0,0],2,1,2,2,1,2,[1,2],10);
+%(example) curvelet_dm_data_out('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','10.000xv0.dat',2,2,4,2,[0,0,0],64,16,4,2,32,4,[1,2],0.4);
 
 
 %UNTITLED Summary of this function goes here
@@ -40,7 +38,7 @@ angles(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE_out),'_p.cvs'))
 
 root_out=strcat(root_out(1,1:end-1),'_curv/');
 
-path_data_in_curv=strcat(strcat(root_out,spec,aux_path),'data/',aux_path_out,num2str(lenght_factor_in),'lf_',num2str(resol_factor_in),'rf_',strcat(num2str(pivot_in(1)),'-',num2str(pivot_in(2)),'-',num2str(pivot_in(3))),'pv','/','stat/box_statistics/dm/');
+path_data_in_curv=strcat(strcat(root_out,spec,aux_path),'peaks_info/',aux_path_out,num2str(lenght_factor_in),'lf_',num2str(resol_factor_in),'rf_',strcat(num2str(pivot_in(1)),'-',num2str(pivot_in(2)),'-',num2str(pivot_in(3))),'pv','/','stat/box_statistics/dm/');
 peaks=dlmread(strcat(path_data_in_curv,'_',num2str(find(str2num(char(redshift_list))==z)),'_peaks_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part_in),'_NSIDE',num2str(NSIDE_in),'.txt'));
 
 
@@ -49,7 +47,7 @@ theta=peaks(:,3);
 phi=peaks(:,4);
 
 pivot(1)=distance_to_center(4)*sin(theta(4))*cos(phi(4));
-pivot(2)=distance_to_center(4)*sin(theta(4))*cos(phi(4));
+pivot(2)=distance_to_center(4)*sin(theta(4))*sin(phi(4));
 pivot(3)=distance_to_center(4)*cos(theta(4));
 
 bins=[-(nc/(2*lenght_factor_out)):nc/(np*resol_factor_out):(nc/(2*lenght_factor_out))];

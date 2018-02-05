@@ -1,13 +1,13 @@
-function [  pks,locs,out_proj1d_angles ,out_filtered_proj1d_angles,f_index_max,f_max,thetas_max,phis_max] = curvelet_dm_analysis( root,root_data_out,root_plot_out,spec,aux_path,aux_path_data_out,aux_path_plot_out,filename,lenght_factor,resol_factor,pivot_in,NSIDE,part,num_cores,lim,data_stream,info,analysis ,cutoff,projection_analysed,signal_analysed)
+function [ pks,locs,out_proj1d_angles ,out_filtered_proj1d_angles,f_index_max,f_max,thetas_max,phis_max] = curvelet_dm_analysis( root,root_data_out,root_plot_out,spec,aux_path,aux_path_data_out,aux_path_plot_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,lim,data_stream,info,analysis ,cutoff,projection_analysed,signal_analysed)
 
-%(example)  [  ] = curvelet_dm_analysis('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat/','/home/asus/Dropbox/extras/storage/graham/small_res/box_stat/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','10.000xv0.dat',2,2,[0,0,0],2,1,2,'minmax',[1],[0,1,2,3],1,10,[1],[1]);
+%(example)  [  ] = curvelet_dm_analysis('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_statistics/','/home/asus/Dropbox/extras/storage/graham/small_res/box_statistics/','64Mpc_96c_48p_zi255_wakeGmu5t10m7zi63m','/sample1001/','','','10.000xv0.dat',2,2,[0,0,0],2,1,4,'minmax',[1],[0,1,2,3],1,10,[1,2,3,4],[1,2,3]);
 
-%(example)  [  ] = curvelet_dm_analysis('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat/','/home/asus/Dropbox/extras/storage/guillimin/box_stat/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','','10.000xv0.dat',2,1,[0,0,0],64,16,4,'minmax',[1],[0,1,2,3],1,0.8,[1,2,3,4],[1,2,3]);
-%(example)  [  ] = curvelet_dm_analysis('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat/','/home/asus/Dropbox/extras/storage/guillimin/box_stat/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','','10.000xv0.dat',4,2,[0,0,0],2,32,4,'minmax',[1],[0,1,2,3],1,0.4,[1],[1]);
-%                                              
-% % 
-% % path_total_out=strcat(strcat(root_per_node_out,spec,aux_path),'data/',aux_path_per_node_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/dc_all_nodes_1dproj/');
-% % path_analysis_out=strcat(strcat(root_per_node_out,spec,aux_path),'data/',aux_path_per_node_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/dc_all_nodes_1dproj_analysis/');
+%(example)  [  ] = box_statistics_dm_analysis('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat/','/home/asus/Dropbox/extras/storage/guillimin/box_stat/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','','10.000xv0.dat',2,1,[0,0,0],64,16,4,'minmax',[1],[0,1,2,3],1,0.8,[1,2,3,4],[1,2,3]);
+%(example)  [  ] = curvelet_dm_analysis('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat_curv/','/home/asus/Dropbox/extras/storage/guillimin/box_stat_curv/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','','10.000xv0.dat',4,2,[0.072365,0.072365,-7.9993],1,32,4,'minmax',[1],[0,1,2,3],1,0.4,[1,2,3,4],[1,2,3]);
+                                             
+% 
+% path_total_out=strcat(strcat(root_per_node_out,spec,aux_path),'data/',aux_path_per_node_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/dc_all_nodes_1dproj/');
+% path_analysis_out=strcat(strcat(root_per_node_out,spec,aux_path),'data/',aux_path_per_node_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/dc_all_nodes_1dproj_analysis/');
 
 cd('../../preprocessing');
 
@@ -19,38 +19,8 @@ cd('../../parameters')
 
 [ vSgammaS displacement vel_pert] = wake( Gmu,z);
 
-cd('../Analysis/processing');
+cd('../Analysis/wake_detection/curvelet');
 
-
-root_peaks=strcat(root_data_out(1,1:end-1),'_curv/');
-
-% pivot_in=[0,0,0];
-
-path_data_in_curv=strcat(strcat(root_peaks,spec,aux_path),'peaks_info/',aux_path_data_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot_in(1)),'-',num2str(pivot_in(2)),'-',num2str(pivot_in(3))),'pv','/','stat/box_statistics/dm/');
-peaks=dlmread(strcat(path_data_in_curv,'_',num2str(find(str2num(char(redshift_list))==z)),'_peaks_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'));
-
-
-distance_to_center=peaks(:,2);
-theta=peaks(:,3);
-phi=peaks(:,4);
-
-pivot(1)=distance_to_center(4)*sin(theta(4))*cos(phi(4));
-pivot(2)=distance_to_center(4)*sin(theta(4))*sin(phi(4));
-pivot(3)=distance_to_center(4)*cos(theta(4));
-
-path_data=strcat(strcat(root_data_out(1,1:end-1),'_curv/',spec,aux_path),'data/',aux_path_data_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/');
-
-% % % path_peaks_in=strcat(strcat(root_data_out,spec,aux_path),'data/',aux_path_data_out,num2str(lenght_factor),'lf_',num2str(resol_factor));
-%  peaks_list=dir(strcat(path_data,'*'));
-% peaks_list={peaks_list.name};
-% peaks_list=sort_nat(peaks_list);
-% peaks_list=peaks_list(3:end);
-% 
-% 
-% 
-% % display(specs_list);
-
-cd('../wake_detection/curvelet');
 
 
 if ismember(0,data_stream)
@@ -61,7 +31,7 @@ if ismember(0,data_stream)
     end
 else
     
-%     path_data=strcat(strcat(root_data_out,spec,aux_path),'data/',aux_path_data_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/');
+    path_data=strcat(strcat(root_data_out,spec,aux_path),'data/',aux_path_data_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/');
     
     if ismember(2,data_stream)
         if ismember(3,data_stream)
@@ -74,7 +44,7 @@ else
         if ismember(3,data_stream)
             box_statistics_dm_data_out( root,root_data_out,spec,aux_path,aux_path_data_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,1,cutoff);
         end
-         display(strcat(path_data,'_',num2str(find(str2num(char(redshift_list))==z)),'_out_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
+        % display(strcat(path_data,'_',num2str(find(str2num(char(redshift_list))==z)),'_out_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
         fileID = fopen(strcat(path_data,'_',num2str(find(str2num(char(redshift_list))==z)),'_out_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
 %         display(fileID);
         out_proj1d_angles=fread(fileID,[3,12*NSIDE^2],'float32','l');
@@ -115,52 +85,52 @@ addpath('/home/asus/Programs/s2let/src/main/matlab','/home/asus/Programs/ssht/sr
    
 if ismember(1,projection_analysed)
     if ismember(1,signal_analysed)
-        plot_molweide(transpose(out_proj1d_angles(1,:)),'Peak of the mass amplitude');
+        [f_index_max,f_max,thetas_max,phis_max]=plot_molweide(transpose(out_proj1d_angles(1,:)),'Peak of the mass amplitude');
     end
     
     if ismember(2,signal_analysed)
-       plot_molweide(transpose(out_proj1d_angles(2,:)),{'Standard deviation';'of the mass amplitude'})
+        [f_index_max,f_max,thetas_max,phis_max]=plot_molweide(transpose(out_proj1d_angles(2,:)),{'Standard deviation';'of the mass amplitude'})
     end
     
     if ismember(3,signal_analysed)
-       plot_molweide(transpose(out_proj1d_angles(3,:)),{'Signal to noise';'of the mass amplitude'})
+        [f_index_max,f_max,thetas_max,phis_max]=plot_molweide(transpose(out_proj1d_angles(3,:)),{'Signal to noise';'of the mass amplitude'})
     end
     
 end
 
 if ismember(2,projection_analysed)
     if ismember(1,signal_analysed)
-      plot_molweide(transpose(out_dc_proj1d_angles(1,:)),'Peak of the dc amplitude');
+        [f_index_max,f_max,thetas_max,phis_max]=plot_molweide(transpose(out_dc_proj1d_angles(1,:)),'Peak of the dc amplitude');
     end
     
     if ismember(2,signal_analysed)
-        plot_molweide(transpose(out_dc_proj1d_angles(2,:)),{'Standard deviation';'of the dc amplitude'})
+        [f_index_max,f_max,thetas_max,phis_max]=plot_molweide(transpose(out_dc_proj1d_angles(2,:)),{'Standard deviation';'of the dc amplitude'})
     end
     
     if ismember(3,signal_analysed)
-        plot_molweide(transpose(out_dc_proj1d_angles(3,:)),{'Signal to noise';'of the dc amplitude'})
+        [f_index_max,f_max,thetas_max,phis_max]=plot_molweide(transpose(out_dc_proj1d_angles(3,:)),{'Signal to noise';'of the dc amplitude'})
     end
     
 end
 
 if ismember(3,projection_analysed)
     if ismember(1,signal_analysed)
-        plot_molweide(transpose(out_filtered_proj1d_angles(1,:)),'Peak of the filtered mass amplitude');
+       [f_index_max,f_max,thetas_max,phis_max]= plot_molweide(transpose(out_filtered_proj1d_angles(1,:)),'Peak of the filtered mass amplitude');
     end
     
     if ismember(2,signal_analysed)
-        plot_molweide(transpose(out_filtered_proj1d_angles(2,:)),{'Standard deviation';'of the filtered mass amplitude'})
+        [f_index_max,f_max,thetas_max,phis_max]=plot_molweide(transpose(out_filtered_proj1d_angles(2,:)),{'Standard deviation';'of the filtered mass amplitude'})
     end
     
     if ismember(3,signal_analysed)
-        plot_molweide(transpose(out_filtered_proj1d_angles(3,:)),{'Signal to noise';'of the filtered mass amplitude'})
+        [f_index_max,f_max,thetas_max,phis_max]=plot_molweide(transpose(out_filtered_proj1d_angles(3,:)),{'Signal to noise';'of the filtered mass amplitude'})
     end
     
     %multiplication of the filtered amplitude and standard deviation
     
     if ismember(4,signal_analysed)
 %         plot_molweide(transpose(out_filtered_proj1d_angles(1,:)).*transpose(out_filtered_proj1d_angles(2,:)),{'Peak of the filtered mass amplitude';'times Standard deviation';'of the filtered mass amplitude'})
-        plot_molweide(transpose(out_filtered_proj1d_angles(1,:)).*transpose(out_filtered_proj1d_angles(2,:)),{'Original Map'})    
+        [f_index_max,f_max,thetas_max,phis_max]=plot_molweide(transpose(out_filtered_proj1d_angles(1,:)).*transpose(out_filtered_proj1d_angles(2,:)),{'Original Map'})    
     end    
 end
 
@@ -168,15 +138,15 @@ end
             
 if ismember(4,projection_analysed)
     if ismember(1,signal_analysed)
-        plot_molweide(transpose(out_filtered_dc_proj1d_angles(1,:)),'Peak of the filtered dc amplitude');
+        [f_index_max,f_max,thetas_max,phis_max]=plot_molweide(transpose(out_filtered_dc_proj1d_angles(1,:)),'Peak of the filtered dc amplitude');
     end
     
     if ismember(2,signal_analysed)
-        plot_molweide(transpose(out_filtered_dc_proj1d_angles(2,:)),{'Standard deviation';'of the filtered dc amplitude'})
+        [f_index_max,f_max,thetas_max,phis_max]=plot_molweide(transpose(out_filtered_dc_proj1d_angles(2,:)),{'Standard deviation';'of the filtered dc amplitude'})
     end
     
     if ismember(3,signal_analysed)
-        plot_molweide(transpose(out_filtered_dc_proj1d_angles(3,:)),{'Signal to noise';'of the filtered dc amplitude'})
+        [f_index_max,f_max,thetas_max,phis_max]=plot_molweide(transpose(out_filtered_dc_proj1d_angles(3,:)),{'Signal to noise';'of the filtered dc amplitude'})
     end
     
 end
@@ -260,7 +230,7 @@ end
 end
 
 
-function plot_molweide(f,string)
+function [f_index_max,f_max,thetas_max,phis_max]=plot_molweide(f,string)
 
 % %     s2let_hpx_plot_mollweide(maxi);
 %     
