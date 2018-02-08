@@ -103,8 +103,13 @@ else
     low_pass=1;
 end
 
+%     low_pass=7;
+
+
 i_dc_cwt = icwt(dc_cwt,periods,[periods(low_pass) seconds(cutoff)],'waveletparameters',[3 3.01]);
      
+% display(periods);
+
 if ~ismember(0,data_stream)
     mkdir(path_orig_data,strcat('wavelet/dc/filter_1dproj_',num2str(cutoff),'MpcCut/'));
     if ismember(1,data_stream)        

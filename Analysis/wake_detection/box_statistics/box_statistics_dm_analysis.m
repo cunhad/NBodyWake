@@ -61,9 +61,9 @@ else
             out_filtered_proj1d_angles=fread(fileID,[3,12*NSIDE^2],'float32','l');
             fclose(fileID);
             
-            fileID = fopen(strcat(path_data,'cutoff_',num2str(cutoff),'MpcCut/','dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_dc_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
-            out_dc_filtered_proj1d_angles=fread(fileID,[3,12*NSIDE^2],'float32','l');
-            fclose(fileID);
+%             fileID = fopen(strcat(path_data,'cutoff_',num2str(cutoff),'MpcCut/','dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_dc_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
+%             out_dc_filtered_proj1d_angles=fread(fileID,[3,12*NSIDE^2],'float32','l');
+%             fclose(fileID);
             
             fileID = fopen(strcat(path_data,'dc/','cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
             out_filtered_dc_proj1d_angles=fread(fileID,[3,12*NSIDE^2],'float32','l');
@@ -282,10 +282,11 @@ end
 % 
 % s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1}+f_wav{J-J_min}+f_wav{J-J_min-1},1); %best for Gmu8t10m7
 
+s2let_hpx_plot_mollweide_info(f_wav{J-J_min},1);
 
 
 
-% % s2let_hpx_plot_mollweide_info(f_wav{6},1); %no signal for gmu2t10m7
+% s2let_hpx_plot_mollweide_info(f_wav{6},1); %no signal for gmu2t10m7
 
 
 % s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1}+f_wav{J-J_min}+f_wav{J-J_min-1}+f_wav{J-J_min-2}+f_wav{J-J_min-3},1); %best for gmu2t10m7

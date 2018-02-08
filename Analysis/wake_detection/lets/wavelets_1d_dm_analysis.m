@@ -3,6 +3,7 @@ function [  ] = wavelets_1d_dm_analysis( root,root_data_out,root_plot_out,root_s
 % reads (and/or generate) data of the filtered 1d projections aconding to the input specifications and plot the result
 
 
+
 %(example) wavelets_1d_dm_analysis('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','/home/asus/Dropbox/extras/storage/graham/small_res/snan/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','','','0.000xv0.dat',1,1,[0,0,0],[0,0],'minmax','minmax',10,[1,3],[0,2,3],1);
 %(example) wavelets_1d_dm_analysis('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','','','15.000xv0.dat',1,1,[0,0,0],[0,0],'minmax','minmax',0.8,[1,3],[0,2,3],1);
 
@@ -51,6 +52,12 @@ function [  ] = wavelets_1d_dm_analysis( root,root_data_out,root_plot_out,root_s
 % if info=3 complete plots plus info are generated
 
 % analysis=1 -> create a textfile with signal to noise data (peak, std, peak/std)
+
+% test
+
+% test=[1];
+% low_cutoff_index=1;
+% high_cuttof_index10;
 
 cd('../../preprocessing');
 

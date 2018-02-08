@@ -1,4 +1,4 @@
-function [  ] = snan_comparison_wavelets_1dproj(root,root_snan_in,root_snan_out,aux_path_snan_in,aux_path_snan_out,lenght_factor,resol_factor,pivot,rot_angle,cutoff,z_id_range,id_specs,info,analysis)
+function [ stn ] = snan_comparison_wavelets_1dproj(root,root_snan_in,root_snan_out,aux_path_snan_in,aux_path_snan_out,lenght_factor,resol_factor,pivot,rot_angle,cutoff,z_id_range,id_specs,info,analysis)
 
 %reads the data from proj1d_dm_analysis for the signal to noise analysis
 %and creates the corresponding figures
@@ -145,6 +145,7 @@ for Spec_Id=1:length(specs_list)
     stand_err=cellfun(@squeeze,data(1:length(z_id_range),5));    
     stn=cellfun(@squeeze,data(1:length(z_id_range),6));
     stn_err=cellfun(@squeeze,data(1:length(z_id_range),7));
+    display([stn,stn_err]);
     
     errorbar(ax1,(redshift_array+1).^-1,peak,peak_err);    
     hold(ax1,'on');
