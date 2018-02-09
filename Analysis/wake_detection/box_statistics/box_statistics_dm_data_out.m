@@ -76,6 +76,11 @@ for part_id = 1  :   part
         Ry = [cos(theta) 0 sin(theta); 0 1 0; -sin(theta) 0 cos(theta)];
         Rz = [cos(phi) -sin(phi) 0; sin(phi) cos(phi) 0; 0 0 1];
         %
+        
+%         R = Ry*Rz;
+%         
+%         rx=R*rx;
+        
         rx=Rz*rx;
         rx=Ry*rx;
         
@@ -201,6 +206,7 @@ if cutoff~=0
     else
         low_pass=1;
     end    
+    
     parfor i=1:number_of_angle_nuple
 %         average_proj1d_angles=mean2(proj1d_angles(:,i));
 %         proj1d=(proj1d_angles(:,i)-average_proj1d_angles)/average_proj1d_angles;

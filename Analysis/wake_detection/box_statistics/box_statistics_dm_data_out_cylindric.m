@@ -1,9 +1,9 @@
-function [ proj1d_angles] = box_statistics_dm_data_out( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,data_stream,cutoff)
+function [ proj1d_angles] = box_statistics_dm_data_out_cylindric( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,data_stream,cutoff)
 
 %(example)  box_statistics_dm_per_node_part('/home/asus/Dropbox/extras/storage/', '/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','',4,0,1,1);
 %(example)  for i=1:8; box_statistics_dm_per_node_part('/home/asus/Dropbox/extras/storage/guillimin/test/','/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','',4,0,8,i); end;
 
-%(example)  [proj1d_angles] = box_statistics_dm_data_out('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,2,[0,0,0],2,1,4,[1,2],10);
+%(example)  [proj1d_angles] = box_statistics_dm_data_out_cylindric('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,2,[0,0,0],2,1,4,[1,2],4);
 
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
@@ -14,11 +14,16 @@ function [ proj1d_angles] = box_statistics_dm_data_out( root,root_out,spec,aux_p
 % if filter = 1
 % if filter = 2
 
+%passivetransf melhorou1/3
+
 myCluster = parcluster('local');
 myCluster.NumWorkers=num_cores;
 saveProfile(myCluster);
 
 p = parpool(num_cores);
+
+
+
 tic;
 
 cd('../../preprocessing');
@@ -34,7 +39,7 @@ angles(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'));
 % mkdir(root_out,strcat(spec,aux_path));
 [ size_box, nc, np, ~, ~ ,~ ,~ ,~ ,z, ~, ~  ] = preprocessing_part(root,spec,aux_path,filename,part,1);
 bins=[-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))];
-proj1d_angles=zeros(number_of_angle_nuple,length(bins)-1);
+proj1d_angles=zeros(length(bins)-1,number_of_angle_nuple);
 
 %for k = 3:-1:1
 for part_id = 1  :   part
@@ -47,8 +52,8 @@ for part_id = 1  :   part
     Pos=mod(Pos,nc);
     
     
-    
     parfor i=1:number_of_angle_nuple
+%     for i=1:number_of_angle_nuple
         %     for i=1:number_of_angle_nuple
         %   for i=1:1
         
@@ -63,7 +68,7 @@ for part_id = 1  :   part
 %         theta=theta-pi/2;
 %         phi=phi-pi/4;
         
-        hist1d_cor=zeros(1,length(bins)-1);
+%         hist1d_cor=zeros(1,length(bins)-1);
         
         % for j=1:1000
         
@@ -75,48 +80,74 @@ for part_id = 1  :   part
         
         Ry = [cos(theta) 0 sin(theta); 0 1 0; -sin(theta) 0 cos(theta)];
         Rz = [cos(phi) -sin(phi) 0; sin(phi) cos(phi) 0; 0 0 1];
+        
+        nx=[1 ,0, 0];
+        ny=[0 ,1, 0];
+        nz=[0 ,0, 1];
+        
+        nx=nx*Rz;
+        nx=nx*Ry;
+        
+        ny=ny*Rz;
+        ny=ny*Ry;
+        
+        nz=nz*Rz;
+        nz=nz*Ry;
+        
         %
-        rx=Rz*rx;
-        rx=Ry*rx;
+%         rx=Rz*rx;
+%         rx=Ry*rx;
+
+%         dx=nx*rx;
+%         dy=ny*rx;
+        dz=nz*rx;
         
         liminf=-(1/(2*lenght_factor))*nc;
         limsup= (1/(2*lenght_factor))*nc;
-        conditionsx=rx(1,:)<=liminf|rx(1,:)>=limsup;
-        conditionsy=rx(2,:)<=liminf|rx(2,:)>=limsup;
-        conditionsz=rx(3,:)<=liminf|rx(3,:)>=limsup;
-        conditions=conditionsx|conditionsy|conditionsz;
-        rx(:,conditions)=[];
         
-        rx=transpose(rx);
+        limsup_sq= limsup^2;
+
+%         
+%         conditionsx=rx(1,:)<=liminf|rx(1,:)>=limsup;
+%         conditionsy=rx(2,:)<=liminf|rx(2,:)>=limsup;
+%         conditionsz=rx(3,:)<=liminf|rx(3,:)>=limsup;
+%         conditions=conditionsx|conditionsy|conditionsz;
+%         rx(:,conditions)=[];
+        
+%         rx(:,dx<=liminf|dx>=limsup|dy<=liminf|dy>=limsup|dz<=liminf|dz>=limsup)=[];
+        
+        dz(:,(nx*rx).*(nx*rx)+(ny*rx).*(ny*rx)>=limsup_sq|dz<=liminf|dz>=limsup)=[];
+        histogr = histcounts(dz,bins);
+        proj1d_angles(:,i)=proj1d_angles(:,i)+transpose(histogr(1,:));%         rx=transpose(rx);
         
         %display(rx);
         
-        if(~isempty(rx))
-            
-            [count, ~ ,~ ,~] = histcn(rx,1,1,bins);
-            % display(count);
-            % display(length(bins));
-            count=count(1:1,1:1,1:length(bins)-1);
-            %     average=mean2(count);
-            %     count=(count-average)/average;
-            count=squeeze(count);
-            count=squeeze(count);
-            
-            count=transpose(count);
-            
-            % display(count);
-            
-            
-            
-            hist1d_cor=count;
-            
-            % display(hist1d_cor);
-            
-            
-            
-            
-            
-        end
+%         if(~isempty(rx))
+%             
+%             [count, ~ ,~ ,~] = histcn(rx,1,1,bins);
+%             % display(count);
+%             % display(length(bins));
+%             count=count(1:1,1:1,1:length(bins)-1);
+%             %     average=mean2(count);
+%             %     count=(count-average)/average;
+%             count=squeeze(count);
+%             count=squeeze(count);
+%             
+%             count=transpose(count);
+%             
+%             % display(count);
+%             
+%             
+%             
+%             hist1d_cor=count;
+%             
+%             % display(hist1d_cor);
+%             
+%             
+%             
+%             
+%             
+%         end
         
         % proj=transpose(proj);
         
@@ -133,7 +164,7 @@ for part_id = 1  :   part
         % average=mean2(hist1d_cor);
         % hist1d_cor=(hist1d_cor-average)/average;
         
-        proj1d_angles(i,:)=proj1d_angles(i,:)+hist1d_cor(1,:);
+%         proj1d_angles(i,:)=proj1d_angles(i,:)+hist1d_cor(1,:);
         
         fprintf('done for z= %f,part=%d and  i= %d\n',z,part_id, i);
         %display(proj);
@@ -141,7 +172,7 @@ for part_id = 1  :   part
     end
 end
 
-proj1d_angles=transpose(proj1d_angles);
+% proj1d_angles=transpose(proj1d_angles);
 max_proj1d_angles=max(proj1d_angles);
 average_proj1d_angles=mean(proj1d_angles,1);
 max_amplitude_proj1d_angles=max_proj1d_angles(:)-average_proj1d_angles(:);
@@ -312,7 +343,7 @@ if ~ismember(0,data_stream)
         fwrite(fileID,proj1d_angles, 'float32','l');
         fclose(fileID);
         
-        fileID = fopen(strcat(path_out_all,'_',num2str(find(str2num(char(redshift_list))==z)),'_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
+        fileID = fopen(strcat(path_out_all,'dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
         fwrite(fileID,dc_proj1d_angles, 'float32','l');
         fclose(fileID);
         
@@ -351,7 +382,7 @@ if ~ismember(0,data_stream)
     
     if ismember(2,data_stream)
             dlmwrite(strcat(path_out_all,'_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),proj1d_angles,'delimiter','\t');
-            dlmwrite(strcat(path_out_all,'_',num2str(find(str2num(char(redshift_list))==z)),'_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),dc_proj1d_angles,'delimiter','\t');
+            dlmwrite(strcat(path_out_all,'dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),dc_proj1d_angles,'delimiter','\t');
             dlmwrite(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z)),'_out_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),out_proj1d_angles,'delimiter','\t');
             dlmwrite(strcat(path_out,'dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),out_dc_proj1d_angles,'delimiter','\t');
         
