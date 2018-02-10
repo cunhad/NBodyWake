@@ -174,6 +174,10 @@ for part_id = 1  :   part
     end
 end
 
+toc;
+
+tic;
+
 % proj1d_angles=transpose(proj1d_angles);
 max_proj1d_angles=max(proj1d_angles);
 average_proj1d_angles=mean(proj1d_angles,1);

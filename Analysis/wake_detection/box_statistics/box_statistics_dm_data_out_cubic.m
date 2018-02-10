@@ -139,15 +139,7 @@ for part_id = 1  :   part
         proj1d_angles(:,i)=proj1d_angles(:,i)+transpose(histogr(1,:));%         rx=transpose(rx);
         
 
-        bin_sz=(length(bins)-1);
-        area=zeros(bin_sz,1);
-        for dist_1d=1:bin_sz
-                plane = createPlane(nz*((bins(1,dist_1d+1)+bins(1,dist_1d))/2), nz);
-                 plane_overlap = intersectPlaneMesh(plane, v, f);
-                 area(dist_1d,1)=polygonArea3d(plane_overlap);
-        end
-                             areas(:,i)=area(:,1);
-
+      
         
         %display(rx);
         
@@ -201,6 +193,31 @@ for part_id = 1  :   part
     end
 end
 
+toc;
+
+tic;
+    parfor i=1:number_of_angle_nuple
+
+        
+        theta=angles(1,i);
+        phi=angles(2,i);
+                nz=[sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)];
+
+  bin_sz=(length(bins)-1);
+        area=zeros(bin_sz,1);
+        for dist_1d=1:bin_sz
+                plane = createPlane(nz*((bins(1,dist_1d+1)+bins(1,dist_1d))/2), nz);
+                 plane_overlap = intersectPlaneMesh(plane, v, f);
+                 area(dist_1d,1)=polygonArea3d(plane_overlap);
+        end
+                             areas(:,i)=area(:,1);
+
+    end
+
+    toc;
+    
+    tic;
+    
 proj1d_angles=proj1d_angles./areas;
 
 
