@@ -1,9 +1,9 @@
-function [ proj1d_angles] = box_statistics_dm_data_out_cylindric( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,data_stream,cutoff)
+function [ proj1d_angles, areas] = box_statistics_dm_data_out_cubic( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,data_stream,cutoff)
 
 %(example)  box_statistics_dm_per_node_part('/home/asus/Dropbox/extras/storage/', '/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','',4,0,1,1);
 %(example)  for i=1:8; box_statistics_dm_per_node_part('/home/asus/Dropbox/extras/storage/guillimin/test/','/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','',4,0,8,i); end;
 
-%(example)  [proj1d_angles] = box_statistics_dm_data_out_cylindric('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,2,[0,0,0],2,1,4,[1,2],4);
+%(example)  [proj1d_angles] = box_statistics_dm_data_out_cubic('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,2,[0,0,0],2,1,4,[1,2],4);
 
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
@@ -14,17 +14,24 @@ function [ proj1d_angles] = box_statistics_dm_data_out_cylindric( root,root_out,
 % if filter = 1
 % if filter = 2
 
-%passivetransf melhorou1/3
+%passivetransf melhorou1/3 
+%cubic algo took 1.75 times more
+
 
 myCluster = parcluster('local');
 myCluster.NumWorkers=num_cores;
 saveProfile(myCluster);
 
 p = parpool(num_cores);
+% 
 
+% addpath(genpath('/home/asus/Dropbox/Disrael/Fazendo/templates_and_metrics/matlab/utils/geom3d'));
 
+addpath(genpath('../../processing/'));
 
 tic;
+
+
 
 cd('../../preprocessing');
 
@@ -40,6 +47,12 @@ angles(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'));
 [ size_box, nc, np, ~, ~ ,~ ,~ ,~ ,z, ~, ~  ] = preprocessing_part(root,spec,aux_path,filename,part,1);
 bins=[-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))];
 proj1d_angles=zeros(length(bins)-1,number_of_angle_nuple);
+
+areas=zeros(length(bins)-1,number_of_angle_nuple);
+
+
+[v f] = createCube; v = (v-[0.5 0.5 0.5])*nc ;
+
 
 %for k = 3:-1:1
 for part_id = 1  :   part
@@ -62,6 +75,7 @@ for part_id = 1  :   part
         theta=angles(1,i);
         phi=angles(2,i);
         
+        
 %         theta=mod(theta+pi/2,pi)
 %         phi=mod(phi+pi/2,2*pi)
         
@@ -78,23 +92,22 @@ for part_id = 1  :   part
         rx(2,:)=Pos(2,:)-(nc/2)-pivot(2);
         rx(3,:)=Pos(3,:)-(nc/2)-pivot(3);
         
-        Ry = [cos(theta) 0 sin(theta); 0 1 0; -sin(theta) 0 cos(theta)];
-        Rz = [cos(phi) -sin(phi) 0; sin(phi) cos(phi) 0; 0 0 1];
-        
-        nx=[1 ,0, 0];
-        ny=[0 ,1, 0];
+%         Ry = [cos(theta) 0 sin(theta); 0 1 0; -sin(theta) 0 cos(theta)];
+%         Rz = [cos(phi) -sin(phi) 0; sin(phi) cos(phi) 0; 0 0 1];
+%         
 %         nz=[0 ,0, 1];
-        
-        nx=nx*Rz;
-        nx=nx*Ry;
-        
-        ny=ny*Rz;
-        ny=ny*Ry;
-        
+%         
+% %         nx=nx*Rz;
+% %         nx=nx*Ry;
+%         
+% %         ny=ny*Rz;
+% %         ny=ny*Ry;
+%         
 %         nz=nz*Rz;
 %         nz=nz*Ry;
 
         nz=[sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)];
+
         
         %
 %         rx=Rz*rx;
@@ -103,11 +116,14 @@ for part_id = 1  :   part
 %         dx=nx*rx;
 %         dy=ny*rx;
         dz=nz*rx;
+%         
+%         liminf=-(1/(2*lenght_factor))*nc;
+%         limsup= (1/(2*lenght_factor))*nc;
         
-        liminf=-(1/(2*lenght_factor))*nc;
-        limsup= (1/(2*lenght_factor))*nc;
         
-        limsup_sq= limsup^2;
+        
+%         
+%         limsup_sq= limsup^2;
 
 %         
 %         conditionsx=rx(1,:)<=liminf|rx(1,:)>=limsup;
@@ -118,9 +134,20 @@ for part_id = 1  :   part
         
 %         rx(:,dx<=liminf|dx>=limsup|dy<=liminf|dy>=limsup|dz<=liminf|dz>=limsup)=[];
         
-        dz(:,(nx*rx).*(nx*rx)+(ny*rx).*(ny*rx)>=limsup_sq|dz<=liminf|dz>=limsup)=[];
+%         dz(:,(nx*rx).*(nx*rx)+(ny*rx).*(ny*rx)>=limsup_sq|dz<=liminf|dz>=limsup)=[];
         histogr = histcounts(dz,bins);
         proj1d_angles(:,i)=proj1d_angles(:,i)+transpose(histogr(1,:));%         rx=transpose(rx);
+        
+
+        bin_sz=(length(bins)-1);
+        area=zeros(bin_sz,1);
+        for dist_1d=1:bin_sz
+                plane = createPlane(nz*((bins(1,dist_1d+1)+bins(1,dist_1d))/2), nz);
+                 plane_overlap = intersectPlaneMesh(plane, v, f);
+                 area(dist_1d,1)=polygonArea3d(plane_overlap);
+        end
+                             areas(:,i)=area(:,1);
+
         
         %display(rx);
         
@@ -173,6 +200,9 @@ for part_id = 1  :   part
         
     end
 end
+
+proj1d_angles=proj1d_angles./areas;
+
 
 % proj1d_angles=transpose(proj1d_angles);
 max_proj1d_angles=max(proj1d_angles);
