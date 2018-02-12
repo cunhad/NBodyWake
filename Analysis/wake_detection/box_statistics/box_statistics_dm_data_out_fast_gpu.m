@@ -1,9 +1,9 @@
-function [ proj1d_angles] = box_statistics_dm_data_out_fast( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,data_stream,level_window,dwbasis)
+function [ proj1d_angles] = box_statistics_dm_data_out_fast_gpu( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,data_stream,level_window,dwbasis)
 
 %(example)  box_statistics_dm_per_node_part('/home/asus/Dropbox/extras/storage/', '/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','',4,0,1,1);
 %(example)  for i=1:8; box_statistics_dm_per_node_part('/home/asus/Dropbox/extras/storage/guillimin/test/','/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','',4,0,8,i); end;
 
-%(example)  [proj1d_angles] = box_statistics_dm_data_out_fast('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_fast/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,2,[0,0,0],2,1,4,[1,2],[1],'db1');
+%(example)  [proj1d_angles] = box_statistics_dm_data_out_fast_gpu('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_fast/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,2,[0,0,0],2,1,4,[1,2],[1],'db1');
 
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
@@ -93,6 +93,8 @@ for part_id = 1  :   part
         
           angles1=angles_hpx(1,angl_ind_start:angl_ind_end);
           angles2=angles_hpx(2,angl_ind_start:angl_ind_end);
+          
+          
         
 %         
 %         angles1(:)=angles_parfor1(i,:);
@@ -238,10 +240,9 @@ for part_id = 1  :   part
 %     end
 end
 
-parfor j=1:num_cores
+for j=1:num_cores
 
     aux(:,:)=histogr_sum_parts(j,:,:);
-    st=
     
 proj1d_angles(:,angl_indx(j):angl_indx(j+1)-1)=transpose(aux);
 

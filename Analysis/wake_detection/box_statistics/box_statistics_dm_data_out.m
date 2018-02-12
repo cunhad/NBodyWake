@@ -140,11 +140,15 @@ for part_id = 1  :   part
         
         proj1d_angles(i,:)=proj1d_angles(i,:)+hist1d_cor(1,:);
         
-        fprintf('done for z= %f,part=%d and  i= %d\n',z,part_id, i);
+%         fprintf('done for z= %f,part=%d and  i= %d\n',z,part_id, i);
         %display(proj);
         
     end
 end
+
+toc;
+
+tic;
 
 proj1d_angles=transpose(proj1d_angles);
 max_proj1d_angles=max(proj1d_angles);
