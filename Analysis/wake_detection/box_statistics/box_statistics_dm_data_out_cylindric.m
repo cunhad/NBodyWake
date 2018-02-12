@@ -78,19 +78,23 @@ for part_id = 1  :   part
         rx(2,:)=Pos(2,:)-(nc/2)-pivot(2);
         rx(3,:)=Pos(3,:)-(nc/2)-pivot(3);
         
-        Ry = [cos(theta) 0 sin(theta); 0 1 0; -sin(theta) 0 cos(theta)];
-        Rz = [cos(phi) -sin(phi) 0; sin(phi) cos(phi) 0; 0 0 1];
-        
-        nx=[1 ,0, 0];
-        ny=[0 ,1, 0];
-%         nz=[0 ,0, 1];
-        
-        nx=nx*Rz;
-        nx=nx*Ry;
-        
-        ny=ny*Rz;
-        ny=ny*Ry;
-        
+%         Ry = [cos(theta) 0 sin(theta); 0 1 0; -sin(theta) 0 cos(theta)];
+%         Rz = [cos(phi) -sin(phi) 0; sin(phi) cos(phi) 0; 0 0 1];
+%         
+%         nx=[1 ,0, 0];
+%         ny=[0 ,1, 0];
+% %         nz=[0 ,0, 1];
+%         
+%         nx=nx*Rz;
+%         nx=nx*Ry;
+%         
+%         ny=ny*Rz;
+%         ny=ny*Ry;
+
+ nx=[transpose(cos(theta).*cos(phi)) ,transpose(cos(theta).*sin(phi)), transpose(-sin(theta))];
+ ny=[transpose(-sin(phi)) ,transpose(cos(phi)), 0];
+% 
+
 %         nz=nz*Rz;
 %         nz=nz*Ry;
 

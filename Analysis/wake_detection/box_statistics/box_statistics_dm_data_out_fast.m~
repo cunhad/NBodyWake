@@ -1,9 +1,9 @@
-function [ proj1d_angles, areas] = box_statistics_dm_data_out_cubic( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,data_stream,cutoff)
+function [ proj1d_angles] = box_statistics_dm_data_out_fast( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,data_stream,level_window,dwbasis)
 
 %(example)  box_statistics_dm_per_node_part('/home/asus/Dropbox/extras/storage/', '/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','',4,0,1,1);
 %(example)  for i=1:8; box_statistics_dm_per_node_part('/home/asus/Dropbox/extras/storage/guillimin/test/','/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','',4,0,8,i); end;
 
-%(example)  [proj1d_angles] = box_statistics_dm_data_out_cubic('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,2,[0,0,0],2,1,4,[1,2],4);
+%(example)  [proj1d_angles] = box_statistics_dm_data_out_fast('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_fast/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,2,[0,0,0],2,1,4,[1,2],[1],'db1');
 
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
@@ -14,47 +14,62 @@ function [ proj1d_angles, areas] = box_statistics_dm_data_out_cubic( root,root_o
 % if filter = 1
 % if filter = 2
 
-%passivetransf melhorou1/3 
-%cubic algo took 1.75 times more
-
-
-myCluster = parcluster('local');
-myCluster.NumWorkers=num_cores;
-saveProfile(myCluster);
-
-p = parpool(num_cores);
+% %passivetransf melhorou1/3
 % 
+% myCluster = parcluster('local');
+% myCluster.NumWorkers=num_cores;
+% saveProfile(myCluster);
+% 
+% p = parpool(num_cores);
 
-% addpath(genpath('/home/asus/Dropbox/Disrael/Fazendo/templates_and_metrics/matlab/utils/geom3d'));
 
-addpath(genpath('../../processing/'));
 
 tic;
-
-
-
+% 
 cd('../../preprocessing');
 
 %  [ ~,redshift_list ] = preprocessing_many_nodes(root,spec,aux_path );
  [~,redshift_list,~,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec,aux_path );
 
-angles(1,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_t.cvs'));
-angles(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'));
-[~,number_of_angle_nuple] = size(angles);
+angles_hpx(1,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_t.cvs'));
+angles_hpx(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'));
+[~,number_of_angle_nuple_hpx] = size(angles_hpx);
+
+n_angle_per_node=ceil(number_of_angle_nuple_hpx/num_cores);
+
+for cr=1:num_cores+1
+   angl_indx(cr)= n_angle_per_node*(cr-1)+1;
+end
+%     angl_indx(1)=1;
+%     angl_indx(num_cores+1)=number_of_angle_nuple_hpx+1;
+%     n_angl_indx=[];
+    for cr=1:num_cores
+        n_angl_indx(cr)= -angl_indx(cr)+angl_indx(cr+1);
+        
+    end
+% 
+%     for cr=1:num_cores
+%         angles_parfor1(cr)= [angles_hpx(1,angl_indx(cr):(angl_indx(cr+1)-1))];
+%         angles_parfor2(cr)= [angles_hpx(2,angl_indx(cr):(angl_indx(cr+1)-1))];
+%     end
+    
+% 
+% angles(1,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_t.cvs'));
+% angles(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'));
+% [~,number_of_angle_nuple] = size(angles);
+
 %
 % mkdir(root_out);
 % mkdir(root_out,strcat(spec,aux_path));
 [ size_box, nc, np, ~, ~ ,~ ,~ ,~ ,z, ~, ~  ] = preprocessing_part(root,spec,aux_path,filename,part,1);
 bins=[-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))];
-proj1d_angles=zeros(length(bins)-1,number_of_angle_nuple);
-
-areas=zeros(length(bins)-1,number_of_angle_nuple);
-
-
-[v f] = createCube; v = (v-[0.5 0.5 0.5])*nc ;
-
+proj1d_angles=zeros(length(bins)-1,number_of_angle_nuple_hpx);
 
 %for k = 3:-1:1
+
+    histogr_sum_parts=zeros(num_cores,n_angle_per_node,length(bins)-1);
+
+
 for part_id = 1  :   part
     %for k = 1  : 1
     
@@ -64,17 +79,34 @@ for part_id = 1  :   part
     
     Pos=mod(Pos,nc);
     
-    
-    parfor i=1:number_of_angle_nuple
-%     for i=1:number_of_angle_nuple
+    histogr(:,:,:)=zeros(num_cores,n_angle_per_node,length(bins)-1);
+%     
+%      for i=1:num_cores
+     parfor i=1:num_cores
+
+         %     for i=1:number_of_angle_nuple
         %     for i=1:number_of_angle_nuple
         %   for i=1:1
+
+        angl_ind_start=angl_indx(i);
+        angl_ind_end=angl_indx(i+1)-1;
         
+          angles1=angles_hpx(1,angl_ind_start:angl_ind_end);
+          angles2=angles_hpx(2,angl_ind_start:angl_ind_end);
         
-        
-        theta=angles(1,i);
-        phi=angles(2,i);
-        
+%         
+%         angles1(:)=angles_parfor1(i,:);
+%         angles2(:)=angles_parfor2(i,:);
+% %         
+[~,number_of_angle_nuple] = size(angles1);
+
+
+
+
+
+
+%         theta=angles(1,i);
+%         phi=angles(2,i);
         
 %         theta=mod(theta+pi/2,pi)
 %         phi=mod(phi+pi/2,2*pi)
@@ -94,21 +126,23 @@ for part_id = 1  :   part
         
 %         Ry = [cos(theta) 0 sin(theta); 0 1 0; -sin(theta) 0 cos(theta)];
 %         Rz = [cos(phi) -sin(phi) 0; sin(phi) cos(phi) 0; 0 0 1];
+        
+%         nx=[1 ,0, 0];
+%         ny=[0 ,1, 0];
+% %         nz=[0 ,0, 1];
 %         
-%         nz=[0 ,0, 1];
+%         nx=nx*Rz;
+%         nx=nx*Ry;
 %         
-% %         nx=nx*Rz;
-% %         nx=nx*Ry;
-%         
-% %         ny=ny*Rz;
-% %         ny=ny*Ry;
-%         
+%         ny=ny*Rz;
+%         ny=ny*Ry;
+        
 %         nz=nz*Rz;
 %         nz=nz*Ry;
-
-        nz=[sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)];
-
-        
+        nx=[transpose(cos(angles1).*cos(angles1)) ,transpose(cos(angles1).*sin(angles2)), transpose(-sin(angles1))];
+        ny=[transpose(-sin(angles2)) ,transpose(cos(angles2)), zeros(number_of_angle_nuple,1)];
+%         nz=[sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)];
+        nz=[transpose(sin(angles1).*cos(angles2)) ,transpose(sin(angles1).*sin(angles2)), transpose(cos(angles1))];
         %
 %         rx=Rz*rx;
 %         rx=Ry*rx;
@@ -116,14 +150,11 @@ for part_id = 1  :   part
 %         dx=nx*rx;
 %         dy=ny*rx;
         dz=nz*rx;
-%         
-%         liminf=-(1/(2*lenght_factor))*nc;
-%         limsup= (1/(2*lenght_factor))*nc;
         
+        liminf=-(1/(2*lenght_factor))*nc;
+        limsup= (1/(2*lenght_factor))*nc;
         
-        
-%         
-%         limsup_sq= limsup^2;
+        limsup_sq= limsup^2;
 
 %         
 %         conditionsx=rx(1,:)<=liminf|rx(1,:)>=limsup;
@@ -134,14 +165,26 @@ for part_id = 1  :   part
         
 %         rx(:,dx<=liminf|dx>=limsup|dy<=liminf|dy>=limsup|dz<=liminf|dz>=limsup)=[];
         
-%         dz(:,(nx*rx).*(nx*rx)+(ny*rx).*(ny*rx)>=limsup_sq|dz<=liminf|dz>=limsup)=[];
-        histogr = histcounts(dz,bins);
-        proj1d_angles(:,i)=proj1d_angles(:,i)+transpose(histogr(1,:));%         rx=transpose(rx);
+        dz((nx*rx).*(nx*rx)+(ny*rx).*(ny*rx)>=limsup_sq|dz<=liminf|dz>=limsup)=NaN;
         
+        xc = mat2cell(dz, ones(1,size(dz,1)), size(dz,2));
+        [hcell,hedges] = cellfun(@(dz) histcounts(dz,bins), xc, 'Uni',0);
+        histogr(i,:,:) = cell2mat(hcell);
+        
+%         for angl=1:number_of_angle_nuple
+%         histogr = histcounts(dz(angl,:),bins);
+%         proj1d_angles(:,angl)=proj1d_angles(:,angl)+transpose(histogr(1,:));%         rx=transpose(rx);
+%         end
 
-      
-        
-        %display(rx);
+%         for angl=1:number_of_angle_nuple
+%             for j=1:(lenght(bins)-1)
+%             a(j)=proj1d_angles(j,angl);
+%             end
+%         proj1d_angles(:,angl)=a;
+%         %         rx=transpose(rx);
+%         end
+
+%display(rx);
         
 %         if(~isempty(rx))
 %             
@@ -168,8 +211,10 @@ for part_id = 1  :   part
 %             
 %             
 %             
-%         end
-        
+     end
+         
+        histogr_sum_parts=histogr_sum_parts+histogr;
+     
         % proj=transpose(proj);
         
         %display(proj);
@@ -187,31 +232,28 @@ for part_id = 1  :   part
         
 %         proj1d_angles(i,:)=proj1d_angles(i,:)+hist1d_cor(1,:);
         
-        fprintf('done for z= %f,part=%d and  i= %d\n',z,part_id, i);
+%         fprintf('done for z= %f,part=%d and  i= %d\n',z,part_id, i);
         %display(proj);
         
-    end
+%     end
+end
+
+parfor j=1:num_cores
+
+    aux(:,:)=histogr_sum_parts(j,:,:);
+    st=
+    
+proj1d_angles(:,angl_indx(j):angl_indx(j+1)-1)=transpose(aux);
+
 end
 
 toc;
 
-    parfor i=1:number_of_angle_nuple
+tic;
 
-                nz=[sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)];
-
-  bin_sz=(length(bins)-1);
-        area=zeros(bin_sz,1);
-        for dist_1d=1:bin_sz
-                plane = createPlane(nz*((bins(1,dist_1d+1)+bins(1,dist_1d))/2), nz);
-                 plane_overlap = intersectPlaneMesh(plane, v, f);
-                 area(dist_1d,1)=polygonArea3d(plane_overlap);
-        end
-                             areas(:,i)=area(:,1);
-
-    end
-
-proj1d_angles=proj1d_angles./areas;
-
+ angles(1,:)=angles_hpx(1,:);
+ angles(2,:)=angles_hpx(2,:);
+ [~,number_of_angle_nuple] = size(angles);
 
 % proj1d_angles=transpose(proj1d_angles);
 max_proj1d_angles=max(proj1d_angles);
@@ -264,25 +306,39 @@ stn_dc_proj1d_angles=(max_amplitude_dc_proj1d_angles(:))./std_dc_proj1d_angles(:
 
 out_dc_proj1d_angles=[transpose(max_amplitude_dc_proj1d_angles);std_dc_proj1d_angles;transpose(stn_dc_proj1d_angles)];
 
-if cutoff~=0        
+if level_window~=0        
     filtered_proj1d_angles=zeros(length(bins)-1,number_of_angle_nuple);
     filtered_dc_proj1d_angles=zeros(length(bins)-1,number_of_angle_nuple);
     
-    if resol_factor>=1
-        low_pass=resol_factor;
-    else
-        low_pass=1;
-    end    
+     level=floor(log2(length(bins)-1));
+
+    
     parfor i=1:number_of_angle_nuple
 %         average_proj1d_angles=mean2(proj1d_angles(:,i));
 %         proj1d=(proj1d_angles(:,i)-average_proj1d_angles)/average_proj1d_angles;
         proj1d=proj1d_angles(:,i);
-        [cwt_proj1d,periods] = cwt(proj1d,seconds(size_box/(np*resol_factor)),'waveletparameters',[3 3.01]);
-        filtered_proj1d_angles(:,i) = icwt(cwt_proj1d,periods,[periods(low_pass) seconds(cutoff)],'waveletparameters',[3 3.01]);
-        
+        [dwt_proj1d,levels] = wavedec(proj1d,level,dwbasis);
+
         dc_proj1d=dc_proj1d_angles(:,i);
-        [cwt_dc_proj1d,periods] = cwt(dc_proj1d,seconds(size_box/(np*resol_factor)),'waveletparameters',[3 3.01]);
-        filtered_dc_proj1d_angles(:,i) = icwt(cwt_dc_proj1d,periods,[periods(low_pass) seconds(cutoff)],'waveletparameters',[3 3.01]);
+        [dwt_dc_proj1d,levels] = wavedec(dc_proj1d,level,dwbasis);
+
+
+        
+%         [cwt_proj1d,periods] = cwt(proj1d,seconds(size_box/(np*resol_factor)),'waveletparameters',[3 3.01]);
+%         filtered_proj1d_angles(:,i) = icwt(cwt_proj1d,periods,[periods(low_pass) seconds(level_window)],'waveletparameters',[3 3.01]);
+%         
+%         dc_proj1d=dc_proj1d_angles(:,i);
+%         [cwt_dc_proj1d,periods] = cwt(dc_proj1d,seconds(size_box/(np*resol_factor)),'waveletparameters',[3 3.01]);
+        
+        D=zeros(length(bins)-1,1);
+        D_dc=zeros(length(bins)-1,1);
+        for lev_win = 1:length(level_window)
+            lvwin=level_window(lev_win);
+            D(:,1)=D(:,1)+wrcoef('d',dwt_proj1d,levels,dwbasis,lvwin);
+            D_dc(:,1)=D(:,1)+wrcoef('d',dwt_dc_proj1d,levels,dwbasis,lvwin);
+        end
+        filtered_proj1d_angles(:,i) = D(:,1);
+        filtered_dc_proj1d_angles(:,i) = D_dc(:,1);
         
     end
     
@@ -369,12 +425,12 @@ if ~ismember(0,data_stream)
     mkdir(strcat(root_out,spec,aux_path),strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/'));
     mkdir(strcat(root_out,spec,aux_path),strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/dc/'));
     
-    if cutoff~=0 
-        mkdir(path_out,strcat('/cutoff_',num2str(cutoff),'MpcCut/'));
-        mkdir(path_out,strcat('/dc/cutoff_',num2str(cutoff),'MpcCut/'));
+    if level_window~=0 
+        mkdir(path_out,strcat('/cutoff_',num2str(level_window),'MpcCut/'));
+        mkdir(path_out,strcat('/dc/cutoff_',num2str(level_window),'MpcCut/'));
 %         mkdir(path_out,strcat('/cutoff_',num2str(cutoff),'MpcCut/dc/'));       
-        mkdir(path_out_all,strcat('/cutoff_',num2str(cutoff),'MpcCut/'));
-        mkdir(path_out_all,strcat('/dc/cutoff_',num2str(cutoff),'MpcCut/'));
+        mkdir(path_out_all,strcat('/cutoff_',num2str(level_window),'MpcCut/'));
+        mkdir(path_out_all,strcat('/dc/cutoff_',num2str(level_window),'MpcCut/'));
         
     end
     
@@ -396,21 +452,21 @@ if ~ismember(0,data_stream)
         fwrite(fileID,out_dc_proj1d_angles, 'float32','l');
         fclose(fileID);
         
-        if cutoff~=0 
+        if level_window~=0 
             
-            fileID = fopen(strcat(path_out_all,'cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
+            fileID = fopen(strcat(path_out_all,'cutoff_',num2str(level_window),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
             fwrite(fileID,filtered_proj1d_angles, 'float32','l');
             fclose(fileID);
             
-            fileID = fopen(strcat(path_out_all,'dc/cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
+            fileID = fopen(strcat(path_out_all,'dc/cutoff_',num2str(level_window),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
             fwrite(fileID,filtered_dc_proj1d_angles, 'float32','l');
             fclose(fileID);
             
-            fileID = fopen(strcat(path_out,'cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
+            fileID = fopen(strcat(path_out,'cutoff_',num2str(level_window),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
             fwrite(fileID,out_filtered_proj1d_angles, 'float32','l');
             fclose(fileID);
             
-            fileID = fopen(strcat(path_out,'dc/cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
+            fileID = fopen(strcat(path_out,'dc/cutoff_',num2str(level_window),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
             fwrite(fileID,out_filtered_dc_proj1d_angles, 'float32','l');
             fclose(fileID);
             
@@ -427,12 +483,12 @@ if ~ismember(0,data_stream)
             dlmwrite(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z)),'_out_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),out_proj1d_angles,'delimiter','\t');
             dlmwrite(strcat(path_out,'dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),out_dc_proj1d_angles,'delimiter','\t');
         
-        if cutoff~=0 
-            dlmwrite(strcat(path_out_all,'cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),filtered_proj1d_angles,'delimiter','\t');
-            dlmwrite(strcat(path_out_all,'dc/cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),filtered_dc_proj1d_angles,'delimiter','\t');
-            dlmwrite(strcat(path_out,'cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),out_proj1d_angles,'delimiter','\t');
+        if level_window~=0 
+            dlmwrite(strcat(path_out_all,'cutoff_',num2str(level_window),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),filtered_proj1d_angles,'delimiter','\t');
+            dlmwrite(strcat(path_out_all,'dc/cutoff_',num2str(level_window),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),filtered_dc_proj1d_angles,'delimiter','\t');
+            dlmwrite(strcat(path_out,'cutoff_',num2str(level_window),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),out_proj1d_angles,'delimiter','\t');
 %             dlmwrite(strcat(path_out,'dc/','cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),out_filtered_dc_proj1d_angles,'delimiter','\t');
-            dlmwrite(strcat(path_out,'dc/cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),out_filtered_dc_proj1d_angles,'delimiter','\t');
+            dlmwrite(strcat(path_out,'dc/cutoff_',num2str(level_window),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),out_filtered_dc_proj1d_angles,'delimiter','\t');
         end
         
     end
@@ -441,7 +497,7 @@ end
 
 
 cd('../wake_detection/box_statistics');
-
+% 
 toc;
 delete(gcp('nocreate'))
 
