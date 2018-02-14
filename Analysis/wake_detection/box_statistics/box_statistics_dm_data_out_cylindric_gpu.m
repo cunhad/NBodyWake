@@ -71,9 +71,9 @@ nc=single(nc);
 pivot=single(pivot);
 lenght_factor=single(lenght_factor);
 
-liminf=-(1/(2*lenght_factor))*nc;
-limsup= (1/(2*lenght_factor))*nc;
-limsup_sq= limsup^2;
+% liminf=-(1/(2*lenght_factor))*nc;
+% limsup= (1/(2*lenght_factor))*nc;
+% limsup_sq= limsup^2;
 
 for part_id = 1  :   part
     
@@ -86,7 +86,8 @@ for part_id = 1  :   part
     Pos=single(Pos);
         
     parfor cor=1:num_cores
-%         
+%      for cor=1:num_cores
+
         angl_ind_start=angl_indx(cor);
         angl_ind_end=angl_indx(cor+1)-1;
                         
@@ -99,16 +100,16 @@ for part_id = 1  :   part
         rx(2,:)=Pos(2,:)-(nc/2)-pivot(2);
         rx(3,:)=Pos(3,:)-(nc/2)-pivot(3);
         
-        rx=gpuarray(rx);
+        rx=gpuArray(rx);
         
-        histogr_1d_angles1=gpuarray(single(zeros(length(bins)-1,number_of_angle_nuple_hpx)));
+        histogr_1d_angles1=gpuArray(single(zeros(length(bins)-1,number_of_angle_nuple_hpx)));
 
-        angles_t=gpuarray(angles_t);
-        angles_p=gpuarray(angles_p);
+        angles_t=gpuArray(angles_t);
+        angles_p=gpuArray(angles_p);
         
-        limsup_sq=gpuarray(limsup_sq);
-        liminf=gpuarray(liminf);
-        limsup=gpuarray(limsup);
+        limsup=gpuArray((1/(2*lenght_factor))*nc);
+        liminf=gpuArray(-(1/(2*lenght_factor))*nc);
+        limsup_sq=limsup^2;
         
         for i=angl_ind_start:angl_ind_end
                     
