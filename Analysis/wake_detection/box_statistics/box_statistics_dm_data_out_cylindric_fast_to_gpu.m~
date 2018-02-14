@@ -1,9 +1,9 @@
-function [ proj1d_angles] = box_statistics_dm_data_out_cylindric_fast( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,data_stream,level_window,dwbasis)
+function [ proj1d_angles] = box_statistics_dm_data_out_cylindric_fast_to_gpu( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,data_stream,level_window,dwbasis)
 
 %(example)  box_statistics_dm_per_node_part('/home/asus/Dropbox/extras/storage/', '/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','',4,0,1,1);
 %(example)  for i=1:8; box_statistics_dm_per_node_part('/home/asus/Dropbox/extras/storage/guillimin/test/','/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','',4,0,8,i); end;
 
-%(example)  [proj1d_angles] = box_statistics_dm_data_out_cylindric_fast('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_fast/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,2,[0,0,0],2,1,4,[1,2],[1],'db1');
+%(example)  [proj1d_angles] = box_statistics_dm_data_out_cylindric_fast_to_gpu('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cylindric_fast_to_gpu/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,1,[0,0,0],2,1,4,[1,2],[1],'db1');
 
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
@@ -16,11 +16,11 @@ function [ proj1d_angles] = box_statistics_dm_data_out_cylindric_fast( root,root
 
 % %passivetransf melhorou1/3
 % 
-% myCluster = parcluster('local');
-% myCluster.NumWorkers=num_cores;
-% saveProfile(myCluster);
-% 
-% p = parpool(num_cores);
+myCluster = parcluster('local');
+myCluster.NumWorkers=num_cores;
+saveProfile(myCluster);
+
+p = parpool(num_cores);
 
 
 
@@ -32,6 +32,11 @@ cd('../../preprocessing');
 
 angles_hpx(1,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_t.cvs'));
 angles_hpx(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'));
+
+% angles_hpx_t = dlmread(strcat('../../python/angles',num2str(NSIDE),'_t.cvs'));
+% angles_hpx_p= dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'));
+
+
 [~,number_of_angle_nuple_hpx] = size(angles_hpx);
 
 n_angle_per_node=ceil(number_of_angle_nuple_hpx/num_cores);
@@ -42,6 +47,13 @@ end
 for cr=1:num_cores
     n_angl_indx(cr)= -angl_indx(cr)+angl_indx(cr+1);
     
+end
+
+for cr=1:num_cores
+     angl_ind_start=angl_indx(cr);
+     angl_ind_end=angl_indx(cr+1)-1;
+     angl_chunk_t{cr}=angles_hpx(1,angl_ind_start:angl_ind_end);
+     angl_chunk_p{cr}=angles_hpx(2,angl_ind_start:angl_ind_end);   
 end
 
 [ size_box, nc, np, ~, ~ ,~ ,~ ,~ ,z, ~, ~  ] = preprocessing_part(root,spec,aux_path,filename,part,1);
@@ -60,13 +72,15 @@ for part_id = 1  :   part
     Pos=mod(Pos,nc);
         
     parfor cor=1:num_cores
-        
-        angl_ind_start=angl_indx(cor);
-        angl_ind_end=angl_indx(cor+1)-1;
+%         
+%         angl_ind_start=angl_indx(cor);
+%         angl_ind_end=angl_indx(cor+1)-1;
                 
+%         angles=angles_hpx_t(angl_ind_start:angl_ind_end);
         
-        
-        
+        angles_t=angl_chunk_t{cor};
+        angles_p=angl_chunk_p{cor};
+
         rx=[];
         
         rx(1,:)=Pos(1,:)-(nc/2)-pivot(1);
@@ -78,9 +92,12 @@ for part_id = 1  :   part
         
         for i=angl_ind_start:angl_ind_end
                     
-        theta=angles_hpx(1,i);
-        phi=angles_hpx(2,i);
-        
+%         theta=angles_hpx(1,i);
+%         phi=angles_hpx(2,i);
+
+        theta=angles_t(i);
+        phi=angles_p(i);
+
         nx=[transpose(cos(theta).*cos(phi)) ,transpose(cos(theta).*sin(phi)), transpose(-sin(theta))];
         ny=[transpose(-sin(phi)) ,transpose(cos(phi)), 0];
         nz=[sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)];
@@ -91,7 +108,7 @@ for part_id = 1  :   part
         limsup= (1/(2*lenght_factor))*nc;        
         limsup_sq= limsup^2;
         
-        dz(:,(nx*rx).*(nx*rx)+(ny*rx).*(ny*rx)>=limsup_sq|dz<=liminf|dz>=limsup)=[];
+        dz((nx*rx).*(nx*rx)+(ny*rx).*(ny*rx)>=limsup_sq|dz<=liminf|dz>=limsup)=[];
                 
         histogr_1d_angles1(:,i)=histcounts(dz,bins);
 %          histogr(i,:,:) = histcounts(dz,bins);
@@ -103,16 +120,8 @@ for part_id = 1  :   part
         
     end
     
-    histogr_sum_parts=histogr_sum_parts+histogr;
+    proj1d_angles=proj1d_angles+histogr_1d_angles;
     
-end
-
-for j=1:num_cores
-
-    aux(:,:)=histogr_sum_parts(j,:,:);
-    
-proj1d_angles(:,angl_indx(j):angl_indx(j+1)-1)=transpose(aux);
-
 end
 
 toc;
@@ -286,30 +295,22 @@ end
 
 if ~ismember(0,data_stream)
     
-    path_out_all=strcat(strcat(root_out(1,1:end-1),'_all/',spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/');
-    path_out=strcat(strcat(root_out,spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/');
-    mkdir(strcat(strcat(root_out(1,1:end-1),'_all/',spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/'));
-    mkdir(strcat(root_out,spec,aux_path),strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/'));
-    mkdir(strcat(root_out,spec,aux_path),strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/dc/'));
+    path_out_all=strcat(strcat(root_out(1,1:end-1),'_all/',spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/',dwbasis,'/');
+    path_out=strcat(strcat(root_out,spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/',dwbasis,'/');
+    mkdir(strcat(strcat(root_out(1,1:end-1),'_all/',spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/',dwbasis,'/'));
+    mkdir(strcat(root_out,spec,aux_path),strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/',dwbasis,'/'));
+    mkdir(strcat(root_out,spec,aux_path),strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/',dwbasis,'/dc/'));
     
     if level_window~=0 
-        mkdir(path_out,strcat('/cutoff_',num2str(level_window),'MpcCut/'));
-        mkdir(path_out,strcat('/dc/cutoff_',num2str(level_window),'MpcCut/'));
+        mkdir(path_out,strcat('/','level_window',mat2str(level_window(:)),'/'));
+        mkdir(path_out,strcat('/dc','/','level_window',mat2str(level_window(:)),'/'));
 %         mkdir(path_out,strcat('/cutoff_',num2str(cutoff),'MpcCut/dc/'));       
-        mkdir(path_out_all,strcat('/cutoff_',num2str(level_window),'MpcCut/'));
-        mkdir(path_out_all,strcat('/dc/cutoff_',num2str(level_window),'MpcCut/'));
+        mkdir(path_out_all,strcat('/','level_window',mat2str(level_window(:)),'/'));
+        mkdir(path_out_all,strcat('/dc/','level_window',mat2str(level_window(:)),'/'));
         
     end
     
     if ismember(1,data_stream)
-
-        fileID = fopen(strcat(path_out_all,'_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
-        fwrite(fileID,proj1d_angles, 'float32','l');
-        fclose(fileID);
-        
-        fileID = fopen(strcat(path_out_all,'dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
-        fwrite(fileID,dc_proj1d_angles, 'float32','l');
-        fclose(fileID);
         
         fileID = fopen(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z)),'_out_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
         fwrite(fileID,out_proj1d_angles, 'float32','l');
@@ -319,44 +320,51 @@ if ~ismember(0,data_stream)
         fwrite(fileID,out_dc_proj1d_angles, 'float32','l');
         fclose(fileID);
         
-        if level_window~=0 
+        if level_window~=0             
             
-            fileID = fopen(strcat(path_out_all,'cutoff_',num2str(level_window),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
-            fwrite(fileID,filtered_proj1d_angles, 'float32','l');
-            fclose(fileID);
-            
-            fileID = fopen(strcat(path_out_all,'dc/cutoff_',num2str(level_window),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
-            fwrite(fileID,filtered_dc_proj1d_angles, 'float32','l');
-            fclose(fileID);
-            
-            fileID = fopen(strcat(path_out,'cutoff_',num2str(level_window),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
+            fileID = fopen(strcat(path_out,'level_window',mat2str(level_window(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
             fwrite(fileID,out_filtered_proj1d_angles, 'float32','l');
             fclose(fileID);
             
-            fileID = fopen(strcat(path_out,'dc/cutoff_',num2str(level_window),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
+            fileID = fopen(strcat(path_out,'dc/','level_window',mat2str(level_window(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
             fwrite(fileID,out_filtered_dc_proj1d_angles, 'float32','l');
             fclose(fileID);
             
-%             fileID = fopen(strcat(path_out,'cutoff_',num2str(cutoff),'MpcCut/','dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_dc_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
-%             fwrite(fileID,out_dc_filtered_proj1d_angles, 'float32','l');
-%             fclose(fileID);
+            fileID = fopen(strcat(path_out_all,'level_window',mat2str(level_window(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
+            fwrite(fileID,filtered_proj1d_angles, 'float32','l');
+            fclose(fileID);
+            
+            fileID = fopen(strcat(path_out_all,'dc/','level_window',mat2str(level_window(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
+            fwrite(fileID,filtered_dc_proj1d_angles, 'float32','l');
+            fclose(fileID);
             
         end
+        
+        fileID = fopen(strcat(path_out_all,'_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
+        fwrite(fileID,proj1d_angles, 'float32','l');
+        fclose(fileID);
+        
+        fileID = fopen(strcat(path_out_all,'dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'),'w');
+        fwrite(fileID,dc_proj1d_angles, 'float32','l');
+        fclose(fileID);
+        
     end
     
     if ismember(2,data_stream)
-            dlmwrite(strcat(path_out_all,'_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),proj1d_angles,'delimiter','\t');
-            dlmwrite(strcat(path_out_all,'dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),dc_proj1d_angles,'delimiter','\t');
             dlmwrite(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z)),'_out_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),out_proj1d_angles,'delimiter','\t');
             dlmwrite(strcat(path_out,'dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),out_dc_proj1d_angles,'delimiter','\t');
         
         if level_window~=0 
-            dlmwrite(strcat(path_out_all,'cutoff_',num2str(level_window),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),filtered_proj1d_angles,'delimiter','\t');
-            dlmwrite(strcat(path_out_all,'dc/cutoff_',num2str(level_window),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),filtered_dc_proj1d_angles,'delimiter','\t');
-            dlmwrite(strcat(path_out,'cutoff_',num2str(level_window),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),out_proj1d_angles,'delimiter','\t');
-%             dlmwrite(strcat(path_out,'dc/','cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),out_filtered_dc_proj1d_angles,'delimiter','\t');
-            dlmwrite(strcat(path_out,'dc/cutoff_',num2str(level_window),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),out_filtered_dc_proj1d_angles,'delimiter','\t');
+            dlmwrite(strcat(path_out,'level_window',mat2str(level_window(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),out_proj1d_angles,'delimiter','\t');
+            dlmwrite(strcat(path_out,'dc/','level_window',mat2str(level_window(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),out_filtered_dc_proj1d_angles,'delimiter','\t');
+            dlmwrite(strcat(path_out_all,'level_window',mat2str(level_window(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),filtered_proj1d_angles,'delimiter','\t');
+            dlmwrite(strcat(path_out_all,'dc/','level_window',mat2str(level_window(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),filtered_dc_proj1d_angles,'delimiter','\t');
+
         end
+        
+            dlmwrite(strcat(path_out_all,'_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),proj1d_angles,'delimiter','\t');
+            dlmwrite(strcat(path_out_all,'dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),dc_proj1d_angles,'delimiter','\t');
+
         
     end
     
