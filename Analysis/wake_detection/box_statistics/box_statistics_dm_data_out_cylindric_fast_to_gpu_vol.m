@@ -116,7 +116,7 @@ for part_id = 1  :   part
     
     
         
-    for cor=1:num_cores
+    parfor cor=1:num_cores
 %         
         angl_ind_start=angl_indx(cor);
         angl_ind_end=angl_indx(cor+1)-1;
@@ -126,7 +126,7 @@ for part_id = 1  :   part
         angles_t=angl_chunk_t{cor};
         angles_p=angl_chunk_p{cor};
 
-        rx=Pos;
+        rx=[];
         
 %         rx(1,:)=Pos(1,:)-(nc/2)-pivot(1);
 %         rx(2,:)=Pos(2,:)-(nc/2)-pivot(2);
