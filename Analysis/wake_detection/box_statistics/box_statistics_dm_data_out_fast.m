@@ -173,31 +173,13 @@ for part_id = 1  :   part
 %     part_id=part_id+1;
     
 end
+clearvars angl_chunk_t angl_chunk_p;
+
 
 toc;
 
-clearvars angl_chunk_t angl_chunk_p;
-
-angles_hpx(1,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_t.cvs'));
-angles_hpx(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'));
-
-[~,number_of_angle_nuple_hpx] = size(angles_hpx);
 
 
-
-for angl=1:number_of_angle_nuple_hpx/2
-    
-    theta_indices=find(angles_hpx(1,angl)==angles_hpx(1,:));
-
- theta_inverse_indices=number_of_angle_nuple_hpx-theta_indices+1;
- 
-%  phi_indice_inverse=theta_inverse_indices(find((mod(angles_hpx(2,angl)+pi,2*pi))==angles_hpx(2,theta_inverse_indices)));
- phi_indice_inverse=theta_inverse_indices(abs((mod(angles_hpx(2,angl)+pi,2*pi))-angles_hpx(2,theta_inverse_indices))<10E-10);
- 
-    
-    proj1d_angles(:,phi_indice_inverse)=flip(proj1d_angles(:,angl));
-    
-end
 
 tic;
 % 
@@ -364,6 +346,31 @@ if level_window~=0
     
 end
 
+angles_hpx(1,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_t.cvs'));
+angles_hpx(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'));
+
+[~,number_of_angle_nuple_hpx] = size(angles_hpx);
+
+
+
+for angl=1:number_of_angle_nuple_hpx/2
+    
+    theta_indices=find(angles_hpx(1,angl)==angles_hpx(1,:));
+
+ theta_inverse_indices=number_of_angle_nuple_hpx-theta_indices+1;
+ 
+%  phi_indice_inverse=theta_inverse_indices(find((mod(angles_hpx(2,angl)+pi,2*pi))==angles_hpx(2,theta_inverse_indices)));
+ phi_indice_inverse=theta_inverse_indices(abs((mod(angles_hpx(2,angl)+pi,2*pi))-angles_hpx(2,theta_inverse_indices))<10E-10);
+ 
+    
+    proj1d_angles(:,phi_indice_inverse)=flip(proj1d_angles(:,angl));
+    dc_proj1d_angles(:,phi_indice_inverse)=flip(dc_proj1d_angles(:,angl));
+    out_proj1d_angles(:,phi_indice_inverse)=flip(out_proj1d_angles(:,angl));
+    out_dc_proj1d_angles(:,phi_indice_inverse)=flip(out_dc_proj1d_angles(:,angl));
+    out_filtered_proj1d_angles(:,phi_indice_inverse)=flip(out_filtered_proj1d_angles(:,angl));
+    filtered_dc_proj1d_angles(:,phi_indice_inverse)=flip(filtered_dc_proj1d_angles(:,angl));
+    
+end
 
 
 if ~ismember(0,data_stream)
