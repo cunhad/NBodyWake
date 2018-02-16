@@ -245,29 +245,29 @@ zoomfactor = 1.2;
 ns = ceil(sqrt(2+J-J_min+1)) ;
 ny = 2  ;
 nx = ceil((2+J-J_min)/2 );
-figure('Position',[100 100 1300 1000])
-
-subplot(nx, ny, 1);
-s2let_hpx_plot_mollweide(f);
-campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
-title(string)
-
-% subplot(nx, ny, 2);
-% s2let_hpx_plot_mollweide(f_scal);
+% figure('Position',[100 100 1300 1000])
+% 
+% subplot(nx, ny, 1);
+% s2let_hpx_plot_mollweide(f);
 % campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
-% title('Scaling fct')
-
-% display(J_min);
-% display(J);
-% display(ns);
-
-for j = J_min:J
-   subplot(nx, ny, j-J_min+2);
-   s2let_hpx_plot_mollweide(f_wav{j-J_min+1});
-   campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
-   title(['Wavelet scale : ',int2str(j)-J_min+1])
-      
-end 
+% title(string)
+% 
+% % subplot(nx, ny, 2);
+% % s2let_hpx_plot_mollweide(f_scal);
+% % campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+% % title('Scaling fct')
+% 
+% % display(J_min);
+% % display(J);
+% % display(ns);
+% 
+% for j = J_min:J
+%    subplot(nx, ny, j-J_min+2);
+%    s2let_hpx_plot_mollweide(f_wav{j-J_min+1});
+%    campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+%    title(['Wavelet scale : ',int2str(j)-J_min+1])
+%       
+% end 
 
 % for j = J_min:J
 %    
@@ -276,8 +276,12 @@ end
 % end
 
 
-% s2let_hpx_plot_mollweide_info(f_wav{8},1);
+% s2let_hpx_plot_mollweide_info(f_wav{10},1);
 s2let_hpx_plot_mollweide_info(f,1);
+% s2let_hpx_plot_mollweide(f);
+% 
+% figure;
+% histogram(f);
 
 % s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1}+f_wav{J-J_min}+f_wav{J-J_min-1},1);
 
@@ -307,8 +311,12 @@ s2let_hpx_plot_mollweide_info(f,1);
 % s2let_hpx_plot_mollweide_info(f_wav{5}+f_wav{4},1); %same as above
 % s2let_hpx_plot_mollweide_info(f_wav{5}+f_wav{4},1); %same as above, but
 % for 4,1
-
-
+% 
+% s2let_hpx_plot_mollweide_info(f_wav{6},1);
+% 
+% figure;
+% 
+% histogram(f_wav{10}+f_wav{9}+f_wav{8}+f_wav{7}+f_wav{6}+f_wav{5});
 
 % display(thetas_max);
 % display(phis_max);

@@ -119,7 +119,7 @@ for part_id = 1  :   part
     
     
         
-    for cor=1:num_cores
+    parfor cor=1:num_cores
 %         
         angl_ind_start=angl_indx(cor);
         angl_ind_end=angl_indx(cor+1)-1;
