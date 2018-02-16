@@ -351,6 +351,14 @@ angles_hpx(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'))
 
 [~,number_of_angle_nuple_hpx] = size(angles_hpx);
 
+proj1d_angles2=proj1d_angles;
+dc_proj1d_angles2=dc_proj1d_angles;
+filtered_dc_proj1d_angles2=filtered_dc_proj1d_angles;
+filtered_proj1d_angles2=filtered_proj1d_angles;
+out_proj1d_angles2=out_proj1d_angles;
+out_dc_proj1d_angles2=out_dc_proj1d_angles;
+out_filtered_proj1d_angles2=out_filtered_proj1d_angles;
+out_filtered_dc_proj1d_angles2=out_filtered_dc_proj1d_angles;
 
 
 parfor angl=number_of_angle_nuple_hpx:number_of_angle_nuple_hpx/2+1
@@ -363,14 +371,14 @@ parfor angl=number_of_angle_nuple_hpx:number_of_angle_nuple_hpx/2+1
  phi_indice_inverse=theta_inverse_indices(abs((mod(angles_hpx(2,angl)+pi,2*pi))-angles_hpx(2,theta_inverse_indices))<10E-10);
  
     
-    proj1d_angles(:,angl)=flip(proj1d_angles(:,phi_indice_inverse));
-    dc_proj1d_angles(:,angl)=flip(dc_proj1d_angles(:,phi_indice_inverse));
-    filtered_dc_proj1d_angles(:,angl)=flip(filtered_dc_proj1d_angles(:,phi_indice_inverse));
-    filtered_proj1d_angles(:,angl)=flip(filtered_proj1d_angles(:,phi_indice_inverse));
-    out_proj1d_angles(:,angl)=out_proj1d_angles(:,phi_indice_inverse);
-    out_dc_proj1d_angles(:,angl)=out_dc_proj1d_angles(:,phi_indice_inverse);
-    out_filtered_proj1d_angles(:,angl)=out_filtered_proj1d_angles(:,phi_indice_inverse);
-    out_filtered_dc_proj1d_angles(:,angl)=out_filtered_dc_proj1d_angles(:,phi_indice_inverse);
+    proj1d_angles(:,angl)=flip(proj1d_angles2(:,phi_indice_inverse));
+    dc_proj1d_angles(:,angl)=flip(dc_proj1d_angles2(:,phi_indice_inverse));
+    filtered_dc_proj1d_angles(:,angl)=flip(filtered_dc_proj1d_angles2(:,phi_indice_inverse));
+    filtered_proj1d_angles(:,angl)=flip(filtered_proj1d_angles2(:,phi_indice_inverse));
+    out_proj1d_angles(:,angl)=out_proj1d_angles2(:,phi_indice_inverse);
+    out_dc_proj1d_angles(:,angl)=out_dc_proj1d_angles2(:,phi_indice_inverse);
+    out_filtered_proj1d_angles(:,angl)=out_filtered_proj1d_angles2(:,phi_indice_inverse);
+    out_filtered_dc_proj1d_angles(:,angl)=out_filtered_dc_proj1d_angles2(:,phi_indice_inverse);
     
 end
 

@@ -3,7 +3,7 @@ function [ proj1d_angles ] = box_statistics_dm_data_out_fast( root,root_out,spec
 %(example)  box_statistics_dm_per_node_part('/home/asus/Dropbox/extras/storage/', '/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','',4,0,1,1);
 %(example)  for i=1:8; box_statistics_dm_per_node_part('/home/asus/Dropbox/extras/storage/guillimin/test/','/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','',4,0,8,i); end;
 
-%(example)  [proj1d_angles] = box_statistics_dm_data_out_fast('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cylindric_fast/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,1,[0,0,0],2,1,4,[1,2],[1],'sym6');
+%(example)  [proj1d_angles] = box_statistics_dm_data_out_fast('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_fast/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,1,[0,0,0],2,1,4,[1,2],[1],'sym6');
 
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
@@ -351,9 +351,17 @@ angles_hpx(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'))
 
 [~,number_of_angle_nuple_hpx] = size(angles_hpx);
 
+proj1d_angles2=proj1d_angles;
+dc_proj1d_angles2=dc_proj1d_angles;
+filtered_dc_proj1d_angles2=filtered_dc_proj1d_angles;
+filtered_proj1d_angles2=filtered_proj1d_angles;
+out_proj1d_angles2=out_proj1d_angles;
+out_dc_proj1d_angles2=out_dc_proj1d_angles;
+out_filtered_proj1d_angles2=out_filtered_proj1d_angles;
+out_filtered_dc_proj1d_angles2=out_filtered_dc_proj1d_angles;
 
 
-for angl=1:number_of_angle_nuple_hpx/2
+parfor angl=number_of_angle_nuple_hpx:number_of_angle_nuple_hpx/2+1
     
     theta_indices=find(angles_hpx(1,angl)==angles_hpx(1,:));
 
@@ -363,14 +371,14 @@ for angl=1:number_of_angle_nuple_hpx/2
  phi_indice_inverse=theta_inverse_indices(abs((mod(angles_hpx(2,angl)+pi,2*pi))-angles_hpx(2,theta_inverse_indices))<10E-10);
  
     
-    proj1d_angles(:,phi_indice_inverse)=flip(proj1d_angles(:,angl));
-    dc_proj1d_angles(:,phi_indice_inverse)=flip(dc_proj1d_angles(:,angl));
-    filtered_dc_proj1d_angles(:,phi_indice_inverse)=flip(filtered_dc_proj1d_angles(:,angl));
-    filtered_proj1d_angles(:,phi_indice_inverse)=flip(filtered_proj1d_angles(:,angl));
-    out_proj1d_angles(:,phi_indice_inverse)=out_proj1d_angles(:,angl);
-    out_dc_proj1d_angles(:,phi_indice_inverse)=out_dc_proj1d_angles(:,angl);
-    out_filtered_proj1d_angles(:,phi_indice_inverse)=out_filtered_proj1d_angles(:,angl);
-    out_filtered_dc_proj1d_angles(:,phi_indice_inverse)=out_filtered_dc_proj1d_angles(:,angl);
+    proj1d_angles(:,angl)=flip(proj1d_angles2(:,phi_indice_inverse));
+    dc_proj1d_angles(:,angl)=flip(dc_proj1d_angles2(:,phi_indice_inverse));
+    filtered_dc_proj1d_angles(:,angl)=flip(filtered_dc_proj1d_angles2(:,phi_indice_inverse));
+    filtered_proj1d_angles(:,angl)=flip(filtered_proj1d_angles2(:,phi_indice_inverse));
+    out_proj1d_angles(:,angl)=out_proj1d_angles2(:,phi_indice_inverse);
+    out_dc_proj1d_angles(:,angl)=out_dc_proj1d_angles2(:,phi_indice_inverse);
+    out_filtered_proj1d_angles(:,angl)=out_filtered_proj1d_angles2(:,phi_indice_inverse);
+    out_filtered_dc_proj1d_angles(:,angl)=out_filtered_dc_proj1d_angles2(:,phi_indice_inverse);
     
 end
 
