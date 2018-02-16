@@ -1,9 +1,9 @@
-function [ proj1d_angles] = box_statistics_dm_data_out_cylindric_fast_to_gpu( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,data_stream,level_window,dwbasis)
+function [ proj1d_angles ] = box_statistics_dm_data_out_fast_noserialloop( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,data_stream,level_window,dwbasis)
 
 %(example)  box_statistics_dm_per_node_part('/home/asus/Dropbox/extras/storage/', '/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','',4,0,1,1);
 %(example)  for i=1:8; box_statistics_dm_per_node_part('/home/asus/Dropbox/extras/storage/guillimin/test/','/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','',4,0,8,i); end;
 
-%(example)  [proj1d_angles] = box_statistics_dm_data_out_cylindric_fast_to_gpu('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cylindric_fast_to_gpu/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,1,[0,0,0],2,1,4,[1,2],[1],'db1');
+%(example)  [proj1d_angles] = box_statistics_dm_data_out_fast_noserialloop('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cylindric_fast/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,1,[0,0,0],2,1,4,[1,2],[1],'db1');
 
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
@@ -30,8 +30,8 @@ cd('../../preprocessing');
 
 [~,redshift_list,~,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec,aux_path );
 
-angles_hpx(1,:) = single(dlmread(strcat('../../python/angles',num2str(NSIDE),'_t.cvs')));
-angles_hpx(2,:) = single(dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs')));
+angles_hpx(1,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_t.cvs'));
+angles_hpx(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'));
 
 % angles_hpx_t = dlmread(strcat('../../python/angles',num2str(NSIDE),'_t.cvs'));
 % angles_hpx_p= dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'));
@@ -39,111 +39,137 @@ angles_hpx(2,:) = single(dlmread(strcat('../../python/angles',num2str(NSIDE),'_p
 
 [~,number_of_angle_nuple_hpx] = size(angles_hpx);
 
-n_angle_per_node=ceil(number_of_angle_nuple_hpx/num_cores);
+number_of_angle_nuple_hpx=number_of_angle_nuple_hpx/2;
+% 
+% n_angle_per_node=ceil(number_of_angle_nuple_hpx/num_cores);
+% 
+% for cr=1:num_cores+1
+%     angl_indx(cr)= n_angle_per_node*(cr-1)+1;
+% end
+% for cr=1:num_cores
+%     n_angl_indx(cr)= -angl_indx(cr)+angl_indx(cr+1);
+%     
+% end
+% 
+% for cr=1:num_cores
+%      angl_ind_start=angl_indx(cr);
+%      angl_ind_end=angl_indx(cr+1)-1;
+%      angl_chunk_t{cr}=angles_hpx(1,angl_ind_start:angl_ind_end);
+%      angl_chunk_p{cr}=angles_hpx(2,angl_ind_start:angl_ind_end);   
+% end
+% 
+% clearvars angles_hpx;
 
-for cr=1:num_cores+1
-    angl_indx(cr)= n_angle_per_node*(cr-1)+1;
-end
-for cr=1:num_cores
-    n_angl_indx(cr)= -angl_indx(cr)+angl_indx(cr+1);
-    
-end
+% N_particles=0;
+% 
+% for part_pre_id = 1 : part_pre
+%     [ ~, ~, ~, ~, ~ ,~ ,~ ,~ ,~, ~, ~, n_size_id ] = preprocessing_part_aux(root,spec,aux_path,filename,lenght_factor,pivot,part_pre,part_pre_id);
+%     N_particles=N_particles+n_size_id;
+% end
+% 
+% N_particles_chunk_exact=N_particles/part;
 
-for cr=1:num_cores
-     angl_ind_start=angl_indx(cr);
-     angl_ind_end=angl_indx(cr+1)-1;
-     angl_chunk_t{cr}=angles_hpx(1,angl_ind_start:angl_ind_end);
-     angl_chunk_p{cr}=angles_hpx(2,angl_ind_start:angl_ind_end);   
-end
 
-clearvars angles_hpx;
+
 
 [ size_box, nc, np, ~, ~ ,~ ,~ ,~ ,z, ~, ~  ] = preprocessing_part(root,spec,aux_path,filename,part,1);
 bins=[-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))];
 proj1d_angles=zeros(length(bins)-1,number_of_angle_nuple_hpx);
 
-histogr_1d_angles=single(zeros(length(bins)-1,number_of_angle_nuple_hpx));
 
+% % part_id=1;
 
-bins=single(bins);
-
-nc=single(nc);
-pivot=single(pivot);
-lenght_factor=single(lenght_factor);
-
-% liminf=-(1/(2*lenght_factor))*nc;
-% limsup= (1/(2*lenght_factor))*nc;
-% limsup_sq= limsup^2;
-
+% while part_id <   part +1
 for part_id = 1  :   part
+
     
     cd('../preprocessing');
     
-    [ ~, ~, ~, ~, ~ ,~ ,~ ,~ ,~, ~, Pos  ] = preprocessing_part(root,spec,aux_path,filename,part,part_id);
+    [ ~, ~, ~, ~, ~ ,~ ,~ ,~ ,z, ~, Pos  ] = preprocessing_part(root,spec,aux_path,filename,part,part_id);
     
-    Pos=mod(Pos,nc);
-    
-    Pos=single(Pos);
+        Pos=mod(Pos,nc);
+ 
+        Pos(1,:)=Pos(1,:)-(nc/2)-pivot(1);
+        Pos(2,:)=Pos(2,:)-(nc/2)-pivot(2);
+        Pos(3,:)=Pos(3,:)-(nc/2)-pivot(3);
         
-%     parfor cor=1:num_cores
-     for cor=1:num_cores
+        lenght_factor_pre=lenght_factor/2;
 
-        angl_ind_start=angl_indx(cor);
-        angl_ind_end=angl_indx(cor+1)-1;
-                        
-        angles_t=angl_chunk_t{cor};
-        angles_p=angl_chunk_p{cor};
+        
+        lim_pre=(1/(lenght_factor_pre))*nc;
+        lim_pre_sq= lim_pre^2;
 
-        rx=[];
+        
+%         conditionsx_pre=Pos(1,:)<=liminf_pre|Pos(1,:)>=limsup_pre;
+%         conditionsy_pre=Pos(2,:)<=liminf_pre|Pos(2,:)>=limsup_pre;
+%         conditionsz_pre=Pos(3,:)<=liminf_pre|Pos(3,:)>=limsup_pre;
+%         conditions_pre=conditionsx_pre|conditionsy_pre|conditionsz_pre;
+        
+        Pos(:,Pos(1,:).*Pos(1,:)+Pos(2,:).*Pos(2,:)+Pos(3,:).*Pos(3,:)>=lim_pre_sq)=[];
+%     
+%     [~,N_particle_in_part]=size(Pos);
+%     
+%     while (N_particle_in_part<N_particles_chunk_exact&&part_id<part)
+%     
+%     [ ~, ~, ~, ~, ~ ,~ ,~ ,~ ,z, ~, Pos_t  ] = preprocessing_part(root,spec,aux_path,filename,part,part_id);
+%     
+%     [ N_particle_in_part
+%     
+    
+    
+        
+    parfor i=1:number_of_angle_nuple_hpx
+%         
+%         angl_ind_start=angl_indx(cor);
+%         angl_ind_end=angl_indx(cor+1)-1;
+                
+%         angles=angles_hpx_t(angl_ind_start:angl_ind_end);
+        
+        theta=angles_hpx(1,i);
+        phi=angles_hpx(2,i);
+
+        rx=Pos;
         
         rx(1,:)=Pos(1,:)-(nc/2)-pivot(1);
         rx(2,:)=Pos(2,:)-(nc/2)-pivot(2);
         rx(3,:)=Pos(3,:)-(nc/2)-pivot(3);
         
-        rx=gpuArray(rx);
-        
-        histogr_1d_angles1=gpuArray(single(zeros(length(bins)-1,number_of_angle_nuple_hpx)));
 
-        angles_t=gpuarray(angles_t);
-        angles_p=gpuarray(angles_p);
-        
-        limsup=gpuarray((1/(2*lenght_factor))*nc);
-        liminf=gpuarray(-(1/(2*lenght_factor))*nc);
-        limsup_sq=limsup^2;
-        
-        for i=angl_ind_start:angl_ind_end
-                    
+                            
 %         theta=angles_hpx(1,i);
 %         phi=angles_hpx(2,i);
-
-        theta=angles_t(i-angl_ind_start+1);
-        phi=angles_p(i-angl_ind_start+1);
 
         nx=[transpose(cos(theta).*cos(phi)) ,transpose(cos(theta).*sin(phi)), transpose(-sin(theta))];
         ny=[transpose(-sin(phi)) ,transpose(cos(phi)), 0];
         nz=[sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)];
         
-        dz=nz*rx;        
-%         
-%         liminf=-(1/(2*lenght_factor))*nc;
-%         limsup= (1/(2*lenght_factor))*nc;
-%         limsup_sq= limsup^2;
-%         
+        dz=nz*rx;
+        
+        liminf=-(1/(2*lenght_factor))*nc;
+        limsup= (1/(2*lenght_factor))*nc;        
+        limsup_sq= limsup^2;
+        
         dz((nx*rx).*(nx*rx)+(ny*rx).*(ny*rx)>=limsup_sq|dz<=liminf|dz>=limsup)=[];
-                
-        histogr_1d_angles1(:,i)=histcounts(dz,bins);
-         
-        end
         
-        histogr_1d_angles=histogr_1d_angles+gather(histogr_1d_angles1);
+        %          histogr(i,:,:) = histcounts(dz,bins);
+        %         proj1d_angles(:,i)=proj1d_angles(:,i)+transpose(histogr(1,:));
+        %
         
+        
+        histogr = histcounts(dz,bins);
+        proj1d_angles(:,i)=proj1d_angles(:,i)+transpose(histogr(1,:));%
     end
     
-    proj1d_angles=proj1d_angles+histogr_1d_angles;
+    
+    %     part_id=part_id+1;
     
 end
 
+
 toc;
+
+
+
 
 tic;
 % 
@@ -309,7 +335,32 @@ if level_window~=0
     out_filtered_dc_proj1d_angles=[transpose(max_amplitude_filtered_dc_proj1d_angles);std_filtered_dc_proj1d_angles;transpose(stn_filtered_dc_proj1d_angles)];
     
 end
+% 
+% angles_hpx(1,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_t.cvs'));
+% angles_hpx(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'));
+% 
+[~,number_of_angle_nuple_hpx] = size(angles_hpx);
 
+
+
+for angl=1:number_of_angle_nuple_hpx/2
+    
+    theta_indices=find(angles_hpx(1,angl)==angles_hpx(1,:));
+
+ theta_inverse_indices=number_of_angle_nuple_hpx-theta_indices+1;
+ 
+%  phi_indice_inverse=theta_inverse_indices(find((mod(angles_hpx(2,angl)+pi,2*pi))==angles_hpx(2,theta_inverse_indices)));
+ phi_indice_inverse=theta_inverse_indices(abs((mod(angles_hpx(2,angl)+pi,2*pi))-angles_hpx(2,theta_inverse_indices))<10E-10);
+ 
+    
+    proj1d_angles(:,phi_indice_inverse)=flip(proj1d_angles(:,angl));
+    dc_proj1d_angles(:,phi_indice_inverse)=flip(dc_proj1d_angles(:,angl));
+    out_proj1d_angles(:,phi_indice_inverse)=flip(out_proj1d_angles(:,angl));
+    out_dc_proj1d_angles(:,phi_indice_inverse)=flip(out_dc_proj1d_angles(:,angl));
+    out_filtered_proj1d_angles(:,phi_indice_inverse)=flip(out_filtered_proj1d_angles(:,angl));
+    filtered_dc_proj1d_angles(:,phi_indice_inverse)=flip(filtered_dc_proj1d_angles(:,angl));
+    
+end
 
 
 if ~ismember(0,data_stream)

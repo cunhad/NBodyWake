@@ -280,8 +280,8 @@ nx = ceil((2+J-J_min)/2 );
 s2let_hpx_plot_mollweide_info(f,1);
 % s2let_hpx_plot_mollweide(f);
 % 
-% figure;
-% histogram(f);
+figure;
+histogram(f);
 
 % s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1}+f_wav{J-J_min}+f_wav{J-J_min-1},1);
 

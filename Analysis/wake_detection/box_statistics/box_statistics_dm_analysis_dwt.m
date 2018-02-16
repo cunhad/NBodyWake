@@ -2,7 +2,7 @@ function [ out_proj1d_angles ] = box_statistics_dm_analysis_dwt( root,root_data_
 
 %(example)  [  ] = box_statistics_dm_analysis_dwt('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/data_test/','/home/asus/Dropbox/extras/storage/graham/small_res/test_plot_box/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','0.000xv0.dat',2,1,[0,0,0],4,1,4,'minmax',[1,3],[0,1,2,3],1,[1],'db1',[1,2,3,4],[1,2,3]);
 
-%(example)  [  ] = box_statistics_dm_analysis_dwt('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat_cylindric_fast_to_gpu/','/home/asus/Dropbox/extras/storage/guillimin/box_stat_cylindric_fast_to_gpu/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','','10.000xv0.dat',2,1,[0,0,0],64,16,4,'minmax',[1],[0,1,2,3],1,[1],'db1',[1,2,3,4],[1,2,3]);
+%(example)  [  ] = box_statistics_dm_analysis_dwt('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat_cylindric_fast/','/home/asus/Dropbox/extras/storage/guillimin/box_stat_cylindric_fast/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','','10.000xv0.dat',2,1,[0,0,0],64,16,4,'minmax',[1],[0,1,2,3],1,[1],'sym6',[1,2,3,4],[1,2,3]);
 
 % 
 % path_total_out=strcat(strcat(root_per_node_out,spec,aux_path),'data/',aux_path_per_node_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/dc_all_nodes_1dproj/');
