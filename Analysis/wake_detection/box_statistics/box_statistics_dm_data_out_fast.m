@@ -94,10 +94,10 @@ for part_id = 1  :   part
         Pos(2,:)=Pos(2,:)-(nc/2)-pivot(2);
         Pos(3,:)=Pos(3,:)-(nc/2)-pivot(3);
         
-        lenght_factor_pre=lenght_factor/2;
+%         lenght_factor_pre=lenght_factor/2;
 
         
-        lim_pre=(1/(lenght_factor_pre))*nc;
+        lim_pre=(1/(lenght_factor))*nc;
         lim_pre_sq= lim_pre^2;
 
         
@@ -129,7 +129,7 @@ for part_id = 1  :   part
         angles_t=angl_chunk_t{cor};
         angles_p=angl_chunk_p{cor};
 
-        rx=Pos;
+%         rx=Pos;
         
 %         rx(1,:)=Pos(1,:)-(nc/2)-pivot(1);
 %         rx(2,:)=Pos(2,:)-(nc/2)-pivot(2);
@@ -150,13 +150,13 @@ for part_id = 1  :   part
         ny=[transpose(-sin(phi)) ,transpose(cos(phi)), 0];
         nz=[sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)];
         
-        dz=nz*rx;
+        dz=nz*Pos;
         
         liminf=-(1/(2*lenght_factor))*nc;
         limsup= (1/(2*lenght_factor))*nc;        
         limsup_sq= limsup^2;
         
-        dz((nx*rx).*(nx*rx)+(ny*rx).*(ny*rx)>=limsup_sq|dz<=liminf|dz>=limsup)=[];
+        dz((nx*Pos).*(nx*Pos)+(ny*Pos).*(ny*Pos)>=limsup_sq|dz<=liminf|dz>=limsup)=[];
                 
         histogr_1d_angles1(:,i)=histcounts(dz,bins);
 %          histogr(i,:,:) = histcounts(dz,bins);
@@ -361,7 +361,7 @@ out_filtered_proj1d_angles2=out_filtered_proj1d_angles;
 out_filtered_dc_proj1d_angles2=out_filtered_dc_proj1d_angles;
 
 
-parfor angl=number_of_angle_nuple_hpx:number_of_angle_nuple_hpx/2+1
+parfor angl=number_of_angle_nuple_hpx/2+1:number_of_angle_nuple_hpx
     
     theta_indices=find(angles_hpx(1,angl)==angles_hpx(1,:));
 
