@@ -154,7 +154,7 @@ for part_id = 1  :   part
         
         liminf=-(1/(2*lenght_factor))*nc;
         limsup= (1/(2*lenght_factor))*nc;        
-        limsup_sq= limsup^2;
+        limsup_sq= 2*limsup^2;
         
         dz((nx*Pos).*(nx*Pos)+(ny*Pos).*(ny*Pos)>=limsup_sq|dz<=liminf|dz>=limsup)=[];
                 
