@@ -76,7 +76,7 @@ clearvars angles_hpx;
 bins=[-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))];
 proj1d_angles=zeros(length(bins)-1,number_of_angle_nuple_hpx);
 
-histogr_1d_angles=zeros(length(bins)-1,number_of_angle_nuple_hpx);
+% histogr_1d_angles=zeros(length(bins)-1,number_of_angle_nuple_hpx);
 
 % % part_id=1;
 
@@ -117,6 +117,7 @@ for part_id = 1  :   part
 %     [ N_particle_in_part
 %     
     
+histogr_1d_angles=zeros(length(bins)-1,number_of_angle_nuple_hpx);
     
         
     parfor cor=1:num_cores
