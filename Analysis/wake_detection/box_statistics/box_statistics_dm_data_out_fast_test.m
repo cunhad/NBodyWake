@@ -217,7 +217,7 @@ stn_proj1d_angles=(max_amplitude_proj1d_angles(:))./std_proj1d_angles(:);
 
 out_proj1d_angles=[transpose(max_amplitude_proj1d_angles);std_proj1d_angles;transpose(stn_proj1d_angles)];
 
-parfor angl=1:number_of_angle_nuple_hpx
+for angl=1:number_of_angle_nuple_hpx
 dc_proj1d_angles(:,angl)=(proj1d_angles(:,angl)-average_proj1d_angles(angl))./average_proj1d_angles(angl);
 end
 
