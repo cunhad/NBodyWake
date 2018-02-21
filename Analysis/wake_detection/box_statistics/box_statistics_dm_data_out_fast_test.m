@@ -226,7 +226,7 @@ max_amplitude_dc_proj1d_angles=max_dc_proj1d_angles(:);
 
 dc_proj1d_index_max=zeros(1,number_of_angle_nuple_hpx);
 
-parfor angl=1:number_of_angle_nuple_hpx
+for angl=1:number_of_angle_nuple_hpx
 dc_proj1d_index_max(1,angl)=find(dc_proj1d_angles(:,angl)==max_dc_proj1d_angles(1,angl),1);
 end
 dc_proj1d_angles_snremoved=dc_proj1d_angles;
