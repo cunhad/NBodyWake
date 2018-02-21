@@ -240,11 +240,11 @@ nsideguessed = sqrt(max(sz)/12);
     
     % Plot
 J = s2let_jmax(L, B);
-zoomfactor = 1.2;
-% zoomfactor = 20;
-ns = ceil(sqrt(2+J-J_min+1)) ;
-ny = 2  ;
-nx = ceil((2+J-J_min)/2 );
+% zoomfactor = 1.2;
+% % zoomfactor = 20;
+% ns = ceil(sqrt(2+J-J_min+1)) ;
+% ny = 2  ;
+% nx = ceil((2+J-J_min)/2 );
 % figure('Position',[100 100 1300 1000])
 % 
 % subplot(nx, ny, 1);
@@ -293,7 +293,7 @@ s2let_hpx_plot_mollweide_info(f,1);
 
 % s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1}+f_wav{J-J_min},1);
 
-% s2let_hpx_plot_mollweide_info(f_wav{J-J_min},1);
+% s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1},1);
 
 
 % s2let_hpx_plot_mollweide_info(f,1); %best for za gmu10m7,nside32, (3,1)
@@ -316,7 +316,7 @@ s2let_hpx_plot_mollweide_info(f,1);
 % 
 % figure;
 % 
-% histogram(f_wav{10}+f_wav{9}+f_wav{8}+f_wav{7}+f_wav{6}+f_wav{5});
+% s2let_hpx_plot_mollweide_info(f_wav{10}+f_wav{9}+f_wav{8}+f_wav{7}+f_wav{6}+f_wav{5});
 
 % display(thetas_max);
 % display(phis_max);
