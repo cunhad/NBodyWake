@@ -365,7 +365,7 @@ out_filtered_proj1d_angles2=out_filtered_proj1d_angles;
 out_filtered_dc_proj1d_angles2=out_filtered_dc_proj1d_angles;
 
 
-parfor angl=number_of_angle_nuple_hpx/2+1:number_of_angle_nuple_hpx
+for angl=number_of_angle_nuple_hpx/2+1:number_of_angle_nuple_hpx
     
     theta_indices=find(angles_hpx(1,angl)==angles_hpx(1,:));
 
