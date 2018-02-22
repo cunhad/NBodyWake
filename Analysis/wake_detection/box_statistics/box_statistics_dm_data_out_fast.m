@@ -214,7 +214,8 @@ stn_proj1d_angles=(max_amplitude_proj1d_angles(:))./std_proj1d_angles(:);
 
 out_proj1d_angles=[transpose(max_amplitude_proj1d_angles);std_proj1d_angles;transpose(stn_proj1d_angles)];
 
-parfor angl=1:number_of_angle_nuple_hpx
+% parfor angl=1:number_of_angle_nuple_hpx    %memory problem
+for angl=1:number_of_angle_nuple_hpx
 dc_proj1d_angles(:,angl)=(proj1d_angles(:,angl)-average_proj1d_angles(angl))./average_proj1d_angles(angl);
 end
 
@@ -223,7 +224,8 @@ max_amplitude_dc_proj1d_angles=max_dc_proj1d_angles(:);
 
 dc_proj1d_index_max=zeros(1,number_of_angle_nuple_hpx);
 
-parfor angl=1:number_of_angle_nuple_hpx
+% parfor angl=1:number_of_angle_nuple_hpx %memory problem
+for angl=1:number_of_angle_nuple_hpx
 dc_proj1d_index_max(1,angl)=find(dc_proj1d_angles(:,angl)==max_dc_proj1d_angles(1,angl),1);
 end
 dc_proj1d_angles_snremoved=dc_proj1d_angles;
@@ -362,7 +364,10 @@ out_filtered_proj1d_angles2=out_filtered_proj1d_angles;
 out_filtered_dc_proj1d_angles2=out_filtered_dc_proj1d_angles;
 
 
-parfor angl=number_of_angle_nuple_hpx/2+1:number_of_angle_nuple_hpx
+% parfor angl=number_of_angle_nuple_hpx/2+1:number_of_angle_nuple_hpx
+% /memory problem
+for angl=number_of_angle_nuple_hpx/2+1:number_of_angle_nuple_hpx
+
     
     theta_indices=find(angles_hpx(1,angl)==angles_hpx(1,:));
 
