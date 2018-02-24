@@ -1,9 +1,9 @@
-function [ proj1d_angles] = box_statistics_dm_data_out_cubic_fast( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,data_stream,level_window,dwbasis)
+function [ proj1d_angles ] = box_statistics_dm_data_out_cubic_fast( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,data_stream,level_window,dwbasis)
 
 %(example)  box_statistics_dm_per_node_part('/home/asus/Dropbox/extras/storage/', '/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','',4,0,1,1);
 %(example)  for i=1:8; box_statistics_dm_per_node_part('/home/asus/Dropbox/extras/storage/guillimin/test/','/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','',4,0,8,i); end;
 
-%(example)  [proj1d_angles] = box_statistics_dm_data_out_cubic_fast('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cf/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,1,[0,0,0],2,1,4,[1,2],[1],'sym6');
+%(example)  [proj1d_angles] = box_statistics_dm_data_out_cubic_fast('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,1,[0,0,0],2,1,4,[1,2],[1],'sym6');
 
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
@@ -14,29 +14,22 @@ function [ proj1d_angles] = box_statistics_dm_data_out_cubic_fast( root,root_out
 % if filter = 1
 % if filter = 2
 
-%passivetransf melhorou1/3 
-%cubic algo took 1.75 times more
-
-
+% %passivetransf melhorou1/3
+% 
 myCluster = parcluster('local');
 myCluster.NumWorkers=num_cores;
 saveProfile(myCluster);
 
 p = parpool(num_cores);
-% 
-
-% addpath(genpath('/home/asus/Dropbox/Disrael/Fazendo/templates_and_metrics/matlab/utils/geom3d'));
 
 addpath(genpath('../../processing/'));
 
+
 tic;
-
-
-
+% 
 cd('../../preprocessing');
 
-%  [ ~,redshift_list ] = preprocessing_many_nodes(root,spec,aux_path );
- [~,redshift_list,~,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec,aux_path );
+[~,redshift_list,~,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec,aux_path );
 
 angles_hpx(1,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_t.cvs'));
 angles_hpx(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'));
@@ -48,7 +41,6 @@ angles_hpx(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'))
 [~,number_of_angle_nuple_hpx] = size(angles_hpx);
 
 number_of_angle_nuple_hpx=number_of_angle_nuple_hpx/2;
-
 
 n_angle_per_node=ceil(number_of_angle_nuple_hpx/num_cores);
 
@@ -67,112 +59,100 @@ for cr=1:num_cores
      angl_chunk_p{cr}=angles_hpx(2,angl_ind_start:angl_ind_end);   
 end
 
-clearvars angles_hpx;
+% clearvars angles_hpx;
 
 
-
-%
-% mkdir(root_out);
-% mkdir(root_out,strcat(spec,aux_path));
 [ size_box, nc, np, ~, ~ ,~ ,~ ,~ ,z, ~, ~  ] = preprocessing_part(root,spec,aux_path,filename,part,1);
 bins=[-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))];
 proj1d_angles=zeros(length(bins)-1,number_of_angle_nuple_hpx);
 
-histogr_1d_angles=zeros(length(bins)-1,number_of_angle_nuple_hpx);
-
-
-areas=zeros(length(bins)-1,number_of_angle_nuple_hpx);
-
-
-[v f] = createCube; v = (v-[0.5 0.5 0.5])*nc ;
-
-
-%for k = 3:-1:1
 for part_id = 1  :   part
-    %for k = 1  : 1
+
     
     cd('../preprocessing');
     
-    [ ~, ~, ~, ~, ~ ,~ ,~ ,~ ,~, ~, Pos  ] = preprocessing_part(root,spec,aux_path,filename,part,part_id);
+    [ ~, ~, ~, ~, ~ ,~ ,~ ,~ ,z, ~, Pos  ] = preprocessing_part(root,spec,aux_path,filename,part,part_id);
     
-    Pos=mod(Pos,nc);
-    
-    rx(1,:)=Pos(1,:)-(nc/2)-pivot(1);
-    rx(2,:)=Pos(2,:)-(nc/2)-pivot(2);
-    rx(3,:)=Pos(3,:)-(nc/2)-pivot(3);
-    
-    
-    parfor cor=1:num_cores
-        %     for i=1:number_of_angle_nuple
+        Pos=mod(Pos,nc);
+ 
+        Pos(1,:)=Pos(1,:)-(nc/2)-pivot(1);
+        Pos(2,:)=Pos(2,:)-(nc/2)-pivot(2);
+        Pos(3,:)=Pos(3,:)-(nc/2)-pivot(3);
         
+        
+        lim_pre=(1/(lenght_factor))*nc;
+    
+        Pos(:,abs(Pos(1,:))>lim_pre|abs(Pos(2,:))>lim_pre|abs(Pos(3,:))>lim_pre)=[];
+
+    
+histogr_1d_angles=zeros(length(bins)-1,number_of_angle_nuple_hpx);
+    
+        
+    parfor cor=1:num_cores
         angl_ind_start=angl_indx(cor);
         angl_ind_end=angl_indx(cor+1)-1;
-        
-        %         angles=angles_hpx_t(angl_ind_start:angl_ind_end);
+                
         
         angles_t=angl_chunk_t{cor};
         angles_p=angl_chunk_p{cor};
-        
-%         rx=Pos;
+
         
         histogr_1d_angles1=zeros(length(bins)-1,number_of_angle_nuple_hpx);
-        
+
         
         for i=angl_ind_start:angl_ind_end
-            
-            theta=angles_t(i-angl_ind_start+1);
-            phi=angles_p(i-angl_ind_start+1);
-            
-            nz=[sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)];
-            
-            dz=nz*rx;
-            
-            histogr_1d_angles1(:,i)=histcounts(dz,bins);
-            
+                    
+
+        theta=angles_t(i-angl_ind_start+1);
+        phi=angles_p(i-angl_ind_start+1);
+
+        nz=[sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)];
+        
+        dz=nz*Pos;        
+                
+        histogr_1d_angles1(:,i)=histcounts(dz,bins);
+        
         end
         
         histogr_1d_angles=histogr_1d_angles+histogr_1d_angles1;
         
     end
+    
     proj1d_angles=proj1d_angles+histogr_1d_angles;
     
+    
 end
-
 clearvars angl_chunk_t angl_chunk_p;
-
 
 
 toc;
 
 tic;
 
-angles_hpx(1,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_t.cvs'));
-angles_hpx(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'));
+[v f] = createCube; v = (v-[0.5 0.5 0.5])*nc ;
 
-    parfor i=1:number_of_angle_nuple_hpx
 
-        
-        theta=angles_hpx(1,i);
-        phi=angles_hpx(2,i);
-                nz=[sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)];
-
-  bin_sz=(length(bins)-1);
-        area=zeros(bin_sz,1);
-        for dist_1d=1:bin_sz
-                plane = createPlane(nz*((bins(1,dist_1d+1)+bins(1,dist_1d))/2), nz);
-                 plane_overlap = intersectPlaneMesh(plane, v, f);
-                 area(dist_1d,1)=polygonArea3d(plane_overlap);
-        end
-                             areas(:,i)=area(:,1);
-
+parfor i=1:number_of_angle_nuple_hpx        
+    theta=angles_hpx(1,i);
+    phi=angles_hpx(2,i);
+    nz=[sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)];
+    
+    bin_sz=(length(bins)-1);
+    area=zeros(bin_sz,1);
+    for dist_1d=1:bin_sz
+        plane = createPlane(nz*((bins(1,dist_1d+1)+bins(1,dist_1d))/2), nz);
+        plane_overlap = intersectPlaneMesh(plane, v, f);
+        area(dist_1d,1)=polygonArea3d(plane_overlap);
     end
+    areas(:,i)=area(:,1);    
+end
 
-    toc;
-    
-    tic;
-    
 proj1d_angles=proj1d_angles./areas;
 
+toc;
+
+
+tic;
 
 max_proj1d_angles=max(proj1d_angles);
 average_proj1d_angles=mean(proj1d_angles,1);
@@ -200,7 +180,8 @@ stn_proj1d_angles=(max_amplitude_proj1d_angles(:))./std_proj1d_angles(:);
 
 out_proj1d_angles=[transpose(max_amplitude_proj1d_angles);std_proj1d_angles;transpose(stn_proj1d_angles)];
 
-parfor angl=1:number_of_angle_nuple_hpx
+% parfor angl=1:number_of_angle_nuple_hpx    %memory problem
+for angl=1:number_of_angle_nuple_hpx
 dc_proj1d_angles(:,angl)=(proj1d_angles(:,angl)-average_proj1d_angles(angl))./average_proj1d_angles(angl);
 end
 
@@ -209,7 +190,8 @@ max_amplitude_dc_proj1d_angles=max_dc_proj1d_angles(:);
 
 dc_proj1d_index_max=zeros(1,number_of_angle_nuple_hpx);
 
-parfor angl=1:number_of_angle_nuple_hpx
+% parfor angl=1:number_of_angle_nuple_hpx %memory problem
+for angl=1:number_of_angle_nuple_hpx
 dc_proj1d_index_max(1,angl)=find(dc_proj1d_angles(:,angl)==max_dc_proj1d_angles(1,angl),1);
 end
 dc_proj1d_angles_snremoved=dc_proj1d_angles;
@@ -232,22 +214,13 @@ if level_window~=0
 
     
     parfor i=1:number_of_angle_nuple_hpx
-%         average_proj1d_angles=mean2(proj1d_angles(:,i));
-%         proj1d=(proj1d_angles(:,i)-average_proj1d_angles)/average_proj1d_angles;
+
         proj1d=proj1d_angles(:,i);
         [dwt_proj1d,levels] = wavedec(proj1d,level,dwbasis);
 
         dc_proj1d=dc_proj1d_angles(:,i);
         [dwt_dc_proj1d,levels] = wavedec(dc_proj1d,level,dwbasis);
 
-
-        
-%         [cwt_proj1d,periods] = cwt(proj1d,seconds(size_box/(np*resol_factor)),'waveletparameters',[3 3.01]);
-%         filtered_proj1d_angles(:,i) = icwt(cwt_proj1d,periods,[periods(low_pass) seconds(level_window)],'waveletparameters',[3 3.01]);
-%         
-%         dc_proj1d=dc_proj1d_angles(:,i);
-%         [cwt_dc_proj1d,periods] = cwt(dc_proj1d,seconds(size_box/(np*resol_factor)),'waveletparameters',[3 3.01]);
-        
         D=zeros(length(bins)-1,1);
         D_dc=zeros(length(bins)-1,1);
         for lev_win = 1:length(level_window)
@@ -280,35 +253,7 @@ if level_window~=0
     stn_filtered_proj1d_angles=(max_amplitude_filtered_proj1d_angles(:))./std_filtered_proj1d_angles(:);
     
     out_filtered_proj1d_angles=[transpose(max_amplitude_filtered_proj1d_angles);std_filtered_proj1d_angles;transpose(stn_filtered_proj1d_angles)];
-    
-%     parfor angl=1:number_of_angle_nuple
-%         dc_filtered_proj1d_angles(:,angl)=(filtered_proj1d_angles(:,angl)-average_filtered_proj1d_angles(angl))./average_filtered_proj1d_angles(angl);
-%     end
-    
-%     max_dc_filtered_proj1d_angles=max(dc_filtered_proj1d_angles);
-%     max_amplitude_dc_filtered_proj1d_angles=max_dc_filtered_proj1d_angles(:);
-    
-%     max_amplitude_dc_filtered_proj1d_angles=max(dc_filtered_proj1d_angles);
-
-    
-%     dc_filtered_proj1d_index_max=zeros(1,number_of_angle_nuple);
-    
-%     parfor angl=1:number_of_angle_nuple
-%         dc_filtered_proj1d_index_max(1,angl)=find(dc_filtered_proj1d_angles(:,angl)==max_amplitude_dc_filtered_proj1d_angles(1,angl));
-%     end
-%     dc_filtered_proj1d_angles_snremoved=dc_filtered_proj1d_angles;
-%     
-%     for angl=1:number_of_angle_nuple
-%         dc_filtered_proj1d_angles_snremoved(dc_filtered_proj1d_index_max(1,angl),angl)=0;
-%     end
-%        
-    
-%     std_dc_filtered_proj1d_angles=std(dc_filtered_proj1d_angles_snremoved);
-%     clearvars dc_filtered_proj1d_angles_snremoved;
-%     stn_dc_filtered_proj1d_angles=(max_amplitude_dc_filtered_proj1d_angles(:))./std_dc_filtered_proj1d_angles(:);
-%     
-%     out_dc_filtered_proj1d_angles=[(max_amplitude_dc_filtered_proj1d_angles);std_dc_filtered_proj1d_angles;transpose(stn_dc_filtered_proj1d_angles)];
-%     
+ 
     max_filtered_dc_proj1d_angles=max(filtered_dc_proj1d_angles);
     average_filtered_dc_proj1d_angles=mean(filtered_dc_proj1d_angles,1);
     
@@ -333,6 +278,8 @@ if level_window~=0
     
 end
 
+angles_hpx(1,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_t.cvs'));
+angles_hpx(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'));
 
 [~,number_of_angle_nuple_hpx] = size(angles_hpx);
 
@@ -346,13 +293,15 @@ out_filtered_proj1d_angles2=out_filtered_proj1d_angles;
 out_filtered_dc_proj1d_angles2=out_filtered_dc_proj1d_angles;
 
 
-parfor angl=number_of_angle_nuple_hpx:number_of_angle_nuple_hpx/2+1
+% parfor angl=number_of_angle_nuple_hpx/2+1:number_of_angle_nuple_hpx
+% /memory problem
+for angl=number_of_angle_nuple_hpx/2+1:number_of_angle_nuple_hpx
+
     
     theta_indices=find(angles_hpx(1,angl)==angles_hpx(1,:));
 
  theta_inverse_indices=number_of_angle_nuple_hpx-theta_indices+1;
  
-%  phi_indice_inverse=theta_inverse_indices(find((mod(angles_hpx(2,angl)+pi,2*pi))==angles_hpx(2,theta_inverse_indices)));
  phi_indice_inverse=theta_inverse_indices(abs((mod(angles_hpx(2,angl)+pi,2*pi))-angles_hpx(2,theta_inverse_indices))<10E-10);
  
     
@@ -368,7 +317,6 @@ parfor angl=number_of_angle_nuple_hpx:number_of_angle_nuple_hpx/2+1
 end
 
 
-
 if ~ismember(0,data_stream)
     
     path_out_all=strcat(strcat(root_out(1,1:end-1),'_all/',spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/',dwbasis,'/');
@@ -380,7 +328,6 @@ if ~ismember(0,data_stream)
     if level_window~=0 
         mkdir(path_out,strcat('/','level_window',mat2str(level_window(:)),'/'));
         mkdir(path_out,strcat('/dc','/','level_window',mat2str(level_window(:)),'/'));
-%         mkdir(path_out,strcat('/cutoff_',num2str(cutoff),'MpcCut/dc/'));       
         mkdir(path_out_all,strcat('/','level_window',mat2str(level_window(:)),'/'));
         mkdir(path_out_all,strcat('/dc/','level_window',mat2str(level_window(:)),'/'));
         
@@ -448,7 +395,7 @@ end
 
 
 cd('../wake_detection/box_statistics');
-
+% 
 toc;
 delete(gcp('nocreate'))
 
