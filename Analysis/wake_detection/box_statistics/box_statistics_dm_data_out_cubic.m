@@ -3,7 +3,7 @@ function [ proj1d_angles, areas] = box_statistics_dm_data_out_cubic( root,root_o
 %(example)  box_statistics_dm_per_node_part('/home/asus/Dropbox/extras/storage/', '/home/asus/Dropbox/extras/storage/','40Mpc_192c_96p_zi65_nowakes','/','',4,0,1,1);
 %(example)  for i=1:8; box_statistics_dm_per_node_part('/home/asus/Dropbox/extras/storage/guillimin/test/','/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','',4,0,8,i); end;
 
-%(example)  [proj1d_angles] = box_statistics_dm_data_out_cubic('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,2,[0,0,0],2,1,4,[1,2],4);
+%(example)  [proj1d_angles] = box_statistics_dm_data_out_cubic('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',1,1,[0,0,0],2,1,4,[1,2],4);
 
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
@@ -45,7 +45,11 @@ angles(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'));
 % mkdir(root_out);
 % mkdir(root_out,strcat(spec,aux_path));
 [ size_box, nc, np, ~, ~ ,~ ,~ ,~ ,z, ~, ~  ] = preprocessing_part(root,spec,aux_path,filename,part,1);
-bins=[-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))];
+if lenght_factor==1
+    bins=[1-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))-1];
+else
+    bins=[-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))];
+end
 proj1d_angles=zeros(length(bins)-1,number_of_angle_nuple);
 
 areas=zeros(length(bins)-1,number_of_angle_nuple);
