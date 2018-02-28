@@ -45,11 +45,11 @@ angles(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'));
 % mkdir(root_out);
 % mkdir(root_out,strcat(spec,aux_path));
 [ size_box, nc, np, ~, ~ ,~ ,~ ,~ ,z, ~, ~  ] = preprocessing_part(root,spec,aux_path,filename,part,1);
-if lenght_factor==1
-    bins=[1-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))-1];
-else
+% if lenght_factor==1
+%     bins=[1-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))-1];
+% else
     bins=[-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))];
-end
+% end
 proj1d_angles=zeros(length(bins)-1,number_of_angle_nuple);
 
 areas=zeros(length(bins)-1,number_of_angle_nuple);

@@ -68,7 +68,6 @@ if lenght_factor==1
 else
     bins=[-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))];
 end
-
 proj1d_angles=zeros(length(bins)-1,number_of_angle_nuple_hpx);
 
 for part_id = 1  :   part
