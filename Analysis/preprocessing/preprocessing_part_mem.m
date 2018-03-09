@@ -1,11 +1,11 @@
-function [ size_box, nc, np, zi, wake_or_no_wake ,multiplicity_of_files ,Gmu ,ziw ,z, path_file_in, Pos  ] = preprocessing_part( path,spec,aux_path,filename,part,part_id)
+function [ size_box, nc, np, zi, wake_or_no_wake ,multiplicity_of_files ,Gmu ,ziw ,z, path_file_in, Pos  ] = preprocessing_part_mem( path,spec,aux_path,filename,part,part_id)
 %   This function takes the phase space output from CUBEP3M and returns
 %   some relevant information plus the global positions of all particles at the
 %   corresponding redshift and node volume
 
 
-%(example) [ size_box, nc, np, zi, wake_or_no_wake ,multiplicity_of_files ,Gmu ,ziw ,z, path_file_in, Pos ] = preprocessing_part( '/home/asus/Dropbox/extras/storage/graham/small_res/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','0.000xv0.dat',8,1);
-%(example) [ size_box, nc, np, zi, wake_or_no_wake ,multiplicity_of_files ,Gmu ,ziw ,z, path_file_in, Pos ] = preprocessing_part( '/home/asus/Dropbox/extras/storage/guillimin/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','10.000xv0.dat',8,1);
+%(example) [ size_box, nc, np, zi, wake_or_no_wake ,multiplicity_of_files ,Gmu ,ziw ,z, path_file_in, Pos ] = preprocessing_part_men( '/home/asus/Dropbox/extras/storage/graham/small_res/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','0.000xv0.dat',8,1);
+%(example) [ size_box, nc, np, zi, wake_or_no_wake ,multiplicity_of_files ,Gmu ,ziw ,z, path_file_in, Pos ] = preprocessing_part_men( '/home/asus/Dropbox/extras/storage/guillimin/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','10.000xv0.dat',8,1);
 
 
 
@@ -183,7 +183,7 @@ Pos = data(1:3,:);
 %  Pos(2,:)=Pos(2,:)+(nc/number_node_dim)*j_node;
 %  Pos(3,:)=Pos(3,:)+(nc/number_node_dim)*k_node;
 %  
- 
-
+ %pid = feature('getpid');
+ %display(num2str(pid));
 end
 
