@@ -97,6 +97,8 @@ for cr=1:angle_p
      angl_chunk_p{cr}=angles_hpx(2,angl_ind_start:angl_ind_end);   
 end
 
+clearvars angles_hpx;
+
 %stores other information about the simulation (4 numbers only)
 
 [ size_box, nc, np, ~, ~ ,~ ,~ ,~ ,z, ~, ~  ] = preprocessing_part(root,spec,aux_path,filename,part_p,1);
@@ -200,6 +202,9 @@ end
 %we don't need to store the partition of angles anymore
 
 clearvars angl_chunk_t angl_chunk_p;
+
+angles_hpx(1,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_t.cvs'));
+angles_hpx(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'));
 
 
 toc;
