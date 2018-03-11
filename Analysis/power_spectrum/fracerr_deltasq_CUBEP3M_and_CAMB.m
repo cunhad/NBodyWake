@@ -83,7 +83,7 @@ ylim([-1 1]);
     %hold on;
 %loglog(dat_CAMB(:,1),dat_CAMB(:,2),'DisplayName','CAMB','LineWidth',2);
 
-%title({strcat('Fractional error of the'),strcat('dimensionless power spectrum at ',strcat(' z = ',char(redshift_list(rds))))},'interpreter', 'latex', 'fontsize', 15);
+title({strcat('Fractional error of the'),strcat('dimensionless power spectrum at ',strcat(' z = ',char(redshift_list(rds))))},'interpreter', 'latex', 'fontsize', 15);
 ylabel('$\frac{\Delta^{2}_{Nbody}-\Delta^{2}_{CAMB}}{\Delta^{2}_{CAMB}}\ (k)$', 'interpreter', 'latex', 'fontsize', 20);
 xlabel('$k (h/Mpc)$', 'interpreter', 'latex', 'fontsize', 20);
 %legend('show');

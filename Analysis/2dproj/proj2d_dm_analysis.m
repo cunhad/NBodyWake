@@ -117,8 +117,8 @@ if ismember(0,info)
     
     %set(gca,'dataAspectRatio',[1 1 1]);
     %colorbar;
-    xlabel(ax2,'$Z(Mpc)$', 'interpreter', 'latex', 'fontsize', 20);
-    ylabel(ax2,'$Y(Mpc)$', 'interpreter', 'latex', 'fontsize', 20);
+    xlabel(ax2,'$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel(ax2,'$Y(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
     set(gca,'FontName','FixedWidth');
     set(gca,'FontSize',16);
     set(gca,'linewidth',2);
@@ -226,8 +226,8 @@ if ismember(2,info)
     end
     set(gca,'dataAspectRatio',[1 1 1]);
     colorbar;
-    xlabel('$Z(Mpc)$', 'interpreter', 'latex', 'fontsize', 20);
-    ylabel('$Y(Mpc)$', 'interpreter', 'latex', 'fontsize', 20);
+    xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel('$Y(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
     set(gca,'FontName','FixedWidth');
     set(gca,'FontSize',16);
     set(gca,'linewidth',2);
@@ -257,8 +257,8 @@ if ismember(3,info)
     end
     set(gca,'dataAspectRatio',[1 1 1]);
     colorbar;
-    xlabel(ax2,'$Z(Mpc)$', 'interpreter', 'latex', 'fontsize', 20);
-    ylabel(ax2,'$Y(Mpc)$', 'interpreter', 'latex', 'fontsize', 20);
+    xlabel(ax2,'$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel(ax2,'$Y(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
     set(gca,'FontName','FixedWidth');
     set(gca,'FontSize',16);
     set(gca,'linewidth',2);
