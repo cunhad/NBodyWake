@@ -10,7 +10,7 @@ function [ proj1d_angles ] = box_statistics_dm_data_out_cubic_fast_ap( root,root
 %part.
 
 
-%(example)  [proj1d_angles] = box_statistics_dm_data_out_cubic_fast_ap('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,1,1,[0,0,0],2,4,4,[1,2],[1],'sym6');
+%(example)  [proj1d_angles] = box_statistics_dm_data_out_cubic_fast_ap('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,1,[0,0,0],2,1,4,4,[1,2],[1],'sym6');
 
 % NBody output should be stored as root+spec+aux_path (root directory, specification in the form size_numberofcellsperdimension_number_particlesperdimension_initialredshift_wakespecification&multiplicity, aux_path is the sample number )
 
@@ -34,8 +34,8 @@ function [ proj1d_angles ] = box_statistics_dm_data_out_cubic_fast_ap( root,root
 % it to fit in the memory of each worker.
 
 % "angle_p" specifies the partition of the angles catalogue done in order to
-% it to fit in the memory of each worker. This should be not samml than the nIt is recommended that this
-% quantity is proportional to the numbers of workers.
+% it to fit in the memory of each worker. This should be not samml than the number of workers. It is recommended that this
+% quantity is an integer times the numbers of workers.
 
 
 %num_cores specifies the number of cores used
@@ -80,7 +80,7 @@ angles_hpx(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'))
 
 number_of_angle_nuple_hpx=number_of_angle_nuple_hpx/2; %we use just half of the angles since there is a reflection symmetry (because the projection in one axis is the same as the projection on the oposite axis)
 
-n_angle_per_node=ceil(number_of_angle_nuple_hpx/num_cores);
+n_angle_per_node=ceil(number_of_angle_nuple_hpx/angle_p);
 
 for cr=1:angle_p+1
     angl_indx(cr)= n_angle_per_node*(cr-1)+1;
@@ -96,6 +96,8 @@ for cr=1:angle_p
      angl_chunk_t{cr}=angles_hpx(1,angl_ind_start:angl_ind_end);
      angl_chunk_p{cr}=angles_hpx(2,angl_ind_start:angl_ind_end);   
 end
+
+clearvars angles_hpx;
 
 %stores other information about the simulation (4 numbers only)
 
@@ -145,8 +147,13 @@ for part_id = 1  :   part_p
 histogr_1d_angles=zeros(length(bins)-1,number_of_angle_nuple_hpx);
     
 
+ticBytes(gcp);
+
     %here the projections are performed by the workers
-        
+        %matlab says "Using sliced variables can reduce communication
+        %between the client and workers. Only those slices needed by a
+        %worker are sent to it when it starts working on a particular range
+        %of indices.", but this seems not to be the case
     parfor cor=1:angle_p
         angl_ind_start=angl_indx(cor);
         angl_ind_end=angl_indx(cor+1)-1;
@@ -194,12 +201,15 @@ histogr_1d_angles=zeros(length(bins)-1,number_of_angle_nuple_hpx);
     
     proj1d_angles=proj1d_angles+histogr_1d_angles;
     
-    
+    tocBytes(gcp)
 end
 
 %we don't need to store the partition of angles anymore
 
 clearvars angl_chunk_t angl_chunk_p;
+
+angles_hpx(1,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_t.cvs'));
+angles_hpx(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'));
 
 
 toc;

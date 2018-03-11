@@ -119,6 +119,8 @@ proj1d_angles=zeros(length(bins)-1,number_of_angle_nuple_hpx);
 % this first loop only exist to avoid overload the memory of the workers,
 % so the particle catalogue is partitioned, the projections are performed and the resulted is summed afterwards
 
+% for angle_id = 1: angl_p
+
 for part_id = 1  :   part_p
 
     
@@ -147,9 +149,14 @@ for part_id = 1  :   part_p
 histogr_1d_angles=zeros(length(bins)-1,number_of_angle_nuple_hpx);
     
 
+ticBytes(gcp);
+
     %here the projections are performed by the workers
-        
-    parfor cor=1:angle_p
+        %matlab says "Using sliced variables can reduce communication
+        %between the client and workers. Only those slices needed by a
+        %worker are sent to it when it starts working on a particular range
+        %of indices.", but this seems not to be the case
+    for cor=1:angle_p
         angl_ind_start=angl_indx(cor);
         angl_ind_end=angl_indx(cor+1)-1;
                 
@@ -165,7 +172,7 @@ histogr_1d_angles=zeros(length(bins)-1,number_of_angle_nuple_hpx);
 
         %do the loop for each angle to perform the projections
         
-        for i=angl_ind_start:angl_ind_end
+        parfor i=angl_ind_start:angl_ind_end
                     
         %here are the angles
 
@@ -196,7 +203,7 @@ histogr_1d_angles=zeros(length(bins)-1,number_of_angle_nuple_hpx);
     
     proj1d_angles=proj1d_angles+histogr_1d_angles;
     
-    
+    tocBytes(gcp)
 end
 
 %we don't need to store the partition of angles anymore
