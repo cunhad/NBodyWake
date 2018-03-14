@@ -250,7 +250,7 @@ else
 end
 
 
-xlabel('$Z(Mpc)$', 'interpreter', 'latex', 'fontsize', 20);
+xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('Density contrast', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
@@ -299,7 +299,7 @@ else
 end
 
 
-xlabel(ax3,'$Z(Mpc)$', 'interpreter', 'latex', 'fontsize', 20);
+xlabel(ax3,'$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
 ylabel(ax3,'Density contrast', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);

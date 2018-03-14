@@ -98,7 +98,7 @@ for rds=1:length(redshift_list)
     set(gca,'FontName','FixedWidth');
     set(gca,'FontSize',16);
     set(gca,'linewidth',2);
-%     title({strcat('Displacement for z = '),char(redshift_list(rds))},'interpreter', 'latex', 'fontsize', 20);
+    title({strcat('Displacement for z = '),char(redshift_list(rds))},'interpreter', 'latex', 'fontsize', 20);
     hold off;
     
     
@@ -142,7 +142,7 @@ xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
     set(gca,'FontName','FixedWidth');
     set(gca,'FontSize',16);
     set(gca,'linewidth',2);
-%     title({strcat('Displacement comparizon')},'interpreter', 'latex', 'fontsize', 20);
+    title({strcat('Displacement comparizon')},'interpreter', 'latex', 'fontsize', 20);
     legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
     hold off;
     
