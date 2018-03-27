@@ -277,8 +277,14 @@ J = s2let_jmax(L, B);
 
 
 % s2let_hpx_plot_mollweide_info(f_wav{8},1);
-% s2let_hpx_plot_mollweide_info(f,1); 
-% 
+% s2let_hpx_plot_mollweide_info(f,1);
+
+
+
+s2let_hpx_plot_mollweide(f);
+% zoom(40)
+
+
 % figure;
 % histogram(f);
 
@@ -294,7 +300,7 @@ J = s2let_jmax(L, B);
 
 %  s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1}+f_wav{J-J_min}+f_wav{J-J_min-1}+f_wav{J-J_min-2},1);
 
-s2let_hpx_plot_mollweide_info(f_wav{J-J_min}+f_wav{J-J_min-1},1);
+% s2let_hpx_plot_mollweide_info(f_wav{J-J_min}+f_wav{J-J_min-1},1);
 
 % s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1},1);
 

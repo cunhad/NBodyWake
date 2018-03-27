@@ -453,7 +453,7 @@ if ismember(1,info)
         
     end
     
-    xlabel('$Z(Mp/h)$', 'interpreter', 'latex', 'fontsize', 20);
+    xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
     ylabel('Density contrast', 'interpreter', 'latex', 'fontsize', 20);
     set(gca,'FontName','FixedWidth');
     set(gca,'FontSize',16);

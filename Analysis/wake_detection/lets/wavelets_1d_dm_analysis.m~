@@ -116,7 +116,7 @@ if ismember(0,info)
     set(gcf, 'Position', [0 0 800 600]);
     ax2 = axes('Position',[0.15 0.15 0.65 0.65]);
     if (~ischar(lim_cwt))
-    his=histogram( ax2,proj1d_dc_cwt,'BinLimits',lim );
+    his=histogram( ax2,proj1d_dc_cwt,'BinLimits',lim_cwt );
     else
     his=histogram( ax2,proj1d_dc_cwt);        
     end
@@ -372,7 +372,7 @@ if ismember(0,info)
     xlim ([-inf inf]);
 
     if (~ischar(lim1d))
-    his=histogram( ax2,proj1d_dc_icwt,'BinLimits',lim );
+    his=histogram( ax2,proj1d_dc_icwt,'BinLimits',lim1d );
     else
     his=histogram( ax2,proj1d_dc_icwt);        
     end
@@ -419,7 +419,7 @@ if ismember(0,info)
     
     if (~ischar(lim1d))
         mkdir(tot_path_out,strcat('dm_0/',num2str(lim1d(1)),'_',num2str(lim1d(2)),'lim','/','wavelet/filter_1dproj_',num2str(cutoff),'MpcCut/'));
-        saveas(fig,strcat(tot_path_out,num2str('dm_0/',lim1d(1)),'_',num2str(lim1d(2)),'lim','/','wavelet/filter_1dproj_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_mcwt_hist_z',num2str(z),'_plot.png'));
+        saveas(fig,strcat(tot_path_out,'dm_0/',num2str(lim1d(1)),'_',num2str(lim1d(2)),'lim','/','wavelet/filter_1dproj_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_mcwt_hist_z',num2str(z),'_plot.png'));
     else
         mkdir(tot_path_out,strcat('dm_0/','minmax/wavelet/','filter_1dproj_',num2str(cutoff),'MpcCut/'));
         saveas(fig,strcat(tot_path_out,'dm_0/','minmax/wavelet/','filter_1dproj_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_mcwt_hist_z',num2str(z),'_plot.png'));
@@ -453,7 +453,7 @@ if ismember(1,info)
         
     end
     
-    xlabel('$Z(Mp/h)$', 'interpreter', 'latex', 'fontsize', 20);
+    xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
     ylabel('Density contrast', 'interpreter', 'latex', 'fontsize', 20);
     set(gca,'FontName','FixedWidth');
     set(gca,'FontSize',16);
@@ -586,7 +586,7 @@ if ismember(3,info)
     
     if (~ischar(lim1d))
         mkdir(tot_path_out,strcat('dm_3/',num2str(lim1d(1)),'_',num2str(lim1d(2)),'lim','/','wavelet/filter_1dproj_',num2str(cutoff),'MpcCut/'));
-        saveas(fig,strcat(tot_path_out,num2str('dm_3/',lim1d(1)),'_',num2str(lim1d(2)),'lim','/','wavelet/filter_1dproj_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_mcwt_z_z',num2str(z),'_plot.png'));
+        saveas(fig,strcat(tot_path_out,'dm_3/',num2str(lim1d(1)),'_',num2str(lim1d(2)),'lim','/','wavelet/filter_1dproj_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_mcwt_z_z',num2str(z),'_plot.png'));
     else
         mkdir(tot_path_out,strcat('dm_3/','minmax/wavelet/','filter_1dproj_',num2str(cutoff),'MpcCut/'));
         saveas(fig,strcat(tot_path_out,'dm_3/','minmax/wavelet/','filter_1dproj_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_mcwt_z_z',num2str(z),'_plot.png'));
@@ -617,7 +617,7 @@ if ismember(0,info)
     set(gcf, 'Position', [0 0 800 600]);
     ax2 = axes('Position',[0.15 0.15 0.65 0.65]);
     if (~ischar(lim_cwt))
-    his=histogram( ax2,proj1d_dc_cwt,'BinLimits',lim );
+    his=histogram( ax2,proj1d_dc_cwt,'BinLimits',lim_cwt );
     else
     his=histogram( ax2,proj1d_dc_cwt);        
     end
@@ -678,6 +678,13 @@ if ismember(1,info)
     set(gcf, 'Position', [0 0 800 600]);
     hp = pcolor( -size_box/(2*lenght_factor) +size_box/(2)+pvz:size_box/(lenght_factor*length(proj1d_dc_cwt(1,:))):size_box/(2*lenght_factor) +size_box/(2)+pvz-size_box/(lenght_factor*length(proj1d_dc_cwt(1,:))),scale,abs(filt_proj1d_dc_cwt)); hp.EdgeColor = 'none';
     
+        hold on;
+    set(gca,'YScale','log');
+    xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20); ylabel('Scale parameter (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+%     title(strcat({'filtered continuous wavelet transformation of the ','density contrast of the 1d projected','dark matter mass (absolute value)'}),'interpreter', 'latex', 'fontsize', 20);
+    
+    hold off;
+    
     if (~ischar(lim_cwt))
         fig_cb1=figure('Visible', 'off');
         caxis([lim_cwt(1) lim_cwt(2)]);
@@ -711,14 +718,7 @@ if ismember(1,info)
         pos=[left bottom width height];
         set(fig_cb2,'OuterPosition',pos);
         
-    end
-       
-    hold on;
-    set(gca,'YScale','log');
-    xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20); ylabel('Scale parameter (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
-%     title(strcat({'filtered continuous wavelet transformation of the ','density contrast of the 1d projected','dark matter mass (absolute value)'}),'interpreter', 'latex', 'fontsize', 20);
-    
-    hold off;
+    end      
     
     if (~ischar(lim_cwt))
         if (~ischar(lim1d))
@@ -728,15 +728,17 @@ if ismember(1,info)
         else
             mkdir(tot_path_out,strcat('dm_1/','minmax/wavelet/','filtered_abs_',num2str(cutoff),'MpcCut/',num2str(lim_cwt(1)),'_',num2str(lim_cwt(2)),'lim','/'));
             saveas(fig,strcat(tot_path_out,'dm_1/','minmax/wavelet/','filtered_abs_',num2str(cutoff),'MpcCut/',num2str(lim_cwt(1)),'_',num2str(lim_cwt(2)),'lim','/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_filtered_mcwt_z_z',num2str(z),'_plot.png'));
-            
+            saveas(fig_cb2,strcat(tot_path_out,'dm_1/','minmax/wavelet/','filtered_abs_',num2str(cutoff),'MpcCut/',num2str(lim_cwt(1)),'_',num2str(lim_cwt(2)),'lim','/','_','colormap_h.png'));
         end
     else
         if (~ischar(lim1d))
             mkdir(tot_path_out,strcat('dm_1/',num2str(lim1d(1)),'_',num2str(lim1d(2)),'lim','/','wavelet/filtered_abs_',num2str(cutoff),'MpcCut/minmax/'));
             saveas(fig,strcat(tot_path_out,'dm_1/',num2str(lim1d(1)),'_',num2str(lim1d(2)),'lim','/','wavelet/filtered_abs_',num2str(cutoff),'MpcCut/minmax/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_filtered_mcwt_z_z',num2str(z),'_plot.png'));
+            saveas(fig_cb2,strcat(tot_path_out,'dm_1/',num2str(lim1d(1)),'_',num2str(lim1d(2)),'lim','/','wavelet/filtered_abs_',num2str(cutoff),'MpcCut/minmax/','_','colormap_h.png'));
         else
             mkdir(tot_path_out,strcat('dm_1/','minmax/wavelet/','filtered_abs_',num2str(cutoff),'MpcCut/minmax/'));
             saveas(fig,strcat(tot_path_out,'dm_1/','minmax/wavelet/','filtered_abs_',num2str(cutoff),'MpcCut/minmax/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_filtered_mcwt_z_z',num2str(z),'_plot.png'));
+            saveas(fig_cb2,strcat(tot_path_out,'dm_1/','minmax/wavelet/','filtered_abs_',num2str(cutoff),'MpcCut/minmax/','_','colormap_h.png'));
         end
     end    
 end

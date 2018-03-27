@@ -1,4 +1,4 @@
-function [ stn ] = snan_comparison_wavelets_1dproj(root,root_snan_in,root_snan_out,aux_path_snan_in,aux_path_snan_out,lenght_factor,resol_factor,pivot,rot_angle,cutoff,z_id_range,id_specs,info,analysis)
+function [ peak ] = snan_comparison_wavelets_1dproj(root,root_snan_in,root_snan_out,aux_path_snan_in,aux_path_snan_out,lenght_factor,resol_factor,pivot,rot_angle,cutoff,z_id_range,id_specs,info,analysis)
 
 %reads the data from proj1d_dm_analysis for the signal to noise analysis
 %and creates the corresponding figures
@@ -183,7 +183,7 @@ legend(ax3,leg);
 
 title(ax1,{'Summary plot of the peak'},'interpreter', 'latex', 'fontsize', 20);
 title(ax2,{'Summary plot of the standard deviation'},'interpreter', 'latex', 'fontsize', 20);
-title(ax3,{'Summary plot of the signal to noise ratio for the filtered 1d projection with high resolution'},'interpreter', 'latex', 'fontsize', 20);
+% title(ax3,{'Summary plot of the signal to noise ratio for the filtered 1d projection with high resolution'},'interpreter', 'latex', 'fontsize', 20);
 xlabel(ax3,'redshift', 'interpreter', 'latex', 'fontsize', 20);
 ylabel(ax3,'Signal to noise', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
