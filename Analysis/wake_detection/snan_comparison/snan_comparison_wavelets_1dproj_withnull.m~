@@ -50,11 +50,10 @@ plots={};
 %     z_id_range=[1 : length(redshift_list)];
 % end
 
-fig1=figure('Visible', 'off');
-% fig1=figure;
+% fig1=figure('Visible', 'off');
+fig1=figure;
 set(gcf, 'Position', [0 0 1600 800]);
-fig2=figure('Visible', 'off');
-% fig2=figure;
+fig2=figure;
 set(gcf, 'Position', [0 0 1600 800]);
 %  fig3=figure;
 %  set(gcf, 'Position', [0 0 1600 800]);
@@ -65,9 +64,9 @@ ax2=axes(fig2);
 
  cd('../../processing');
 
-path_comparizon_out=strcat(root_snan_out,aux_path_snan_out);
+path_comparizon_out=strcat(root_snan_out,aux_path_snan_out,'comparison/');
 mkdir(strcat(root_snan_out,aux_path_snan_out));
-
+mkdir(strcat(root_snan_out,aux_path_snan_out),strcat('comparison/'));
 
 path_specs_in=strcat(root_snan_in,aux_path_snan_in);
 
@@ -355,16 +354,17 @@ for j=1:length(test)
 end
 
 %legend with the gmu info
-% legend(ax1,[plots{:}],'G\mu =0',leg{:},'Location','northwest');
+legend(ax1,[plots{:}],'no wake',leg{:});
 
 %legend with the spec info
-% % l = legend(ax1,[plots{:}],specs_list{:},'Location','northwest');
-l = legend(ax1,[plots{:}],specs_list{:},'Location','northoutside');
+% l = legend(ax1,[plots{:}],specs_list{:},'Location','northwest');
+
+
 set(l, 'Interpreter', 'none');
 
 hold(ax1,'off');
 
-    legend(ax2,leg,'Location','northoutside');
+    legend(ax2,leg);
 
 % title(ax2,{'Summary plot of the standard deviation'},'interpreter', 'latex', 'fontsize', 20);
 % title(ax3,{'Summary plot of the signal to noise ratio for the filtered 1d projection with high resolution'},'interpreter', 'latex', 'fontsize', 20);
@@ -373,10 +373,6 @@ ylabel(ax2,'Signal to noise', 'interpreter', 'latex', 'fontsize', 20);
 set(ax2,'FontName','FixedWidth');
 set(ax2,'FontSize',16);
 set(ax2,'linewidth',2);
-
-mkdir(path_comparizon_out);
-saveas(fig1,strcat(path_comparizon_out,'peaks_dist.png'));
-saveas(fig2,strcat(path_comparizon_out,'signal_to_noise.png'));
 
 
 % legend(ax1,specs_list);

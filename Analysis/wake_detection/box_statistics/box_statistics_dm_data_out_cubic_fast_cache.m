@@ -80,39 +80,39 @@ angles_hpx(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'))
 
 number_of_angle_nuple_hpx=number_of_angle_nuple_hpx/2; %we use just half of the angles since there is a reflection symmetry (because the projection in one axis is the same as the projection on the oposite axis)
 
-n_angle_per_node=ceil(number_of_angle_nuple_hpx/angle_p);
+n_angle_per_chunck=ceil(number_of_angle_nuple_hpx/angle_p);
 
-for cr=1:angle_p+1
-    angl_indx(cr)= n_angle_per_node*(cr-1)+1;
+for ap=1:angle_p+1
+    angl_indx(ap)= n_angle_per_chunck*(ap-1)+1;
 end
-for cr=1:angle_p
-    n_angl_indx(cr)= -angl_indx(cr)+angl_indx(cr+1);
+for ap=1:angle_p
+    n_angl_indx(ap)= -angl_indx(ap)+angl_indx(ap+1);
     
 end
 
-for cr=1:angle_p
-     angl_ind_start=angl_indx(cr);
-     angl_ind_end=angl_indx(cr+1)-1;
-     angl_chunk_t{cr}=angles_hpx(1,angl_ind_start:angl_ind_end);
-     angl_chunk_p{cr}=angles_hpx(2,angl_ind_start:angl_ind_end);   
-end
+for ap=1:angle_p
+             angl_ind_start=angl_indx(ap);
+             angl_ind_end=angl_indx(ap+1)-1;
+             angl_chunk_t{ap}=angles_hpx(1,angl_ind_start:angl_ind_end);
+             angl_chunk_p{ap}=angles_hpx(2,angl_ind_start:angl_ind_end);   
+        end
 
-clearvars angles_hpx;
+        clearvars angles_hpx;
 
-%stores other information about the simulation (4 numbers only)
+        %stores other information about the simulation (4 numbers only)
 
-[ size_box, nc, np, ~, ~ ,~ ,~ ,~ ,z, ~, ~  ] = preprocessing_part(root,spec,aux_path,filename,part_p,1);
+        [ size_box, nc, np, ~, ~ ,~ ,~ ,~ ,z, ~, ~  ] = preprocessing_part(root,spec,aux_path,filename,part_p,1);
 
-%creates the bins to be used in the histograms (it has 2 fewer points if the volume analysed is maximum)
+        %creates the bins to be used in the histograms (it has 2 fewer points if the volume analysed is maximum)
 
-if lenght_factor==1
-    bins=[1-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))-1];
-else
-    bins=[-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))];
-end
+        if lenght_factor==1
+            bins=[1-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))-1];
+        else
+            bins=[-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))];
+        end
 
-% proj1d_angles(a,b) will store the 1d projection at point a for each angle
-% a
+        % proj1d_angles(a,b) will store the 1d projection at point a for each angle
+        % a
 
 proj1d_angles=zeros(length(bins)-1,number_of_angle_nuple_hpx);
 
@@ -156,44 +156,84 @@ ticBytes(gcp);
         %between the client and workers. Only those slices needed by a
         %worker are sent to it when it starts working on a particular range
         %of indices.", but this seems not to be the case
-    for cor=1:angle_p
-        angl_ind_start=angl_indx(cor);
-        angl_ind_end=angl_indx(cor+1)-1;
+    for angl_part=1:angle_p
+        angl_ind_start=angl_indx(angl_part);
+        angl_ind_end=angl_indx(angl_part+1)-1;
+        
+%         display(angl_part);
                 
         %load the angles in the workers
         
-        angles_t=angl_chunk_t{cor};
-        angles_p=angl_chunk_p{cor};
+        angles_t=angl_chunk_t{angl_part};
+        angles_p=angl_chunk_p{angl_part};
 
-           
+        [~,number_of_angles] = size(angles_t);
+        
+        n_angle_per_node=ceil(number_of_angles/num_cores);
+        
+        for cr=1:num_cores+1
+            angl_indx_c(cr)= n_angle_per_node*(cr-1)+1;
+        end
+        for cr=1:num_cores
+            n_angl_indx_c(cr)= -angl_indx_c(cr)+angl_indx_c(cr+1);
+            
+        end
+        
+        for cr=1:num_cores
+            angl_ind_start_c=angl_indx_c(cr);
+            angl_ind_end_c=angl_indx_c(cr+1)-1;            
+            angl_tocores_t{cr}=angles_t(1,angl_ind_start_c:angl_ind_end_c);
+            angl_tocores_p{cr}=angles_p(1,angl_ind_start_c:angl_ind_end_c);
+        end
+        
+        
         %created the auxiliary variable to histogr_1d_angles
         
         histogr_1d_angles1=zeros(length(bins)-1,number_of_angle_nuple_hpx);
 
         %do the loop for each angle to perform the projections
         
-        parfor i=angl_ind_start:angl_ind_end
-                    
-        %here are the angles
-
-        theta=angles_t(i-angl_ind_start+1);
-        phi=angles_p(i-angl_ind_start+1);
-        
-        %here is the unit vector associated with the angles above
-
-        nz=[sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)];
-        
-        %here the projection is performed
-        
-        dz=nz*Pos;        
-        
-        %and the histogram is computed
+        parfor cor=1:num_cores
+            
+            angl_ind_start_c=angl_indx_c(cor);
+            angl_ind_end_c=angl_indx_c(cor+1)-1;
+            
+            %load the angles in the workers
+            
+            angles_t_c=angl_tocores_t{cor};
+            angles_p_c=angl_tocores_p{cor};
+            
+            %created the auxiliary variable to histogr_2d_angles
+            
+            histogr_1d_angles2=zeros(length(bins)-1,number_of_angle_nuple_hpx);
+            
+            for i=angl_ind_start_c:angl_ind_end_c
                 
-        histogr_1d_angles1(:,i)=histcounts(dz,bins);
-        
+                %here are the angles
+                
+                theta=angles_t_c(i-angl_ind_start_c+1);
+                phi=angles_p_c(i-angl_ind_start_c+1);
+                
+                %here is the unit vector associated with the angles above
+                
+                nz=[sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)];
+                
+                %here the projection is performed
+                
+                dz=nz*Pos;
+                
+                %and the histogram is computed
+                
+                histogr_1d_angles2(:,i+angl_ind_start-1)=histcounts(dz,bins);
+                
+            end
+            
+            %histogram is stored in the auxiliary variable
+            
+            histogr_1d_angles1=histogr_1d_angles1+histogr_1d_angles2;
+            
         end
-        
-        %histogram is stored in the auxiliary variable
+            %histogram is stored in the auxiliary variable
         
         histogr_1d_angles=histogr_1d_angles+histogr_1d_angles1;
         

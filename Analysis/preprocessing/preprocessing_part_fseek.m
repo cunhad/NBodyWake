@@ -162,12 +162,13 @@ for node_ID=part_files_start_ID:part_files_end_ID
     data_file(2,:)=data_file(2,:)+(nc/number_node_dim)*j_node;
     data_file(3,:)=data_file(3,:)+(nc/number_node_dim)*k_node;
     data=[data data_file];
+    
+    fclose(fid); 
 end
 
 
 Pos = data(1:3,:);
 
-fclose(fid); 
 
 %Pos=transpose(Pos);
 %Pos=mod(Pos,nc);
