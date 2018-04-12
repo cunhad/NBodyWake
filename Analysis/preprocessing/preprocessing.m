@@ -47,7 +47,7 @@ fclose(fid);
 
 nodes_list=dir(strcat(path_xv_files_in,strcat(char(redshift_list(1)),'xv*.dat')));
 nodes_list={nodes_list.name};
-nodes_list=cellfun(@(x) x(2+cell2mat(strfind(nodes_list(1:1), 'xv')):-1+cell2mat(strfind(nodes_list(1:1), '.dat'))),nodes_list,'UniformOutput', false);
+nodes_list=cellfun(@(x) x(3+length(char(redshift_list(1))):end-4),nodes_list,'UniformOutput', false);
 nodes_list=sort_nat(nodes_list);
 
 fid=fopen(strcat(path_files_out,'nodes_list.txt'),'w');
