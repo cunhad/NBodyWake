@@ -51,8 +51,8 @@ for node = 1 : length(nodes_list)
     
     
     path_in=strcat(root,spec,aux_path);
-    file_name = dir(strcat(path_in,num2str(z),'*xv',char(nodes_list(node)),'.dat'));
-    filename=file_name.name;
+%     file_name = dir(strcat(path_in,num2str(z),'*xv',char(nodes_list(node)),'.dat'));
+%     filename=file_name.name;
     
 %     [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( root,spec,aux_path,filename);
     [ ~,~,~,~,~,~,~,~,~,~,Pos ] = preprocessing_part(root,spec,aux_path,filename,length(nodes_list),node);
