@@ -62,6 +62,7 @@ cd('../2dproj');
 for rds = z_id_range
     
     filename = strcat(char(redshift_list(rds)),'xv0','.dat');
+    display(filename);
     proj2d_dm_analysis( root,root_data_out,root_plot_out,spec,aux_path,aux_path_data_out,aux_path_plot_out,filename,lenght_factor,resol_factor,pivot,rot_angle,lim,data_stream,info);
     
 end

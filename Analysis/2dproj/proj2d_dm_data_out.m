@@ -65,10 +65,10 @@ phi=rot_angle(2);
     
     
     path_in=strcat(root,spec,aux_path);
-    file_name = dir(strcat(path_in,num2str(z),'*xv',char(nodes_list(node)),'.dat'));
+    file_name = dir(strcat(path_in,num2str(z_glob),'*xv',char(nodes_list(node)),'.dat'));
     filename=file_name.name;
     
-%     display(filename);
+    display(filename);
     
     [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( root,spec,aux_path,filename);
 %     [ ~,~,~,~,~,~,~,~,~,~,Pos ] = preprocessing_part(root,spec,aux_path,filename,length(nodes_list),node);

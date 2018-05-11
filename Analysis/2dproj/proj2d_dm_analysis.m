@@ -51,6 +51,7 @@ cd('../preprocessing');
 [~,redshift_list,~,size_box,nc,np,zi,~,~,Gmu,ziw] = preprocessing_info(root,spec,aux_path );
 
 [  ~,~,~,~,z ] = preprocessing_filename_info( root,spec,aux_path,filename);
+display(z)
 
 cd('../../parameters')
 
