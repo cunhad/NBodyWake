@@ -57,8 +57,8 @@ phi=rot_angle(2);
 
 % display(length(nodes_list));
 
-% for node = 1 : 64
- for node = 1 : length(nodes_list)
+for node = 1 : 64
+% for node = 1 : length(nodes_list)
     
 %     cell_bins1d_y=[(nc/2)-(nc/(2*lenght_factor))+pivot(2):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(2)];
 %     cell_bins1d_z=[(nc/2)-(nc/(2*lenght_factor))+pivot(3):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(3)];

@@ -96,6 +96,12 @@ Pos = data(1:3,:);
  j_node=floor(res/number_node_dim);
  i_node=mod(res,number_node_dim);
  
+%  display(numel(nodes_list));
+%  display(number_node_dim);
+%  display(node);
+%  display(i_node);
+%  display(j_node);
+%  display(k_node);
  
  Pos(1,:)=Pos(1,:)+(nc/number_node_dim)*i_node;
  Pos(2,:)=Pos(2,:)+(nc/number_node_dim)*j_node;
