@@ -36,6 +36,7 @@ cd('../preprocessing');
 % [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( root,spec,aux_path,filename);
 [ size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw,z,path_file_in,~ ] = preprocessing_part(root,spec,aux_path,filename,length(nodes_list),1);
 
+z_glob=z;
 
 cell_bins1d_z=[(nc/2)-(nc/(2*lenght_factor))+pivot(3):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(3)];
 cell_bins1d_z(end)=[];
@@ -44,18 +45,20 @@ count_sum=zeros(1,numel(cell_bins1d_z));
 theta=rot_angle(1);
 phi=rot_angle(2);
 
+cell_bins1d_z=[(nc/2)-(nc/(2*lenght_factor))+pivot(3):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(3)];
+
+
 %for node = 1 : 1
 for node = 1 : length(nodes_list)
     
-    cell_bins1d_z=[(nc/2)-(nc/(2*lenght_factor))+pivot(3):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(3)];
     
     
     path_in=strcat(root,spec,aux_path);
-%     file_name = dir(strcat(path_in,num2str(z),'*xv',char(nodes_list(node)),'.dat'));
-%     filename=file_name.name;
+    file_name = dir(strcat(path_in,num2str(z_glob),'*xv',char(nodes_list(node)),'.dat'));
+    filename=file_name.name;
     
-%     [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( root,spec,aux_path,filename);
-    [ ~,~,~,~,~,~,~,~,~,~,Pos ] = preprocessing_part(root,spec,aux_path,filename,length(nodes_list),node);
+    [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( root,spec,aux_path,filename);
+%     [ ~,~,~,~,~,~,~,~,~,~,Pos ] = preprocessing_part(root,spec,aux_path,filename,length(nodes_list),node);
     
     Pos=mod(Pos,nc);
     
@@ -113,13 +116,13 @@ if ~ismember(0,data_stream)
     mkdir(path_out,'nc/');
     
     if ismember(1,data_stream)        
-        fileID = fopen(strcat(path_out,'nc/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_z',num2str(z),'_data.bin'),'w');
+        fileID = fopen(strcat(path_out,'nc/','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_1dproj_z',num2str(z_glob),'_data.bin'),'w');
         fwrite(fileID,count_sum, 'float32','l');
         fclose(fileID);
     end
 
     if ismember(2,data_stream)
-        dlmwrite(strcat(path_out,'nc/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_z',num2str(z),'_data.txt'),count_sum,'delimiter','\t');
+        dlmwrite(strcat(path_out,'nc/','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_1dproj_z',num2str(z_glob),'_data.txt'),count_sum,'delimiter','\t');
     end
     
 end
