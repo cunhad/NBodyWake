@@ -1,11 +1,11 @@
-function [  ] = dwavelets_1d_dm_analysis( root,root_data_out,root_plot_out,root_snan_out,spec,aux_path,aux_path_data_out,aux_path_plot_out,aux_path_snan_out,filename,lenght_factor,resol_factor,pivot,rot_angle,level_window,data_stream,info,analysis,dwbasis)
+function [  ] = dwavelets_1d_dm_analysis( root,root_data_out,root_plot_out,root_snan_out,spec,aux_path,aux_path_data_out,aux_path_plot_out,aux_path_snan_out,filename,lenght_factor,resol_factor,pivot,rot_angle,lim1d,lim_cwt,level_window,data_stream,info,analysis,dwbasis)
     
 % reads (and/or generate) data of the filtered 1d projections aconding to the input specifications and plot the result
 
 
 
-%(example) dwavelets_1d_dm_analysis('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','/home/asus/Dropbox/extras/storage/graham/small_res/snan/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','','','0.000xv0.dat',1,1,[0,0,0],[0,0],1,[1,3],[0,2,3],1,'db1');
-%(example) dwavelets_1d_dm_analysis('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/data/','/home/asus/Dropbox/extras/storage/guillimin/plot/','/home/asus/Dropbox/extras/storage/guillimin/snan/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','','','15.000xv0.dat',1,1,[0,0,0],[0,0],2,[1,3],[0,2,3],1,'db1');
+%(example) dwavelets_1d_dm_analysis('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','/home/asus/Dropbox/extras/storage/graham/small_res/snan/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','','','0.000xv0.dat',1,1,[0,0,0],[0,0],'minmax','minmax',1,[1,3],[0,2,3],1,'db1');
+%(example) dwavelets_1d_dm_analysis('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/data/','/home/asus/Dropbox/extras/storage/guillimin/plot/','/home/asus/Dropbox/extras/storage/guillimin/snan/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','','','15.000xv0.dat',1,1,[0,0,0],[0,0],'minmax','minmax',1,[1,3],[0,2,3],1,'db1');
 
 %try sym6, waveinfo('wname')
 
@@ -732,13 +732,13 @@ end
 if ismember(1,analysis)
     mkdir(root_snan_out);
     mkdir(root_snan_out,strcat(spec,aux_path));
-    mkdir(strcat(root_snan_out,spec,aux_path),strcat('snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2))),'ra','/','1dproj/'));
-    tot_snan_path_out=strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2))),'ra','/','1dproj/');
+    mkdir(strcat(root_snan_out,spec,aux_path),strcat('dsnan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2))),'ra','/','1dproj/'));
+    tot_snan_path_out=strcat(root_snan_out,spec,aux_path,'dsnan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2))),'ra','/','1dproj/');
     st_proj1d_dc_icwt = std(D);
-    max_proj1d_dc_icwt=max(D);
+    max_proj1d_dc_icwt=max(proj1d_dc_icwt);
     snan=[max_proj1d_dc_icwt st_proj1d_dc_icwt (max_proj1d_dc_icwt)/(st_proj1d_dc_icwt)]; 
-    mkdir(tot_snan_path_out,strcat('dm/','dwavelet_levels/',dwbasis,'/'));
-    dlmwrite(strcat(tot_snan_path_out,'dm/','dwavelet_levels/',dwbasis,'/','_',num2str(find(str2num(char(redshift_list))==z)),'_snan_1dproj_dwt_z',num2str(z),'_data.txt'),snan,'delimiter','\t');
+    mkdir(tot_snan_path_out,strcat('dm/','dwavelet_filtered_abs_',num2str(cutoff),'MpcCut/'));
+    dlmwrite(strcat(tot_snan_path_out,'dm/','dwavelet_filtered_abs_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_snan_1dproj_cwt_z',num2str(z),'_data.txt'),snan,'delimiter','\t');
 end
 
 
