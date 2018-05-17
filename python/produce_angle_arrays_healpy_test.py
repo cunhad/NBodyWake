@@ -16,14 +16,14 @@ NPix
 
 # In[3]:
 
-angles=hp.pix2ang(NSIDE,range(NPix))
+#angles=hp.pix2ang(NSIDE,range(NPix))
 #angles
 
 
 # In[10]:
 
-np.savetxt('/home/asus/Documents/angles8192_t.txt',angles[0], delimiter=' ')
-np.savetxt('/home/asus/Documents/angles8192_p.txt',angles[1], delimiter=' ')
+np.savetxt('/home/asus/Documents/angles8192.txt',hp.pix2ang(NSIDE,range(NPix)), delimiter=' ')
+#np.savetxt('/home/asus/Documents/angles8192_p.txt',angles[1], delimiter=' ')
 
 
 # In[5]:
