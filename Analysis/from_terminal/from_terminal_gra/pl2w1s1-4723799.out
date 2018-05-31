@@ -1,0 +1,1854 @@
+MATLAB is selecting SOFTWARE OPENGL rendering.
+Opening log file:  /home/cunhad/java.log.12951
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2018 The MathWorks, Inc.
+                   R2018a (9.4.0.813654) 64-bit (glnxa64)
+                             February 23, 2018
+
+[Warning: Unable to load Toolbox Path Cache
+/home/cunhad/.matlab/R2018a/toolbox_cache-9.4.0-817948803-glnxa64.xml. The
+cache file is not in the correct format. It will be regenerated upon quitting
+MATLAB.] 
+ 
+To get started, type one of these: helpwin, helpdesk, or demo.
+For product information, visit www.mathworks.com.
+ 
+
+filename =
+
+    '31.000xv0.dat'
+
+
+z =
+
+    31
+
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 62)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 63)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 64)
+  In proj2d_dm_analysis_all (line 66)] 
+
+filename =
+
+    '31.000xv0.dat'
+
+
+filename =
+
+    '31.000xv1.dat'
+
+
+filename =
+
+    '31.000xv2.dat'
+
+
+filename =
+
+    '31.000xv3.dat'
+
+
+filename =
+
+    '31.000xv4.dat'
+
+
+filename =
+
+    '31.000xv5.dat'
+
+
+filename =
+
+    '31.000xv6.dat'
+
+
+filename =
+
+    '31.000xv7.dat'
+
+
+filename =
+
+    '31.000xv8.dat'
+
+
+filename =
+
+    '31.000xv9.dat'
+
+
+filename =
+
+    '31.000xv10.dat'
+
+
+filename =
+
+    '31.000xv11.dat'
+
+
+filename =
+
+    '31.000xv12.dat'
+
+
+filename =
+
+    '31.000xv13.dat'
+
+
+filename =
+
+    '31.000xv14.dat'
+
+
+filename =
+
+    '31.000xv15.dat'
+
+
+filename =
+
+    '31.000xv16.dat'
+
+
+filename =
+
+    '31.000xv17.dat'
+
+
+filename =
+
+    '31.000xv18.dat'
+
+
+filename =
+
+    '31.000xv19.dat'
+
+
+filename =
+
+    '31.000xv20.dat'
+
+
+filename =
+
+    '31.000xv21.dat'
+
+
+filename =
+
+    '31.000xv22.dat'
+
+
+filename =
+
+    '31.000xv23.dat'
+
+
+filename =
+
+    '31.000xv24.dat'
+
+
+filename =
+
+    '31.000xv25.dat'
+
+
+filename =
+
+    '31.000xv26.dat'
+
+
+filename =
+
+    '31.000xv27.dat'
+
+
+filename =
+
+    '31.000xv28.dat'
+
+
+filename =
+
+    '31.000xv29.dat'
+
+
+filename =
+
+    '31.000xv30.dat'
+
+
+filename =
+
+    '31.000xv31.dat'
+
+
+filename =
+
+    '31.000xv32.dat'
+
+
+filename =
+
+    '31.000xv33.dat'
+
+
+filename =
+
+    '31.000xv34.dat'
+
+
+filename =
+
+    '31.000xv35.dat'
+
+
+filename =
+
+    '31.000xv36.dat'
+
+
+filename =
+
+    '31.000xv37.dat'
+
+
+filename =
+
+    '31.000xv38.dat'
+
+
+filename =
+
+    '31.000xv39.dat'
+
+
+filename =
+
+    '31.000xv40.dat'
+
+
+filename =
+
+    '31.000xv41.dat'
+
+
+filename =
+
+    '31.000xv42.dat'
+
+
+filename =
+
+    '31.000xv43.dat'
+
+
+filename =
+
+    '31.000xv44.dat'
+
+
+filename =
+
+    '31.000xv45.dat'
+
+
+filename =
+
+    '31.000xv46.dat'
+
+
+filename =
+
+    '31.000xv47.dat'
+
+
+filename =
+
+    '31.000xv48.dat'
+
+
+filename =
+
+    '31.000xv49.dat'
+
+
+filename =
+
+    '31.000xv50.dat'
+
+
+filename =
+
+    '31.000xv51.dat'
+
+
+filename =
+
+    '31.000xv52.dat'
+
+
+filename =
+
+    '31.000xv53.dat'
+
+
+filename =
+
+    '31.000xv54.dat'
+
+
+filename =
+
+    '31.000xv55.dat'
+
+
+filename =
+
+    '31.000xv56.dat'
+
+
+filename =
+
+    '31.000xv57.dat'
+
+
+filename =
+
+    '31.000xv58.dat'
+
+
+filename =
+
+    '31.000xv59.dat'
+
+
+filename =
+
+    '31.000xv60.dat'
+
+
+filename =
+
+    '31.000xv61.dat'
+
+
+filename =
+
+    '31.000xv62.dat'
+
+
+filename =
+
+    '31.000xv63.dat'
+
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 126)
+  In proj2d_dm_analysis (line 81)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 127)
+  In proj2d_dm_analysis (line 81)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 130)
+  In proj2d_dm_analysis (line 81)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 133)
+  In proj2d_dm_analysis (line 81)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: MATLAB has disabled some advanced graphics rendering features by
+switching to software OpenGL. For more information, click <a
+href="matlab:opengl('problems')">here</a>.] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 296)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 308)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 324)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 336)
+  In proj2d_dm_analysis_all (line 66)] 
+
+filename =
+
+    '15.000xv0.dat'
+
+
+z =
+
+    15
+
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 62)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 63)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 64)
+  In proj2d_dm_analysis_all (line 66)] 
+
+filename =
+
+    '15.000xv0.dat'
+
+
+filename =
+
+    '15.000xv1.dat'
+
+
+filename =
+
+    '15.000xv2.dat'
+
+
+filename =
+
+    '15.000xv3.dat'
+
+
+filename =
+
+    '15.000xv4.dat'
+
+
+filename =
+
+    '15.000xv5.dat'
+
+
+filename =
+
+    '15.000xv6.dat'
+
+
+filename =
+
+    '15.000xv7.dat'
+
+
+filename =
+
+    '15.000xv8.dat'
+
+
+filename =
+
+    '15.000xv9.dat'
+
+
+filename =
+
+    '15.000xv10.dat'
+
+
+filename =
+
+    '15.000xv11.dat'
+
+
+filename =
+
+    '15.000xv12.dat'
+
+
+filename =
+
+    '15.000xv13.dat'
+
+
+filename =
+
+    '15.000xv14.dat'
+
+
+filename =
+
+    '15.000xv15.dat'
+
+
+filename =
+
+    '15.000xv16.dat'
+
+
+filename =
+
+    '15.000xv17.dat'
+
+
+filename =
+
+    '15.000xv18.dat'
+
+
+filename =
+
+    '15.000xv19.dat'
+
+
+filename =
+
+    '15.000xv20.dat'
+
+
+filename =
+
+    '15.000xv21.dat'
+
+
+filename =
+
+    '15.000xv22.dat'
+
+
+filename =
+
+    '15.000xv23.dat'
+
+
+filename =
+
+    '15.000xv24.dat'
+
+
+filename =
+
+    '15.000xv25.dat'
+
+
+filename =
+
+    '15.000xv26.dat'
+
+
+filename =
+
+    '15.000xv27.dat'
+
+
+filename =
+
+    '15.000xv28.dat'
+
+
+filename =
+
+    '15.000xv29.dat'
+
+
+filename =
+
+    '15.000xv30.dat'
+
+
+filename =
+
+    '15.000xv31.dat'
+
+
+filename =
+
+    '15.000xv32.dat'
+
+
+filename =
+
+    '15.000xv33.dat'
+
+
+filename =
+
+    '15.000xv34.dat'
+
+
+filename =
+
+    '15.000xv35.dat'
+
+
+filename =
+
+    '15.000xv36.dat'
+
+
+filename =
+
+    '15.000xv37.dat'
+
+
+filename =
+
+    '15.000xv38.dat'
+
+
+filename =
+
+    '15.000xv39.dat'
+
+
+filename =
+
+    '15.000xv40.dat'
+
+
+filename =
+
+    '15.000xv41.dat'
+
+
+filename =
+
+    '15.000xv42.dat'
+
+
+filename =
+
+    '15.000xv43.dat'
+
+
+filename =
+
+    '15.000xv44.dat'
+
+
+filename =
+
+    '15.000xv45.dat'
+
+
+filename =
+
+    '15.000xv46.dat'
+
+
+filename =
+
+    '15.000xv47.dat'
+
+
+filename =
+
+    '15.000xv48.dat'
+
+
+filename =
+
+    '15.000xv49.dat'
+
+
+filename =
+
+    '15.000xv50.dat'
+
+
+filename =
+
+    '15.000xv51.dat'
+
+
+filename =
+
+    '15.000xv52.dat'
+
+
+filename =
+
+    '15.000xv53.dat'
+
+
+filename =
+
+    '15.000xv54.dat'
+
+
+filename =
+
+    '15.000xv55.dat'
+
+
+filename =
+
+    '15.000xv56.dat'
+
+
+filename =
+
+    '15.000xv57.dat'
+
+
+filename =
+
+    '15.000xv58.dat'
+
+
+filename =
+
+    '15.000xv59.dat'
+
+
+filename =
+
+    '15.000xv60.dat'
+
+
+filename =
+
+    '15.000xv61.dat'
+
+
+filename =
+
+    '15.000xv62.dat'
+
+
+filename =
+
+    '15.000xv63.dat'
+
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 126)
+  In proj2d_dm_analysis (line 81)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 127)
+  In proj2d_dm_analysis (line 81)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 130)
+  In proj2d_dm_analysis (line 81)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 133)
+  In proj2d_dm_analysis (line 81)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 296)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 308)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 324)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 336)
+  In proj2d_dm_analysis_all (line 66)] 
+
+filename =
+
+    '10.000xv0.dat'
+
+
+z =
+
+    10
+
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 62)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 63)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 64)
+  In proj2d_dm_analysis_all (line 66)] 
+
+filename =
+
+    '10.000xv0.dat'
+
+
+filename =
+
+    '10.000xv1.dat'
+
+
+filename =
+
+    '10.000xv2.dat'
+
+
+filename =
+
+    '10.000xv3.dat'
+
+
+filename =
+
+    '10.000xv4.dat'
+
+
+filename =
+
+    '10.000xv5.dat'
+
+
+filename =
+
+    '10.000xv6.dat'
+
+
+filename =
+
+    '10.000xv7.dat'
+
+
+filename =
+
+    '10.000xv8.dat'
+
+
+filename =
+
+    '10.000xv9.dat'
+
+
+filename =
+
+    '10.000xv10.dat'
+
+
+filename =
+
+    '10.000xv11.dat'
+
+
+filename =
+
+    '10.000xv12.dat'
+
+
+filename =
+
+    '10.000xv13.dat'
+
+
+filename =
+
+    '10.000xv14.dat'
+
+
+filename =
+
+    '10.000xv15.dat'
+
+
+filename =
+
+    '10.000xv16.dat'
+
+
+filename =
+
+    '10.000xv17.dat'
+
+
+filename =
+
+    '10.000xv18.dat'
+
+
+filename =
+
+    '10.000xv19.dat'
+
+
+filename =
+
+    '10.000xv20.dat'
+
+
+filename =
+
+    '10.000xv21.dat'
+
+
+filename =
+
+    '10.000xv22.dat'
+
+
+filename =
+
+    '10.000xv23.dat'
+
+
+filename =
+
+    '10.000xv24.dat'
+
+
+filename =
+
+    '10.000xv25.dat'
+
+
+filename =
+
+    '10.000xv26.dat'
+
+
+filename =
+
+    '10.000xv27.dat'
+
+
+filename =
+
+    '10.000xv28.dat'
+
+
+filename =
+
+    '10.000xv29.dat'
+
+
+filename =
+
+    '10.000xv30.dat'
+
+
+filename =
+
+    '10.000xv31.dat'
+
+
+filename =
+
+    '10.000xv32.dat'
+
+
+filename =
+
+    '10.000xv33.dat'
+
+
+filename =
+
+    '10.000xv34.dat'
+
+
+filename =
+
+    '10.000xv35.dat'
+
+
+filename =
+
+    '10.000xv36.dat'
+
+
+filename =
+
+    '10.000xv37.dat'
+
+
+filename =
+
+    '10.000xv38.dat'
+
+
+filename =
+
+    '10.000xv39.dat'
+
+
+filename =
+
+    '10.000xv40.dat'
+
+
+filename =
+
+    '10.000xv41.dat'
+
+
+filename =
+
+    '10.000xv42.dat'
+
+
+filename =
+
+    '10.000xv43.dat'
+
+
+filename =
+
+    '10.000xv44.dat'
+
+
+filename =
+
+    '10.000xv45.dat'
+
+
+filename =
+
+    '10.000xv46.dat'
+
+
+filename =
+
+    '10.000xv47.dat'
+
+
+filename =
+
+    '10.000xv48.dat'
+
+
+filename =
+
+    '10.000xv49.dat'
+
+
+filename =
+
+    '10.000xv50.dat'
+
+
+filename =
+
+    '10.000xv51.dat'
+
+
+filename =
+
+    '10.000xv52.dat'
+
+
+filename =
+
+    '10.000xv53.dat'
+
+
+filename =
+
+    '10.000xv54.dat'
+
+
+filename =
+
+    '10.000xv55.dat'
+
+
+filename =
+
+    '10.000xv56.dat'
+
+
+filename =
+
+    '10.000xv57.dat'
+
+
+filename =
+
+    '10.000xv58.dat'
+
+
+filename =
+
+    '10.000xv59.dat'
+
+
+filename =
+
+    '10.000xv60.dat'
+
+
+filename =
+
+    '10.000xv61.dat'
+
+
+filename =
+
+    '10.000xv62.dat'
+
+
+filename =
+
+    '10.000xv63.dat'
+
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 126)
+  In proj2d_dm_analysis (line 81)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 127)
+  In proj2d_dm_analysis (line 81)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 130)
+  In proj2d_dm_analysis (line 81)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 133)
+  In proj2d_dm_analysis (line 81)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 296)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 308)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 324)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 336)
+  In proj2d_dm_analysis_all (line 66)] 
+
+filename =
+
+    '7.000xv0.dat'
+
+
+z =
+
+     7
+
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 62)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 63)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 64)
+  In proj2d_dm_analysis_all (line 66)] 
+
+filename =
+
+    '7.000xv0.dat'
+
+
+filename =
+
+    '7.000xv1.dat'
+
+
+filename =
+
+    '7.000xv2.dat'
+
+
+filename =
+
+    '7.000xv3.dat'
+
+
+filename =
+
+    '7.000xv4.dat'
+
+
+filename =
+
+    '7.000xv5.dat'
+
+
+filename =
+
+    '7.000xv6.dat'
+
+
+filename =
+
+    '7.000xv7.dat'
+
+
+filename =
+
+    '7.000xv8.dat'
+
+
+filename =
+
+    '7.000xv9.dat'
+
+
+filename =
+
+    '7.000xv10.dat'
+
+
+filename =
+
+    '7.000xv11.dat'
+
+
+filename =
+
+    '7.000xv12.dat'
+
+
+filename =
+
+    '7.000xv13.dat'
+
+
+filename =
+
+    '7.000xv14.dat'
+
+
+filename =
+
+    '7.000xv15.dat'
+
+
+filename =
+
+    '7.000xv16.dat'
+
+
+filename =
+
+    '7.000xv17.dat'
+
+
+filename =
+
+    '7.000xv18.dat'
+
+
+filename =
+
+    '7.000xv19.dat'
+
+
+filename =
+
+    '7.000xv20.dat'
+
+
+filename =
+
+    '7.000xv21.dat'
+
+
+filename =
+
+    '7.000xv22.dat'
+
+
+filename =
+
+    '7.000xv23.dat'
+
+
+filename =
+
+    '7.000xv24.dat'
+
+
+filename =
+
+    '7.000xv25.dat'
+
+
+filename =
+
+    '7.000xv26.dat'
+
+
+filename =
+
+    '7.000xv27.dat'
+
+
+filename =
+
+    '7.000xv28.dat'
+
+
+filename =
+
+    '7.000xv29.dat'
+
+
+filename =
+
+    '7.000xv30.dat'
+
+
+filename =
+
+    '7.000xv31.dat'
+
+
+filename =
+
+    '7.000xv32.dat'
+
+
+filename =
+
+    '7.000xv33.dat'
+
+
+filename =
+
+    '7.000xv34.dat'
+
+
+filename =
+
+    '7.000xv35.dat'
+
+
+filename =
+
+    '7.000xv36.dat'
+
+
+filename =
+
+    '7.000xv37.dat'
+
+
+filename =
+
+    '7.000xv38.dat'
+
+
+filename =
+
+    '7.000xv39.dat'
+
+
+filename =
+
+    '7.000xv40.dat'
+
+
+filename =
+
+    '7.000xv41.dat'
+
+
+filename =
+
+    '7.000xv42.dat'
+
+
+filename =
+
+    '7.000xv43.dat'
+
+
+filename =
+
+    '7.000xv44.dat'
+
+
+filename =
+
+    '7.000xv45.dat'
+
+
+filename =
+
+    '7.000xv46.dat'
+
+
+filename =
+
+    '7.000xv47.dat'
+
+
+filename =
+
+    '7.000xv48.dat'
+
+
+filename =
+
+    '7.000xv49.dat'
+
+
+filename =
+
+    '7.000xv50.dat'
+
+
+filename =
+
+    '7.000xv51.dat'
+
+
+filename =
+
+    '7.000xv52.dat'
+
+
+filename =
+
+    '7.000xv53.dat'
+
+
+filename =
+
+    '7.000xv54.dat'
+
+
+filename =
+
+    '7.000xv55.dat'
+
+
+filename =
+
+    '7.000xv56.dat'
+
+
+filename =
+
+    '7.000xv57.dat'
+
+
+filename =
+
+    '7.000xv58.dat'
+
+
+filename =
+
+    '7.000xv59.dat'
+
+
+filename =
+
+    '7.000xv60.dat'
+
+
+filename =
+
+    '7.000xv61.dat'
+
+
+filename =
+
+    '7.000xv62.dat'
+
+
+filename =
+
+    '7.000xv63.dat'
+
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 126)
+  In proj2d_dm_analysis (line 81)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 127)
+  In proj2d_dm_analysis (line 81)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 130)
+  In proj2d_dm_analysis (line 81)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 133)
+  In proj2d_dm_analysis (line 81)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 296)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 308)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 324)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 336)
+  In proj2d_dm_analysis_all (line 66)] 
+
+filename =
+
+    '5.000xv0.dat'
+
+
+z =
+
+     5
+
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 62)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 63)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 64)
+  In proj2d_dm_analysis_all (line 66)] 
+
+filename =
+
+    '5.000xv0.dat'
+
+
+filename =
+
+    '5.000xv1.dat'
+
+
+filename =
+
+    '5.000xv2.dat'
+
+
+filename =
+
+    '5.000xv3.dat'
+
+
+filename =
+
+    '5.000xv4.dat'
+
+
+filename =
+
+    '5.000xv5.dat'
+
+
+filename =
+
+    '5.000xv6.dat'
+
+
+filename =
+
+    '5.000xv7.dat'
+
+
+filename =
+
+    '5.000xv8.dat'
+
+
+filename =
+
+    '5.000xv9.dat'
+
+
+filename =
+
+    '5.000xv10.dat'
+
+
+filename =
+
+    '5.000xv11.dat'
+
+
+filename =
+
+    '5.000xv12.dat'
+
+
+filename =
+
+    '5.000xv13.dat'
+
+
+filename =
+
+    '5.000xv14.dat'
+
+
+filename =
+
+    '5.000xv15.dat'
+
+
+filename =
+
+    '5.000xv16.dat'
+
+
+filename =
+
+    '5.000xv17.dat'
+
+
+filename =
+
+    '5.000xv18.dat'
+
+
+filename =
+
+    '5.000xv19.dat'
+
+
+filename =
+
+    '5.000xv20.dat'
+
+
+filename =
+
+    '5.000xv21.dat'
+
+
+filename =
+
+    '5.000xv22.dat'
+
+
+filename =
+
+    '5.000xv23.dat'
+
+
+filename =
+
+    '5.000xv24.dat'
+
+
+filename =
+
+    '5.000xv25.dat'
+
+
+filename =
+
+    '5.000xv26.dat'
+
+
+filename =
+
+    '5.000xv27.dat'
+
+
+filename =
+
+    '5.000xv28.dat'
+
+
+filename =
+
+    '5.000xv29.dat'
+
+
+filename =
+
+    '5.000xv30.dat'
+
+
+filename =
+
+    '5.000xv31.dat'
+
+
+filename =
+
+    '5.000xv32.dat'
+
+
+filename =
+
+    '5.000xv33.dat'
+
+
+filename =
+
+    '5.000xv34.dat'
+
+
+filename =
+
+    '5.000xv35.dat'
+
+
+filename =
+
+    '5.000xv36.dat'
+
+
+filename =
+
+    '5.000xv37.dat'
+
+
+filename =
+
+    '5.000xv38.dat'
+
+
+filename =
+
+    '5.000xv39.dat'
+
+
+filename =
+
+    '5.000xv40.dat'
+
+
+filename =
+
+    '5.000xv41.dat'
+
+
+filename =
+
+    '5.000xv42.dat'
+
+
+filename =
+
+    '5.000xv43.dat'
+
+
+filename =
+
+    '5.000xv44.dat'
+
+
+filename =
+
+    '5.000xv45.dat'
+
+
+filename =
+
+    '5.000xv46.dat'
+
+
+filename =
+
+    '5.000xv47.dat'
+
+
+filename =
+
+    '5.000xv48.dat'
+
+
+filename =
+
+    '5.000xv49.dat'
+
+
+filename =
+
+    '5.000xv50.dat'
+
+
+filename =
+
+    '5.000xv51.dat'
+
+
+filename =
+
+    '5.000xv52.dat'
+
+
+filename =
+
+    '5.000xv53.dat'
+
+
+filename =
+
+    '5.000xv54.dat'
+
+
+filename =
+
+    '5.000xv55.dat'
+
+
+filename =
+
+    '5.000xv56.dat'
+
+
+filename =
+
+    '5.000xv57.dat'
+
+
+filename =
+
+    '5.000xv58.dat'
+
+
+filename =
+
+    '5.000xv59.dat'
+
+
+filename =
+
+    '5.000xv60.dat'
+
+
+filename =
+
+    '5.000xv61.dat'
+
+
+filename =
+
+    '5.000xv62.dat'
+
+
+filename =
+
+    '5.000xv63.dat'
+
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 126)
+  In proj2d_dm_analysis (line 81)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 127)
+  In proj2d_dm_analysis (line 81)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 130)
+  In proj2d_dm_analysis (line 81)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 133)
+  In proj2d_dm_analysis (line 81)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 296)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 308)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 324)
+  In proj2d_dm_analysis_all (line 66)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 336)
+  In proj2d_dm_analysis_all (line 66)] 

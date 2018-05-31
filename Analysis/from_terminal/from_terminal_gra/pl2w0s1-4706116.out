@@ -1,0 +1,241 @@
+MATLAB is selecting SOFTWARE OPENGL rendering.
+Opening log file:  /home/cunhad/java.log.28116
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2018 The MathWorks, Inc.
+                   R2018a (9.4.0.813654) 64-bit (glnxa64)
+                             February 23, 2018
+
+[Warning: Unable to load Toolbox Path Cache
+/home/cunhad/.matlab/R2018a/toolbox_cache-9.4.0-817948803-glnxa64.xml. The
+cache file is not in the correct format. It will be regenerated upon quitting
+MATLAB.] 
+ 
+To get started, type one of these: helpwin, helpdesk, or demo.
+For product information, visit www.mathworks.com.
+ 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 61)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 62)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 63)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 126)
+  In proj2d_dm_analysis (line 80)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 127)
+  In proj2d_dm_analysis (line 80)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 130)
+  In proj2d_dm_analysis (line 80)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 133)
+  In proj2d_dm_analysis (line 80)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: MATLAB has disabled some advanced graphics rendering features by
+switching to software OpenGL. For more information, click <a
+href="matlab:opengl('problems')">here</a>.] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 295)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 307)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 323)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 335)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 61)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 62)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 63)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 126)
+  In proj2d_dm_analysis (line 80)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 127)
+  In proj2d_dm_analysis (line 80)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 130)
+  In proj2d_dm_analysis (line 80)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 133)
+  In proj2d_dm_analysis (line 80)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 295)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 307)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 323)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 335)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 61)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 62)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 63)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 126)
+  In proj2d_dm_analysis (line 80)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 127)
+  In proj2d_dm_analysis (line 80)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 130)
+  In proj2d_dm_analysis (line 80)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 133)
+  In proj2d_dm_analysis (line 80)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 295)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 307)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 323)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 335)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 61)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 62)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 63)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 126)
+  In proj2d_dm_analysis (line 80)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 127)
+  In proj2d_dm_analysis (line 80)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 130)
+  In proj2d_dm_analysis (line 80)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 133)
+  In proj2d_dm_analysis (line 80)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 295)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 307)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 323)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 335)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 61)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 62)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 63)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 126)
+  In proj2d_dm_analysis (line 80)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 127)
+  In proj2d_dm_analysis (line 80)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 130)
+  In proj2d_dm_analysis (line 80)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 133)
+  In proj2d_dm_analysis (line 80)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 295)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 307)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 323)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 335)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 61)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 62)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 63)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 126)
+  In proj2d_dm_analysis (line 80)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 127)
+  In proj2d_dm_analysis (line 80)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 130)
+  In proj2d_dm_analysis (line 80)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_data_out (line 133)
+  In proj2d_dm_analysis (line 80)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 295)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 307)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 323)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 335)
+  In proj2d_dm_analysis_all (line 65)] 

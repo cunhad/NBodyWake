@@ -1,0 +1,23 @@
+{Error using parpool (line 103)
+Failed to start a parallel pool. (For information in addition to the causing
+error, validate the profile 'local' in the Cluster Profile Manager.)
+
+Error in box_statistics_dm_data_out_cubic_fast_ap (line 57)
+p = parpool(num_cores);
+
+Caused by:
+    Error using parallel.internal.pool.InteractiveClient>iThrowWithCause (line
+    665)
+    Failed to start pool.
+        Error using parallel.Job/submit (line 327)
+        An unexpected error occurred accessing properties: "CaptureDiary"
+        "CreateDateTime" "CreateTime" "DependentFiles" "Diary" "Error"
+        "ErrorIdentifier" "ErrorMessage" "FinishDateTime" "FinishTime"
+        "Function" "InputArguments" "DiagnosticWarnings" "Name"
+        "NumOutputArguments" "OutputArguments" "StartDateTime" "StartTime"
+        "StateEnum" "Worker"
+            Error using save
+            Error closing file
+            /home/cunhad/.matlab/local_cluster_jobs/R2016b/Job3/Task8.in.mat.
+            The file may be corrupt.
+} 

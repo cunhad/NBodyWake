@@ -1,0 +1,10 @@
+{Error using parallel_function (line 604)
+All workers aborted during execution of the parfor loop.
+
+Error in box_statistics_dm_data_out_cubic_fast_cache (line 196)
+        parfor cor=1:num_cores
+} 
+{The client lost connection to worker 4. This might be due to network problems,
+or the interactive communicating job might have errored.
+} 
+slurmstepd: error: Detected 1 oom-kill event(s) in step 3839803.batch cgroup.

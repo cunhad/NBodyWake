@@ -1,0 +1,2 @@
+/var/spool/slurmd/job3842936/slurm_script: line 57: 12375 Killed                  matlab -nosplash -nodesktop -r "box_statistics_dm_data_out_cubic_fast_cache($root,$root_out,$spec,$aux_path,$aux_path_out,$filename_,$lenght_factor,$resol_factor,$pivot,$NSIDE_,$part_p,$angle_p,$num_cores,$data_stream,$level_window,$dwbasis_);  exit;"
+slurmstepd: error: Detected 28 oom-kill event(s) in step 3842936.batch cgroup.

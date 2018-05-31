@@ -1,0 +1,18 @@
+MATLAB is selecting SOFTWARE OPENGL rendering.
+Opening log file:  /home/cunhad/java.log.25486
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2017 The MathWorks, Inc.
+                   R2017a (9.2.0.556344) 64-bit (glnxa64)
+                               March 27, 2017
+
+ 
+To get started, type one of these: helpwin, helpdesk, or demo.
+For product information, visit www.mathworks.com.
+ 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 61)
+  In proj2d_dm_analysis_all (line 65)] 
+[Warning: Directory already exists.] 
+[> In proj2d_dm_analysis (line 62)
+  In proj2d_dm_analysis_all (line 65)] 

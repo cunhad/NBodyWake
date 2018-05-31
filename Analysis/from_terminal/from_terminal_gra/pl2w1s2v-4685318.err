@@ -1,0 +1,12 @@
+{Error: File:
+/project/6006729/cunhad/production/NBodyWake/Analysis/2dproj/proj2d_dm_data_out.m
+Line: 66 Column: 97
+An array for multiple LHS assignment cannot contain expressions.
+
+Error in proj2d_dm_analysis (line 80)
+            proj2d_dm_data_out(
+            root,root_data_out,spec,aux_path,aux_path_data_out,filename,lenght_factor,resol_factor,pivot,rot_angle,1);
+            
+Error in proj2d_dm_analysis_all (line 65)
+    proj2d_dm_analysis(
+    root,root_data_out,root_plot_out,spec,aux_path,aux_path_data_out,aux_path_plot_out,filename,lenght_factor,resol_factor,pivot,rot_angle,lim,data_stream,info);} 

@@ -1,0 +1,75 @@
+#!/bin/bash
+
+
+#(execute as:) bash run_gadget
+#(or:) sbatch run_gadget
+
+export LD_LIBRARY_PATH=/usr/local/lib
+
+box_size_Mpc=32
+grid_size=64
+particle_size=64
+redshift_initial=63
+redshift_wake_insertion=31
+Gmu_insert="1E-7"
+Gmu_digit=1
+Gmu_exp=7
+
+NumFilesPerSnapshot=2			#should be smaller than processors
+NumFilesWrittenInParallel=2		#%should be smaller than processors
+NumProcessors=4
+
+spec_nowake_=$box_size_Mpc'Mpc_'$grid_size'c_'$particle_size'p_zi'$redshift_initial'_nowakem'
+spec_wake_=$box_size_Mpc'Mpc_'$grid_size'c_'$particle_size'p_zi'$redshift_initial'_wakeGmu'$Gmu_digit't10m'$Gmu_exp'zi'$redshift_wake_insertion'm'
+root_=/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/
+
+#root_data_out_=/home/cunhad/project/cunhad/cubep3m/simulations/high/data/
+#root_plot_out_=/home/cunhad/project/cunhad/cubep3m/simulations/high/plot/
+#root_snan_out_=/home/cunhad/project/cunhad/cubep3m/simulations/high/snan_gra$box_size_Mpc'/'
+#root_snan_comp_=/home/cunhad/project/cunhad/cubep3m/simulations/high/snan_gra$box_size_Mpc'_comp/'
+#aux_path_data_out_=
+#aux_path_plot_out_=
+#aux_path_snan_out_=
+#aux_path_snan_comp_=
+#cubep3m_type=
+#cubep3m_type=_high_ht
+#cubep3m_type=_ht
+#cubep3m_type=_high
+#cubep3m_type=_high_ht
+path_to_original_gadget=/home/asus/Dropbox/extras/Gadget-2.0.7
+initial_sample_id=0001
+final_sample_id=0001
+
+for i in $(seq -f sample"%04g" $initial_sample_id $final_sample_id)
+do
+
+	root_spec_sample=$root_$spec_nowake_'/'$i
+
+	#initial simulation
+
+        mkdir -p $root_spec_sample
+        cp -r $path_to_original_gadget $root_spec_sample"/."	
+	cd $root_spec_sample"/Gadget-2.0.7/Gadget2"
+	
+	cp Makefile_glass Makefile
+	sed -i '71s/.*/OPT   +=  -DMAKEGLASS='"$(($particle_size * $particle_size * $particle_size))"'/' Makefile
+	make
+	mkdir ../../batch
+	mkdir ../../glass
+	cd ../../batch	
+	cp ../Gadget-2.0.7/Gadget2/Gadget2 .
+	cp ../Gadget-2.0.7/Gadget2/parameterfiles/output_list.txt .
+	cp ../Gadget-2.0.7/Gadget2/parameterfiles/glass.param .
+#	sed -i '4s#.*#OutputDir          '"${root_spec_sample}"'/glass/ #g' glass.param
+#	sed -i '14s#.*#OutputListFilename          '"${root_spec_sample}"'/batch/output_list.txt#g' glass.param
+	sed -i '4s#.*#OutputDir          ../glass/ #g' glass.param
+	sed -i '14s#.*#OutputListFilename          ../batch/output_list.txt#g' glass.param
+	sed -i '43s#.*#BoxSize          '"${box_size_Mpc}"'.0#g' glass.param
+	sed -i '53s#.*#NumFilesPerSnapshot          '"${NumFilesPerSnapshot}"'#g' glass.param
+	sed -i '54s#.*#NumFilesWrittenInParallel          '"${NumFilesWrittenInParallel}"'#g' glass.param
+	sed -i '111s#.*#SofteningHalo          '"$(echo 2k $box_size_Mpc 25 /p | dc)"'#g' glass.param
+	sed -i '118s#.*#SofteningHaloMaxPhys  '"$(echo 2k $box_size_Mpc 25 /p | dc)"'  #g' glass.param
+
+	mpirun -np $NumProcessors ./Gadget2 glass.param
+	
+done

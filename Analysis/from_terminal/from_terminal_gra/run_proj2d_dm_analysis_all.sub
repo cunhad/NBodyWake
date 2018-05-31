@@ -1,0 +1,72 @@
+#!/bin/bash 
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=1
+#SBATCH --time=15:00:00
+#SBATCH --account=rrg-rhb
+#SBATCH --mem=64G
+#SBATCH --job-name=pl2w1s1
+#SBATCH --output=%x-%j.out
+#SBATCH --error=%x-%j.err
+#SBATCH --mail-user=disrael.dacunha@mail.mcgill.ca
+#SBATCH --mail-type=END
+#SBATCH --mail-type=BEGIN
+
+
+#execute as: sbatch run_proj2d_dm_analysis_all.sub
+
+root_=/home/cunhad/project/cunhad/cubep3m/simulations/
+root_data_out_=/home/cunhad/project/cunhad/cubep3m/simulations/data/
+root_plot_out_=/home/cunhad/project/cunhad/cubep3m/simulations/plot/
+root_snan_out_=/home/cunhad/project/cunhad/cubep3m/simulations/snan/
+spec_=64Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi31m
+aux_path_=/sample2001/
+aux_path_data_out_=
+aux_path_plot_out_=
+aux_path_snan_out_=
+lenght_factor_=1
+resol_factor_=1
+pivot_=[0,0,0]
+rot_angle_=[0,0]
+#lim_=minmax
+#lim_=[-1" "2]
+lim_=[-1" "2]
+data_stream_=[1,3]
+info_=[0,1,2,3]
+#z_id_range_=all
+#z_id_range_=[1,3,4,5]
+z_id_range_=all
+
+
+
+root="'$root_'"
+root_data_out="'$root_data_out_'"
+root_plot_out="'$root_plot_out_'"
+root_snan_out="'$root_snan_out_'"
+spec="'$spec_'"
+aux_path="'$aux_path_'"
+aux_path_data_out="'$aux_path_data_out_'"
+aux_path_plot_out="'$aux_path_plot_out_'"
+aux_path_snan_out="'$aux_path_snan_out_'"
+lenght_factor="$lenght_factor_"
+resol_factor="$resol_factor_"
+pivot="$pivot_"
+rot_angle="$rot_angle_"
+#lim="'$lim_'"
+#lim="$lim_"
+lim="$lim_"
+data_stream="$data_stream_"
+info="$info_"
+analysis="$analysis_"
+z_id_range="'$z_id_range_'"
+#z_id_range="$z_id_range_"
+
+
+module load matlab/2018a
+
+cd ~/project/cunhad/production/NBodyWake/Analysis/2dproj/
+
+#export OMP_NUM_THREADS=12
+
+matlab -nosplash -nodesktop -r "proj2d_dm_analysis_all($root,$root_data_out,$root_plot_out,$spec,$aux_path,$aux_path_data_out,$aux_path_plot_out,$lenght_factor,$resol_factor,$pivot,$rot_angle,$lim,$data_stream,$info,$z_id_range);  exit;"
+

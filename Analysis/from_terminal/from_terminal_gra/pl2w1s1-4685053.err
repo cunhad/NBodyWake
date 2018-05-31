@@ -1,0 +1,13 @@
+{Error using preprocessing_part (line 103)
+Subscript indices must either be real positive integers or logicals.
+
+Error in proj2d_dm_data_out (line 54)
+parfor node = 1 : length(nodes_list)
+
+Error in proj2d_dm_analysis (line 80)
+            proj2d_dm_data_out(
+            root,root_data_out,spec,aux_path,aux_path_data_out,filename,lenght_factor,resol_factor,pivot,rot_angle,1);
+            
+Error in proj2d_dm_analysis_all (line 65)
+    proj2d_dm_analysis(
+    root,root_data_out,root_plot_out,spec,aux_path,aux_path_data_out,aux_path_plot_out,filename,lenght_factor,resol_factor,pivot,rot_angle,lim,data_stream,info);} 

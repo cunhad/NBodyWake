@@ -1,0 +1,23 @@
+#!/bin/bash 
+#BATCH --time=03:00:00
+#SBATCH --account=def-rhb
+#SBATCH --mem-per-cpu=8000M
+#SBATCH --job-name=ppgw0s1
+#SBATCH --output=%x-%j.out
+#SBATCH --error=%x-%j.err
+
+#execute as: sbatch run_preprocessing.sub 
+
+root_=/home/cunhad/project/cunhad/cubep3m/simulations/
+spec_=64Mpc_1024c_512p_zi255_nowakem
+aux_path_=/sample1001/
+
+root="'$root_'"
+spec="'$spec_'"
+aux_path="'$aux_path_'"
+
+module load matlab/2018a
+
+cd ~/project/cunhad/production/NBodyWake/Analysis/preprocessing/
+
+matlab -nosplash -nodesktop -r "preprocessing($root,$spec,$aux_path);  exit;"

@@ -1,0 +1,56 @@
+#!/bin/bash 
+#SBATCH --nodes=4
+#SBATCH --ntasks-per-node=32
+##SBATCH --cpus-per-task=16
+#SBATCH --mem-per-cpu=4000M
+##SBATCH --mem=800G
+#SBATCH --time=24:00:00
+#SBATCH --account=def-rhb
+#SBATCH --job-name=bd1w0s1
+#SBATCH --output=%x-%j.out
+#SBATCH --error=%x-%j.err
+
+
+
+#execute as: sbatch run_box_statistics_dm_data_out_cylindric_fast_old.sub
+
+root_=/home/cunhad/project/cunhad/cubep3m/simulations/
+root_out_=/home/cunhad/project/cunhad/cubep3m/simulations/box_stat_cylindric_fast_old/
+spec_=64Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi31m
+aux_path_=/sample1001/
+aux_path_out=
+filename_="'10.000xv0.dat'"
+lenght_factor_=2
+resol_factor_=1
+pivot_=[0,0,0]
+NSIDE_=64
+part_=512
+num_cores_=128
+data_stream_=1
+level_window_=[1]
+dwbasis_="'sym6'"
+
+
+root="'$root_'"
+root_out="'$root_out_'"
+spec="'$spec_'"
+aux_path="'$aux_path_'"
+aux_path_out="'$aux_path_out_'"
+filename="'$filename'"
+lenght_factor="$lenght_factor_"
+resol_factor="$resol_factor_"
+pivot="$pivot_"
+NSIDE="'$NSIDE_'"
+part="$part_"
+num_cores="$num_cores_"
+data_stream="$data_stream_"
+level_window="$level_window_"
+dwbasis="'$dwbasis_'"
+
+#export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+
+module load matlab/2016b
+
+cd ~/project/cunhad/production/NBodyWake/Analysis/wake_detection/box_statistics
+
+matlab -nosplash -nodesktop -r "box_statistics_dm_data_out_cylindric_fast_old($root,$root_out,$spec,$aux_path,$aux_path_out,$filename_,$lenght_factor,$resol_factor,$pivot,$NSIDE_,$part,$num_cores,$data_stream,$level_window,$dwbasis_);  exit;"
