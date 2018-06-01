@@ -296,8 +296,8 @@ fwrite(fid_o,block_size_12_tail,'uint','l');
 fclose(fid);
 fclose(fid_o);
 
-system(char(strcat({'ln -s '},{' '},{filename_out},{' '},{strcat(path_out,file_out,'.dat.',node)})))
-% display(char(strcat({'ln -s '},{' '},{strcat(path_out,file_out,'.dat.',node)},{' '},{filename_out})));
+% system(strcat('ln -s ',path_out,file_out,'.dat.',node,' ',filename_out))
+display(strcat({'ln -s '},,path_out,file_out,'.dat.',node,' ',filename_out));
 
 end
 

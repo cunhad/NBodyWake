@@ -12,8 +12,6 @@ grid_size_log2=6
 particle_size=64
 redshift_initial=63
 redshift_wake_insertion=31
-file_in_wake_insertion=snapshot_001
-file_out_wake_insertion=ics_gadget
 Gmu_insert="1E-7"
 Gmu_digit=1
 Gmu_exp=7
@@ -43,8 +41,6 @@ path_to_original_gadget=/home/asus/Dropbox/extras/Gadget-2.0.7
 #path_to_original_2LPT_PNGnonlocal=/home/asus/Dropbox/extras/2LPT_PNGnonlocal
 path_to_original_Music=/home/asus/Dropbox/extras/ohahn-music-afefabeea948
 path_to_original_Picola=/home/asus/Dropbox/extras/MG-PICOLA-PUBLIC-master
-path_to_matlab_wake_insertion_gadget_format=/home/asus/Dropbox/Disrael/Doutorado/Research/NBodyWake/production/wake_insertion/gadget
-
 
 initial_sample_id=0001
 final_sample_id=0001
@@ -52,20 +48,58 @@ final_sample_id=0001
 do_Music_ic=false
 do_gadget=false
 do_picola=true
-do_nowake=false
-do_wake=true
-do_insert_wake=false
-
 
 for i in $(seq -f sample"%04g" $initial_sample_id $final_sample_id)
 do
 
-
-if [[ "${do_no_wake}" == "true" ]]; then	
-
 	root_spec_sample=$root_$spec_nowake_'/'$i
 
-	if [[ "${do_Music_ic}" == "true" ]]; then
+	#glass initial condition simulation
+
+#        mkdir -p $root_spec_sample
+#        cp -r $path_to_original_gadget $root_spec_sample"/."	
+#	cd $root_spec_sample"/Gadget-2.0.7/Gadget2"
+	
+#	cp Makefile_glass Makefile
+#	sed -i '22s/.*/OPT   +=  -DPMGRID='"${grid_size}"'/' Makefile
+#	sed -i '71s/.*/OPT   +=  -DMAKEGLASS='"$(($particle_size * $particle_size * $particle_size))"'/' Makefile	
+#	make
+#	mkdir ../../batch
+#	mkdir ../../glass
+#	cd ../../batch	
+#	cp ../Gadget-2.0.7/Gadget2/Gadget2 .
+#	cp ../Gadget-2.0.7/Gadget2/parameterfiles/output_list.txt .
+#	cp ../Gadget-2.0.7/Gadget2/parameterfiles/glass.param .
+#	sed -i '4s#.*#OutputDir          ../glass/ #g' glass.param
+#	sed -i '14s#.*#OutputListFilename          ../batch/output_list.txt#g' glass.param
+#	sed -i '43s#.*#BoxSize          '"${box_size_Mpc}"'.0#g' glass.param
+#	sed -i '53s#.*#NumFilesPerSnapshot          '"${NumFilesPerSnapshot}"'#g' glass.param
+#	sed -i '54s#.*#NumFilesWrittenInParallel          '"${NumFilesWrittenInParallel}"'#g' glass.param
+#	sed -i '111s#.*#SofteningHalo          '"$(echo 2k $box_size_Mpc 25 /p | dc)"'#g' glass.param
+#	sed -i '118s#.*#SofteningHaloMaxPhys  '"$(echo 2k $box_size_Mpc 25 /p | dc)"'  #g' glass.param
+
+#	mpirun -np $NumProcessors ./Gadget2 glass.param
+
+	#Run intial conditions generatior with glass 
+
+#	cp -r $path_to_original_2LPT_PNGnonlocal $root_spec_sample"/." 
+#	cd $root_spec_sample"/2LPT_PNGnonlocal"
+#	make	
+#	mkdir ../ic
+#	cd ../batch
+#	cp ../2LPT_PNGnonlocal/2LPTnonlocal .
+#	cp ../2LPT_PNGnonlocal/inputs/2lpt_nonlocal_test.param ic_glass.param
+#	sed -i '2s#.*#Nmesh         '"${grid_size}"' #g' ic_glass.param
+#        sed -i '6s#.*#Nsample         '"${grid_size}"' #g' ic_glass.param
+#        sed -i '15s#.*#Box        '"${box_size_Mpc}"'.0 #g' ic_glass.param
+#	sed -i '21s#.*#GlassTileFac         '"${grid_size}"' #g' ic_glass.param
+#	sed -i '30s#.*#Redshift         '"${redshift_initial}"'.0 #g' ic_glass.param
+#	sed -i '75s#.*#NumFilesWrittenInParallel          '"${NumFilesWrittenInParallel}"'#g' ic_glass.param
+	
+#	mpirun -np $NumProcessors ./2LPTnonlocal ic_glass.param
+
+
+if [[ "${do_Music_ic}" == "true" ]]; then
 	#Run MUSIC intial conditions generatior
 
 	export LD_LIBRARY_PATH=/usr/local/lib
@@ -86,9 +120,9 @@ if [[ "${do_no_wake}" == "true" ]]; then
 	
 	./MUSIC ics.conf
 
-	fi
+fi
 
-	if [[ "${do_gadget}" == "true" ]]; then
+if [[ "${do_gadget}" == "true" ]]; then
 
 	export LD_LIBRARY_PATH=/usr/local/lib
 
@@ -118,10 +152,10 @@ if [[ "${do_no_wake}" == "true" ]]; then
 
 	mpirun -np $NumProcessors ./Gadget2 cosmology.param
 
-	fi
+fi
 	
 
-	if [[ "${do_picola}" == "true" ]]; then
+if [[ "${do_picola}" == "true" ]]; then
 
         #Run MG-Picola
 
@@ -146,88 +180,8 @@ if [[ "${do_no_wake}" == "true" ]]; then
 
 	mpirun -np 4 MG_PICOLA_DGP paramfiles/params_lcdm.txt
 
-	fi
 
 fi
 
-if [[ "${do_wake}" == "true" ]]; then
-
-	if [[ "${do_insert_wake}" == "true" ]]; then
-
-        root_spec_nowake=$root_$spec_nowake_'/'$i	
-	root_spec_wake=$root_$spec_wake_'/'$i
-
-	cd $path_to_matlab_wake_insertion_gadget_format	
-	matlab -nosplash -nodesktop -r "wake_insertion('$root_spec_nowake/gadget_out/','$file_in_wake_insertion','$root_spec_wake/ic/','$file_out_wake_insertion',$Gmu_insert,$redshift_wake_insertion);  exit;"
-
-	fi
-
-
-	if [[ "${do_gadget}" == "true" ]]; then
-
-	export LD_LIBRARY_PATH=/usr/local/lib
-
-	#Run Gadget
-
-        root_spec_wake=$root_$spec_wake_'/'$i
-
-	mkdir -p $root_spec_wake
-	cp -r $path_to_original_gadget $root_spec_wake"/."
-	cd $root_spec_wake"/Gadget-2.0.7/Gadget2"
-
-
-	cp Makefile_example Makefile
-	sed -i '22s/.*/OPT   +=  -DPMGRID='"${grid_size}"'/' Makefile
-	make
-
-	mkdir ../../batch
-	mkdir ../../gadget_out
-	cd ../../batch
-	cp ../Gadget-2.0.7/Gadget2/Gadget2 .
-	cp ../Gadget-2.0.7/Gadget2/parameterfiles/output_list.txt .
-	cp ../Gadget-2.0.7/Gadget2/parameterfiles/cosmology.param .
-	sed -i '4s#.*#OutputDir          ../gadget_out/ #g' cosmology.param
-	sed -i '14s#.*#OutputListFilename          ../batch/output_list.txt#g' cosmology.param
-	sed -i '43s#.*#BoxSize          '"${box_size_Mpc}"'.0#g' cosmology.param
-	sed -i '53s#.*#NumFilesPerSnapshot          '"${NumFilesPerSnapshot}"'#g' cosmology.param
-	sed -i '54s#.*#NumFilesWrittenInParallel          '"${NumFilesWrittenInParallel}"'#g' cosmology.param
-	sed -i '111s#.*#SofteningHalo          '"$(echo 2k $box_size_Mpc 25 /p | dc)"'#g' cosmology.param
-	sed -i '118s#.*#SofteningHaloMaxPhys  '"$(echo 2k $box_size_Mpc 25 /p | dc)"'  #g' cosmology.param
-
-
-	mpirun -np $NumProcessors ./Gadget2 cosmology.param
-
-	fi
-
-	if [[ "${do_picola}" == "true" ]]; then
-
-	#Run MG-Picola
-
-        root_spec_wake=$root_$spec_wake_'/'$i
-
-	export LD_LIBRARY_PATH=/usr/local/lib/:/home/asus/Programs/fftw-3.3.4/installation_folder/lib/
-
-        mkdir -p $root_spec_wake     
-
-	cp -r $path_to_original_Picola $root_spec_wake"/."
-	cd $root_spec_wake"/MG-PICOLA-PUBLIC-master"
-	make
-
-	mkdir ../picola_out
-	ln -s ../ic/ics_gadget.dat ../ic/ics_gadget.0
-	cd paramfiles
-	cp params_lcdm_example.txt params_lcdm.txt
-	sed -i '36s/.*/Nmesh       '"${grid_size}"' /' params_lcdm.txt
-	sed -i '37s#.*#Nsample       '"${particle_size}"' #g' params_lcdm.txt
-	sed -i '38s#.*#Box          '"${box_size_Mpc}"'.0#g' params_lcdm.txt
-	sed -i '39s#.*#Init_Redshift         '"${redshift_initial}"'.0 #g' params_lcdm.txt
-	#       sed -i '40s#.*#Seed         ='"${seed}"' #g' params_lcdm.txt
-	cd ../
-
-        mpirun -np 4 MG_PICOLA_DGP paramfiles/params_lcdm.txt
-
-																	        fi
-
-fi
 
 done
