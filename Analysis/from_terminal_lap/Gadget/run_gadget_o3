@@ -44,10 +44,7 @@ path_to_original_gadget=/home/asus/Dropbox/extras/Gadget-2.0.7
 path_to_original_Music=/home/asus/Dropbox/extras/ohahn-music-afefabeea948
 path_to_original_Picola=/home/asus/Dropbox/extras/MG-PICOLA-PUBLIC-master
 path_to_matlab_wake_insertion_gadget_format=/home/asus/Dropbox/Disrael/Doutorado/Research/NBodyWake/production/wake_insertion/gadget
-path_to_matlab_2dproj=/home/asus/Dropbox/Disrael/Doutorado/Research/NBodyWake/production/gadget/2dproj
 
-
-path_to_plot=/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/plot
 
 initial_sample_id=0001
 final_sample_id=0001
@@ -58,8 +55,7 @@ do_picola=true
 do_nowake=true
 do_wake=true
 do_insert_wake=true
-do_analysis_gadget=true
-do_analysis_picola=true
+
 
 for i in $(seq -f sample"%04g" $initial_sample_id $final_sample_id)
 do
@@ -123,19 +119,8 @@ if [[ "${do_nowake}" == "true" ]]; then
 
 	mpirun -np $NumProcessors ./Gadget2 cosmology.param
 
-
-		
-
 	fi
-
-        if [[ "${do_analysis_gadget}" == "true" ]]; then
-
-	#gadget analysis
-	cd $path_to_matlab_2dproj
-        matlab -nosplash -nodesktop -r "proj2d_dm_data_out('$root_spec_sample/gadget_out/','snapshot','$path_to_plot/$spec_nowake_/$i/gadget_out/',${grid_size});  exit;"
-
-
-	fi
+	
 
 	if [[ "${do_picola}" == "true" ]]; then
 
@@ -163,15 +148,6 @@ if [[ "${do_nowake}" == "true" ]]; then
 	mpirun -np 4 MG_PICOLA_DGP paramfiles/params_lcdm.txt
 
 	fi
-
-        if [[ "${do_analysis_picola}" == "true" ]]; then
-
-       	#picola analysis
-
-	cd $path_to_matlab_2dproj
-
-	matlab -nosplash -nodesktop -r "proj2d_dm_data_out('$root_spec_sample/picola_out/','out','$path_to_plot/$spec_nowake_/$i/picola_out/',${grid_size});  exit;"
-	fi	 
 
 fi
 
@@ -224,21 +200,6 @@ if [[ "${do_wake}" == "true" ]]; then
 
 	fi
 
-        if [[ "${do_analysis_gadget}" == "true" ]]; then
-
-
-	
-	#gadget analysis
-
-        root_spec_wake=$root_$spec_wake_'/'$i
-
-
-	cd $path_to_matlab_2dproj
-
-	matlab -nosplash -nodesktop -r "proj2d_dm_data_out('$root_spec_wake/gadget_out/','snapshot','$path_to_plot/$spec_wake_/$i/gadget_out/',${grid_size});  exit;"
-	fi
-
-
 	if [[ "${do_picola}" == "true" ]]; then
 
 	#Run MG-Picola
@@ -266,18 +227,6 @@ if [[ "${do_wake}" == "true" ]]; then
 
         mpirun -np 4 MG_PICOLA_DGP paramfiles/params_lcdm.txt
 
-
-	fi
-
-        if [[ "${do_analysis_picola}" == "true" ]]; then
-
-	#picola analysis
-
-
-	cd $path_to_matlab_2dproj
-
-
-	matlab -nosplash -nodesktop -r "proj2d_dm_data_out('$root_spec_wake/picola_out/','out','$path_to_plot/$spec_wake_/$i/picola_out/',${grid_size});  exit;"
 
 	fi
 
