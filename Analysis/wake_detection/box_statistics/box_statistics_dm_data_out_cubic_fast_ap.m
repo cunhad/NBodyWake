@@ -9,6 +9,8 @@ function [ proj1d_angles ] = box_statistics_dm_data_out_cubic_fast_ap( root,root
 %divided in "part" parts and at the end the histogram is added for each
 %part.
 
+%
+
 
 %(example)  [proj1d_angles] = box_statistics_dm_data_out_cubic_fast_ap('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,1,[0,0,0],2,1,4,4,[1,2],[1],'sym6');
 
