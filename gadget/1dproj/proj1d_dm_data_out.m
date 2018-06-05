@@ -1,8 +1,8 @@
-function [ ] = proj2d_dm_data_out( path_in,file_in,path_out,bins)
+function [ ] = proj1d_dm_data_out( path_in,file_in,path_out,bins)
 % %Computes the 2d projections aconding to the input specifications and stores (and returns) the resulting data
 
-% (example) proj2d_dm_data_out('/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/32Mpc_64c_64p_zi63_nowakem/sample0001/gadget_out/','snapshot','/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/plot/32Mpc_64c_64p_zi63_wakeGmu1t10m7zi31m/sample0001/gadget_out/',32);
-% (example) proj2d_dm_data_out('/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/32Mpc_64c_64p_zi63_nowakem/sample0001/picola_out/','out','/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/plot/32Mpc_64c_64p_zi63_wakeGmu1t10m7zi31m/sample0001/picola_out/',32);
+% (example) proj1d_dm_data_out('/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/32Mpc_64c_64p_zi63_nowakem/sample0001/gadget_out/','snapshot','/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/plot/32Mpc_64c_64p_zi63_wakeGmu1t10m7zi31m/sample0001/gadget_out/',32);
+% (example) proj1d_dm_data_out('/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/32Mpc_64c_64p_zi63_nowakem/sample0001/picola_out/','out','/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/plot/32Mpc_64c_64p_zi63_wakeGmu1t10m7zi31m/sample0001/picola_out/',32);
 
 % path_in='/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/32Mpc_64c_64p_zi63_nowakem/sample0001/picola_out/';
 % file_in='out';
@@ -91,42 +91,43 @@ for file_z = 1 : length(xv_files_list_head)
     
     
     [count edges mid loc] = histcn(pos_1,1,bins,bins);
-    count=count(1:1,1:bins-1,1:bins-1);
+    count=count(1:1,1:1,1:bins-1);
+    count=squeeze(count);
     count=squeeze(count);
     count_sum=count_sum+count;
         
+    
         
     end
     
     
     fig1=figure('Visible', 'off');
     set(gcf, 'Position', [0 0 600 600]);
-    clims = [-1 2];
-    imagesc([1:bins-1]*BoxSize/bins,[1:bins-1]*BoxSize/bins,(count_sum-mean(count_sum(:)))/mean(count_sum(:)),clims);
-        hold on;
-    colorbar;
+    plot([1:bins-1]*BoxSize/bins,(count_sum-mean(count_sum(:)))/mean(count_sum(:)));  
+    ylim([-1 2]);
+    xlim([0 BoxSize]);
     xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
-    ylabel('$Y(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel('Density contrast', 'interpreter', 'latex', 'fontsize', 20);
     set(gca,'FontName','FixedWidth');
     set(gca,'FontSize',16);
     set(gca,'linewidth',2);
-    title({strcat('Density contrast of the 2d projection'),'of dark matter mass ar z=',},'interpreter', 'latex', 'fontsize', 20);
+    title({strcat('Density contrast of the 1d projection'),'of dark matter mass ar z=',Redshift},'interpreter', 'latex', 'fontsize', 20);
     hold off;
-    saveas(fig1,strcat(path_out,'2d_lim_dc_',file_name_head,'.png'));
+    saveas(fig1,strcat(path_out,'1d_lim_dc_',file_name_head,'.png'));
 
     fig2=figure('Visible', 'off');
     set(gcf, 'Position', [0 0 600 600]);
-    imagesc([1:bins-1]*BoxSize/bins,[1:bins-1]*BoxSize/bins,(count_sum-mean(count_sum(:)))/mean(count_sum(:)));
-    hold on;
-    colorbar;
+    plot([1:bins-1]*BoxSize/bins,(count_sum-mean(count_sum(:)))/mean(count_sum(:)));
+    hold on;    
+    xlim([0 BoxSize]);
     xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
-    ylabel('$Y(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel('Density contrast', 'interpreter', 'latex', 'fontsize', 20);
     set(gca,'FontName','FixedWidth');
     set(gca,'FontSize',16);
     set(gca,'linewidth',2);
-    title({strcat('Density contrast of the 2d projection'),'of dark matter mass'},'interpreter', 'latex', 'fontsize', 20);
+    title({strcat('Density contrast of the 1d projection'),'of dark matter mass at z=',Redshift},'interpreter', 'latex', 'fontsize', 20);
     hold off;
-    saveas(fig2,strcat(path_out,'2d_dc',file_name_head,'.png'));
+    saveas(fig2,strcat(path_out,'1d_dc',file_name_head,'.png'));
     
 end
 
@@ -284,7 +285,7 @@ end
 % cd('../2dproj');
 % 
 
-cd('../2dproj');
+cd('../1dproj');
 
 end
 

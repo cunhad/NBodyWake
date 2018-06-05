@@ -1,4 +1,4 @@
-function [ out_filtered_proj1d_angles ] = box_statistics_dm_analysis_dwt( root,root_data_out,root_plot_out,spec,aux_path,aux_path_data_out,aux_path_plot_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,lim,data_stream,info,analysis ,level_window,dwbasis,projection_analysed,signal_analysed)
+function [ f_out ] = box_statistics_dm_analysis_dwt_peakprofile( root,root_data_out,root_plot_out,spec,aux_path,aux_path_data_out,aux_path_plot_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,lim,data_stream,info,analysis ,level_window,dwbasis,projection_analysed,signal_analysed)
 
 %(example)  [  ] = box_statistics_dm_analysis_dwt('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/data_test/','/home/asus/Dropbox/extras/storage/graham/small_res/test_plot_box/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','0.000xv0.dat',2,1,[0,0,0],4,1,4,'minmax',[1,3],[0,1,2,3],1,[1],'db1',[1,2,3,4],[1,2,3]);
 
@@ -110,6 +110,7 @@ end
 if ismember(3,projection_analysed)
     if ismember(1,signal_analysed)
        plot_molweide(transpose(out_filtered_proj1d_angles(1,:)),'Peak of the filtered mass amplitude');
+       f_out=transpose(out_filtered_proj1d_angles(1,:));
     end
     
     if ismember(2,signal_analysed)
@@ -226,7 +227,122 @@ end
 % mkdir(strcat(strcat(root_data_out(1,1:end-1),'_curv/',spec,aux_path),'data/',aux_path_data_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/'));
 % dlmwrite(strcat(path_data_out_curv,'_',num2str(find(str2num(char(redshift_list))==z)),'_peaks_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'),peaks_tot,'delimiter','\t');
 
+
+sz = size(f_out);
+nside = sqrt(max(sz)/12);
+[thetas, phis] = s2let_hpx_sampling_ring(nside);
+
+peak=max(f_out);
+f_index_max=find(f_out==peak,1);
+phis_max=phis(f_index_max);
+thetas_max=thetas(f_index_max);
+
+% [x, y] = ssht_mollweide(thetas, phis,0,0);
+[x, y] = ssht_mollweide(thetas, phis,thetas_max,phis_max);
+
+
+fig3=figure;
+set(gcf, 'Position', [0 0 1200 600]);
+ax2 = axes('Position',[0.05 0.13 0.7 0.7]);
+
+gridDelaunay = delaunay(x,y);
+h = trisurf(gridDelaunay,x,y,f_out*0.0,f_out);
+% caxis([-3500,3500]);
+colorbar('southoutside');
+
+set(h, 'LineStyle', 'none')
+
+hold on;
+
+axis equal
+axis off
+campos([0 0 1])
+camup([0 1 0])
+
+% [x_max, y_max] = ssht_mollweide(thetas_max, phis_max,0,0);
+[x_max, y_max] = ssht_mollweide(thetas_max, phis_max,thetas_max,phis_max);
+
+display(x_max)
+display(y_max)
+
+scatter(ax2,x_max, y_max,36,'r');
+
+
+
+hold off
+
+figure;
+
+[xq,yq] = meshgrid(-0.008:.0008:0.008, -0.008:0.0008:0.008);
+vq = griddata(x,y,f_out,xq,yq);
+mesh(xq,yq,vq);
+
+
+
 end
+
+
+function [x, y] = ssht_mollweide(thetas, phis,thetas_shift, phis_shift)
+% ssht_mollweide - Compute Mollweide projection
+%
+% Compute Mollweide projection of spherical coordinates.
+%
+% Usage is given by
+%
+%   [x,y] = ssht_mollweide(thetas, phis)
+%
+% where thetas and phis are spherical coordinates and x and y are the
+% projected Mollweide coordinates.
+%
+% Author: Jason McEwen (www.jasonmcewen.org)
+
+MAX_ITERATIONS = 1e5;
+TOL = 1e-10;
+
+
+
+%wake at the center
+% thetas=mod(thetas+pi/2,pi);
+% phis=mod(phis+pi,2*pi);
+
+% Convert theta to longitude.
+thetas = pi/2 - thetas;
+phis = phis - pi;
+% 
+% % phis = mod(phis+pi,2*pi) - pi;
+% % thetas=mod(thetas,pi)-pi/2;
+% 
+[rx(1,:),rx(2,:),rx(3,:)] = sph2cart(phis,thetas,1);
+
+theta=pi/2+thetas_shift;
+% phi=pi/4-phis_shift;
+phi=-phis_shift;
+
+Ry = [cos(theta) 0 sin(theta); 0 1 0; -sin(theta) 0 cos(theta)];
+Rz = [cos(phi) -sin(phi) 0; sin(phi) cos(phi) 0; 0 0 1];
+
+rx=Rz*rx;
+rx=Ry*rx;
+
+[phis,thetas,~] = cart2sph(rx(1,:),rx(2,:),rx(3,:));
+
+
+t = thetas;
+for it = 1:MAX_ITERATIONS
+
+   dt = (t + sin(t) - pi.*sin(thetas)) ./ (1 + cos(t));
+   t = t - dt;
+   
+   if(max(abs(dt)) < TOL)
+      break;
+   end
+   
+end
+t = t/2;
+x = 2 .* sqrt(2) ./ pi .* phis .* cos(t);
+y = sqrt(2) .* sin(t);
+end
+
 
 
 function plot_molweide(f,string)
@@ -336,16 +452,18 @@ J = s2let_jmax(L, B);
 
 % display(thetas_max);
 % display(phis_max);
-for j = J_min:J-9
-    f_wav{j+1,1}(1,:)=0;
-end
+% for j = J_min:J-9
+%     f_wav{j+1,1}(1,:)=0;
+% end
 
 % s2let_hpx_plot_mollweide_info(f,1);
 
 
-f_n=s2let_transform_axisym_synthesis_hpx(f_wav, f_scal, 'B',B,'L',L,'J_min',J_min);
+% f_n=s2let_transform_axisym_synthesis_hpx(f_wav, f_scal, 'B',B,'L',L,'J_min',J_min);
 
-s2let_hpx_plot_mollweide_info(f_n,1);
+% s2let_hpx_plot_mollweide_info(f_n,1);
+
+
 
 
 end
