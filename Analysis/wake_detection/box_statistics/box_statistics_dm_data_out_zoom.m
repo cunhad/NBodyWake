@@ -4,6 +4,12 @@ function [  ] = box_statistics_dm_data_out_zoom( root,root_box_in,root_plot_out,
 
 %(example)  [  ] = box_statistics_dm_data_out_zoom('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','/home/asus/Dropbox/extras/storage/graham/small_res/box_plot/','/home/asus/Dropbox/extras/storage/graham/small_res/box_snan/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','','10.000xv0.dat',2,1,[0,0,0],4,1,1,4,1,'sym6',0.01,20,1);
 
+myCluster = parcluster('local');
+myCluster.NumWorkers=num_cores;
+saveProfile(myCluster);
+
+p = parpool(num_cores);
+
 addpath(genpath('../../processing/'));
 
 
@@ -85,7 +91,7 @@ for max_id=1:n_max
         histogr_1d_angles=zeros(length(bins)-1,length(phis_q));      %auxiliary variable that will stores all 1d projs
         
         
-        parfor (angl_ind=1:length(phis_q),num_cores)
+        parfor angl_ind=1:length(phis_q)
             
             theta=thetas_q(angl_ind);
             phi=phis_q(angl_ind);
@@ -108,7 +114,7 @@ for max_id=1:n_max
     [v f] = createCube; v = (v-[0.5 0.5 0.5])*nc ;
     
     
-    parfor (angl_ind=1:length(phis_q),num_cores)
+    parfor angl_ind=1:length(phis_q)
         theta=thetas_q(angl_ind);
         phi=phis_q(angl_ind);
         nz=[sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)];
@@ -153,7 +159,7 @@ for max_id=1:n_max
     average_filtered_proj1d_angles=mean(filtered_proj1d_angles,1);
     max_amplitude_filtered_proj1d_angles=max_filtered_proj1d_angles(:)-average_filtered_proj1d_angles(:);
     
-    for i=1:length(phis_q)
+    parfor i=1:length(phis_q)
         
         peaks_fine_filtered_proj1d_angles(i)=max_amplitude_filtered_proj1d_angles(i);
         thetas_sq(i)=thetas_q(i);
