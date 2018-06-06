@@ -1,4 +1,4 @@
-function [ out_filtered_proj1d_angles ] = box_statistics_dm_data_out_zoom( root,root_box_in,root_plot_out,root_snan_out,spec,aux_path,aux_path_box_in,aux_path_plot_out,aux_path_snan_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part_in,part_out,num_cores,level_window,dwbasis,angle_range,n_angles_1d,n_max)
+function [  ] = box_statistics_dm_data_out_zoom( root,root_box_in,root_plot_out,root_snan_out,spec,aux_path,aux_path_box_in,aux_path_plot_out,aux_path_snan_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part_in,part_out,num_cores,level_window,dwbasis,angle_range,n_angles_1d,n_max)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -25,10 +25,13 @@ display(strcat(path_data,'level_window',mat2str(level_window(:)),'/','_',num2str
 out_filtered_proj1d_angles=fread(fileID,[3,12*NSIDE^2],'float32','l');
 fclose(fileID);
 
+% display(out_filtered_proj1d_angles(1,:))
 
 [thetas, phis] = s2let_hpx_sampling_ring(NSIDE);
 
-out_filtered_proj1d_angles_sort=unique(sort(out_filtered_proj1d_angles(1,:),'descend'));
+out_filtered_proj1d_angles_sort=flip(unique(sort(out_filtered_proj1d_angles(1,:),'descend')));
+
+peaks_maxima=zeros(n_max);
 
 for max_id=1:n_max
     peak=out_filtered_proj1d_angles_sort(max_id);
@@ -36,18 +39,21 @@ for max_id=1:n_max
     f_index_max=find(out_filtered_proj1d_angles==peak,1);
     phis_max=phis(f_index_max);
     thetas_max=thetas(f_index_max);
+    display(phis_max)
+    display(thetas_max)
     
     [xq,yq] = meshgrid(-angle_range/2:angle_range/n_angles_1d:angle_range/2, -angle_range/2:angle_range/n_angles_1d:angle_range/2);
     peaks_fine_filtered_proj1d_angles=zeros(size(xq));  %matrix with the peaks to be computed
     thetas_sq=zeros(size(xq));
     phis_sq=zeros(size(xq));
     [phis_q,thetas_q,~] = cart2sph(xq(:),yq(:),1);  %planar approximation
-    clearvars xq yq
+%     thetas_q=thetas_q-pi/2                          %elevation to theta
+%     clearvars xq yq
     [rx(1,:),rx(2,:),rx(3,:)] = sph2cart(phis_q,thetas_q,1);           %points in the sphere
     
     %rotation to centralize on peak
     
-    Ry = [cos(thetas_max) 0 sin(thetas_max); 0 1 0; -sin(thetas_max) 0 cos(thetas_max)];
+    Ry = [cos(thetas_max) 0 -sin(thetas_max); 0 1 0; sin(thetas_max) 0 cos(thetas_max)];
     Rz = [cos(phis_max) -sin(phis_max) 0; sin(phis_max) cos(phis_max) 0; 0 0 1];
     
     rx=Rz*rx;
@@ -55,7 +61,8 @@ for max_id=1:n_max
     
     
     [phis_q,thetas_q,~] = cart2sph(rx(1,:),rx(2,:),rx(3,:));
-    
+    thetas_q=thetas_q-pi/2;                      %elevation to theta
+
     
     proj1d_angles=zeros(length(bins)-1,length(phis_q));     %stores the plain 1d projections
     
@@ -153,13 +160,26 @@ for max_id=1:n_max
         phis_sq(i)=phis_q(i);
     end
     
-    figure;
-    mesh(thetas_sq,phis_sq,peaks_fine_filtered_proj1d_angles);
+    %     fig0=figure('Visible', 'off');
+    fig0=figure;
+%     mesh(thetas_sq,phis_sq,peaks_fine_filtered_proj1d_angles);
+        mesh(xq,yq,peaks_fine_filtered_proj1d_angles);
+    tot_plot_path_out=strcat(root_plot_out,spec,aux_path,'plot/',aux_path_plot_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/',dwbasis,'/anglRang_',num2str(angle_range),'/nangl_',num2str(n_angles_1d),'/');
+    mkdir(tot_plot_path_out);
+    mkdir(tot_plot_path_out,strcat('level_window',mat2str(level_window(:)),'/peak_zoom/','max_',num2str(max_id),'/'));
+    saveas(fig0,strcat(tot_plot_path_out,'level_window',mat2str(level_window(:)),'/peak_zoom/','max_',num2str(max_id),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_peak_zoom_z',num2str(z),'_plot.png'));
+%     saveas(fig0,strcat(tot_plot_path_out,'level_window',mat2str(level_window(:)),'/peak_zoom/','max_',num2str(max_id),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_peak_zoom_z',num2str(z),'_plot'));
     
-    
-    
+    peaks_maxima(max_id)=max(peaks_fine_filtered_proj1d_angles(:));
+    display(peaks_maxima)
     
 end
+
+snan_tot_path_out=strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/',dwbasis,'/anglRang_',num2str(angle_range),'/nangl_',num2str(n_angles_1d),'/');
+mkdir(snan_tot_path_out);
+mkdir(snan_tot_path_out,strcat('level_window',mat2str(level_window(:)),'/peak_zoom/'));
+snan=[max(peaks_maxima) find(peaks_maxima==max(peaks_maxima),1)];
+dlmwrite(strcat(snan_tot_path_out,strcat('level_window',mat2str(level_window(:)),'/peak_zoom/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_zoom_z',num2str(z),'_data.txt'),snan,'delimiter','\t');    
 
 cd('../wake_detection/box_statistics');
 
