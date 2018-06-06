@@ -230,6 +230,25 @@ end
 
 sz = size(f_out);
 nside = sqrt(max(sz)/12);
+
+% 
+% nsideguessed = sqrt(max(sz)/12);
+%     L = 2*nsideguessed;
+%     B=2;
+%     J_min=0;
+%     
+%     [f_wav, f_scal] = s2let_transform_axisym_analysis_hpx(f_out,'B',B,'L',L,'J_min',J_min);
+%     
+% J = s2let_jmax(L, B);
+% for j = J_min:J-11
+%     f_wav{j+1,1}(1,:)=0;
+% end
+% 
+% f_out=s2let_transform_axisym_synthesis_hpx(f_wav, f_scal, 'B',B,'L',L,'J_min',J_min);
+
+
+
+
 [thetas, phis] = s2let_hpx_sampling_ring(nside);
 
 peak=max(f_out);
