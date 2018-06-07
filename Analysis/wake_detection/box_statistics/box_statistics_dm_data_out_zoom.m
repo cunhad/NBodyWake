@@ -174,7 +174,7 @@ for max_id=1:n_max
     mkdir(tot_plot_path_out);
     mkdir(tot_plot_path_out,strcat('level_window',mat2str(level_window(:)),'/peak_zoom/','max_',num2str(max_id),'/'));
     saveas(fig0,strcat(tot_plot_path_out,'level_window',mat2str(level_window(:)),'/peak_zoom/','max_',num2str(max_id),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_peak_zoom_z',num2str(z),'_plot.png'));
-%     saveas(fig0,strcat(tot_plot_path_out,'level_window',mat2str(level_window(:)),'/peak_zoom/','max_',num2str(max_id),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_peak_zoom_z',num2str(z),'_plot'));
+     saveas(fig0,strcat(tot_plot_path_out,'level_window',mat2str(level_window(:)),'/peak_zoom/','max_',num2str(max_id),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_peak_zoom_z',num2str(z),'_plot'));
     
     peaks_maxima(max_id)=max(peaks_fine_filtered_proj1d_angles(:));
     display(peaks_maxima)
