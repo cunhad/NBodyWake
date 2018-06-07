@@ -3,6 +3,12 @@ function [  ] = box_statistics_dm_data_out_zoom( root,root_box_in,root_plot_out,
 %   Detailed explanation goes here
 
 %(example)  [  ] = box_statistics_dm_data_out_zoom('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','/home/asus/Dropbox/extras/storage/graham/small_res/box_plot/','/home/asus/Dropbox/extras/storage/graham/small_res/box_snan/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','','10.000xv0.dat',2,1,[0,0,0],4,1,1,4,1,'sym6',0.01,20,1);
+%(example)  [  ] = box_statistics_dm_data_out_zoom('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','/home/asus/Dropbox/extras/storage/graham/small_res/box_plot/','/home/asus/Dropbox/extras/storage/graham/small_res/box_snan/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','','10.000xv0.dat',2,1,[0,0,0],64,1,1,4,1,'sym6',0.5,20,3); 
+%(example)  [  ] = box_statistics_dm_data_out_zoom('/home/asus/Dropbox/extras/storage/graham/', '/home/asus/Dropbox/extras/storage/graham/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/graham/box_plot_/','/home/asus/Dropbox/extras/storage/graham/box_snan_/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample2001/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,1,4,1,'sym6',0.5,0,3);
+
+
+
+
 
 myCluster = parcluster('local');
 myCluster.NumWorkers=num_cores;
@@ -35,18 +41,71 @@ fclose(fileID);
 
 [thetas, phis] = s2let_hpx_sampling_ring(NSIDE);
 
-out_filtered_proj1d_angles_sort=flip(unique(sort(out_filtered_proj1d_angles(1,:),'descend')));
+% out_filtered_proj1d_angles_sort=flip(unique(sort(out_filtered_proj1d_angles(1,:),'descend')));
+[f_index_max] = find_peaks(thetas, phis,out_filtered_proj1d_angles(1,:),NSIDE,n_max);
+
+out_filtered_proj1d_angles_sort=out_filtered_proj1d_angles(1,f_index_max);
+% phis_max=phis(f_index_max(1));
+% thetas_max=thetas(f_index_max(1));
 
 peaks_maxima=zeros(n_max);
 
 for max_id=1:n_max
     peak=out_filtered_proj1d_angles_sort(max_id);
     display(peak)
-    f_index_max=find(out_filtered_proj1d_angles==peak,1);
-    phis_max=phis(f_index_max);
-    thetas_max=thetas(f_index_max);
+%     f_index_max=find(out_filtered_proj1d_angles(1,:)==peak,1);
+%     phis_max=phis(f_index_max);
+%     thetas_max=thetas(f_index_max);
+    
+%       f_index_max=find(out_filtered_proj1d_angles(1,:)==peak,1);
+     phis_max=phis(f_index_max(max_id));
+     thetas_max=thetas(f_index_max(max_id));
     display(phis_max)
     display(thetas_max)
+    
+    %plot the spherical projection
+    
+    [x, y] = ssht_mollweide(thetas, phis,0,0);        
+    
+%     fig1=figure('Visible', 'off');
+    fig1=figure('Visible', 'off');
+    set(gcf, 'Position', [0 0 1200 600]);
+    ax1 = axes('Position',[0.05 0.13 0.7 0.7]);
+    
+    gridDelaunay = delaunay(x,y);
+    h = trisurf(gridDelaunay,x,y,out_filtered_proj1d_angles(1,:)*0.0,out_filtered_proj1d_angles(1,:));
+    colorbar('southoutside');
+    
+    set(h, 'LineStyle', 'none')
+    
+    hold on;
+    
+    axis equal
+    axis off
+    campos([0 0 1])
+    camup([0 1 0])
+    
+    [x_max, y_max] = ssht_mollweide(thetas_max, phis_max,0,0);       
+    scatter(x_max, y_max,255,'r');
+    
+    descr = {strcat('max = ',num2str(peak));
+    strcat('std = ',num2str(std(out_filtered_proj1d_angles(1,:))));
+    strcat('stn = ',num2str(peak/std(out_filtered_proj1d_angles(1,:))))};
+    
+    ax1 = axes('Position',[0 0 1 1],'Visible','off');
+    txt=text(0.75,0.5,descr);
+    set(txt,'Parent',ax1,'interpreter', 'latex');
+    
+    hold off;
+    
+    tot_plot_path_out=strcat(root_plot_out,spec,aux_path,'plot/',aux_path_plot_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/',dwbasis,'/');
+    mkdir(tot_plot_path_out);
+    mkdir(tot_plot_path_out,strcat('/peak/','max_',num2str(max_id),'/'));
+    saveas(fig1,strcat(tot_plot_path_out,'/peak/','max_',num2str(max_id),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_peak_z',num2str(z),'_plot.png'));
+ 
+    
+    
+    %plot the zoom
     
     [xq,yq] = meshgrid(-angle_range/2:angle_range/n_angles_1d:angle_range/2, -angle_range/2:angle_range/n_angles_1d:angle_range/2);
     peaks_fine_filtered_proj1d_angles=zeros(size(xq));  %matrix with the peaks to be computed
@@ -167,14 +226,14 @@ for max_id=1:n_max
     end
     
     %     fig0=figure('Visible', 'off');
-    fig0=figure;
+    fig2=figure('Visible', 'off');
 %     mesh(thetas_sq,phis_sq,peaks_fine_filtered_proj1d_angles);
         mesh(xq,yq,peaks_fine_filtered_proj1d_angles);
-    tot_plot_path_out=strcat(root_plot_out,spec,aux_path,'plot/',aux_path_plot_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/',dwbasis,'/anglRang_',num2str(angle_range),'/nangl_',num2str(n_angles_1d),'/');
-    mkdir(tot_plot_path_out);
-    mkdir(tot_plot_path_out,strcat('level_window',mat2str(level_window(:)),'/peak_zoom/','max_',num2str(max_id),'/'));
-    saveas(fig0,strcat(tot_plot_path_out,'level_window',mat2str(level_window(:)),'/peak_zoom/','max_',num2str(max_id),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_peak_zoom_z',num2str(z),'_plot.png'));
-     saveas(fig0,strcat(tot_plot_path_out,'level_window',mat2str(level_window(:)),'/peak_zoom/','max_',num2str(max_id),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_peak_zoom_z',num2str(z),'_plot'));
+    tot_plot_path_out_zoom=strcat(root_plot_out,spec,aux_path,'plot/',aux_path_plot_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/',dwbasis,'/anglRang_',num2str(angle_range),'/nangl_',num2str(n_angles_1d),'/');
+    mkdir(tot_plot_path_out_zoom);
+    mkdir(tot_plot_path_out_zoom,strcat('level_window',mat2str(level_window(:)),'/peak_zoom/','max_',num2str(max_id),'/'));
+    saveas(fig2,strcat(tot_plot_path_out_zoom,'level_window',mat2str(level_window(:)),'/peak_zoom/','max_',num2str(max_id),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_peak_zoom_z',num2str(z),'_plot.png'));
+     saveas(fig2,strcat(tot_plot_path_out_zoom,'level_window',mat2str(level_window(:)),'/peak_zoom/','max_',num2str(max_id),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_peak_zoom_z',num2str(z),'_plot'));
     
     peaks_maxima(max_id)=max(peaks_fine_filtered_proj1d_angles(:));
     display(peaks_maxima)
@@ -299,58 +358,130 @@ function [theta, phi] = healpix_pix2ang_ring(ipix, nside)
 
 end
 
-% 
-% 
-% function [x, y] = ssht_mollweide(thetas, phis,thetas_shift, phis_shift)
-% % ssht_mollweide - Compute Mollweide projection
-% %
-% % Compute Mollweide projection of spherical coordinates.
-% %
-% % Usage is given by
-% %
-% %   [x,y] = ssht_mollweide(thetas, phis)
-% %
-% % where thetas and phis are spherical coordinates and x and y are the
-% % projected Mollweide coordinates.
-% %
-% % Author: Jason McEwen (www.jasonmcewen.org)
-% 
-% MAX_ITERATIONS = 1e5;
-% TOL = 1e-10;
-% 
-% 
-% % Convert theta to longitude.
-% thetas = pi/2 - thetas;
-% phis = phis - pi;
-% 
-% % 
-% [rx(1,:),rx(2,:),rx(3,:)] = sph2cart(phis,thetas,1);
-% 
+function [f_index_max] = find_peaks(thetas, phis,f,NSIDE,number_of_maxima)
+
+% number_of_maxima=4;
+
+% peak=max(f);
+% ave=mean(f);
+% f_symmetric=f-ave;
+% signal=max(f_symmetric);
+
+f_size=length(f);
+f(f_size/2:end)=[];
+
+[f_sort,f_index_max]=sort(f,'descend');
+
+% f_sort=flip(unique(sort(f,'descend')));
+
+
+% f_symmetric_sort=fliplr(f_symmetric_sort);
+
+% std_f=std(f);
+% stn_f=signal/std_f;
+% f_index_max=find(f_symmetric==signal);
+% f_index_max=zeros(1,number_of_maxima);
+% for pk=1:length(f_index_max)
+%     f_index_max(1,pk)=find(f==f_sort(pk),1);
+% end
+
+phis_max=phis(f_index_max);
+thetas_max=thetas(f_index_max);
+% display(phis_max(1:10));
+% display(thetas_max(1:10));
+
+angle_cutoff=2*sqrt(4*pi/(12*(NSIDE/2)*(NSIDE/2)));
+
+for f_verify =1:number_of_maxima
+    
+    f_index_max_aux=length(f_index_max);
+    
+%     display(f_index_max_aux)
+        	v1=zeros(1,3);
+            [v1(1,1),v1(1,2),v1(1,3)] = sph2cart(phis_max(f_verify),+pi/2-thetas_max(f_verify),1);
+            v2=-v1;
+    
+    parfor f_compare=f_verify+1:f_index_max_aux
+
+            w1=zeros(1,3);
+            [w1(1,1),w1(1,2),w1(1,3)] = sph2cart(phis_max(f_compare),+pi/2-thetas_max(f_compare),1);
+            w2=-w1;
+            
+            a=zeros(1,4);
+            a(1,1)=acos(dot(v1, w1));
+            a(1,2)=acos(dot(v1, w2));
+            a(1,3)=acos(dot(v2, w1));
+            a(1,4)=acos(dot(v2, w2));
+            am=min(a);
+            
+            if (am<angle_cutoff)
+                
+                f_index_max(f_compare)=0;
+                
+            end
+    end
+    
+    f_index_max(f_index_max==0) = [];
+    
+end
+
+end
+
+
+
+function [x, y] = ssht_mollweide(thetas, phis,thetas_shift, phis_shift)
+% ssht_mollweide - Compute Mollweide projection
+%
+% Compute Mollweide projection of spherical coordinates.
+%
+% Usage is given by
+%
+%   [x,y] = ssht_mollweide(thetas, phis)
+%
+% where thetas and phis are spherical coordinates and x and y are the
+% projected Mollweide coordinates.
+%
+% Author: Jason McEwen (www.jasonmcewen.org)
+
+MAX_ITERATIONS = 1e5;
+TOL = 1e-10;
+
+
+% Convert theta to longitude.
+thetas = pi/2 - thetas;
+phis = phis - pi;
+
+
+% recenter
+[rx(1,:),rx(2,:),rx(3,:)] = sph2cart(phis,thetas,1);
+
 % theta=pi/2+thetas_shift;
 % phi=-phis_shift;
-% 
-% Ry = [cos(theta) 0 sin(theta); 0 1 0; -sin(theta) 0 cos(theta)];
-% Rz = [cos(phi) -sin(phi) 0; sin(phi) cos(phi) 0; 0 0 1];
-% 
-% rx=Rz*rx;
-% rx=Ry*rx;
-% 
-% [phis,thetas,~] = cart2sph(rx(1,:),rx(2,:),rx(3,:));
-% 
-% 
-% t = thetas;
-% for it = 1:MAX_ITERATIONS
-% 
-%    dt = (t + sin(t) - pi.*sin(thetas)) ./ (1 + cos(t));
-%    t = t - dt;
-%    
-%    if(max(abs(dt)) < TOL)
-%       break;
-%    end
-%    
-% end
-% t = t/2;
-% x = 2 .* sqrt(2) ./ pi .* phis .* cos(t);
-% y = sqrt(2) .* sin(t);
-% end
-% 
+
+theta=pi/2;
+phi=pi/4;
+
+Ry = [cos(theta) 0 sin(theta); 0 1 0; -sin(theta) 0 cos(theta)];
+Rz = [cos(phi) -sin(phi) 0; sin(phi) cos(phi) 0; 0 0 1];
+
+rx=Rz*rx;
+rx=Ry*rx;
+
+[phis,thetas,~] = cart2sph(rx(1,:),rx(2,:),rx(3,:));
+
+
+t = thetas;
+for it = 1:MAX_ITERATIONS
+
+   dt = (t + sin(t) - pi.*sin(thetas)) ./ (1 + cos(t));
+   t = t - dt;
+   
+   if(max(abs(dt)) < TOL)
+      break;
+   end
+   
+end
+t = t/2;
+x = 2 .* sqrt(2) ./ pi .* phis .* cos(t);
+y = sqrt(2) .* sin(t);
+end
