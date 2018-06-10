@@ -6,6 +6,7 @@ function [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z pat
 
 %(example) [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes_part( '/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','0.000xv0.dat',8,1);
 
+%(example) [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes_part( '/home/asus/Dropbox/extras/storage/guillimin/','64Mpc_1024c_512p_zi63_nowakem','/sample0001/','10.000xv0.dat',8,1);
 
 
 %   Detailed explanation:

@@ -9,12 +9,12 @@ function [  ] = box_statistics_dm_data_out_zoom( root,root_box_in,root_plot_out,
 
 
 
-
-myCluster = parcluster('local');
-myCluster.NumWorkers=num_cores;
-saveProfile(myCluster);
-
-p = parpool(num_cores);
+% 
+% myCluster = parcluster('local');
+% myCluster.NumWorkers=num_cores;
+% saveProfile(myCluster);
+% 
+% p = parpool(num_cores);
 
 addpath(genpath('../../processing/'));
 
@@ -47,6 +47,24 @@ fclose(fileID);
 out_filtered_proj1d_angles_sort=out_filtered_proj1d_angles(1,f_index_max);
 % phis_max=phis(f_index_max(1));
 % thetas_max=thetas(f_index_max(1));
+
+
+
+tot_plot_path_out=strcat(root_plot_out,spec,aux_path,'plot/',aux_path_plot_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/',dwbasis,'/');
+mkdir(tot_plot_path_out);
+
+tot_plot_path_out_zoom=strcat(root_plot_out,spec,aux_path,'plot/',aux_path_plot_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/',dwbasis,'/anglRang_',num2str(angle_range),'/nangl_',num2str(n_angles_1d),'/');
+mkdir(tot_plot_path_out_zoom);
+
+snan_tot_path_out=strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/',dwbasis,'/',strcat('level_window',mat2str(level_window(:)),'/peak/'));
+snan_tot_path_out_zoom=strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/',dwbasis,'/',strcat('level_window',mat2str(level_window(:)),'/peak_zoom/'),'/anglRang_',num2str(angle_range),'/nangl_',num2str(n_angles_1d),'/');
+
+mkdir(snan_tot_path_out);
+mkdir(snan_tot_path_out_zoom);
+
+% mkdir(snan_tot_path_out_zoom,strcat('level_window',mat2str(level_window(:)),'/peak_zoom/'));
+% mkdir(snan_tot_path_out,strcat('level_window',mat2str(level_window(:)),'/peak/'));
+
 
 peaks_maxima=zeros(n_max);
 
@@ -98,17 +116,20 @@ for max_id=1:n_max
     
     hold off;
     
-    tot_plot_path_out=strcat(root_plot_out,spec,aux_path,'plot/',aux_path_plot_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/',dwbasis,'/');
-    mkdir(tot_plot_path_out);
+
     mkdir(tot_plot_path_out,strcat('/peak/','max_',num2str(max_id),'/'));
     saveas(fig1,strcat(tot_plot_path_out,'/peak/','max_',num2str(max_id),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_peak_z',num2str(z),'_plot.png'));
  
-    
+    mkdir(snan_tot_path_out,strcat('max_',num2str(max_id),'/'));
+%      snan_zoom=[max(peaks_maxima) find(peaks_maxima==max(peaks_maxima),1)];
+    dlmwrite(strcat(snan_tot_path_out,strcat('max_',num2str(max_id),'/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_z',num2str(z),'_data.txt'),peak,'delimiter','\t');    
+
     
     %plot the zoom
     
     [xq,yq] = meshgrid(-angle_range/2:angle_range/n_angles_1d:angle_range/2, -angle_range/2:angle_range/n_angles_1d:angle_range/2);
     peaks_fine_filtered_proj1d_angles=zeros(size(xq));  %matrix with the peaks to be computed
+    stn_fine_filtered_proj1d_angles=zeros(size(xq));  %matrix with the peaks to be computed
     thetas_sq=zeros(size(xq));
     phis_sq=zeros(size(xq));
     [phis_q,thetas_q,~] = cart2sph(xq(:),yq(:),1);  %planar approximation
@@ -218,33 +239,70 @@ for max_id=1:n_max
     average_filtered_proj1d_angles=mean(filtered_proj1d_angles,1);
     max_amplitude_filtered_proj1d_angles=max_filtered_proj1d_angles(:)-average_filtered_proj1d_angles(:);
     
+    filtered_proj1d_index_max=zeros(1,length(phis_q));
+    
+    parfor angl=1:length(phis_q)
+        filtered_proj1d_index_max(1,angl)=find(filtered_proj1d_angles(:,angl)==max_filtered_proj1d_angles(1,angl),1);
+    end
+    filtered_proj1d_angles_snremoved=filtered_proj1d_angles;
+    
+    for angl=1:length(phis_q)
+        filtered_proj1d_angles_snremoved(filtered_proj1d_index_max(1,angl),angl)=average_filtered_proj1d_angles(angl);
+    end
+            
+    std_filtered_proj1d_angles=std(filtered_proj1d_angles_snremoved);
+    
+    stn_filtered_proj1d_angles=(max_amplitude_filtered_proj1d_angles(:))./std_filtered_proj1d_angles(:);
+
+    
     parfor i=1:length(phis_q)
         
         peaks_fine_filtered_proj1d_angles(i)=max_amplitude_filtered_proj1d_angles(i);
-        thetas_sq(i)=thetas_q(i);
-        phis_sq(i)=phis_q(i);
+        stn_fine_filtered_proj1d_angles(i)=stn_filtered_proj1d_angles(i);
+%         thetas_sq(i)=thetas_q(i);
+%         phis_sq(i)=phis_q(i);
     end
+    %         peaks_maxima(max_id)=max(peaks_fine_filtered_proj1d_angles(:));
+    %     display(peaks_maxima)
     
-    %     fig0=figure('Visible', 'off');
+%     fig2=figure;
     fig2=figure('Visible', 'off');
-%     mesh(thetas_sq,phis_sq,peaks_fine_filtered_proj1d_angles);
-        mesh(xq,yq,peaks_fine_filtered_proj1d_angles);
-    tot_plot_path_out_zoom=strcat(root_plot_out,spec,aux_path,'plot/',aux_path_plot_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/',dwbasis,'/anglRang_',num2str(angle_range),'/nangl_',num2str(n_angles_1d),'/');
-    mkdir(tot_plot_path_out_zoom);
-    mkdir(tot_plot_path_out_zoom,strcat('level_window',mat2str(level_window(:)),'/peak_zoom/','max_',num2str(max_id),'/'));
-    saveas(fig2,strcat(tot_plot_path_out_zoom,'level_window',mat2str(level_window(:)),'/peak_zoom/','max_',num2str(max_id),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_peak_zoom_z',num2str(z),'_plot.png'));
-     saveas(fig2,strcat(tot_plot_path_out_zoom,'level_window',mat2str(level_window(:)),'/peak_zoom/','max_',num2str(max_id),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_peak_zoom_z',num2str(z),'_plot'));
+    %     mesh(thetas_sq,phis_sq,peaks_fine_filtered_proj1d_angles);
+    mesh(xq,yq,peaks_fine_filtered_proj1d_angles);
+    %     tot_plot_path_out_zoom=strcat(root_plot_out,spec,aux_path,'plot/',aux_path_plot_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/',dwbasis,'/anglRang_',num2str(angle_range),'/nangl_',num2str(n_angles_1d),'/');
+    %     mkdir(tot_plot_path_out_zoom);
+    mkdir(tot_plot_path_out_zoom,strcat('max_',num2str(max_id),'/'));
+    saveas(fig2,strcat(tot_plot_path_out_zoom,'max_',num2str(max_id),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_peak_zoom_z',num2str(z),'_plot.png'));
+%     saveas(fig2,strcat(tot_plot_path_out_zoom,'level_window',mat2str(level_window(:)),'/peak_zoom/','max_',num2str(max_id),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_peak_zoom_z',num2str(z),'_plot'));
+    mkdir(snan_tot_path_out_zoom,strcat('max_',num2str(max_id)));
+    %     snan_zoom=[max(peaks_maxima) find(peaks_maxima==max(peaks_maxima),1)];
+    dlmwrite(strcat(snan_tot_path_out_zoom,strcat('max_',num2str(max_id),'/_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_zoom_z',num2str(z),'_peak.txt')),max(peaks_fine_filtered_proj1d_angles(:)),'delimiter','\t');
     
-    peaks_maxima(max_id)=max(peaks_fine_filtered_proj1d_angles(:));
-    display(peaks_maxima)
+    
+    
+    
+%     fig3=figure;
+    fig3=figure('Visible', 'off');
+    %     mesh(thetas_sq,phis_sq,peaks_fine_filtered_proj1d_angles);
+    mesh(xq,yq,stn_fine_filtered_proj1d_angles);
+    %     tot_plot_path_out_zoom=strcat(root_plot_out,spec,aux_path,'plot/',aux_path_plot_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/',dwbasis,'/anglRang_',num2str(angle_range),'/nangl_',num2str(n_angles_1d),'/');
+    %     mkdir(tot_plot_path_out_zoom);
+    %     mkdir(tot_plot_path_out_zoom,strcat('level_window',mat2str(level_window(:)),'/peak_zoom/','max_',num2str(max_id),'/'));
+    saveas(fig3,strcat(tot_plot_path_out_zoom,'max_',num2str(max_id),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_stn_zoom_z',num2str(z),'_plot.png'));
+%     saveas(fig3,strcat(tot_plot_path_out_zoom,'level_window',mat2str(level_window(:)),'/peak_zoom/','max_',num2str(max_id),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_stn_zoom_z',num2str(z),'_plot'));
+    
+%      mkdir(snan_tot_path_out,strcat('level_window',mat2str(level_window(:)),mat2str(level_window(:)),'/peak_zoom/'));
+    %     snan_zoom=[max(peaks_maxima) find(peaks_maxima==max(peaks_maxima),1)];
+    dlmwrite(strcat(snan_tot_path_out_zoom,strcat('max_',num2str(max_id),'/_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_zoom_z',num2str(z),'_stn.txt')),max(stn_fine_filtered_proj1d_angles(:)),'delimiter','\t');
+    
     
 end
 
-snan_tot_path_out=strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/',dwbasis,'/anglRang_',num2str(angle_range),'/nangl_',num2str(n_angles_1d),'/');
-mkdir(snan_tot_path_out);
-mkdir(snan_tot_path_out,strcat('level_window',mat2str(level_window(:)),'/peak_zoom/'));
-snan=[max(peaks_maxima) find(peaks_maxima==max(peaks_maxima),1)];
-dlmwrite(strcat(snan_tot_path_out,strcat('level_window',mat2str(level_window(:)),'/peak_zoom/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_zoom_z',num2str(z),'_data.txt'),snan,'delimiter','\t');    
+% snan_tot_path_out=strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/',dwbasis,'/anglRang_',num2str(angle_range),'/nangl_',num2str(n_angles_1d),'/');
+% mkdir(snan_tot_path_out);
+% mkdir(snan_tot_path_out,strcat('level_window',mat2str(level_window(:)),'/peak_zoom/'));
+% snan_zoom=[max(peaks_maxima) find(peaks_maxima==max(peaks_maxima),1)];
+% dlmwrite(strcat(snan_tot_path_out,strcat('level_window',mat2str(level_window(:)),'/peak_zoom/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_zoom_z',num2str(z),'_data.txt'),snan_zoom,'delimiter','\t');    
 
 cd('../wake_detection/box_statistics');
 

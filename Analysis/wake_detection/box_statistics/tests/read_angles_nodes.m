@@ -1,4 +1,4 @@
-function [ angles_hpx proj1d_angles ] = read_angles_nodes( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,data_stream,level_window,dwbasis)
+function [ angles_hpx proj1d_angles ] = read_angles_nodes( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part_p,part_a,part_a_id,num_cores,data_stream,level_window,dwbasis)
 %Computes for each pair of spherical angles, the projection of the
 %particles positions on the corresponding axis, then construct a histogram
 %of the resulting projection and filters it by extrating the first wavelet
@@ -12,7 +12,7 @@ function [ angles_hpx proj1d_angles ] = read_angles_nodes( root,root_out,spec,au
 
 
 
-%(example)  [proj1d_angles] = read_angles_nodes('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,1,[0,0,0],2,1,4,[1,2],[1],'sym6');
+%(example)  [proj1d_angles] = read_angles_nodes('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,1,[0,0,0],2048,1,32,1,4,[1,2],[1],'sym6');
 
 % NBody output should be stored as root+spec+aux_path (root directory, specification in the form size_numberofcellsperdimension_number_particlesperdimension_initialredshift_wakespecification&multiplicity, aux_path is the sample number )
 
@@ -71,101 +71,60 @@ cd('../../../preprocessing');
 
 % ds = tabularTextDatastore(strcat('angles',num2str(NSIDE),'_t.cvs'));
 
-angles_hpx(1,:) = dlmread(strcat('angles',num2str(NSIDE),'_t.cvs'));
-angles_hpx(2,:) = dlmread(strcat('angles',num2str(NSIDE),'_p.cvs'));
+sz_angles=6*NSIDE*NSIDE;
+sz_angl_chunk_size=floor(sz_angles/part_a);
+ang_chuck_start=sz_angl_chunk_size*(part_a_id-1)
+if part_a_id==part_a
+    ang_chuck_end=sz_angles-1;
+else
+    ang_chuck_end=sz_angl_chunk_size*part_a_id;
+end
 
-[ size_box, nc, np, ~, ~ ,~ ,~ ,~ ,z, ~, ~  ] = preprocessing_part(root,spec,aux_path,filename,part,1);
+angles_hpx(1,:) = dlmread(strcat('angles',num2str(NSIDE),'_t.cvs'),' ',[ang_chuck_start 0 ang_chuck_end 0]);
+angles_hpx(2,:) = dlmread(strcat('angles',num2str(NSIDE),'_p.cvs'),' ',[ang_chuck_start 0 ang_chuck_end 0]);
+
+%stores other information about the simulation 
+
+
+[ size_box, nc, np, ~, ~ ,~ ,~ ,~ ,z, ~, ~  ] = preprocessing_part(root,spec,aux_path,filename,part_p,1);
 
 
 % % 
 [~,number_of_angle_nuple_hpx] = size(angles_hpx);
 
+% %creates the bins to be used in the histograms
+
 bins=[-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))];
 
 
-
-
 % % % proj1d_angles(a,b) will store the 1d projection at point a for each angle
-% % % a
-% % 
 
+proj1d_angles=zeros(length(bins)-1,number_of_angle_nuple_hpx);
 
+% toc;
 
- proj1d_angles=zeros(length(bins)-1,number_of_angle_nuple_hpx);
-
-
-
-
-cd('../wake_detection/box_statistics/tests');
-toc;
-
-% delete(gcp('nocreate'))
-
-% 
-
-% % 
-% % 
-% % 
-% % number_of_angle_nuple_hpx=number_of_angle_nuple_hpx/2; %we use just half of the angles since there is a reflection symmetry (because the projection in one axis is the same as the projection on the oposite axis)
-% % 
-% % n_angle_per_node=ceil(number_of_angle_nuple_hpx/num_cores);
-% % 
-% % for cr=1:num_cores+1
-% %     angl_indx(cr)= n_angle_per_node*(cr-1)+1;
-% % end
-% % for cr=1:num_cores
-% %     n_angl_indx(cr)= -angl_indx(cr)+angl_indx(cr+1);
-% %     
-% % end
-% % 
-% % for cr=1:num_cores
-% %      angl_ind_start=angl_indx(cr);
-% %      angl_ind_end=angl_indx(cr+1)-1;
-% %      angl_chunk_t{cr}=angles_hpx(1,angl_ind_start:angl_ind_end);
-% %      angl_chunk_p{cr}=angles_hpx(2,angl_ind_start:angl_ind_end);   
-% % end
-% % 
-% % %stores other information about the simulation (4 numbers only)
-% % 
-% % [ size_box, nc, np, ~, ~ ,~ ,~ ,~ ,z, ~, ~  ] = preprocessing_part(root,spec,aux_path,filename,part,1);
-% % 
-% % %creates the bins to be used in the histograms (it has 2 fewer points if the volume analysed is maximum)
-% % 
-% % if lenght_factor==1
-% %     bins=[1-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))-1];
-% % else
-% %     bins=[-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))];
-% % end
-% % 
-% % % proj1d_angles(a,b) will store the 1d projection at point a for each angle
-% % % a
-% % 
-% % proj1d_angles=zeros(length(bins)-1,number_of_angle_nuple_hpx);
-% % 
 % % % this first loop only exist to avoid overload the memory of the workers,
 % % % so the particle catalogue is partitioned, the projections are performed and the resulted is summed afterwards
 % % 
-% % for part_id = 1  :   part
-% % 
-% %     
-% %     cd('../preprocessing');
-% %     
+for part_id = 1  :   part
+
+  
 % %     %loads part of the particles of the simulation
 % %     
-% %     [ ~, ~, ~, ~, ~ ,~ ,~ ,~ ,z, ~, Pos  ] = preprocessing_part(root,spec,aux_path,filename,part,part_id);
+    [ ~, ~, ~, ~, ~ ,~ ,~ ,~ ,z, ~, Pos  ] = preprocessing_part(root,spec,aux_path,filename,part,part_id);
 % %     
 % %     %remove particles that are outside the analysis box
-% %     
-% %         Pos=mod(Pos,nc);
-% %  
-% %         Pos(1,:)=Pos(1,:)-(nc/2)-pivot(1);
-% %         Pos(2,:)=Pos(2,:)-(nc/2)-pivot(2);
-% %         Pos(3,:)=Pos(3,:)-(nc/2)-pivot(3);
-% %         
-% %         
-% %         lim_pre=(1/(lenght_factor))*nc;
-% %     
-% %         Pos(:,abs(Pos(1,:))>lim_pre|abs(Pos(2,:))>lim_pre|abs(Pos(3,:))>lim_pre)=[];
+    
+        Pos=mod(Pos,nc);
+ 
+        Pos(1,:)=Pos(1,:)-(nc/2)-pivot(1);
+        Pos(2,:)=Pos(2,:)-(nc/2)-pivot(2);
+        Pos(3,:)=Pos(3,:)-(nc/2)-pivot(3);
+        
+        
+        lim_pre=(1/(lenght_factor))*nc;
+    
+        Pos(:,abs(Pos(1,:))>lim_pre|abs(Pos(2,:))>lim_pre|abs(Pos(3,:))>lim_pre)=[];
 % % 
 % %     %this is an auxiliary variable that will be passed to the main variable
 % %     %proj1d_angles
@@ -223,7 +182,10 @@ toc;
 % %     proj1d_angles=proj1d_angles+histogr_1d_angles;
 % %     
 % %     
-% % end
+end
+
+%stores other information about the simulation (4 numbers only)
+
 % % 
 % % %we don't need to store the partition of angles anymore
 % % 
@@ -530,6 +492,9 @@ toc;
 % % toc;
 % % delete(gcp('nocreate'))
 % 
+
+cd('../wake_detection/box_statistics/tests');
+
 
 end
 
