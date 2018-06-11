@@ -1,4 +1,4 @@
-function [ proj1d_angles,max_amplitude_filtered_proj1d_angles ] = box_statistics_dm_data_out_cubic_fast_ap_cic( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part_p,angle_p,num_cores,data_stream,level_window,dwbasis)
+function [ proj1d_angles,filtered_proj1d_angles ] = box_statistics_dm_data_out_cubic_fast_ap_cic( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part_p,angle_p,num_cores,data_stream,level_window,dwbasis)
 %Computes for each pair of spherical angles, the projection of the
 %particles positions on the corresponding axis, then construct a histogram
 %of the resulting projection and filters it by extrating the first wavelet
@@ -110,7 +110,7 @@ clearvars angles_hpx;
 % if lenght_factor==1
 %     bins=[1-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))-1];
 % else
-    bins=[-np/(2*lenght_factor):1/resol_factor:(np/(2*lenght_factor))];
+    bins=[+8-np*resol_factor/(2*lenght_factor):(np*resol_factor/(2*lenght_factor))-8];
 % end
 
 % proj1d_angles(a,b) will store the 1d projection at point a for each angle
@@ -194,11 +194,13 @@ for part_id = 1  :   part_p
             
             dz=nz*Pos;
             
-            dz=dz+(np*resol_factor/2)+pivot(3);
+            dz=dz+(np*resol_factor/(2*lenght_factor))+pivot(3);
             
             [histogr_1d_anglesaux]=cic(dz,(np*resol_factor/lenght_factor));
             
             histogr_1d_angles1(:,i)=histogr_1d_anglesaux;
+            
+            
             
             
         end
@@ -234,7 +236,7 @@ tic;
 %slices on the projection of the particles inside the cube have diferent
 %areas. The normalization factor is this area.
 
-[v f] = createCube; v = (v-[0.5 0.5 0.5])*np/lenght_factor ;
+[v f] = createCube; v = (v-[0.5 0.5 0.5])*2*np*resol_factor/lenght_factor ;
 
 
 parfor i=1:number_of_angle_nuple_hpx        
@@ -259,6 +261,10 @@ end
 % size(areas)
 
 proj1d_angles=proj1d_angles./areas;
+
+proj1d_angles[1:8]=[];
+
+% display(proj1d_angles(:,1))
 
 toc;
 
@@ -441,6 +447,7 @@ for angl=number_of_angle_nuple_hpx/2+1:number_of_angle_nuple_hpx
     filtered_proj1d_angles(:,angl)=flip(filtered_proj1d_angles2(:,phi_indice_inverse));
     out_proj1d_angles(:,angl)=out_proj1d_angles2(:,phi_indice_inverse);
     out_dc_proj1d_angles(:,angl)=out_dc_proj1d_angles2(:,phi_indice_inverse);
+%     out_filtered_proj1d_angles(:,angl)=out_filtered_proj1d_angles2(:,phi_indice_inverse);
     out_filtered_proj1d_angles(:,angl)=out_filtered_proj1d_angles2(:,phi_indice_inverse);
     out_filtered_dc_proj1d_angles(:,angl)=out_filtered_dc_proj1d_angles2(:,phi_indice_inverse);
     
@@ -547,7 +554,7 @@ histogr_1d_angles1=zeros(1,size);
        dx1=i1-x;
        dx2=1-dx1;
        
-        if (i1>0 && i2< size) 
+        if (i1>0 && i2<= size) 
          histogr_1d_angles1(i1)=histogr_1d_angles1(i1)+dx1;
          histogr_1d_angles1(i2)=histogr_1d_angles1(i2)+dx2;
         end

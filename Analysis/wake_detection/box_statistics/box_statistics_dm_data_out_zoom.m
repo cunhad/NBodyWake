@@ -1,4 +1,4 @@
-function [  ] = box_statistics_dm_data_out_zoom( root,root_box_in,root_plot_out,root_snan_out,spec,aux_path,aux_path_box_in,aux_path_plot_out,aux_path_snan_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part_in,part_out,num_cores,level_window,dwbasis,angle_range,n_angles_1d,n_max)
+function [ out_filtered_proj1d_angles ] = box_statistics_dm_data_out_zoom( root,root_box_in,root_plot_out,root_snan_out,spec,aux_path,aux_path_box_in,aux_path_plot_out,aux_path_snan_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part_in,part_out,num_cores,level_window,dwbasis,angle_range,n_angles_1d,n_max)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -6,6 +6,7 @@ function [  ] = box_statistics_dm_data_out_zoom( root,root_box_in,root_plot_out,
 %(example)  [  ] = box_statistics_dm_data_out_zoom('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','/home/asus/Dropbox/extras/storage/graham/small_res/box_plot/','/home/asus/Dropbox/extras/storage/graham/small_res/box_snan/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','','10.000xv0.dat',2,1,[0,0,0],64,1,1,4,1,'sym6',0.5,20,3); 
 %(example)  [  ] = box_statistics_dm_data_out_zoom('/home/asus/Dropbox/extras/storage/graham/', '/home/asus/Dropbox/extras/storage/graham/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/graham/box_plot_/','/home/asus/Dropbox/extras/storage/graham/box_snan_/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample2001/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,1,4,1,'sym6',0.5,0,3);
 
+%(example)  [  ] = box_statistics_dm_data_out_zoom('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast_ap_cic/','/home/asus/Dropbox/extras/storage/graham/small_res/box_plot_cic/','/home/asus/Dropbox/extras/storage/graham/small_res/box_snan_cic/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','','10.000xv0.dat',2,1,[0,0,0],64,1,1,4,1,'sym6',0.5,20,3); 
 
 
 
@@ -93,6 +94,8 @@ for max_id=1:n_max
     gridDelaunay = delaunay(x,y);
     h = trisurf(gridDelaunay,x,y,out_filtered_proj1d_angles(1,:)*0.0,out_filtered_proj1d_angles(1,:));
     colorbar('southoutside');
+    
+%     display(out_filtered_proj1d_angles(1,:));
     
     set(h, 'LineStyle', 'none')
     
@@ -305,6 +308,8 @@ end
 % dlmwrite(strcat(snan_tot_path_out,strcat('level_window',mat2str(level_window(:)),'/peak_zoom/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_zoom_z',num2str(z),'_data.txt'),snan_zoom,'delimiter','\t');    
 
 cd('../wake_detection/box_statistics');
+
+delete(gcp('nocreate'))
 
 
 end

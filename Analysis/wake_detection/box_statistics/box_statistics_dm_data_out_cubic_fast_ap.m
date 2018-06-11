@@ -1,4 +1,4 @@
-function [ proj1d_angles,max_amplitude_filtered_proj1d_angles ] = box_statistics_dm_data_out_cubic_fast_ap( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part_p,angle_p,num_cores,data_stream,level_window,dwbasis)
+function [ proj1d_angles,filtered_proj1d_angles ] = box_statistics_dm_data_out_cubic_fast_ap( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part_p,angle_p,num_cores,data_stream,level_window,dwbasis)
 %Computes for each pair of spherical angles, the projection of the
 %particles positions on the corresponding axis, then construct a histogram
 %of the resulting projection and filters it by extrating the first wavelet
