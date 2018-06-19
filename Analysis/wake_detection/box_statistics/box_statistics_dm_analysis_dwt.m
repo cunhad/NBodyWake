@@ -6,6 +6,11 @@ function [ out_filtered_proj1d_angles ] = box_statistics_dm_analysis_dwt( root,r
 
 %(example)  [  ] = box_statistics_dm_analysis_dwt('/home/asus/Dropbox/extras/storage/graham/', '/home/asus/Dropbox/extras/storage/graham/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/graham/box_stat_cubic_fast_ap/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample2001/','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,'minmax',[1],[0,1,2,3],1,[1],'sym6',[3],[1]);
 
+%(example)  [  ] = box_statistics_dm_analysis_dwt('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast/','64Mpc_1024c_512p_zi63_nowakem','/sample0003/','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,'minmax',[1],[0,1,2,3],1,[1],'sym6',[3],[2]);
+
+%(example)  [  ] = box_statistics_dm_analysis_dwt('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast_ap_cic/','/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0003/','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,'minmax',[1],[0,1,2,3],1,[1],'sym6',[3],[1]);
+
+%(example)  [  ] = box_statistics_dm_analysis_dwt('/home/asus/Dropbox/extras/storage/graham/high/', '/home/asus/Dropbox/extras/storage/graham/high/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/graham/high/box_stat_cubic_fast/','32Mpc_1024c_512p_zi63_nowakem','/sample2006/','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,'minmax',[1],[0,1,2,3],1,[1],'sym6',[3],[1]);
 
 % 
 % path_total_out=strcat(strcat(root_per_node_out,spec,aux_path),'data/',aux_path_per_node_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/dc_all_nodes_1dproj/');
@@ -243,6 +248,36 @@ nsideguessed = sqrt(max(sz)/12);
     
     % Plot
 J = s2let_jmax(L, B);
+
+
+
+
+
+f_n=s2let_transform_axisym_synthesis_hpx(f_wav, f_scal, 'B',B,'L',L,'J_min',J-1);
+% f_n=s2let_transform_axisym_synthesis_hpx(f_wav, f_scal, 'B',B,'L',L,'J_min',J-2);
+% f_n=s2let_transform_axisym_synthesis_hpx(f_wav, f_scal, 'B',B,'L',L,'J_min',J-9);
+% s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1},1);
+
+% for j = J_min:J-1
+%     f_wav{j+1,1}(1,:)=0;
+% end
+% 
+% for j = J_min:J_min+2
+%     f_wav{j+1,1}(1,:)=0;
+% end
+
+% f_n=s2let_transform_axisym_synthesis_hpx(f_wav, f_scal, 'B',B,'L',L,'J_min',J_min);
+
+% f_n=s2let_transform_axisym_synthesis_hpx(f_wav, f_scal, 'B',B,'L',L,'J_min',J_min+2);
+
+
+s2let_hpx_plot_mollweide_info(f_n,1);
+
+% s2let_hpx_plot_mollweide_info(f,1);
+
+% display(J_min)
+% display(J)
+
 % zoomfactor = 1.2;
 % % zoomfactor = 20;
 % ns = ceil(sqrt(2+J-J_min+1)) ;
@@ -332,20 +367,23 @@ J = s2let_jmax(L, B);
 % s2let_hpx_plot_mollweide_info(f_wav{5}+f_wav{4},1); %same as above, but
 % for 4,1
 
+% 
+% for j = J_min:J-1
+%     f_wav{j+1,1}(1,:)=0;
+% end
+% 
+% % for j = J-1:J
+% %     f_wav{j+1,1}(1,:)=0;
+% % end
+% 
+% % s2let_hpx_plot_mollweide_info(f,1);
+% 
 
+% f_n=s2let_transform_axisym_synthesis_hpx(f_wav, f_scal, 'B',B,'L',L,'J_min',J_min);
 
-% display(thetas_max);
-% display(phis_max);
-for j = J_min:J-9
-    f_wav{j+1,1}(1,:)=0;
-end
+% f_n=s2let_transform_axisym_synthesis_hpx(f_wav, f_scal, 'B',B,'L',L,'J_min',J-1);
 
-% s2let_hpx_plot_mollweide_info(f,1);
-
-
-f_n=s2let_transform_axisym_synthesis_hpx(f_wav, f_scal, 'B',B,'L',L,'J_min',J_min);
-
-s2let_hpx_plot_mollweide_info(f_n,1);
+% s2let_hpx_plot_mollweide_info(f_n,1);
 
 
 end

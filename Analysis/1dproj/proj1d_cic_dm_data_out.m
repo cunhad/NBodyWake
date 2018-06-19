@@ -2,7 +2,7 @@ function [ count_sum ] = proj1d_cic_dm_data_out( root,root_out,spec,aux_path,aux
 %Computes the 1d projections aconding to the input specifications and stores (and/or returns) the resulting data
 
 %   (example) [ count_sum ] = proj1d_cic_dm_data_out('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','0.000xv0.dat',1,1,[0,0,0],[0,0],[1,2]);
-%   (example) [ count_sum ] = proj1d_cic_dm_data_out('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/data_cic/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample1001/','','10.000xv0.dat',1,1,[0,0,0],[0,0],[0]);
+%   (example) [ count_sum ] = proj1d_cic_dm_data_out('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/data_cic/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','10.000xv0.dat',1,1,[0,0,0],[0,0],[0]);
 
 
 % NBody output should be stored as root+spec+aux_path (root directory, specification in the form size_numberofcellsperdimension_number_particlesperdimension_initialredshift_wakespecification&multiplicity, aux_path is the sample number )
