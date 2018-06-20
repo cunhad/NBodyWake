@@ -245,7 +245,7 @@ tic;
 
 
 parfor i=1:number_of_angle_nuple_hpx        
-    display(i)
+%     display(i)
     theta=angles_hpx(1,i);
     phi=angles_hpx(2,i);
     nz=[sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)];
