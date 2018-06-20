@@ -254,7 +254,7 @@ parfor i=1:number_of_angle_nuple_hpx
     area=zeros(bin_sz,1);
     for dist_1d=1:bin_sz
         plane = createPlane(nz*((bins(1,dist_1d+1)+bins(1,dist_1d))/2), nz);
-        plane_overlap = intersectPlaneMesh(plane, v, f);
+        plane_overlap = intersectPlaneMesh(plane, v+1e-10, f);
         area(dist_1d,1)=polygonArea3d(plane_overlap);
     end
     areas(:,i)=area(:,1);    
