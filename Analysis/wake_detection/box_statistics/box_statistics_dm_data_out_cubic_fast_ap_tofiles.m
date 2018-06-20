@@ -134,98 +134,98 @@ end
 % a
 
 proj1d_angles=zeros(length(bins)-1,number_of_angle_nuple_hpx);
-% 
-% % this first loop only exist to avoid overload the memory of the workers,
-% % so the particle catalogue is partitioned, the projections are performed and the resulted is summed afterwards
-% 
-% % for angle_id = 1: angl_p
-% 
-% for part_id = 1  :   particl_part
-% 
-%     
-%     cd('../preprocessing');
-%     
-%     %loads part of the particles of the simulation
-%     
-%     [ ~, ~, ~, ~, ~ ,~ ,~ ,~ ,z, ~, Pos  ] = preprocessing_part(root,spec,aux_path,filename,particl_part,part_id);
-%     
-%     %remove particles that are outside the analysis box
-%     
-%         Pos=mod(Pos,nc);
-%  
-%         Pos(1,:)=Pos(1,:)-(nc/2)-pivot(1);
-%         Pos(2,:)=Pos(2,:)-(nc/2)-pivot(2);
-%         Pos(3,:)=Pos(3,:)-(nc/2)-pivot(3);
-%         
-%         
-%         lim_pre=(1/(lenght_factor))*nc;
-%     
-%         Pos(:,abs(Pos(1,:))>lim_pre|abs(Pos(2,:))>lim_pre|abs(Pos(3,:))>lim_pre)=[];
-% 
-%     %this is an auxiliary variable that will be passed to the main variable
-%     %proj1d_angles
-%         
-% histogr_1d_angles=zeros(length(bins)-1,number_of_angle_nuple_hpx);
-%     
-% 
-% ticBytes(gcp);
-% 
-%     %here the projections are performed by the workers
-%         %matlab says "Using sliced variables can reduce communication
-%         %between the client and workers. Only those slices needed by a
-%         %worker are sent to it when it starts working on a particular range
-%         %of indices.", but this seems not to be the case
-%     for cor=1:angle_part
-%         angl_ind_start=angl_indx(cor);
-%         angl_ind_end=angl_indx(cor+1)-1;
-%                 
-%         %load the angles in the workers
-%         
-%         angles_t=angl_chunk_t{cor};
-%         angles_p=angl_chunk_p{cor};
-% 
-%            
-%         %created the auxiliary variable to histogr_1d_angles
-%         
-%         histogr_1d_angles1=zeros(length(bins)-1,number_of_angle_nuple_hpx);
-% 
-%         %do the loop for each angle to perform the projections
-%         
-%         parfor i=angl_ind_start:angl_ind_end
-%                     
-%         %here are the angles
-% 
-%         theta=angles_t(i-angl_ind_start+1);
-%         phi=angles_p(i-angl_ind_start+1);
-%         
-%         %here is the unit vector associated with the angles above
-% 
-%         nz=[sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)];
-%         
-%         %here the projection is performed
-%         
-%         dz=nz*Pos;        
-%         
-%         %and the histogram is computed
-%                 
-%         histogr_1d_angles1(:,i)=histcounts(dz,bins);
-%         
-%         end
-%         
-%         %histogram is stored in the auxiliary variable
-%         
-%         histogr_1d_angles=histogr_1d_angles+histogr_1d_angles1;
-%         
-%     end
-%     
-%     %histogram is stored in the auxiliary variable
-%     
-%     proj1d_angles=proj1d_angles+histogr_1d_angles;
-%     
-%     tocBytes(gcp)
-% end
-% 
-% %we don't need to store the partition of angles anymore
+
+% this first loop only exist to avoid overload the memory of the workers,
+% so the particle catalogue is partitioned, the projections are performed and the resulted is summed afterwards
+
+% for angle_id = 1: angl_p
+
+for part_id = 1  :   particl_part
+
+    
+    cd('../preprocessing');
+    
+    %loads part of the particles of the simulation
+    
+    [ ~, ~, ~, ~, ~ ,~ ,~ ,~ ,z, ~, Pos  ] = preprocessing_part(root,spec,aux_path,filename,particl_part,part_id);
+    
+    %remove particles that are outside the analysis box
+    
+        Pos=mod(Pos,nc);
+ 
+        Pos(1,:)=Pos(1,:)-(nc/2)-pivot(1);
+        Pos(2,:)=Pos(2,:)-(nc/2)-pivot(2);
+        Pos(3,:)=Pos(3,:)-(nc/2)-pivot(3);
+        
+        
+        lim_pre=(1/(lenght_factor))*nc;
+    
+        Pos(:,abs(Pos(1,:))>lim_pre|abs(Pos(2,:))>lim_pre|abs(Pos(3,:))>lim_pre)=[];
+
+    %this is an auxiliary variable that will be passed to the main variable
+    %proj1d_angles
+        
+histogr_1d_angles=zeros(length(bins)-1,number_of_angle_nuple_hpx);
+    
+
+ticBytes(gcp);
+
+    %here the projections are performed by the workers
+        %matlab says "Using sliced variables can reduce communication
+        %between the client and workers. Only those slices needed by a
+        %worker are sent to it when it starts working on a particular range
+        %of indices.", but this seems not to be the case
+    for cor=1:angle_part
+        angl_ind_start=angl_indx(cor);
+        angl_ind_end=angl_indx(cor+1)-1;
+                
+        %load the angles in the workers
+        
+        angles_t=angl_chunk_t{cor};
+        angles_p=angl_chunk_p{cor};
+
+           
+        %created the auxiliary variable to histogr_1d_angles
+        
+        histogr_1d_angles1=zeros(length(bins)-1,number_of_angle_nuple_hpx);
+
+        %do the loop for each angle to perform the projections
+        
+        parfor i=angl_ind_start:angl_ind_end
+                    
+        %here are the angles
+
+        theta=angles_t(i-angl_ind_start+1);
+        phi=angles_p(i-angl_ind_start+1);
+        
+        %here is the unit vector associated with the angles above
+
+        nz=[sin(theta)*cos(phi) sin(theta)*sin(phi) cos(theta)];
+        
+        %here the projection is performed
+        
+        dz=nz*Pos;        
+        
+        %and the histogram is computed
+                
+        histogr_1d_angles1(:,i)=histcounts(dz,bins);
+        
+        end
+        
+        %histogram is stored in the auxiliary variable
+        
+        histogr_1d_angles=histogr_1d_angles+histogr_1d_angles1;
+        
+    end
+    
+    %histogram is stored in the auxiliary variable
+    
+    proj1d_angles=proj1d_angles+histogr_1d_angles;
+    
+    tocBytes(gcp)
+end
+
+%we don't need to store the partition of angles anymore
 
 clearvars angl_chunk_t angl_chunk_p;
 
