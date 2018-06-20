@@ -12,7 +12,7 @@ function [ proj1d_angles,filtered_proj1d_angles ] = box_statistics_dm_data_out_c
 %
 
 
-%(example)  [proj1d_angles] = box_statistics_dm_data_out_cubic_fast_ap_tofiles('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,1,[0,0,0],2,1,4,4,1,1,[1,2],[1],'sym6');
+%(example)  [proj1d_angles,filtered_proj1d_angles] = box_statistics_dm_data_out_cubic_fast_ap_tofiles('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,1,[0,0,0],2,1,4,4,1,1,[1,2],[1],'sym6');
 
 % NBody output should be stored as root+spec+aux_path (root directory, specification in the form size_numberofcellsperdimension_number_particlesperdimension_initialredshift_wakespecification&multiplicity, aux_path is the sample number )
 
@@ -72,7 +72,7 @@ cd('../../preprocessing');
 %load the angles to be used in the analysis and creates cells which
 %contains the partition of those angles to be distributed in each node
 
-n_angle_per_node=ceil(6*NSIDE*NSIDE/angle_p);
+n_angle_per_node=ceil(6*NSIDE*NSIDE/ );
 
 start_angl_indx=n_angle_per_node*(angle_id-1)+1;
 end_angl_indx=n_angle_per_node*(angle_id);
@@ -100,6 +100,9 @@ n_angle_per_node=ceil(number_of_angle_nuple_hpx/angle_part);
 
 for cr=1:angle_part+1
     angl_indx(cr)= n_angle_per_node*(cr-1)+1;
+    if(angl_indx(cr)>number_of_angle_nuple_hpx)
+        angl_indx(cr)=number_of_angle_nuple_hpx+1;
+    end
 end
 for cr=1:angle_part
     n_angl_indx(cr)= -angl_indx(cr)+angl_indx(cr+1);
@@ -310,6 +313,8 @@ dc_proj1d_index_max=zeros(1,number_of_angle_nuple_hpx);
 
 %could not do parfor here. Matlab complains memory problem
 % parfor angl=1:number_of_angle_nuple_hpx 
+
+
 for angl=1:number_of_angle_nuple_hpx
 dc_proj1d_index_max(1,angl)=find(dc_proj1d_angles(:,angl)==max_dc_proj1d_angles(1,angl),1);
 end
