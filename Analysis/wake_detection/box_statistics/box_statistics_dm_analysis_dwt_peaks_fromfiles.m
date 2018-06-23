@@ -75,9 +75,9 @@ bins=[-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))];
 
 path_data=strcat(strcat(root_box_in,spec,aux_path),'data/',aux_path_box_in,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/',dwbasis,'/parts/');
 
-fileID = fopen(strcat(path_data,'level_window',mat2str(level_window(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_anglparts',num2str(angle_p),'_NSIDE',num2str(NSIDE),'.bin'));
+fileID = fopen(strcat(path_data,'level_window',mat2str(level_window(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_anglparts',num2str(angle_p),'_NSIDE',num2str(NSIDE),'_full.bin'));
 % display(strcat(path_data,'level_window',mat2str(level_window(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part_in),'_NSIDE',num2str(NSIDE),'.bin'))
-display(strcat(path_data,'level_window',mat2str(level_window(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_anglparts',num2str(angle_p),'_NSIDE',num2str(NSIDE),'.bin'));
+display(strcat(path_data,'level_window',mat2str(level_window(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_anglparts',num2str(angle_p),'_NSIDE',num2str(NSIDE),'_full.bin'));
 out_filtered_proj1d_angles=fread(fileID,[3,12*NSIDE^2],'float32','l');
 fclose(fileID);
 
@@ -146,7 +146,7 @@ close(fig)
 out_filtered_proj1d_angles_arround_z=out_filtered_proj1d_angles(quantity_type,thetas<n_angles_1d*d_angle);
 find_max_arround_z_idx=find(max(out_filtered_proj1d_angles_arround_z)==out_filtered_proj1d_angles_arround_z,1);
 path_data_box_all=strcat(strcat(root_box_in(1:end-1),'_all/',spec,aux_path),'data/',aux_path_box_in,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/',dwbasis,'/parts/');
-fileID = fopen(strcat(path_data_box_all,'level_window',mat2str(level_window(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_anglparts',num2str(angle_p),'_NSIDE',num2str(NSIDE),'.bin'));
+fileID = fopen(strcat(path_data_box_all,'level_window',mat2str(level_window(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_anglparts',num2str(angle_p),'_NSIDE',num2str(NSIDE),'_full.bin'));
 fseek(fileID,(length(bins)-1)*(find_max_arround_z_idx-1)*4,'bof');
 out_filtered_proj1d_angle_max_zaxis=fread(fileID,[length(bins)],'float32','l');
 fclose(fileID);
@@ -198,7 +198,7 @@ for max_id=1:n_max
     %plot 1d proj of the peak arround z_axis
     
 
-    fileID = fopen(strcat(path_data_box_all,'level_window',mat2str(level_window(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_anglparts',num2str(angle_p),'_NSIDE',num2str(NSIDE),'.bin'));
+    fileID = fopen(strcat(path_data_box_all,'level_window',mat2str(level_window(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_anglparts',num2str(angle_p),'_NSIDE',num2str(NSIDE),'_full.bin'));
     fseek(fileID,(length(bins)-1)*(f_index_max(max_id)-1)*4,'bof');
     out_filtered_proj1d_angle_max_ofthismax=fread(fileID,[length(bins)-1],'float32','l');
     fclose(fileID);
