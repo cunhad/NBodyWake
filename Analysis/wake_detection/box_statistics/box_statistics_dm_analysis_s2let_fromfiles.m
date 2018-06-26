@@ -1,16 +1,21 @@
-function [ out_filtered_proj1d_angles ] = box_statistics_dm_analysis_dwt( root,root_data_out,root_plot_out,spec,aux_path,aux_path_data_out,aux_path_plot_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,lim,data_stream,info,analysis ,level_window,dwbasis,projection_analysed,signal_analysed)
+function [ out_filtered_proj1d_angles ] = box_statistics_dm_analysis_s2let_fromfiles( root,root_data_out,root_plot_out,spec,aux_path,aux_path_data_out,aux_path_plot_out,filename,lenght_factor,resol_factor,pivot,NSIDE,angl_part,num_cores,lim,data_stream,info,analysis ,level_window,dwbasis,projection_analysed,signal_analysed)
 
-%(example)  [  ] = box_statistics_dm_analysis_dwt('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/data_test/','/home/asus/Dropbox/extras/storage/graham/small_res/test_plot_box/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','0.000xv0.dat',2,1,[0,0,0],4,1,4,'minmax',[1,3],[0,1,2,3],1,[1],'db1',[1,2,3,4],[1,2,3]);
+%(example)  [  ] = box_statistics_dm_analysis_dwt_fromfiles('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/data_test/','/home/asus/Dropbox/extras/storage/graham/small_res/test_plot_box/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','0.000xv0.dat',2,1,[0,0,0],4,1,4,'minmax',[1,3],[0,1,2,3],1,[1],'db1',[1,2,3,4],[1,2,3]);
 
-%(example)  [  ] = box_statistics_dm_analysis_dwt('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast/','/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','','10.000xv0.dat',2,1,[0,0,0],256,16,4,'minmax',[1],[0,1,2,3],1,[1],'sym6',[1,2,3,4],[1,2,3]);
+    %(example)  [  ] = box_statistics_dm_analysis_dwt_fromfiles('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast/','/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','','10.000xv0.dat',2,1,[0,0,0],256,16,4,'minmax',[1],[0,1,2,3],1,[1],'sym6',[1,2,3,4],[1,2,3]);
 
-%(example)  [  ] = box_statistics_dm_analysis_dwt('/home/asus/Dropbox/extras/storage/graham/', '/home/asus/Dropbox/extras/storage/graham/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/graham/box_stat_cubic_fast_ap/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample2001/','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,'minmax',[1],[0,1,2,3],1,[1],'sym6',[3],[1]);
+%(example)  [  ] = box_statistics_dm_analysis_dwt_fromfiles('/home/asus/Dropbox/extras/storage/graham/', '/home/asus/Dropbox/extras/storage/graham/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/graham/box_stat_cubic_fast_ap/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample2001/','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,'minmax',[1],[0,1,2,3],1,[1],'sym6',[3],[1]);
 
-%(example)  [  ] = box_statistics_dm_analysis_dwt('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast/','64Mpc_1024c_512p_zi63_nowakem','/sample0003/','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,'minmax',[1],[0,1,2,3],1,[1],'sym6',[3],[2]);
+%(example)  [  ] = box_statistics_dm_analysis_dwt_fromfiles('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast/','64Mpc_1024c_512p_zi63_nowakem','/sample0003/','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,'minmax',[1],[0,1,2,3],1,[1],'sym6',[3],[2]);
 
-%(example)  [  ] = box_statistics_dm_analysis_dwt('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast_ap_cic/','/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0003/','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,'minmax',[1],[0,1,2,3],1,[1],'sym6',[3],[1]);
+%(example)  [  ] = box_statistics_dm_analysis_dwt_fromfiles('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast_ap_cic/','/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0003/','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,'minmax',[1],[0,1,2,3],1,[1],'sym6',[3],[1]);
 
-%(example)  [  ] = box_statistics_dm_analysis_dwt('/home/asus/Dropbox/extras/storage/graham/high/', '/home/asus/Dropbox/extras/storage/graham/high/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/graham/high/box_stat_cubic_fast/','32Mpc_1024c_512p_zi63_nowakem','/sample2006/','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,'minmax',[1],[0,1,2,3],1,[1],'sym6',[3],[1]);
+%(example)  [  ] = box_statistics_dm_analysis_dwt_fromfiles('/home/asus/Dropbox/extras/storage/graham/high/', '/home/asus/Dropbox/extras/storage/graham/high/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/graham/high/box_stat_cubic_fast/','32Mpc_1024c_512p_zi63_nowakem','/sample2006/','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,'minmax',[1],[0,1,2,3],1,[1],'sym6',[3],[1]);
+
+%(example)  [  ] = box_statistics_dm_analysis_s2let_fromfiles('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','10.000xv0.dat',2,1,[0,0,0],64,4,4,'minmax',[1],[0,1,2,3],1,[1],'sym6',[3],[1]);
+
+%(example)  [  ] = box_statistics_dm_analysis_s2let_fromfiles('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast_ap_tofile/','/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast_ap_tofile/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0003/','','','10.000xv0.dat',2,1,[0,0,0],1024,8,4,'minmax',[1],[0,1,2,3],1,[1],'sym6',[3],[1]);
+
 
 % 
 % path_total_out=strcat(strcat(root_per_node_out,spec,aux_path),'data/',aux_path_per_node_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/dc_all_nodes_1dproj/');
@@ -30,52 +35,52 @@ cd('../Analysis/wake_detection/box_statistics');
 
 if ismember(0,data_stream)
     if (ismember(3,projection_analysed)||ismember(4,projection_analysed)||ismember(5,projection_analysed))
-        [~,~,out_proj1d_angles,out_dc_proj1d_angles,out_filtered_proj1d_angles,out_filtered_dc_proj1d_angles,out_dc_filtered_proj1d_angles] =box_statistics_dm_data_out( root,root_data_out,spec,aux_path,aux_path_data_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,0,cutoff);
+        [~,~,out_proj1d_angles,out_dc_proj1d_angles,out_filtered_proj1d_angles,out_filtered_dc_proj1d_angles,out_dc_filtered_proj1d_angles] =box_statistics_dm_data_out( root,root_data_out,spec,aux_path,aux_path_data_out,filename,lenght_factor,resol_factor,pivot,NSIDE,angl_part,num_cores,0,cutoff);
     else
-        [~,~,out_proj1d_angles,out_dc_proj1d_angles,~,~,~] =box_statistics_dm_data_out( root,root_data_out,spec,aux_path,aux_path_data_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,0,cutoff);
+        [~,~,out_proj1d_angles,out_dc_proj1d_angles,~,~,~] =box_statistics_dm_data_out( root,root_data_out,spec,aux_path,aux_path_data_out,filename,lenght_factor,resol_factor,pivot,NSIDE,angl_part,num_cores,0,cutoff);
     end
 else
-    path_data=strcat(strcat(root_data_out,spec,aux_path),'data/',aux_path_data_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/',dwbasis,'/');
+    path_data=strcat(strcat(root_data_out,spec,aux_path),'data/',aux_path_data_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/',dwbasis,'/parts/');
     
     if ismember(2,data_stream)
         if ismember(3,data_stream)
-            box_statistics_dm_data_out( root,root_data_out,spec,aux_path,aux_path_data_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,2,cutoff);
+            box_statistics_dm_data_out( root,root_data_out,spec,aux_path,aux_path_data_out,filename,lenght_factor,resol_factor,pivot,NSIDE,angl_part,num_cores,2,cutoff);
         end
-        out_proj1d_angles=dlmread(strcat(path_data,'_',num2str(find(str2num(char(redshift_list))==z)),'_out_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'));
-        out_dc_proj1d_angles=dlmread(strcat(path_data,'dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'));
+        out_proj1d_angles=dlmread(strcat(path_data,'_',num2str(find(str2num(char(redshift_list))==z)),'_out_1dproj_angle_z',num2str(z),'_parts',num2str(angl_part),'_NSIDE',num2str(NSIDE),'.txt'));
+        out_dc_proj1d_angles=dlmread(strcat(path_data,'dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_dc_1dproj_angle_z',num2str(z),'_parts',num2str(angl_part),'_NSIDE',num2str(NSIDE),'.txt'));
     end
     if ismember(1,data_stream)
         if ismember(3,data_stream)
-            box_statistics_dm_data_out( root,root_data_out,spec,aux_path,aux_path_data_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part,num_cores,1,cutoff);
+            box_statistics_dm_data_out( root,root_data_out,spec,aux_path,aux_path_data_out,filename,lenght_factor,resol_factor,pivot,NSIDE,angl_part,num_cores,1,cutoff);
         end
 %         display(strcat(path_data,'_',num2str(find(str2num(char(redshift_list))==z)),'_out_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
-        fileID = fopen(strcat(path_data,'_',num2str(find(str2num(char(redshift_list))==z)),'_out_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
-        out_proj1d_angles=fread(fileID,[3,12*NSIDE^2],'float32','l');
-        fclose(fileID);
-        
-        fileID = fopen(strcat(path_data,'dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
-        out_dc_proj1d_angles=fread(fileID,[3,12*NSIDE^2],'float32','l');
-        fclose(fileID);
+%         fileID = fopen(strcat(path_data,'_',num2str(find(str2num(char(redshift_list))==z)),'_out_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
+%         out_proj1d_angles=fread(fileID,[3,12*NSIDE^2],'float32','l');
+%         fclose(fileID);
+%         
+%         fileID = fopen(strcat(path_data,'dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
+%         out_dc_proj1d_angles=fread(fileID,[3,12*NSIDE^2],'float32','l');
+%         fclose(fileID);
     end
     
     if (ismember(3,projection_analysed)||ismember(4,projection_analysed)||ismember(5,projection_analysed))
         if ismember(2,data_stream)
-            out_filtered_proj1d_angles=dlmread(strcat(path_data,'cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'));
-%             out_dc_filtered_proj1d_angles=dlmread(strcat(path_data,'dc/','cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_dc_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'));
-            out_filtered_dc_proj1d_angles=dlmread(strcat(path_data,'cutoff_',num2str(cutoff),'MpcCut/','dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'));
+%             out_filtered_proj1d_angles=dlmread(strcat(path_data,'cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'));
+% %             out_dc_filtered_proj1d_angles=dlmread(strcat(path_data,'dc/','cutoff_',num2str(cutoff),'MpcCut/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_dc_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'));
+%             out_filtered_dc_proj1d_angles=dlmread(strcat(path_data,'cutoff_',num2str(cutoff),'MpcCut/','dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.txt'));
         end
         if ismember(1,data_stream) 
-            fileID = fopen(strcat(path_data,'level_window',mat2str(level_window(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
+            fileID = fopen(strcat(path_data,'level_window',mat2str(level_window(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_anglparts',num2str(angl_part),'_NSIDE',num2str(NSIDE),'_full.bin'));
             out_filtered_proj1d_angles=fread(fileID,[3,12*NSIDE^2],'float32','l');
             fclose(fileID);
             
-%             fileID = fopen(strcat(path_data,'cutoff_',num2str(cutoff),'MpcCut/','dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_dc_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
-%             out_dc_filtered_proj1d_angles=fread(fileID,[3,12*NSIDE^2],'float32','l');
+% %             fileID = fopen(strcat(path_data,'cutoff_',num2str(cutoff),'MpcCut/','dc/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_dc_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
+% %             out_dc_filtered_proj1d_angles=fread(fileID,[3,12*NSIDE^2],'float32','l');
+% %             fclose(fileID);
+%             
+%             fileID = fopen(strcat(path_data,'dc/','level_window',mat2str(level_window(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
+%             out_filtered_dc_proj1d_angles=fread(fileID,[3,12*NSIDE^2],'float32','l');
 %             fclose(fileID);
-            
-            fileID = fopen(strcat(path_data,'dc/','level_window',mat2str(level_window(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_dc_1dproj_angle_z',num2str(z),'_parts',num2str(part),'_NSIDE',num2str(NSIDE),'.bin'));
-            out_filtered_dc_proj1d_angles=fread(fileID,[3,12*NSIDE^2],'float32','l');
-            fclose(fileID);
         end
     end
 end
@@ -238,40 +243,43 @@ function plot_molweide(f,string)
 
 %     s2let_hpx_plot_mollweide(maxi);
     
+% f((12*1024*1024/2)+1:end)=[];
     sz = size(f);
 nsideguessed = sqrt(max(sz)/12);
     L = 2*nsideguessed;
+%     L = floor((1.2)*nsideguessed);
     B=2;
     J_min=0;
     
     [f_wav, f_scal] = s2let_transform_axisym_analysis_hpx(f,'B',B,'L',L,'J_min',J_min);
     
     % Plot
-J = s2let_jmax(L, B);
+J = s2let_jmax(L, B)
 
 
 
 
 
-% f_n=s2let_transform_axisym_synthesis_hpx(f_wav, f_scal, 'B',B,'L',L,'J_min',J-1);
+% f_n=s2let_transform_axisym_synthesis_hpx(f_wav, f_scal, 'B',B,'L',L,'J_min',J-1); 
 % f_n=s2let_transform_axisym_synthesis_hpx(f_wav, f_scal, 'B',B,'L',L,'J_min',J-2);
 % f_n=s2let_transform_axisym_synthesis_hpx(f_wav, f_scal, 'B',B,'L',L,'J_min',J-9);
-s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1},1);
+% s2let_hpx_plot_mollweide_info(f_wav{J-J_min+1},1);
 
-% for j = J_min:J-1
-%     f_wav{j+1,1}(1,:)=0;
-% end
-% 
+for j = J_min:J-1
+    f_wav{j+1,1}(1,:)=0;
+end
+
+%
 % for j = J_min:J_min+2
 %     f_wav{j+1,1}(1,:)=0;
 % end
 
-% f_n=s2let_transform_axisym_synthesis_hpx(f_wav, f_scal, 'B',B,'L',L,'J_min',J_min);
+f_n=s2let_transform_axisym_synthesis_hpx(f_wav, f_scal, 'B',B,'L',L,'J_min',J_min);
 
 % f_n=s2let_transform_axisym_synthesis_hpx(f_wav, f_scal, 'B',B,'L',L,'J_min',J_min+2);
 
 
-% s2let_hpx_plot_mollweide_info(f_n,1);
+s2let_hpx_plot_mollweide_info(f_n,1);
 
 % s2let_hpx_plot_mollweide_info(f,1);
 
