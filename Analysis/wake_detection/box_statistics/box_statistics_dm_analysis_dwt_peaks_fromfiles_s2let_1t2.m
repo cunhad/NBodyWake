@@ -61,8 +61,8 @@ end
 % 
 
 % addpath(genpath('../../processing/'));
-addpath(genpath('/home/asus/Programs/test/s2let/s2let-public/'));
-% addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/s2let/s2let-public'));
+% addpath(genpath('/home/asus/Programs/test/s2let/s2let-public/'));
+addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/s2let/s2let-public'));
 
 cd('../../preprocessing');
 
