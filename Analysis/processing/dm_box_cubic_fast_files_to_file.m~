@@ -214,15 +214,15 @@ if ~ismember(0,data_stream)
 %             fclose(fileID);
 %             
             cd ../processing/
-            files_filtered_dc_1dproj_angle_z_list=dir(strcat(path_out_all,'dc/level_window',mat2str(level_window(:)),'/_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_dc_1dproj_angle_z',num2str(z),'_anglparts',num2str(angle_p),'_anglid*_NSIDE',num2str(NSIDE),'.bin'));
-            files_filtered_dc_1dproj_angle_z_list={files_filtered_dc_1dproj_angle_z_list.name};
-            files_filtered_dc_1dproj_angle_z_list=sort_nat(files_filtered_dc_1dproj_angle_z_list);
+            files_filtered_1dproj_angle_z_list=dir(strcat(path_out_all,'level_window',mat2str(level_window(:)),'/_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_anglparts',num2str(angle_p),'_anglid*_NSIDE',num2str(NSIDE),'.bin'));
+            files_filtered_1dproj_angle_z_list={files_filtered_1dproj_angle_z_list.name};
+            files_filtered_1dproj_angle_z_list=sort_nat(files_filtered_1dproj_angle_z_list);
             cd ../preprocessing/
             
-            fid_o = fopen(strcat(path_out_all,'dc/level_window',mat2str(level_window(:)),'/',files_filtered_dc_1dproj_angle_z_list{1}(1:end-18-length(num2str(NSIDE))),'_NSIDE',num2str(NSIDE),'_half.bin'),'w');
+            fid_o = fopen(strcat(path_out_all,'level_window',mat2str(level_window(:)),'/',files_filtered_1dproj_angle_z_list{1}(1:end-18-length(num2str(NSIDE))),'_NSIDE',num2str(NSIDE),'_half.bin'),'w');
             
             for file_idx=1:angle_p
-                filename=strcat(path_out_all,'dc/level_window',mat2str(level_window(:)),'/',files_filtered_dc_1dproj_angle_z_list{file_idx});
+                filename=strcat(path_out_all,'level_window',mat2str(level_window(:)),'/',files_filtered_1dproj_angle_z_list{file_idx});
                 fid = fopen(filename);
                 %             fread(fid, 'float32','l');
                 %             fseek(fid_o, 0, 'eof');
@@ -231,10 +231,10 @@ if ~ismember(0,data_stream)
             end
             fclose(fid_o);
             
-            copyfile(strcat(path_out_all,'dc/level_window',mat2str(level_window(:)),'/',files_filtered_dc_1dproj_angle_z_list{1}(1:end-18-length(num2str(NSIDE))),'_NSIDE',num2str(NSIDE),'_half.bin'),strcat(path_out_all,'dc/level_window',mat2str(level_window(:)),'/',files_filtered_dc_1dproj_angle_z_list{1}(1:end-18-length(num2str(NSIDE))),'_NSIDE',num2str(NSIDE),'_full.bin'));
+            copyfile(strcat(path_out_all,'level_window',mat2str(level_window(:)),'/',files_filtered_1dproj_angle_z_list{1}(1:end-18-length(num2str(NSIDE))),'_NSIDE',num2str(NSIDE),'_half.bin'),strcat(path_out_all,'level_window',mat2str(level_window(:)),'/',files_filtered_1dproj_angle_z_list{1}(1:end-18-length(num2str(NSIDE))),'_NSIDE',num2str(NSIDE),'_full.bin'));
             
-            fid = fopen(strcat(path_out_all,'dc/level_window',mat2str(level_window(:)),'/',files_filtered_dc_1dproj_angle_z_list{1}(1:end-18-length(num2str(NSIDE))),'_NSIDE',num2str(NSIDE),'_half.bin'));
-            fid_o = fopen(strcat(path_out_all,'dc/level_window',mat2str(level_window(:)),'/',files_filtered_dc_1dproj_angle_z_list{1}(1:end-18-length(num2str(NSIDE))),'_NSIDE',num2str(NSIDE),'_full.bin'),'a');
+            fid = fopen(strcat(path_out_all,'level_window',mat2str(level_window(:)),'/',files_filtered_1dproj_angle_z_list{1}(1:end-18-length(num2str(NSIDE))),'_NSIDE',num2str(NSIDE),'_half.bin'));
+            fid_o = fopen(strcat(path_out_all,'level_window',mat2str(level_window(:)),'/',files_filtered_1dproj_angle_z_list{1}(1:end-18-length(num2str(NSIDE))),'_NSIDE',num2str(NSIDE),'_full.bin'),'a');
 %             fwrite(fid_o,fread(fid, 'float32','l'),'float32','l');
             
             for angl=number_of_angle_nuple_hpx/2+1:number_of_angle_nuple_hpx
