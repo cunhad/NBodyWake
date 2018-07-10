@@ -84,9 +84,9 @@ end
 
 if dm_or_dc==2
 path_data=strcat(strcat(root_box_in,spec,aux_path),'data/',aux_path_box_in,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/',dwbasis,'/parts/dc/');
-fileID = fopen(strcat(path_data,'level_window',mat2str(level_window1d(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_dc_1dproj_angle_z',num2str(z),'_anglparts',num2str(angle_p),'_NSIDE',num2str(NSIDE),'_full.bin'));
+fileID = fopen(strcat(path_data,'level_window',mat2str(level_window1d(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_anglparts',num2str(angle_p),'_NSIDE',num2str(NSIDE),'_full.bin'));
 % display(strcat(path_data,'level_window',mat2str(level_window(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part_in),'_NSIDE',num2str(NSIDE),'.bin'))
-display(strcat(path_data,'level_window',mat2str(level_window1d(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_dc_1dproj_angle_z',num2str(z),'_anglparts',num2str(angle_p),'_NSIDE',num2str(NSIDE),'_full.bin'));
+display(strcat(path_data,'level_window',mat2str(level_window1d(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_anglparts',num2str(angle_p),'_NSIDE',num2str(NSIDE),'_full.bin'));
 f_in=fread(fileID,[3,12*NSIDE^2],'float32','l');
 fclose(fileID);
 end
@@ -130,14 +130,14 @@ for J_level_cutoff=1:J
         tot_plot_path_out=strcat(root_plot_out,spec,aux_path,'plot/',aux_path_plot_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/dc/',dwbasis,'/','level_window',mat2str(level_window1d(:)),'/',type,'/parts/s2let/J_lev_cut',num2str(J_level_cutoff),'/');
         mkdir(tot_plot_path_out);
         
-        snan_tot_path_out=strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/dc/',dwbasis,'/','level_window',mat2str(level_window1d(:)),'/',type,'/parts/s2let/J_lev_cut',num2str(J_level_cutoff),'/');
+        snan_tot_path_out=strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/dc',dwbasis,'/','level_window',mat2str(level_window1d(:)),'/',type,'/parts/s2let/J_lev_cut',num2str(J_level_cutoff),'/');
         mkdir(snan_tot_path_out);
         
     end
     
     
     for j = J_min:J
-        if j~=J-J_level_cutoff+1
+        if j~=J-J_level_cutoff
             f_wav{j+1,1}(1,:)=0;
         end
     end
@@ -172,8 +172,8 @@ for J_level_cutoff=1:J
     % figure;
     imagesc(q_angles,q_angles,Vq);
     hold on;
-    xlabel('$\theta_{1}$', 'interpreter', 'latex', 'fontsize', 20);
-    ylabel('$\theta_{2}$', 'interpreter', 'latex', 'fontsize', 20);
+    xlabel('$theta_{1}$', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel('$theta_{2}$', 'interpreter', 'latex', 'fontsize', 20);
     set(gca,'FontName','FixedWidth');
     set(gca,'FontSize',16);
     set(gca,'linewidth',2);
@@ -363,8 +363,8 @@ for J_level_cutoff=1:J
         % figure;
         imagesc(q_angles+thetas_max,q_angles+phis_max,Vq);
         hold on;
-        xlabel('$\theta_{1}$', 'interpreter', 'latex', 'fontsize', 20);
-        ylabel('$\theta_{2}$', 'interpreter', 'latex', 'fontsize', 20);
+        xlabel('$theta$', 'interpreter', 'latex', 'fontsize', 20);
+        ylabel('$phi$', 'interpreter', 'latex', 'fontsize', 20);
         set(gca,'FontName','FixedWidth');
         set(gca,'FontSize',16);
         set(gca,'linewidth',2);

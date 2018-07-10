@@ -1,22 +1,22 @@
-function [ f_out ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_s2let_1t2( root,root_box_in,root_plot_out,root_snan_out,spec,aux_path,aux_path_box_in,aux_path_plot_out,aux_path_snan_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part_in,angle_part,angle_p,num_cores,level_window1d,quantity_type,dwbasis,n_angles_1d,n_max)
+function [ f_out ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_s2let_1t2( root,root_box_in,root_plot_out,root_snan_out,spec,aux_path,aux_path_box_in,aux_path_plot_out,aux_path_snan_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part_in,angle_part,angle_p,num_cores,level_window1d,quantity_type,dm_or_dc,dwbasis,n_angles_1d,n_max)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
-%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_s2let_1t2('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','/home/asus/Dropbox/extras/storage/graham/small_res/box_plot/','/home/asus/Dropbox/extras/storage/graham/small_res/box_snan/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','','10.000xv0.dat',2,1,[0,0,0],4,1,1,4,1,1,1,'sym6',32,1);
-%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_s2let_1t2('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','/home/asus/Dropbox/extras/storage/graham/small_res/box_plot/','/home/asus/Dropbox/extras/storage/graham/small_res/box_snan/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','','10.000xv0.dat',2,1,[0,0,0],64,1,1,4,4,1,1,'sym6',32,3); 
-%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_s2let_1t2('/home/asus/Dropbox/extras/storage/graham/', '/home/asus/Dropbox/extras/storage/graham/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/graham/box_plot_/','/home/asus/Dropbox/extras/storage/graham/box_snan_/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample2001/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,1,4,1,1,'sym6',32,3);
+%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_s2let_1t2('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','/home/asus/Dropbox/extras/storage/graham/small_res/box_plot/','/home/asus/Dropbox/extras/storage/graham/small_res/box_snan/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','','10.000xv0.dat',2,1,[0,0,0],4,1,1,4,1,1,1,1,'sym6',32,1);
+%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_s2let_1t2('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','/home/asus/Dropbox/extras/storage/graham/small_res/box_plot/','/home/asus/Dropbox/extras/storage/graham/small_res/box_snan/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','','10.000xv0.dat',2,1,[0,0,0],64,1,1,4,4,1,1,1,'sym6',32,3); 
+%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_s2let_1t2('/home/asus/Dropbox/extras/storage/graham/', '/home/asus/Dropbox/extras/storage/graham/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/graham/box_plot_/','/home/asus/Dropbox/extras/storage/graham/box_snan_/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample2001/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,1,4,1,1,1,'sym6',32,3);
 
-%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_s2let_1t2('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast_ap_cic/','/home/asus/Dropbox/extras/storage/graham/small_res/box_plot_cic/','/home/asus/Dropbox/extras/storage/graham/small_res/box_snan_cic/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','','10.000xv0.dat',2,1,[0,0,0],64,1,1,4,1,1,1,'sym6',32,3); 
+%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_s2let_1t2('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast_ap_cic/','/home/asus/Dropbox/extras/storage/graham/small_res/box_plot_cic/','/home/asus/Dropbox/extras/storage/graham/small_res/box_snan_cic/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','','10.000xv0.dat',2,1,[0,0,0],64,1,1,4,1,1,1,1,'sym6',32,3); 
 
-%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_s2let_1t2('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/guillimin/box_plot_test/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_test/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0003/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,1,1,1,1,'sym6',32,3);
+%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_s2let_1t2('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/guillimin/box_plot_test/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_test/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0003/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,1,1,1,1,1,'sym6',32,3);
 
-%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_s2let_1t2('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast_ap_cic/','/home/asus/Dropbox/extras/storage/guillimin/box_plot_cic_test/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_cic_test/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0003/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,1,1,1,1,'sym6',32,3);
+%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_s2let_1t2('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast_ap_cic/','/home/asus/Dropbox/extras/storage/guillimin/box_plot_cic_test/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_cic_test/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0003/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,1,1,1,1,1,'sym6',32,3);
 
-%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_s2let_1t2('/home/asus/Dropbox/extras/storage/graham/', '/home/asus/Dropbox/extras/storage/graham/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/graham/box_plot_test/','/home/asus/Dropbox/extras/storage/graham/box_snan_test/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample2001/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,1,1,1,1,'sym6',32,3);
+%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_s2let_1t2('/home/asus/Dropbox/extras/storage/graham/', '/home/asus/Dropbox/extras/storage/graham/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/graham/box_plot_test/','/home/asus/Dropbox/extras/storage/graham/box_snan_test/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample2001/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,1,1,1,1,1,'sym6',32,3);
 
-%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_s2let_1t2('/home/asus/Dropbox/extras/storage/graham/high/', '/home/asus/Dropbox/extras/storage/graham/high/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/graham/high/box_plot/','/home/asus/Dropbox/extras/storage/graham/high/box_snan/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample2001/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,1,1,1,1,'sym6',32,3);
+%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_s2let_1t2('/home/asus/Dropbox/extras/storage/graham/high/', '/home/asus/Dropbox/extras/storage/graham/high/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/graham/high/box_plot/','/home/asus/Dropbox/extras/storage/graham/high/box_snan/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample2001/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,1,1,1,1,1,'sym6',32,3);
 
-%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_s2let_1t2('/home/asus/Dropbox/extras/storage/graham/high/', '/home/asus/Dropbox/extras/storage/graham/high/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/graham/high/box_plot/','/home/asus/Dropbox/extras/storage/graham/high/box_snan/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample2004/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,1,1,1,1,'sym6',32,3);
+%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_s2let_1t2('/home/asus/Dropbox/extras/storage/graham/high/', '/home/asus/Dropbox/extras/storage/graham/high/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/graham/high/box_plot/','/home/asus/Dropbox/extras/storage/graham/high/box_snan/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample2004/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,1,1,1,1,1,'sym6',32,3);
 
 % 
 % myCluster = parcluster('local');
@@ -74,13 +74,23 @@ bins=[-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))];
 [  ~,~,~,~,z ] = preprocessing_filename_info( root,spec,aux_path,filename);
 
 
+if dm_or_dc==1
 path_data=strcat(strcat(root_box_in,spec,aux_path),'data/',aux_path_box_in,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/',dwbasis,'/parts/');
-
 fileID = fopen(strcat(path_data,'level_window',mat2str(level_window1d(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_anglparts',num2str(angle_p),'_NSIDE',num2str(NSIDE),'_full.bin'));
 % display(strcat(path_data,'level_window',mat2str(level_window(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part_in),'_NSIDE',num2str(NSIDE),'.bin'))
 display(strcat(path_data,'level_window',mat2str(level_window1d(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_anglparts',num2str(angle_p),'_NSIDE',num2str(NSIDE),'_full.bin'));
 f_in=fread(fileID,[3,12*NSIDE^2],'float32','l');
 fclose(fileID);
+end
+
+if dm_or_dc==2
+path_data=strcat(strcat(root_box_in,spec,aux_path),'data/',aux_path_box_in,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/',dwbasis,'/parts/dc/');
+fileID = fopen(strcat(path_data,'level_window',mat2str(level_window1d(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_dc_1dproj_angle_z',num2str(z),'_anglparts',num2str(angle_p),'_NSIDE',num2str(NSIDE),'_full.bin'));
+% display(strcat(path_data,'level_window',mat2str(level_window(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_1dproj_angle_z',num2str(z),'_parts',num2str(part_in),'_NSIDE',num2str(NSIDE),'.bin'))
+display(strcat(path_data,'level_window',mat2str(level_window1d(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_out_filtered_dc_1dproj_angle_z',num2str(z),'_anglparts',num2str(angle_p),'_NSIDE',num2str(NSIDE),'_full.bin'));
+f_in=fread(fileID,[3,12*NSIDE^2],'float32','l');
+fclose(fileID);
+end
 
 % display(out_filtered_proj1d_angles(1,:))
 
@@ -97,18 +107,32 @@ J = s2let_jmax(L, B);
 [f_wav_tot, f_scal] = s2let_transform_axisym_analysis_hpx(f_type,'B',B,'L',L,'J_min',J_min);
 
 
-f2s=zeros(J+1,2);
+f2s=zeros(J+1,2+n_max);
 f2s(:,1)=1:J+1;
 
 for J_level_cutoff=1:J+1
     
     f_wav=f_wav_tot;
     
-    tot_plot_path_out=strcat(root_plot_out,spec,aux_path,'plot/',aux_path_plot_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/',dwbasis,'/','level_window',mat2str(level_window1d(:)),'/',type,'/parts/s2let/J_lev_cut',num2str(J_level_cutoff),'/');
-    mkdir(tot_plot_path_out);
+  if dm_or_dc==1
+        
+        tot_plot_path_out=strcat(root_plot_out,spec,aux_path,'plot/',aux_path_plot_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/',dwbasis,'/','level_window',mat2str(level_window1d(:)),'/',type,'/parts/s2let/J_lev_cut',num2str(J_level_cutoff),'/');
+        mkdir(tot_plot_path_out);
+        
+        snan_tot_path_out=strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/',dwbasis,'/','level_window',mat2str(level_window1d(:)),'/',type,'/parts/s2let/J_lev_cut',num2str(J_level_cutoff),'/');
+        mkdir(snan_tot_path_out);
+        
+    end
     
-    snan_tot_path_out=strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/',dwbasis,'/','level_window',mat2str(level_window1d(:)),'/',type,'/parts/s2let/J_lev_cut',num2str(J_level_cutoff),'/');
-    mkdir(snan_tot_path_out);
+    if dm_or_dc==2
+        
+        tot_plot_path_out=strcat(root_plot_out,spec,aux_path,'plot/',aux_path_plot_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/dc/',dwbasis,'/','level_window',mat2str(level_window1d(:)),'/',type,'/parts/s2let/J_lev_cut',num2str(J_level_cutoff),'/');
+        mkdir(tot_plot_path_out);
+        
+        snan_tot_path_out=strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/dc/',dwbasis,'/','level_window',mat2str(level_window1d(:)),'/',type,'/parts/s2let/J_lev_cut',num2str(J_level_cutoff),'/');
+        mkdir(snan_tot_path_out);
+        
+    end
         
     if J_level_cutoff < J+1
         for j = J_min:J-J_level_cutoff
@@ -143,8 +167,8 @@ for J_level_cutoff=1:J+1
     % figure;
     imagesc(q_angles,q_angles,Vq);
     hold on;
-    xlabel('$theta_{1}$', 'interpreter', 'latex', 'fontsize', 20);
-    ylabel('$theta_{2}$', 'interpreter', 'latex', 'fontsize', 20);
+    xlabel('$\theta_{1}$', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel('$\theta_{2}$', 'interpreter', 'latex', 'fontsize', 20);
     set(gca,'FontName','FixedWidth');
     set(gca,'FontSize',16);
     set(gca,'linewidth',2);
@@ -222,9 +246,16 @@ for J_level_cutoff=1:J+1
     
     peaks_maxima_info=zeros(3,n_max);
     
-    f2s(J_level_cutoff,2)=out_filtered_proj1d_angles_sort(1)/out_filtered_proj1d_angles_sort(2);
-    dlmwrite(strcat(strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/',dwbasis,'/','level_window',mat2str(level_window1d(:)),'/',type,'/parts/s2let/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_z',num2str(z),'_data_f2s.txt'),f2s,'delimiter','\t');
+      f2s(J_level_cutoff,2)=out_filtered_proj1d_angles_sort(1)/out_filtered_proj1d_angles_sort(2);
+    f2s(J_level_cutoff,3:2+n_max)=out_filtered_proj1d_angles_sort(1:n_max);
+    if dm_or_dc==1        
+        dlmwrite(strcat(strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/',dwbasis,'/','level_window',mat2str(level_window1d(:)),'/',type,'/parts/s2let/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_z',num2str(z),'_data_f2s.txt'),f2s,'delimiter','\t');        
+    end
     
+    if dm_or_dc==2
+        dlmwrite(strcat(strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/dc/',dwbasis,'/','level_window',mat2str(level_window1d(:)),'/',type,'/parts/s2let/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_z',num2str(z),'_data_f2s.txt'),f2s,'delimiter','\t');        
+    end
+  
     for max_id=1:n_max
         peak=out_filtered_proj1d_angles_sort(max_id);
         display(peak)
@@ -327,8 +358,8 @@ for J_level_cutoff=1:J+1
         % figure;
         imagesc(q_angles+thetas_max,q_angles+phis_max,Vq);
         hold on;
-        xlabel('$theta$', 'interpreter', 'latex', 'fontsize', 20);
-        ylabel('$phi$', 'interpreter', 'latex', 'fontsize', 20);
+        xlabel('$\theta_{1}$', 'interpreter', 'latex', 'fontsize', 20);
+        ylabel('$\theta_{2}$', 'interpreter', 'latex', 'fontsize', 20);
         set(gca,'FontName','FixedWidth');
         set(gca,'FontSize',16);
         set(gca,'linewidth',2);

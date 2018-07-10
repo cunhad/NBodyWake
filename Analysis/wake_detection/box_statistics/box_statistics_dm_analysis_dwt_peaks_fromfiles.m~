@@ -220,7 +220,7 @@ out_filtered_proj1d_angles_sort=out_filtered_proj1d_angles(quantity_type,f_index
 
 
 f2s(1,1)=out_filtered_proj1d_angles_sort(1)/out_filtered_proj1d_angles_sort(2);
-f2s(1,2:n_max+1)=out_filtered_proj1d_angles_sort(1:n_max);
+f2s(1,2:n_max)=out_filtered_proj1d_angles_sort(1:n_max);
 if dm_or_dc==1
     dlmwrite(strcat(strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/',dwbasis,'/','level_window',mat2str(level_window(:)),'/',type,'/parts/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_z',num2str(z),'_data_f2s.txt'),f2s,'delimiter','\t');
 end
