@@ -12,7 +12,7 @@ function [ proj1d_angles,filtered_proj1d_angles ] = box_statistics_dm_data_out_c
 %
 
 
-%(example)  [proj1d_angles,filtered_proj1d_angles] = box_statistics_dm_data_out_cubic_fast_ap_tofiles_cic('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,1,[0,0,0],2,1,4,4,1,1,[1,2],[1],'sym6');
+%(example)  [proj1d_angles,filtered_proj1d_angles] = box_statistics_dm_data_out_cubic_fast_ap_tofiles_cic('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast_cic/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,1,[0,0,0],2,1,4,4,1,1,[1,2],[1],'sym6');
 
 % NBody output should be stored as root+spec+aux_path (root directory, specification in the form size_numberofcellsperdimension_number_particlesperdimension_initialredshift_wakespecification&multiplicity, aux_path is the sample number )
 
@@ -124,16 +124,18 @@ clearvars angles_hpx;
 
 %creates the bins to be used in the histograms (it has 2 fewer points if the volume analysed is maximum)
 
-if lenght_factor==1
-    bins=[1-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))-1];
-else
-    bins=[-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))];
-end
+% if lenght_factor==1
+%     bins=[1-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))-1];
+% else
+%     bins=[-(nc/(2*lenght_factor)):nc/(np*resol_factor):(nc/(2*lenght_factor))];
+% end
+
+bins=[-np*resol_factor/(2*lenght_factor):(np*resol_factor/(2*lenght_factor))];
 
 % proj1d_angles(a,b) will store the 1d projection at point a for each angle
 % a
 
-proj1d_angles=zeros(length(bins)-1,number_of_angle_nuple_hpx);
+proj1d_angles=zeros((np*resol_factor/lenght_factor),number_of_angle_nuple_hpx);
 
 % this first loop only exist to avoid overload the memory of the workers,
 % so the particle catalogue is partitioned, the projections are performed and the resulted is summed afterwards
@@ -151,21 +153,24 @@ for part_id = 1  :   particl_part
     
     %remove particles that are outside the analysis box
     
-        Pos=mod(Pos,nc);
- 
-        Pos(1,:)=Pos(1,:)-(nc/2)-pivot(1);
-        Pos(2,:)=Pos(2,:)-(nc/2)-pivot(2);
-        Pos(3,:)=Pos(3,:)-(nc/2)-pivot(3);
-        
-        
-        lim_pre=(1/(lenght_factor))*nc;
+        Pos=Pos*(np*resol_factor)/(nc);
     
-        Pos(:,abs(Pos(1,:))>lim_pre|abs(Pos(2,:))>lim_pre|abs(Pos(3,:))>lim_pre)=[];
+    Pos=mod(Pos,np*resol_factor);
+    
+    
+    Pos(1,:)=Pos(1,:)-(np*resol_factor/2)-pivot(1);
+    Pos(2,:)=Pos(2,:)-(np*resol_factor/2)-pivot(2);
+    Pos(3,:)=Pos(3,:)-(np*resol_factor/2)-pivot(3);
+    
+    
+    lim_pre=(1/(lenght_factor))*np*resol_factor;
+    
+    Pos(:,abs(Pos(1,:))>lim_pre|abs(Pos(2,:))>lim_pre|abs(Pos(3,:))>lim_pre)=[];
 
     %this is an auxiliary variable that will be passed to the main variable
     %proj1d_angles
         
-histogr_1d_angles=zeros(length(bins)-1,number_of_angle_nuple_hpx);
+histogr_1d_angles=zeros((np*resol_factor/lenght_factor),number_of_angle_nuple_hpx);
     
 
 ticBytes(gcp);
@@ -187,7 +192,7 @@ ticBytes(gcp);
            
         %created the auxiliary variable to histogr_1d_angles
         
-        histogr_1d_angles1=zeros(length(bins)-1,number_of_angle_nuple_hpx);
+        histogr_1d_angles1=zeros((np*resol_factor/lenght_factor),number_of_angle_nuple_hpx);
 
         %do the loop for each angle to perform the projections
         
@@ -204,12 +209,18 @@ ticBytes(gcp);
         
         %here the projection is performed
         
-        dz=nz*Pos;        
+        dz=nz*Pos;
         
         %and the histogram is computed
-                
-        histogr_1d_angles1(:,i)=histcounts(dz,bins);
         
+        %         histogr_1d_angles1(:,i)=histcounts(dz,bins);
+        
+        dz=dz+(np*resol_factor/(2*lenght_factor))+pivot(3);
+        
+        [histogr_1d_anglesaux]=cic(dz,(np*resol_factor/lenght_factor));
+        
+        histogr_1d_angles1(:,i)=histogr_1d_anglesaux;
+
         end
         
         %histogram is stored in the auxiliary variable
@@ -241,7 +252,7 @@ tic;
 %slices on the projection of the particles inside the cube have diferent
 %areas. The normalization factor is this area.
 
-[v f] = createCube; v = (v-[0.5 0.5 0.5])*nc ;
+[v f] = createCube; v = (v-[0.5 0.5 0.5])*2*np*resol_factor/lenght_factor ;
 
 
 parfor i=1:number_of_angle_nuple_hpx        
@@ -259,6 +270,11 @@ parfor i=1:number_of_angle_nuple_hpx
     end
     areas(:,i)=area(:,1);    
 end
+
+%remove unanted boundaries
+
+proj1d_angles(1:8,:)=0;
+proj1d_angles(end-7:end,:)=0;
 
 %do the normalization
 
@@ -536,5 +552,29 @@ toc;
 delete(gcp('nocreate'))
 
 
+end
+
+
+function [histogr_1d_angles1]=cic(dz,size)
+
+histogr_1d_angles1=zeros(1,size);
+    
+    for particle=1:length(dz)
+        
+       x=dz(1,particle)-0.5;
+       i1=floor(x)+1;
+       i2=i1+1;
+       dx1=i1-x;
+       dx2=1-dx1;
+       
+        if (i1>0 && i2<= size) 
+         histogr_1d_angles1(i1)=histogr_1d_angles1(i1)+dx1;
+         histogr_1d_angles1(i2)=histogr_1d_angles1(i2)+dx2;
+        end
+        
+    end
+
+
+    
 end
 
