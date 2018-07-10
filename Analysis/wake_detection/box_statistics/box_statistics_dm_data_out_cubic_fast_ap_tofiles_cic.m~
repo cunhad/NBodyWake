@@ -376,12 +376,10 @@ if level_window~=0
         
     end
     
-    %avoid boundary problem
+    %avoid boundary pro
     
     filtered_proj1d_angles(1:8,:)=0;
     filtered_proj1d_angles(end-7:end,:)=0;
-    filtered_dc_proj1d_angles(1:8,:)=0;
-    filtered_dc_proj1d_angles(end-7:end,:)=0;
     
     %in this part the peak of each 1d projection is taked, as well the standard
     %deviation (with the peak removed). The diference is that now we are
