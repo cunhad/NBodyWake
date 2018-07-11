@@ -37,6 +37,21 @@ if (quantity_type==3)
     type='stn_count'
 end
 
+if (quantity_type==4)  %this was a mistake, I was trying to do (p^2)/std
+    type='psqtstd_count'
+%     quantity_type=1;
+end
+
+if (quantity_type==5)
+    type='ptstd_count'
+%     quantity_type=1;
+end
+
+if (quantity_type==6)
+    type='psqostd_count'
+%     quantity_type=1;
+end
+
 % 
 % tot_plot_path_out=strcat(root_plot_out,spec,aux_path,'plot/',aux_path_plot_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/',dwbasis,'/','level_window',mat2str(level_window1d(:)),'/',type,'/parts/s2let/');
 % mkdir(tot_plot_path_out);
@@ -96,6 +111,25 @@ end
 % display(out_filtered_proj1d_angles(1,:))
 
 f_type=f_in(quantity_type,:);
+
+if (quantity_type==4)   %   psqtstd
+
+f_type(1,:)=(f_in(1,:).^2)./(f_in(3,:));
+
+end
+
+if (quantity_type==5)   %   peak times std
+
+f_type(1,:)=f_in(1,:).*(f_in(2,:));
+
+end
+
+if (quantity_type==6)   % peak squared over standard deviation
+
+f_type(1,:)=(f_in(1,:).^2)./(f_in(2,:));
+
+
+end
 
 
 sz = size(f_type);

@@ -98,7 +98,12 @@ end
 
 % display(out_filtered_proj1d_angles(1,:))
 
+
+
 f_type=f_in(quantity_type,:);
+
+% f_type=(f_in(1,:).^2)./f_in(2,:);
+
 
 
 sz = size(f_type);
