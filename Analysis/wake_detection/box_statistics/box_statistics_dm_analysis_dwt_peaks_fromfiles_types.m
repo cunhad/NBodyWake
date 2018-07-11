@@ -1,22 +1,25 @@
-function [ out_filtered_proj1d_angles ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_psqtstd( root,root_box_in,root_plot_out,root_snan_out,spec,aux_path,aux_path_box_in,aux_path_plot_out,aux_path_snan_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part_in,angle_part,angle_p,num_cores,level_window,quantity_type,dm_or_dc,dwbasis,n_angles_1d,n_max)
+function [ out_filtered_proj1d_angles ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_types( root,root_box_in,root_plot_out,root_snan_out,spec,aux_path,aux_path_box_in,aux_path_plot_out,aux_path_snan_out,filename,lenght_factor,resol_factor,pivot,NSIDE,part_in,angle_part,angle_p,num_cores,level_window,quantity_type,dm_or_dc,dwbasis,n_angles_1d,n_max)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
-%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_psqtstd('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','/home/asus/Dropbox/extras/storage/graham/small_res/box_plot/','/home/asus/Dropbox/extras/storage/graham/small_res/box_snan/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','','10.000xv0.dat',2,1,[0,0,0],4,1,1,4,1,1,1,1,'sym6',32,1);
-%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_psqtstd('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','/home/asus/Dropbox/extras/storage/graham/small_res/box_plot/','/home/asus/Dropbox/extras/storage/graham/small_res/box_snan/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','','10.000xv0.dat',2,1,[0,0,0],64,1,1,4,4,1,1,1,'sym6',32,3); 
-%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_psqtstd('/home/asus/Dropbox/extras/storage/graham/', '/home/asus/Dropbox/extras/storage/graham/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/graham/box_plot_/','/home/asus/Dropbox/extras/storage/graham/box_snan_/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample2001/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,1,4,1,1,1,'sym6',32,3);
+%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_types('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','/home/asus/Dropbox/extras/storage/graham/small_res/box_plot/','/home/asus/Dropbox/extras/storage/graham/small_res/box_snan/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','','10.000xv0.dat',2,1,[0,0,0],4,1,1,4,1,1,1,1,'sym6',32,1);
+%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_types('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','/home/asus/Dropbox/extras/storage/graham/small_res/box_plot/','/home/asus/Dropbox/extras/storage/graham/small_res/box_snan/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','','10.000xv0.dat',2,1,[0,0,0],64,1,1,4,4,1,1,1,'sym6',32,3); 
+%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_types('/home/asus/Dropbox/extras/storage/graham/', '/home/asus/Dropbox/extras/storage/graham/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/graham/box_plot_/','/home/asus/Dropbox/extras/storage/graham/box_snan_/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample2001/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,1,4,1,1,1,'sym6',32,3);
 
-%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_psqtstd('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast_ap_cic/','/home/asus/Dropbox/extras/storage/graham/small_res/box_plot_cic/','/home/asus/Dropbox/extras/storage/graham/small_res/box_snan_cic/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','','10.000xv0.dat',2,1,[0,0,0],64,1,1,4,1,1,1,1,'sym6',32,3); 
+%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_types('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast_ap_cic/','/home/asus/Dropbox/extras/storage/graham/small_res/box_plot_cic/','/home/asus/Dropbox/extras/storage/graham/small_res/box_snan_cic/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','','10.000xv0.dat',2,1,[0,0,0],64,1,1,4,1,1,1,1,'sym6',32,3); 
 
-%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_psqtstd('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/guillimin/box_plot_test/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_test/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0003/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,1,1,1,1,1,'sym6',32,3);
+%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_types('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/guillimin/box_plot_test/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_test/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0003/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,1,1,1,1,1,'sym6',32,3);
 
-%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_psqtstd('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast_ap_cic/','/home/asus/Dropbox/extras/storage/guillimin/box_plot_cic_test/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_cic_test/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0003/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,1,1,1,1,1,'sym6',32,3);
+%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_types('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/box_stat_cubic_fast_ap_cic/','/home/asus/Dropbox/extras/storage/guillimin/box_plot_cic_test/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_cic_test/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0003/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,1,1,1,1,1,'sym6',32,3);
 
-%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_psqtstd('/home/asus/Dropbox/extras/storage/graham/', '/home/asus/Dropbox/extras/storage/graham/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/graham/box_plot_test/','/home/asus/Dropbox/extras/storage/graham/box_snan_test/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample2001/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,1,1,1,1,1,'sym6',32,3);
+%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_types('/home/asus/Dropbox/extras/storage/graham/', '/home/asus/Dropbox/extras/storage/graham/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/graham/box_plot_test/','/home/asus/Dropbox/extras/storage/graham/box_snan_test/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample2001/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,1,1,1,1,1,'sym6',32,3);
 
-%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_psqtstd('/home/asus/Dropbox/extras/storage/graham/high/', '/home/asus/Dropbox/extras/storage/graham/high/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/graham/high/box_plot/','/home/asus/Dropbox/extras/storage/graham/high/box_snan/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample2001/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,1,1,1,1,1,'sym6',32,3);
+%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_types('/home/asus/Dropbox/extras/storage/graham/high/', '/home/asus/Dropbox/extras/storage/graham/high/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/graham/high/box_plot/','/home/asus/Dropbox/extras/storage/graham/high/box_snan/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample2001/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,1,1,1,1,1,'sym6',32,3);
 
-%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_psqtstd('/home/asus/Dropbox/extras/storage/graham/high/', '/home/asus/Dropbox/extras/storage/graham/high/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/graham/high/box_plot/','/home/asus/Dropbox/extras/storage/graham/high/box_snan/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample2004/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,1,1,1,1,1,'sym6',32,3);
+%(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_types('/home/asus/Dropbox/extras/storage/graham/high/', '/home/asus/Dropbox/extras/storage/graham/high/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/graham/high/box_plot/','/home/asus/Dropbox/extras/storage/graham/high/box_snan/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample2004/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,1,1,1,1,1,'sym6',32,3);
+
+
+%(example)  [  ] =  box_statistics_dm_analysis_dwt_peaks_fromfiles_types('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','/home/asus/Dropbox/extras/storage/graham/small_res/box_plot/','/home/asus/Dropbox/extras/storage/graham/small_res/box_snan/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','','10.000xv0.dat',2,1,[0,0,0],64,1,1,4,4,1,1,1,'sym6',32,3);
 
 % 
 % myCluster = parcluster('local');
@@ -190,6 +193,9 @@ end
 
 
 f2s=zeros(1,1+n_max);
+% info_stat=zeros(2,6);
+% info_stat(1,:)={string('peak'),string('mean'),string('std'),string('peak/mean'),string('peak/std'),string('peak^2/(std*mean)')};
+
 
 [thetas, phis] = s2let_hpx_sampling_ring(NSIDE);
 
@@ -292,12 +298,30 @@ out_filtered_proj1d_angles_sort=out_filtered_proj1d_angles(quantity_type,f_index
 
 f2s(1,1)=out_filtered_proj1d_angles_sort(1)/out_filtered_proj1d_angles_sort(2);
 f2s(1,2:n_max+1)=out_filtered_proj1d_angles_sort(1:n_max);
+% info_stat(1,:)={string('peak'),string('mean'),string('std'),string('peak/mean'),string('peak/std'),string('peak^2/(std*mean)')};
+pk=[out_filtered_proj1d_angles_sort(1)];
+mn=[mean(out_filtered_proj1d_angles(quantity_type,:))];
+standard_dev=[std(out_filtered_proj1d_angles(quantity_type,:))];
+pk_o_mn=[pk/mn];
+pk_o_std=[pk/standard_dev];
+pksq_o_std_t_mn=[(pk^2)/(mn*standard_dev)];
+% info_stat(2,:)={pk,mn,standard_dev,pk/mn,pk/standard_dev,(pk^2)/(mn*standard_dev)};
+
+% Table=table({string('peak');string('mean');string('std');string('peak/mean');string('peak/std');string('peak^2/(std*mean)')},[pk;mn;standard_dev;pk/mn;pk/standard_dev;(pk^2)/(mn*standard_dev)]);
+Table_info=table(pk,mn,standard_dev,pk_o_mn,pk_o_std,pksq_o_std_t_mn);
+% Table=table([pk,mn,standard_dev,pk/mn,pk/standard_dev,(pk^2)/(mn*standard_dev)]);
+% varNames = {string('peak'),string('mean'),string('std'),string('peak/mean'),string('peak/std'),string('peak^2/(std*mean)')};
+% Table.Var_1='peak';
+
 if dm_or_dc==1
     dlmwrite(strcat(strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/',dwbasis,'/','level_window',mat2str(level_window(:)),'/',type,'/parts/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_z',num2str(z),'_data_f2s.txt'),f2s,'delimiter','\t');
+    writetable(Table_info,strcat(strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/',dwbasis,'/','level_window',mat2str(level_window(:)),'/',type,'/parts/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_z',num2str(z),'_data_info_stat.txt'),'Delimiter','\t');
 end
+
 
 if dm_or_dc==2
     dlmwrite(strcat(strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/dc/',dwbasis,'/','level_window',mat2str(level_window(:)),'/',type,'/parts/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_z',num2str(z),'_data_f2s.txt'),f2s,'delimiter','\t');
+    dlmwrite(Table_info,strcat(strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/dc/',dwbasis,'/','level_window',mat2str(level_window(:)),'/',type,'/parts/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_z',num2str(z),'_data_info_stat.txt'),'Delimiter','\t');
 end
 
 peaks_maxima_info=zeros(3,n_max);

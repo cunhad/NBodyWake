@@ -120,6 +120,8 @@ f_type(1,:)=(f_in(1,:).^2)./(f_in(2,:));
 
 end
 
+mn=[mean(f_type(:))];
+
 sz = size(f_type);
 nsideguessed = sqrt(max(sz)/12);
 L = 2*nsideguessed;
