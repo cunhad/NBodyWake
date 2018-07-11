@@ -37,6 +37,20 @@ if (quantity_type==3)
     type='stn_count'
 end
 
+if (quantity_type==4)  %this was a mistake, I was trying to do (p^2)/std
+    type='psqtstd_count'
+%     quantity_type=1;
+end
+
+if (quantity_type==5)
+    type='ptstd_count'
+%     quantity_type=1;
+end
+
+if (quantity_type==6)
+    type='psqostd_count'
+%     quantity_type=1;
+end
 
 tot_plot_path_out=strcat(root_plot_out,spec,aux_path,'plot/',aux_path_plot_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/',dwbasis,'/','level_window',mat2str(level_window1d(:)),'/',type,'/parts/s2let/');
 mkdir(tot_plot_path_out);
@@ -61,8 +75,8 @@ mkdir(snan_tot_path_out);
 % 
 
 % addpath(genpath('../../processing/'));
-addpath(genpath('/home/asus/Programs/test/s2let/s2let-public/'));
-% addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/s2let/s2let-public'));
+%addpath(genpath('/home/asus/Programs/test/s2let/s2let-public/'));
+addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/s2let/s2let-public'));
 
 cd('../../preprocessing');
 
@@ -83,9 +97,27 @@ f_in=fread(fileID,[3,12*NSIDE^2],'float32','l');
 fclose(fileID);
 
 % display(out_filtered_proj1d_angles(1,:))
-
+if 
 f_type=f_in(quantity_type,:);
 
+if (quantity_type==4)   %   psqtstd
+
+f_type(1,:)=(f_in(1,:).^2)./(f_in(3,:));
+
+end
+
+if (quantity_type==5)   %   peak times std
+
+f_type(1,:)=f_in(1,:).*(f_in(2,:));
+
+end
+
+if (quantity_type==6)   % peak squared over standard deviation
+
+f_type(1,:)=(f_in(1,:).^2)./(f_in(2,:));
+
+
+end
 
 sz = size(f_type);
 nsideguessed = sqrt(max(sz)/12);
@@ -162,21 +194,21 @@ zoom(n_angles_1d);
 saveas(fig,strcat(tot_plot_path_out,strcat('/zaxis_zoom/nangl_',num2str(n_angles_1d)),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_zaxis_mollzoom_z',num2str(z),'_plot.png'));
 close(fig)
 
-%plot 1d proj of the peak arround z_axis
-
-out_filtered_proj1d_angles_arround_z=f_out(thetas<n_angles_1d*d_angle);
-find_max_arround_z_idx=find(max(out_filtered_proj1d_angles_arround_z)==out_filtered_proj1d_angles_arround_z,1);
-path_data_box_all=strcat(strcat(root_box_in(1:end-1),'_all/',spec,aux_path),'data/',aux_path_box_in,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/',dwbasis,'/parts/');
-fileID = fopen(strcat(path_data_box_all,'level_window',mat2str(level_window1d(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_anglparts',num2str(angle_p),'_NSIDE',num2str(NSIDE),'_full.bin'));
-fseek(fileID,(length(bins)-1)*(find_max_arround_z_idx-1)*4,'bof');
-out_filtered_proj1d_angle_max_zaxis=fread(fileID,[length(bins)],'float32','l');
-fclose(fileID);
-fig=figure('Visible', 'off');
-% fig=figure;
-plot(bins*size_box/(np*resol_factor),out_filtered_proj1d_angle_max_zaxis);
+% %plot 1d proj of the peak arround z_axis
+% 
+% out_filtered_proj1d_angles_arround_z=f_out(thetas<n_angles_1d*d_angle);
+% find_max_arround_z_idx=find(max(out_filtered_proj1d_angles_arround_z)==out_filtered_proj1d_angles_arround_z,1);
+% path_data_box_all=strcat(strcat(root_box_in(1:end-1),'_all/',spec,aux_path),'data/',aux_path_box_in,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv','/','stat/box_statistics/dm/',dwbasis,'/parts/');
+% fileID = fopen(strcat(path_data_box_all,'level_window',mat2str(level_window1d(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_anglparts',num2str(angle_p),'_NSIDE',num2str(NSIDE),'_full.bin'));
+% fseek(fileID,(length(bins)-1)*(find_max_arround_z_idx-1)*4,'bof');
+% out_filtered_proj1d_angle_max_zaxis=fread(fileID,[length(bins)],'float32','l');
+% fclose(fileID);
+% fig=figure('Visible', 'off');
+% % fig=figure;
+% plot(bins*size_box/(np*resol_factor),out_filtered_proj1d_angle_max_zaxis);
 mkdir(strcat(tot_plot_path_out,'/zaxis_zoom/nangl_',num2str(n_angles_1d),'/'),strcat('1dproj/'));
-saveas(fig,strcat(tot_plot_path_out,strcat('/zaxis_zoom/nangl_',num2str(n_angles_1d),'/1dproj'),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_zaxis_1dprojpeak_z',num2str(z),'_plot.png'));
-close(fig);
+% saveas(fig,strcat(tot_plot_path_out,strcat('/zaxis_zoom/nangl_',num2str(n_angles_1d),'/1dproj'),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_zaxis_1dprojpeak_z',num2str(z),'_plot.png'));
+% close(fig);
 
 % plot mesh
  
@@ -216,20 +248,20 @@ for max_id=1:n_max
     
     display(f_index_max(max_id));
     
-    %plot 1d proj of the peak arround z_axis
-    
-
-    fileID = fopen(strcat(path_data_box_all,'level_window',mat2str(level_window1d(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_anglparts',num2str(angle_p),'_NSIDE',num2str(NSIDE),'_full.bin'));
-    fseek(fileID,(length(bins)-1)*(f_index_max(max_id)-1)*4,'bof');
-    out_filtered_proj1d_angle_max_ofthismax=fread(fileID,[length(bins)-1],'float32','l');
-    fclose(fileID);
-    fig=figure('Visible', 'off');
-    % fig=figure;    
-    plot(bins(1:end-1)*size_box/(np*resol_factor),out_filtered_proj1d_angle_max_ofthismax);
-    mkdir(tot_plot_path_out,strcat('/peak/','max_',num2str(max_id),'/'));
+%     %plot 1d proj of the peak arround z_axis
+%     
+% 
+%     fileID = fopen(strcat(path_data_box_all,'level_window',mat2str(level_window1d(:)),'/','_',num2str(find(str2num(char(redshift_list))==z)),'_filtered_1dproj_angle_z',num2str(z),'_anglparts',num2str(angle_p),'_NSIDE',num2str(NSIDE),'_full.bin'));
+%     fseek(fileID,(length(bins)-1)*(f_index_max(max_id)-1)*4,'bof');
+%     out_filtered_proj1d_angle_max_ofthismax=fread(fileID,[length(bins)-1],'float32','l');
+%     fclose(fileID);
+%     fig=figure('Visible', 'off');
+%     % fig=figure;    
+%     plot(bins(1:end-1)*size_box/(np*resol_factor),out_filtered_proj1d_angle_max_ofthismax);
+%     mkdir(tot_plot_path_out,strcat('/peak/','max_',num2str(max_id),'/'));
     mkdir(tot_plot_path_out,strcat('/peak/','max_',num2str(max_id),'/1dproj/'));
-    saveas(fig,strcat(tot_plot_path_out,strcat('/peak/','max_',num2str(max_id),'/1dproj'),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_max_1dprojpeak_z',num2str(z),'_plot.png'));
-    close(fig);
+%     saveas(fig,strcat(tot_plot_path_out,strcat('/peak/','max_',num2str(max_id),'/1dproj'),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_max_1dprojpeak_z',num2str(z),'_plot.png'));
+%     close(fig);
     
     %plot the spherical projection
     

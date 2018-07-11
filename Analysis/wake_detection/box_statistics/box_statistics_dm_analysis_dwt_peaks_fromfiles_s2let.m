@@ -97,8 +97,9 @@ f_in=fread(fileID,[3,12*NSIDE^2],'float32','l');
 fclose(fileID);
 
 % display(out_filtered_proj1d_angles(1,:))
-
+if quantity_type<4
 f_type=f_in(quantity_type,:);
+end
 
 if (quantity_type==4)   %   psqtstd
 

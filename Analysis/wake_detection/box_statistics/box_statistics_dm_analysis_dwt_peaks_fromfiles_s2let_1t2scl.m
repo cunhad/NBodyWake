@@ -110,7 +110,9 @@ end
 
 % display(out_filtered_proj1d_angles(1,:))
 
+if quantity_type<4
 f_type=f_in(quantity_type,:);
+end
 
 if (quantity_type==4)   %   psqtstd
 
