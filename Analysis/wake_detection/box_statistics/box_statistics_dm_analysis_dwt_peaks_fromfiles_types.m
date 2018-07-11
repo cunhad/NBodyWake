@@ -19,7 +19,11 @@ function [ out_filtered_proj1d_angles ] = box_statistics_dm_analysis_dwt_peaks_f
 %(example)  [  ] = box_statistics_dm_analysis_dwt_peaks_fromfiles_types('/home/asus/Dropbox/extras/storage/graham/high/', '/home/asus/Dropbox/extras/storage/graham/high/box_stat_cubic_fast_ap/','/home/asus/Dropbox/extras/storage/graham/high/box_plot/','/home/asus/Dropbox/extras/storage/graham/high/box_snan/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample2004/','','','','10.000xv0.dat',2,1,[0,0,0],512,16,4,1,1,1,1,1,'sym6',32,3);
 
 
-%(example)  [  ] =  box_statistics_dm_analysis_dwt_peaks_fromfiles_types('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','/home/asus/Dropbox/extras/storage/graham/small_res/box_plot/','/home/asus/Dropbox/extras/storage/graham/small_res/box_snan/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','','10.000xv0.dat',2,1,[0,0,0],64,1,1,4,4,1,1,1,'sym6',32,3);
+%(example)  [  ] =  box_statistics_dm_analysis_dwt_peaks_fromfiles_types('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','/home/asus/Dropbox/extras/storage/graham/small_res/box_plot/','/home/asus/Dropbox/extras/storage/graham/small_res/box_snan/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','','10.000xv0.dat',2,1,[0,0,0],64,1,1,1,4,1,1,1,'sym6',32,3);
+%(example)  [  ] =  box_statistics_dm_analysis_dwt_peaks_fromfiles_types('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast_cic/','/home/asus/Dropbox/extras/storage/graham/small_res/box_plot_cic/','/home/asus/Dropbox/extras/storage/graham/small_res/box_snan_cic/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','','10.000xv0.dat',2,1,[0,0,0],64,1,1,1,4,1,1,1,'sym6',32,3);
+
+%(example)  [  ] =  box_statistics_dm_analysis_dwt_peaks_fromfiles_types('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast_diff/','/home/asus/Dropbox/extras/storage/graham/small_res/box_plot_diff/','/home/asus/Dropbox/extras/storage/graham/small_res/box_snan_diff/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','','','10.000xv0.dat',2,1,[0,0,0],64,1,1,1,4,1,1,1,'sym6',32,3);
+
 
 % 
 % myCluster = parcluster('local');

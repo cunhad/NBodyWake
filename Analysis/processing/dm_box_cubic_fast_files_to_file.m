@@ -3,7 +3,9 @@ function [  root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,reso
 %   Detailed explanation goes here
 
 %(example)  [] = dm_box_cubic_fast_files_to_file('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,1,[0,0,0],64,1,1,4,4,[1,2],[1],'sym6');
-% 
+%(example)  [] = dm_box_cubic_fast_files_to_file('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast_cic/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,1,[0,0,0],64,1,1,1,1,[1,2],[1],'sym6');
+
+%(example)  [] = dm_box_cubic_fast_files_to_file('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast_diff/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,1,[0,0,0],64,1,1,1,1,[1,2],[1],'sym6');
 
 angles_hpx(1,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_t.cvs'));
 angles_hpx(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'));

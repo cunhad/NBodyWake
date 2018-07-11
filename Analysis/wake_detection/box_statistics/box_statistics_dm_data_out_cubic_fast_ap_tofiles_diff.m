@@ -1,4 +1,4 @@
-function [ proj1d_angles,filtered_proj1d_angles ] = box_statistics_dm_data_out_cubic_fast_ap_tofiles( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,particl_part,angle_part,angle_p,angle_id,num_cores,data_stream,level_window,dwbasis)
+function [ proj1d_angles,filtered_proj1d_angles ] = box_statistics_dm_data_out_cubic_fast_ap_tofiles_diff( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,NSIDE,particl_part,angle_part,angle_p,angle_id,num_cores,data_stream,level_window,dwbasis)
 %Computes for each pair of spherical angles, the projection of the
 %particles positions on the corresponding axis, then construct a histogram
 %of the resulting projection and filters it by extrating the first wavelet
@@ -12,9 +12,9 @@ function [ proj1d_angles,filtered_proj1d_angles ] = box_statistics_dm_data_out_c
 %
 
 
-%(example)  [proj1d_angles,filtered_proj1d_angles] = box_statistics_dm_data_out_cubic_fast_ap_tofiles('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,1,[0,0,0],2,1,4,4,1,1,[1,2],[1],'sym6');
+%(example)  [proj1d_angles,filtered_proj1d_angles] = box_statistics_dm_data_out_cubic_fast_ap_tofiles_diff('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,1,[0,0,0],2,1,4,4,1,1,[1,2],[1],'sym6');
 
-%(example)  [proj1d_angles,filtered_proj1d_angles] = box_statistics_dm_data_out_cubic_fast_ap_tofiles('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,1,[0,0,0],64,1,4,1,1,4,[1,2],[1],'sym6');
+%(example)  [proj1d_angles,filtered_proj1d_angles] = box_statistics_dm_data_out_cubic_fast_ap_tofiles_diff('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/box_stat_cubic_fast_diff/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat',2,1,[0,0,0],64,1,4,1,1,4,[1,2],[1],'sym6');
 
 % NBody output should be stored as root+spec+aux_path (root directory, specification in the form size_numberofcellsperdimension_number_particlesperdimension_initialredshift_wakespecification&multiplicity, aux_path is the sample number )
 
@@ -362,14 +362,39 @@ if level_window~=0
         
     end
     
+    %here we compute the absolute difference
+    
+    filtered_proj1d_angles=diff(filtered_proj1d_angles);
+    filtered_proj1d_angles(end+1,:)=0;
+    filtered_proj1d_angles=(abs(filtered_proj1d_angles));
+    
+    filtered_dc_proj1d_angles=diff(filtered_dc_proj1d_angles);
+    filtered_dc_proj1d_angles(end+1,:)=0;
+    filtered_dc_proj1d_angles=(abs(filtered_dc_proj1d_angles));
+    
+    
+    %try this
+    
+    windowSize = 2;
+    b = (1/windowSize)*ones(1,windowSize);
+    a = 1;
+    filtered_proj1d_angles = filter(b,a,filtered_proj1d_angles);
+    
+    windowSize = 2;
+    b = (1/windowSize)*ones(1,windowSize);
+    a = 1;
+    filtered_dc_proj1d_angles = filter(b,a,filtered_dc_proj1d_angles);
+    
     %in this part the peak of each 1d projection is taked, as well the standard
     %deviation (with the peak removed). The diference is that now we are
     %performing these operations on the filtered 1d projections
     
     max_filtered_proj1d_angles=max(filtered_proj1d_angles);
     average_filtered_proj1d_angles=mean(filtered_proj1d_angles,1);
-    max_amplitude_filtered_proj1d_angles=max_filtered_proj1d_angles(:)-average_filtered_proj1d_angles(:);
-    
+    %didn't removed the mean here
+    %     max_amplitude_filtered_proj1d_angles=max_filtered_proj1d_angles(:)-average_filtered_proj1d_angles(:);
+    max_amplitude_filtered_proj1d_angles=max_filtered_proj1d_angles(:);
+
     filtered_proj1d_index_max=zeros(1,number_of_angle_nuple_hpx);
     
     parfor angl=1:number_of_angle_nuple_hpx
@@ -400,8 +425,9 @@ if level_window~=0
     for angl=1:number_of_angle_nuple_hpx
         filtered_dc_proj1d_angles_snremoved(filtered_dc_proj1d_index_max(1,angl),angl)=0;
     end
-        
-    max_amplitude_filtered_dc_proj1d_angles=max_filtered_dc_proj1d_angles(:)-average_filtered_dc_proj1d_angles(:);
+      %didn't removed the mean here  
+%     max_amplitude_filtered_dc_proj1d_angles=max_filtered_dc_proj1d_angles(:)-average_filtered_dc_proj1d_angles(:);
+    max_amplitude_filtered_dc_proj1d_angles=max_filtered_dc_proj1d_angles(:);
     std_filtered_dc_proj1d_angles=std(filtered_dc_proj1d_angles_snremoved);
     clearvars filtered_dc_proj1d_angles_snremoved;
     
