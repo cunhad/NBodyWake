@@ -3,7 +3,7 @@ function [ snan_data_nowake red_list_out_nowake snan_data_wake red_list_out_wake
 %reads the data from proj1d_dm_analysis for the signal to noise analysis
 %and creates the corresponding figures
 
-%(example) snan_comparison_wavelets_1dproj_withnull_progression('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/snan/','/home/asus/Dropbox/extras/storage/guillimin/snan_comparizon/','','',1,1,[0,0,0],[0,0],0.8,'all');
+%(example) snan_comparison_wavelets_1dproj_withnull_progression('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_s2l/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_s2l_comparizon/','','',1,1,[0,0,0],[0,0],0.8,'all');
 %(example) snan_comparison_wavelets_1dproj_withnull_progression('/home/asus/Dropbox/extras/storage/graham/','/home/asus/Dropbox/extras/storage/graham/snan_gra64/','/home/asus/Dropbox/extras/storage/guillimin/snan_gra64_comparizon/','','',1,2,[0,0,0],[0,0],0.4,'all');
 
 

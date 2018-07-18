@@ -247,7 +247,7 @@ for J_level_cutoff=1:J+1
     saveas(fig,strcat(tot_plot_path_out,strcat('/zaxis_zoom/nangl_',num2str(n_angles_1d)),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_zaxis_mollzoom_z',num2str(z),'_plot.png'));
     close(fig)
     
-    if J_level_cutoff == J+1
+%     if J_level_cutoff == J+1
         
         %plot 1d proj of the peak arround z_axis
         
@@ -265,7 +265,7 @@ for J_level_cutoff=1:J+1
         saveas(fig,strcat(tot_plot_path_out,strcat('/zaxis_zoom/nangl_',num2str(n_angles_1d),'/1dproj'),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_zaxis_1dprojpeak_z',num2str(z),'_plot.png'));
         close(fig);
         
-    end
+%     end
     
     % plot mesh
     
@@ -328,7 +328,7 @@ for J_level_cutoff=1:J+1
         
         display(f_index_max(max_id));
 
-        if J_level_cutoff == J+1
+%         if J_level_cutoff == J+1
 
             %plot 1d proj of the peak arround z_axis
         
@@ -345,7 +345,7 @@ for J_level_cutoff=1:J+1
             saveas(fig,strcat(tot_plot_path_out,strcat('/peak/','max_',num2str(max_id),'/1dproj'),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_max_1dprojpeak_z',num2str(z),'_plot.png'));
             close(fig);
 
-        end
+%         end
             
         %plot the spherical projection
         
