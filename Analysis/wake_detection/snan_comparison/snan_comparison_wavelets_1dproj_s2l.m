@@ -77,13 +77,14 @@ display(specs_list);
     path_samples_in=strcat(root_snan_in,aux_path_snan_in,spec);
     sample_list=dir(strcat(path_samples_in,'/sample*'));
     sample_list={sample_list.name};
-    sample_list=sort_nat(sample_list);
+    sample_list=sort_nat(sample_list)
     
 %     display(sample_list)
 %     current_path=pwd;
 
 fig_pk=figure;
 fig_std=figure;
+fig_pkostd=figure;
 fig_clgposdt=figure;
 fig_max_clgposdt=figure;
     set(gcf, 'Position', [0 0 300 800]);
@@ -91,7 +92,8 @@ fig_max_clgposdt=figure;
 
     ax_pk=axes(fig_pk);
     ax_std=axes(fig_std);
-    ax_clgposdt=axes(fig_clgposdt);
+    ax_pkostd=axes(fig_pkostd);
+    ax_clgposdt=axes(fig_clgposdt);   
     ax_max_clgposdt=axes(fig_max_clgposdt);
     
 
@@ -104,13 +106,16 @@ fig_max_clgposdt=figure;
 sample_id_range=[1 : length(sample_list)];
 
 
-% for sample = 1:length(sample_id_range)
+for sample = 1:length(sample_id_range)
 % for sample = 1:3
-for sample = [1,3]    
-
-    tot_snan_path_in=strcat(root_snan_in,spec,aux_path_snan_in,'/',char(sample_list(sample)),'/snan/',num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/sym6/level_window1/particle_count/parts/s2let/');
+% for sample = 1:6
+% for sample = [1,2]    
+% for sample = [1,3]  
+    
+    
+    tot_snan_path_in=strcat(root_snan_in,spec,aux_path_snan_in,'/',char(sample_list(sample)),'/snan/',num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/sym6/level_window1/particle_count/parts/s2let/')
 %     path_snan_data_in=strcat(tot_snan_path_in);
-    snan_data_in_list=dir(strcat(tot_snan_path_in,'*_snan_box_z10_data_table_info.txt'))
+    snan_data_in_list=dir(strcat(tot_snan_path_in,'*_snan_box_z10_data_table_info.txt'));
     snan_data_in_list={snan_data_in_list.name};
     snan_data_in_list=sort_nat(snan_data_in_list);
     snan_data_this=snan_data_in_list{1};
@@ -129,7 +134,7 @@ for sample = [1,3]
 
     
     
-    T = readtable(strcat(tot_snan_path_in,snan_data_this),'Filetype', 'text');
+    T = readtable(strcat(tot_snan_path_in,snan_data_this),'Filetype', 'text')
     
     levels=T{:,1};
     pk=T{:,2};
@@ -145,6 +150,9 @@ for sample = [1,3]
 %     ax_std=axes(fig_std);
     plot(ax_std,levels,std_lvs,'b');
             hold(ax_std,'on');
+            
+    plot(ax_pkostd,levels,pk./std_lvs,'b');
+            hold(ax_pkostd,'on');
     
 %     ax_clgposdt=axes(fig_clgposdt);
     
@@ -186,9 +194,10 @@ end
     
     sample_id_range=[1 : length(sample_list)];
 
-% for sample = 1:length(sample_id_range)
+for sample = 1:length(sample_id_range)
 % for sample = 1:3
-for sample = [1,3]    
+% for sample = [1,2]    
+% for sample = [1,3]    
 
     tot_snan_path_in=strcat(root_snan_in,spec,aux_path_snan_in,'/',char(sample_list(sample)),'/snan/',num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/sym6/level_window1/particle_count/parts/s2let/');
 %     path_snan_data_in=strcat(tot_snan_path_in);
@@ -227,6 +236,9 @@ for sample = [1,3]
 %     ax_std=axes(fig_std);
     plot(ax_std,levels,std_lvs,'r');
             hold(ax_std,'on');
+            
+    plot(ax_pkostd,levels,pk./std_lvs,'r');
+            hold(ax_pkostd,'on');
     
 %     ax_clgposdt=axes(fig_clgposdt);
     
@@ -277,6 +289,8 @@ std_nowake=std(max_nowake,1)
 stn_wake=(max_wake-mean_nowake)/std_nowake
 mean_stn=mean(stn_wake)
 std_stn=std(stn_wake,1)
+
+mean_stn-std_stn
 
 % p_nw_lv
          

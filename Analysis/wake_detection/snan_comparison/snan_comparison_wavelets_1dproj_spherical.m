@@ -94,11 +94,15 @@ display(specs_list);
     set(gcf, 'Position', [0 0 300 800]);
     fig_pkostd=figure;
     set(gcf, 'Position', [0 0 300 800]);
-
+    fig_pkaostd=figure;
+    set(gcf, 'Position', [0 0 300 800]);
+    
     ax_pk=axes(fig_pk);
     ax_mn=axes(fig_mn);
     ax_std=axes(fig_std);
     ax_pkostd=axes(fig_pkostd);
+    ax_pkaostd=axes(fig_pkaostd);
+
 %     ax_clgposdt=axes(fig_clgposdt);
 %     ax_max_clgposdt=axes(fig_max_clgposdt);
     
@@ -141,13 +145,18 @@ for sample = 1:length(sample_id_range)
     pkostd_nw{sample}= scatter(ax_pkostd,1,pk/stdev,'b');
     hold(ax_pkostd,'on');
     
+    pkaostd_nw{sample}= scatter(ax_pkaostd,1,(pk-mn)/stdev,'b');
+    hold(ax_pkaostd,'on');
 
     
     pk_nowake(sample)=pk;
     mn_nowake(sample)=mn;
     stdev_nowake(sample)=stdev;
     pkostd_nowake(sample)=pk/stdev;
-%     end
+    pkaostd_nowake(sample)=(pk-mn)/stdev;
+
+    %     end
+
     
     
     %     hold on;
@@ -206,11 +215,15 @@ for sample = 1:length(sample_id_range)
     pkostd_w{sample}= scatter(ax_pkostd,1,pk/stdev,'r');
     hold(ax_pkostd,'on');
     
+    pkaostd_w{sample}= scatter(ax_pkaostd,1,(pk-mn)/stdev,'r');
+    hold(ax_pkaostd,'on');
+    
     pk_wake(sample)=pk;
     mn_wake(sample)=mn;
     std_wake(sample)=stdev;
     pkostd_wake(sample)=pk/stdev;
-            
+    pkaostd_wake(sample)=(pk-mn)/stdev;
+    
 end
     
 
@@ -241,6 +254,9 @@ set(ax_std,'XTick',[]);
 
 legend(ax_pkostd,[pkostd_nw{1},pkostd_w{1}],leg,'Location','northoutside');   
 set(ax_pkostd,'XTick',[]);
+
+legend(ax_pkaostd,[pkaostd_nw{1},pkaostd_w{1}],leg,'Location','northoutside');   
+set(ax_pkaostd,'XTick',[]);
 
 wake=pk_wake;
 nowake=pk_nowake;
