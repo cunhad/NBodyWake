@@ -4,6 +4,7 @@ function [ snan_data_nowake snan_data_wake] = snan_comparison_wavelets_1dproj_s2
 %and creates the corresponding figures
 
 % (example) snan_comparison_wavelets_1dproj_s2l('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_s2l/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_s2l_comparizon/','','',2,1,[0,0,0],1024,16,2,8,32,[1],1,1,'sym6',32,3);
+% (example) snan_comparison_wavelets_1dproj_s2l('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_types_cic_diff_loc/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_s2l_comparizon/','','',2,1,[0,0,0],1024,16,2,8,32,[1],1,1,'sym6',32,3);
 %(example) snan_comparison_wavelets_1dproj_s2l('/home/asus/Dropbox/extras/storage/graham/','/home/asus/Dropbox/extras/storage/graham/snan_gra64/','/home/asus/Dropbox/extras/storage/guillimin/snan_gra64_comparizon/','','',1,2,[0,0,0],[0,0],0.4,'all');
 
 
@@ -106,12 +107,12 @@ fig_max_clgposdt=figure;
 sample_id_range=[1 : length(sample_list)];
 
 
-for sample = 1:length(sample_id_range)
+% for sample = 1:length(sample_id_range)
 % for sample = 1:3
 % for sample = 1:6
-% for sample = [1,2]    
+for sample = [1,2]    
 % for sample = [1,3]  
-    
+% for sample = 2    
     
     tot_snan_path_in=strcat(root_snan_in,spec,aux_path_snan_in,'/',char(sample_list(sample)),'/snan/',num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/sym6/level_window1/particle_count/parts/s2let/')
 %     path_snan_data_in=strcat(tot_snan_path_in);
@@ -194,10 +195,11 @@ end
     
     sample_id_range=[1 : length(sample_list)];
 
-for sample = 1:length(sample_id_range)
+% for sample = 1:length(sample_id_range)
 % for sample = 1:3
-% for sample = [1,2]    
+for sample = [1,2]    
 % for sample = [1,3]    
+% for sample = 2
 
     tot_snan_path_in=strcat(root_snan_in,spec,aux_path_snan_in,'/',char(sample_list(sample)),'/snan/',num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/sym6/level_window1/particle_count/parts/s2let/');
 %     path_snan_data_in=strcat(tot_snan_path_in);

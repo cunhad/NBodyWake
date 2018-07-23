@@ -305,30 +305,30 @@ out_filtered_proj1d_angles_sort=out_filtered_proj1d_angles(quantity_type,f_index
 f2s(1,1)=out_filtered_proj1d_angles_sort(1)/out_filtered_proj1d_angles_sort(2);
 f2s(1,2:n_max+1)=out_filtered_proj1d_angles_sort(1:n_max);
 % info_stat(1,:)={string('peak'),string('mean'),string('std'),string('peak/mean'),string('peak/std'),string('peak^2/(std*mean)')};
-pk=[out_filtered_proj1d_angles_sort(1)];
-mn=[mean(out_filtered_proj1d_angles(quantity_type,:))];
-standard_dev=[std(out_filtered_proj1d_angles(quantity_type,:))];
-pk_o_mn=[pk/mn];
-pk_o_std=[pk/standard_dev];
-pksq_o_std_t_mn=[(pk^2)/(mn*standard_dev)];
-% info_stat(2,:)={pk,mn,standard_dev,pk/mn,pk/standard_dev,(pk^2)/(mn*standard_dev)};
-
-% Table=table({string('peak');string('mean');string('std');string('peak/mean');string('peak/std');string('peak^2/(std*mean)')},[pk;mn;standard_dev;pk/mn;pk/standard_dev;(pk^2)/(mn*standard_dev)]);
-Table_info=table(pk,mn,standard_dev,pk_o_mn,pk_o_std,pksq_o_std_t_mn);
-% Table=table([pk,mn,standard_dev,pk/mn,pk/standard_dev,(pk^2)/(mn*standard_dev)]);
-% varNames = {string('peak'),string('mean'),string('std'),string('peak/mean'),string('peak/std'),string('peak^2/(std*mean)')};
-% Table.Var_1='peak';
-
-if dm_or_dc==1
-    dlmwrite(strcat(strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/',dwbasis,'/','level_window',mat2str(level_window(:)),'/',type,'/parts/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_z',num2str(z),'_data_f2s.txt'),f2s,'delimiter','\t');
-    writetable(Table_info,strcat(strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/',dwbasis,'/','level_window',mat2str(level_window(:)),'/',type,'/parts/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_z',num2str(z),'_data_info_stat.txt'),'Delimiter','\t');
-end
-
-
-if dm_or_dc==2
-    dlmwrite(strcat(strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/dc/',dwbasis,'/','level_window',mat2str(level_window(:)),'/',type,'/parts/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_z',num2str(z),'_data_f2s.txt'),f2s,'delimiter','\t');
-    dlmwrite(Table_info,strcat(strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/dc/',dwbasis,'/','level_window',mat2str(level_window(:)),'/',type,'/parts/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_z',num2str(z),'_data_info_stat.txt'),'Delimiter','\t');
-end
+% pk=[out_filtered_proj1d_angles_sort(1)];
+% mn=[mean(out_filtered_proj1d_angles(quantity_type,:))];
+% standard_dev=[std(out_filtered_proj1d_angles(quantity_type,:))];
+% pk_o_mn=[pk/mn];
+% pk_o_std=[pk/standard_dev];
+% pksq_o_std_t_mn=[(pk^2)/(mn*standard_dev)];
+% % info_stat(2,:)={pk,mn,standard_dev,pk/mn,pk/standard_dev,(pk^2)/(mn*standard_dev)};
+% 
+% % Table=table({string('peak');string('mean');string('std');string('peak/mean');string('peak/std');string('peak^2/(std*mean)')},[pk;mn;standard_dev;pk/mn;pk/standard_dev;(pk^2)/(mn*standard_dev)]);
+% Table_info=table(pk,mn,standard_dev,pk_o_mn,pk_o_std,pksq_o_std_t_mn);
+% % Table=table([pk,mn,standard_dev,pk/mn,pk/standard_dev,(pk^2)/(mn*standard_dev)]);
+% % varNames = {string('peak'),string('mean'),string('std'),string('peak/mean'),string('peak/std'),string('peak^2/(std*mean)')};
+% % Table.Var_1='peak';
+% 
+% if dm_or_dc==1
+%     dlmwrite(strcat(strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/',dwbasis,'/','level_window',mat2str(level_window(:)),'/',type,'/parts/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_z',num2str(z),'_data_f2s.txt'),f2s,'delimiter','\t');
+%     writetable(Table_info,strcat(strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/',dwbasis,'/','level_window',mat2str(level_window(:)),'/',type,'/parts/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_z',num2str(z),'_data_info_stat.txt'),'Delimiter','\t');
+% end
+% 
+% 
+% if dm_or_dc==2
+%     dlmwrite(strcat(strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/dc/',dwbasis,'/','level_window',mat2str(level_window(:)),'/',type,'/parts/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_z',num2str(z),'_data_f2s.txt'),f2s,'delimiter','\t');
+%     dlmwrite(Table_info,strcat(strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/dc/',dwbasis,'/','level_window',mat2str(level_window(:)),'/',type,'/parts/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_z',num2str(z),'_data_info_stat.txt'),'Delimiter','\t');
+% end
 
 n_max_=1;
 
@@ -756,6 +756,32 @@ dlmwrite(strcat(snan_tot_path_out,'_',num2str(find(str2num(char(redshift_list))=
     
     fclose(fileID);
     
+    pk=[max(spherical_local(:))];
+mn=[mean(spherical_local(:))];
+standard_dev=[std(spherical_local(:))];
+pk_o_mn=[pk/mn];
+pk_o_std=[pk/standard_dev];
+pksq_o_std_t_mn=[(pk^2)/(mn*standard_dev)];
+% info_stat(2,:)={pk,mn,standard_dev,pk/mn,pk/standard_dev,(pk^2)/(mn*standard_dev)};
+
+% Table=table({string('peak');string('mean');string('std');string('peak/mean');string('peak/std');string('peak^2/(std*mean)')},[pk;mn;standard_dev;pk/mn;pk/standard_dev;(pk^2)/(mn*standard_dev)]);
+Table_info=table(pk,mn,standard_dev,pk_o_mn,pk_o_std,pksq_o_std_t_mn);
+% Table=table([pk,mn,standard_dev,pk/mn,pk/standard_dev,(pk^2)/(mn*standard_dev)]);
+% varNames = {string('peak'),string('mean'),string('std'),string('peak/mean'),string('peak/std'),string('peak^2/(std*mean)')};
+% Table.Var_1='peak';
+
+if dm_or_dc==1
+    dlmwrite(strcat(strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/',dwbasis,'/','level_window',mat2str(level_window(:)),'/',type,'/parts/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_z',num2str(z),'_data_f2s.txt'),f2s,'delimiter','\t');
+    writetable(Table_info,strcat(strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/',dwbasis,'/','level_window',mat2str(level_window(:)),'/',type,'/parts/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_z',num2str(z),'_data_info_stat.txt'),'Delimiter','\t');
+end
+
+
+if dm_or_dc==2
+    dlmwrite(strcat(strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/dc/',dwbasis,'/','level_window',mat2str(level_window(:)),'/',type,'/parts/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_z',num2str(z),'_data_f2s.txt'),f2s,'delimiter','\t');
+    dlmwrite(Table_info,strcat(strcat(root_snan_out,spec,aux_path,'snan/',aux_path_snan_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/dc/',dwbasis,'/','level_window',mat2str(level_window(:)),'/',type,'/parts/'),'_',num2str(find(str2num(char(redshift_list))==z)),'_snan_box_z',num2str(z),'_data_info_stat.txt'),'Delimiter','\t');
+end
+
+    
     
     %plot the spherical projection
         
@@ -785,6 +811,8 @@ dlmwrite(strcat(snan_tot_path_out,'_',num2str(find(str2num(char(redshift_list))=
         mkdir(tot_plot_path_out,strcat('/peak/','max_',num2str(max_id),'/'));
         saveas(fig3,strcat(tot_plot_path_out,'/peak/','max_',num2str(max_id),'/_',num2str(find(str2num(char(redshift_list))==z)),'_box_loc_peak_z',num2str(z),'_plot.png'));
         close(fig3)
+        
+        
     
     
 % addpath(genpath('/home/asus/Programs/test/s2let/s2let-public/'));
