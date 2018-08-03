@@ -2,11 +2,19 @@ function [  ] = peak_curvelet_enhanced( root,root_out,spec,aux_path,aux_path_out
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
+
+
+
 %(example)  [proj1d_angles] = box_statistics_dm_data_out_cubic_fast_ap('/home/asus/Dropbox/extras/storage/graham/small_res/', '/home/asus/Dropbox/extras/storage/graham/small_res/curvelet/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat');
 %(example)  [proj1d_angles] = box_statistics_dm_data_out_cubic_fast_ap('/home/asus/Dropbox/extras/storage/guillimin/', '/home/asus/Dropbox/extras/storage/guillimin/curvelet/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','10.000xv0.dat');
 
+
+%(example) []=peak_curvelet_enhanced('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/curvelet/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/','','10.000xv0.dat');
+
 addpath(genpath('/home/asus/Programs/CurveLab_matlab-2.1.3/fdct_wrapping_matlab/'));
 
+
+cd ../../../2dproj/
 
 [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_dm_data_out(root,root_out,spec,aux_path,aux_path_out,filename,1,1,[0,0,0],[0,0],[1,2]);
 
@@ -17,7 +25,7 @@ N = size(count_sum,1);
 
 % Tuning parameters
 finest = 1;                 % 1: curvelets at finest scale, 2: wavelets at finest scale
-nbscales = log2(N) - 3;
+nbscales = floor(log2(N) - 3);
 nbangles_coarse = 8;
 nsigmas_coarse = 2.2;       % threshold proportional to nsigmas_coarse*sigma at all scales except finest
 nsigmas_fine = 2.5;         % threshold proportional to nsigmas_fine*sigma at finest scale

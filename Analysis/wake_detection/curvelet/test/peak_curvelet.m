@@ -7,11 +7,16 @@ function [  ] = peak_curvelet( root,root_out,spec,aux_path,aux_path_out,filename
 
 addpath(genpath('/home/asus/Programs/CurveLab_matlab-2.1.3/fdct_wrapping_cpp/mex/'));
 
+% [root,root_out,spec,aux_path,aux_path_out,filename,1,1,[0,0,0],[0,0],[1,2]]
 
-[ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_dm_data_out(root,root_out,spec,aux_path,aux_path_out,filename,1,1,[0,0,0],[0,0],[1,2]);
+cd ../../../2dproj/
+
+[ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_dm_data_out(root,root_out,spec,aux_path,aux_path_out,filename,1,1,[0,0,0],[0,0],[1,2])
+
+
 
 n = size(count_sum,1);
-sigma = 20;        
+sigma = 10;        
 is_real = 1;
 
 disp('Compute all thresholds');

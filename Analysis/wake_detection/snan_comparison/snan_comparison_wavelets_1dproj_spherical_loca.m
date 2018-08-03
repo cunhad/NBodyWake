@@ -1,10 +1,10 @@
-function [ snan_data_nowake snan_data_wake] = snan_comparison_wavelets_1dproj_spherical(root,root_snan_in,root_snan_comp_out,aux_path_snan_in,aux_path_snan_comp_out,lenght_factor,resol_factor,pivot,NSIDE,part_in,angle_part,angle_p,num_cores,level_window1d,quantity_type,dm_or_dc,dwbasis,n_angles_1d,n_max)
+function [ snan_data_nowake snan_data_wake] = snan_comparison_wavelets_1dproj_spherical_loca(root,root_snan_in,root_snan_comp_out,aux_path_snan_in,aux_path_snan_comp_out,lenght_factor,resol_factor,pivot,NSIDE,part_in,angle_part,angle_p,num_cores,level_window1d,quantity_type,dm_or_dc,dwbasis,n_angles_1d,n_max)
 
 %reads the data from proj1d_dm_analysis for the signal to noise analysis
 %and creates the corresponding figures
 
 % (example) snan_comparison_wavelets_1dproj_spherical('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_types/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_types_comparizon/','','',2,1,[0,0,0],1024,16,2,8,32,[1],1,1,'sym6',32,3);
-% (example) snan_comparison_wavelets_1dproj_spherical('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_types_cic_diff_loc/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_types_comparizon/','','',2,1,[0,0,0],1024,16,2,8,32,[1],1,1,'sym6',32,3);
+% (example) snan_comparison_wavelets_1dproj_spherical_loca('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_types_cic_diff_loc/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_types_comparizon/','','',2,1,[0,0,0],1024,16,2,8,32,[1],1,1,'sym6',32,3);
 %(example) snan_comparison_wavelets_1dproj_spherical('/home/asus/Dropbox/extras/storage/graham/','/home/asus/Dropbox/extras/storage/graham/snan_gra64/','/home/asus/Dropbox/extras/storage/guillimin/snan_gra64_comparizon/','','',1,2,[0,0,0],[0,0],0.4,'all');
 
 

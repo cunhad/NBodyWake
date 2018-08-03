@@ -11,7 +11,8 @@ test_particle_id=10000;
 
 [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw ] = preprocessing_from_spec( spec);
 
-[ nodes_list redshift_list ] = preprocessing_many_nodes(root,spec,aux_path);
+% [ nodes_list redshift_list ] = preprocessing_many_nodes(root,spec,aux_path);
+[~,redshift_list,nodes_list,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec,aux_path );
 
 wake_displacement=zeros(length(redshift_list),2);
 wake_displacement_zeld=zeros(length(redshift_list),1);

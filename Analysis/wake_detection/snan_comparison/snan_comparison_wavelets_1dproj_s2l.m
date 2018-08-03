@@ -1,4 +1,4 @@
-function [ snan_data_nowake snan_data_wake] = snan_comparison_wavelets_1dproj_s2l(root,root_snan_in,root_snan_comp_out,aux_path_snan_in,aux_path_snan_comp_out,lenght_factor,resol_factor,pivot,NSIDE,part_in,angle_part,angle_p,num_cores,level_window1d,quantity_type,dm_or_dc,dwbasis,n_angles_1d,n_max)
+    function [ snan_data_nowake snan_data_wake] = snan_comparison_wavelets_1dproj_s2l(root,root_snan_in,root_snan_comp_out,aux_path_snan_in,aux_path_snan_comp_out,lenght_factor,resol_factor,pivot,NSIDE,part_in,angle_part,angle_p,num_cores,level_window1d,quantity_type,dm_or_dc,dwbasis,n_angles_1d,n_max)
 
 %reads the data from proj1d_dm_analysis for the signal to noise analysis
 %and creates the corresponding figures
@@ -107,10 +107,10 @@ fig_max_clgposdt=figure;
 sample_id_range=[1 : length(sample_list)];
 
 
-% for sample = 1:length(sample_id_range)
+for sample = 1:length(sample_id_range)
 % for sample = 1:3
-% for sample = 1:6
-for sample = [1,2]    
+% for sample = 1:4
+% for sample = [1,2]    
 % for sample = [1,3]  
 % for sample = 2    
     
@@ -195,9 +195,9 @@ end
     
     sample_id_range=[1 : length(sample_list)];
 
-% for sample = 1:length(sample_id_range)
+for sample = 1:length(sample_id_range)
 % for sample = 1:3
-for sample = [1,2]    
+% for sample = [1,2]    
 % for sample = [1,3]    
 % for sample = 2
 
@@ -284,6 +284,11 @@ legend(ax_max_clgposdt,[p_nw_max{1},p_w_max{1}],leg,'Location','northoutside');
 legend(ax_clgposdt,[p_nw_lv{1},p_w_lv{1}],leg,'Location','northoutside');
 
 set(ax_max_clgposdt,'XTick',[]);
+
+max_nowake
+
+max_wake
+
 
 mean_wake=mean(max_wake)
 mean_nowake=mean(max_nowake)

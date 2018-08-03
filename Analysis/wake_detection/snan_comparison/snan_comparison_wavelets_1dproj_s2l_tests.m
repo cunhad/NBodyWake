@@ -1,10 +1,11 @@
-function [ snan_data_nowake snan_data_wake] = snan_comparison_wavelets_1dproj_spherical(root,root_snan_in,root_snan_comp_out,aux_path_snan_in,aux_path_snan_comp_out,lenght_factor,resol_factor,pivot,NSIDE,part_in,angle_part,angle_p,num_cores,level_window1d,quantity_type,dm_or_dc,dwbasis,n_angles_1d,n_max)
+    function [ snan_data_nowake snan_data_wake] = snan_comparison_wavelets_1dproj_s2l_tests(root,root_snan_in,root_snan_comp_out,aux_path_snan_in,aux_path_snan_comp_out,lenght_factor,resol_factor,pivot,NSIDE,part_in,angle_part,angle_p,num_cores,level_window1d,quantity_type,dm_or_dc,dwbasis,n_angles_1d,n_max)
 
 %reads the data from proj1d_dm_analysis for the signal to noise analysis
 %and creates the corresponding figures
 
-% (example) snan_comparison_wavelets_1dproj_spherical('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_types/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_types_comparizon/','','',2,1,[0,0,0],1024,16,2,8,32,[1],1,1,'sym6',32,3);
-%(example) snan_comparison_wavelets_1dproj_spherical('/home/asus/Dropbox/extras/storage/graham/','/home/asus/Dropbox/extras/storage/graham/snan_gra64/','/home/asus/Dropbox/extras/storage/guillimin/snan_gra64_comparizon/','','',1,2,[0,0,0],[0,0],0.4,'all');
+% (example) snan_comparison_wavelets_1dproj_s2l_tests('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_s2l/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_s2l_comparizon/','','',2,1,[0,0,0],1024,16,2,8,32,[1],1,1,'sym6',32,3);
+% (example) snan_comparison_wavelets_1dproj_s2l_tests('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_types_cic_diff_loc/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_s2l_comparizon/','','',2,1,[0,0,0],1024,16,2,8,32,[1],1,1,'sym6',32,3);
+%(example) snan_comparison_wavelets_1dproj_s2l_tests('/home/asus/Dropbox/extras/storage/graham/','/home/asus/Dropbox/extras/storage/graham/snan_gra64/','/home/asus/Dropbox/extras/storage/guillimin/snan_gra64_comparizon/','','',1,2,[0,0,0],[0,0],0.4,'all');
 
 
 % NBody output should be stored as root+spec+aux_path (root directory, specification in the form size_numberofcellsperdimension_number_particlesperdimension_initialredshift_wakespecification&multiplicity, aux_path is the sample number )
@@ -77,34 +78,24 @@ display(specs_list);
     path_samples_in=strcat(root_snan_in,aux_path_snan_in,spec);
     sample_list=dir(strcat(path_samples_in,'/sample*'));
     sample_list={sample_list.name};
-    sample_list=sort_nat(sample_list);
+    sample_list=sort_nat(sample_list)
     
 %     display(sample_list)
 %     current_path=pwd;
 
-% fig_pk=figure;
-% fig_std=figure;
-% fig_clgposdt=figure;
-% fig_max_clgposdt=figure;
-    fig_pk=figure;
+fig_pk=figure;
+fig_std=figure;
+fig_pkostd=figure;
+fig_clgposdt=figure;
+fig_max_clgposdt=figure;
     set(gcf, 'Position', [0 0 300 800]);
-    fig_mn=figure;
-    set(gcf, 'Position', [0 0 300 800]);
-    fig_std=figure;
-    set(gcf, 'Position', [0 0 300 800]);
-    fig_pkostd=figure;
-    set(gcf, 'Position', [0 0 300 800]);
-    fig_pkaostd=figure;
-    set(gcf, 'Position', [0 0 300 800]);
-    
+
+
     ax_pk=axes(fig_pk);
-    ax_mn=axes(fig_mn);
     ax_std=axes(fig_std);
     ax_pkostd=axes(fig_pkostd);
-    ax_pkaostd=axes(fig_pkaostd);
-
-%     ax_clgposdt=axes(fig_clgposdt);
-%     ax_max_clgposdt=axes(fig_max_clgposdt);
+    ax_clgposdt=axes(fig_clgposdt);   
+    ax_max_clgposdt=axes(fig_max_clgposdt);
     
 
     
@@ -116,47 +107,86 @@ display(specs_list);
 sample_id_range=[1 : length(sample_list)];
 
 
-for sample = 1:length(sample_id_range)
-% for sample = 1:3
-% for sample = [1,3]    
-
-    tot_snan_path_in=strcat(root_snan_in,spec,aux_path_snan_in,'/',char(sample_list(sample)),'/snan/',num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/sym6/level_window1/particle_count/parts/');
+% for sample = 1:length(sample_id_range)
+for sample = [1:7]
+% for sample = 1:4
+% for sample = [1,2]    
+% for sample = [1,3]  
+% for sample = 9
+    
+    tot_snan_path_in=strcat(root_snan_in,spec,aux_path_snan_in,'/',char(sample_list(sample)),'/snan/',num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/sym6/level_window1/particle_count/parts/s2let/')
 %     path_snan_data_in=strcat(tot_snan_path_in);
-    snan_data_in_list=dir(strcat(tot_snan_path_in,'*snan_box_z10_data_info_stat.txt'))
+    snan_data_in_list=dir(strcat(tot_snan_path_in,'*_snan_box_z10_data_table_info.txt'));
     snan_data_in_list={snan_data_in_list.name};
     snan_data_in_list=sort_nat(snan_data_in_list);
-    snan_data_this=snan_data_in_list{1};    
+    snan_data_this=snan_data_in_list{1};
+%     snan_data_in_list=ls(strcat(path_snan_data_in,'*_snan_box_z10_data_table_info.txt'));
+%     %              snan_data_in_list={snan_data_in_list.name};
+%     % filename = fullfile(snan_data_in_list);
+%     %         cd(path_snan_data_in);
+%     
+%     %         snan_data_int=ls(strcat('*_snan_box_z10_data_table_info.txt'));
+%     %
+%     %         data=dlmread(snan_data_int);
+%     %     T = readtable(snan_data_in_list(1:end-1),'Filetype', 'text');
+%     %         T = readtable(snan_data_int(1:end-1),'Filetype', 'text');
+%     
+%     %                      T = readtable(filename)
+
+    
     
     T = readtable(strcat(tot_snan_path_in,snan_data_this),'Filetype', 'text')
     
-    pk=T{:,1};
-    mn=T{:,2};
-    stdev=T{:,3};
+    levels=T{:,1};
+    pk=T{:,2};
+    mn=T{:,3};
+    std_lvs=T{:,4};
     
-    pk_nw{sample}= scatter(ax_pk,1,pk,'b');
-    hold(ax_pk,'on');    
     
-    mn_nw{sample}= scatter(ax_mn,1,mn,'b');
-    hold(ax_mn,'on');
-    
-    std_nw{sample}= scatter(ax_std,1,stdev,'b');
-    hold(ax_std,'on');
-    
-    pkostd_nw{sample}= scatter(ax_pkostd,1,pk/stdev,'b');
-    hold(ax_pkostd,'on');
-    
-    pkaostd_nw{sample}= scatter(ax_pkaostd,1,(pk-mn)/stdev,'b');
-    hold(ax_pkaostd,'on');
+%     ax_pk=axes(fig_pk);
+    plot(ax_pk,levels,pk,'b');
+            hold(ax_pk,'on');
 
     
-    pk_nowake(sample)=pk;
-    mn_nowake(sample)=mn;
-    stdev_nowake(sample)=stdev;
-    pkostd_nowake(sample)=pk/stdev;
-    pkaostd_nowake(sample)=(pk-mn)/stdev;
-
-    %     end
-
+%     ax_std=axes(fig_std);
+    plot(ax_std,levels,std_lvs,'b');
+            hold(ax_std,'on');
+            
+    plot(ax_pkostd,levels,pk./std_lvs,'b');
+            hold(ax_pkostd,'on');
+    
+%     ax_clgposdt=axes(fig_clgposdt);
+    
+    cumulative_level_gain_postd(1,1)=1;
+    
+    for level_id=2:length(levels)
+        cumulative_level_gain_postd(1,level_id)=(pk(level_id)/std_lvs(level_id))/((pk(level_id-1)/std_lvs(level_id-1)));
+    end
+    
+%     if sample==1
+%     plot(ax_clgposdt,levels,cumulative_level_gain_postd,'b','DisplayName','wake');
+%     hold(ax_clgposdt,'on');
+%     
+%     scatter(ax_max_clgposdt,1,max(cumulative_level_gain_postd),'b','DisplayName','wake');
+%     hold(ax_max_clgposdt,'on');
+%     else
+       
+    p_nw_lv{sample}=   plot(ax_clgposdt,levels,cumulative_level_gain_postd,'b');
+    hold(ax_clgposdt,'on');
+    
+    p_nw_max{sample}= scatter(ax_max_clgposdt,1,max(cumulative_level_gain_postd),'b');
+    hold(ax_max_clgposdt,'on');
+    
+    max_nowake(sample)=max(cumulative_level_gain_postd);
+    
+    
+    
+    nowake(sample)=pk(2)*pk(3)*pk(4)*pk(5)*pk(6)*pk(7)*pk(8)*pk(9)*pk(10)*pk(11)*pk(12)/(std_lvs(2)*std_lvs(3)*std_lvs(4)*std_lvs(5)*std_lvs(6)*std_lvs(7)*std_lvs(8)*std_lvs(9)*std_lvs(10)*std_lvs(11)*std_lvs(12));
+    
+    
+%     wake
+        
+%     end
     
     
     %     hold on;
@@ -174,11 +204,13 @@ end
 
 for sample = 1:length(sample_id_range)
 % for sample = 1:3
+% for sample = [1,2]    
 % for sample = [1,3]    
+% for sample = 2
 
-    tot_snan_path_in=strcat(root_snan_in,spec,aux_path_snan_in,'/',char(sample_list(sample)),'/snan/',num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/sym6/level_window1/particle_count/parts/');
+    tot_snan_path_in=strcat(root_snan_in,spec,aux_path_snan_in,'/',char(sample_list(sample)),'/snan/',num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv/','box/dm/sym6/level_window1/particle_count/parts/s2let/');
 %     path_snan_data_in=strcat(tot_snan_path_in);
-    snan_data_in_list=dir(strcat(tot_snan_path_in,'*snan_box_z10_data_info_stat.txt'))
+    snan_data_in_list=dir(strcat(tot_snan_path_in,'*_snan_box_z10_data_table_info.txt'))
     snan_data_in_list={snan_data_in_list.name};
     snan_data_in_list=sort_nat(snan_data_in_list);
     snan_data_this=snan_data_in_list{1};
@@ -199,30 +231,43 @@ for sample = 1:length(sample_id_range)
     
     T = readtable(strcat(tot_snan_path_in,snan_data_this),'Filetype', 'text');
     
-    pk=T{:,1};
-    mn=T{:,2};
-    stdev=T{:,3};
+    levels=T{:,1};
+    pk=T{:,2};
+    mn=T{:,3};
+    std_lvs=T{:,4};
     
-    pk_w{sample}= scatter(ax_pk,1,pk,'r');
-    hold(ax_pk,'on');
     
-    mn_w{sample}= scatter(ax_mn,1,mn,'r');
-    hold(ax_mn,'on');
+%     ax_pk=axes(fig_pk);
+    plot(ax_pk,levels,pk,'r');
+            hold(ax_pk,'on');
+
     
-    std_w{sample}= scatter(ax_std,1,stdev,'r');
-    hold(ax_std,'on');    
+%     ax_std=axes(fig_std);
+    plot(ax_std,levels,std_lvs,'r');
+            hold(ax_std,'on');
+            
+    plot(ax_pkostd,levels,pk./std_lvs,'r');
+            hold(ax_pkostd,'on');
     
-    pkostd_w{sample}= scatter(ax_pkostd,1,pk/stdev,'r');
-    hold(ax_pkostd,'on');
+%     ax_clgposdt=axes(fig_clgposdt);
     
-    pkaostd_w{sample}= scatter(ax_pkaostd,1,(pk-mn)/stdev,'r');
-    hold(ax_pkaostd,'on');
+    cumulative_level_gain_postd(1,1)=1;
     
-    pk_wake(sample)=pk;
-    mn_wake(sample)=mn;
-    std_wake(sample)=stdev;
-    pkostd_wake(sample)=pk/stdev;
-    pkaostd_wake(sample)=(pk-mn)/stdev;
+    for level_id=2:length(levels)
+        cumulative_level_gain_postd(1,level_id)=(pk(level_id)/std_lvs(level_id))/((pk(level_id-1)/std_lvs(level_id-1)));
+    end
+    
+    p_w_lv{sample}=   plot(ax_clgposdt,levels,cumulative_level_gain_postd,'r');
+    hold(ax_clgposdt,'on');
+    
+    p_w_max{sample}=   scatter(ax_max_clgposdt,1,max(cumulative_level_gain_postd),'r');
+    hold(ax_max_clgposdt,'on');
+    
+    
+    %     hold on;
+    max_wake(sample)=max(cumulative_level_gain_postd);
+    
+    wake(sample)=pk(2)*pk(3)*pk(4)*pk(5)*pk(6)*pk(7)*pk(8)*pk(9)*pk(10)*pk(11)*pk(12)/(std_lvs(2)*std_lvs(3)*std_lvs(4)*std_lvs(5)*std_lvs(6)*std_lvs(7)*std_lvs(8)*std_lvs(9)*std_lvs(10)*std_lvs(11)*std_lvs(12));
     
 end
     
@@ -243,37 +288,30 @@ for j=1:length(test)
     leg{j}=(strcat('G\mu =',num2str(Gmu)));
 end
 
-legend(ax_pk,[pk_nw{1},pk_w{1}],leg,'Location','northoutside');   
-set(ax_pk,'XTick',[]);
+legend(ax_max_clgposdt,[p_nw_max{1},p_w_max{1}],leg,'Location','northoutside');
+    
+legend(ax_clgposdt,[p_nw_lv{1},p_w_lv{1}],leg,'Location','northoutside');
 
-legend(ax_mn,[mn_nw{1},mn_w{1}],leg,'Location','northoutside');   
-set(ax_mn,'XTick',[]);
+set(ax_max_clgposdt,'XTick',[]);
 
-legend(ax_std,[std_nw{1},std_w{1}],leg,'Location','northoutside');   
-set(ax_std,'XTick',[]);
+max_nowake
 
-legend(ax_pkostd,[pkostd_nw{1},pkostd_w{1}],leg,'Location','northoutside');   
-set(ax_pkostd,'XTick',[]);
-
-legend(ax_pkaostd,[pkaostd_nw{1},pkaostd_w{1}],leg,'Location','northoutside');   
-set(ax_pkaostd,'XTick',[]);
-
-wake=pk_wake;
-nowake=pk_nowake;
+max_wake
 
 
-mean_wake=mean(wake)
-mean_nowake=mean(nowake)
-std_nowake=std(nowake,1)
-stn_wake=(wake-mean_nowake)/std_nowake
+mean_wake=mean(max_wake)
+mean_nowake=mean(max_nowake)
+std_nowake=std(max_nowake,1)
+stn_wake=(max_wake-mean_nowake)/std_nowake
 mean_stn=mean(stn_wake)
 std_stn=std(stn_wake,1)
 
-
 mean_stn-std_stn
 
-wake=pkostd_wake;
-nowake=pkostd_nowake;
+
+nowake
+
+wake
 
 
 mean_wake=mean(wake)
