@@ -1,8 +1,16 @@
-function [ test_particle_displacement ] = displacement_evol_mem( root,root_data_out,root_plot_out,spec,aux_path )
+function [ test_particle_displacement ] = displacement_evol_mem_par( root,root_data_out,root_plot_out,spec,aux_path,num_cores)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
-% (example) []=displacement_evol_mem( '/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/')
+% (example) []=displacement_evol_mem_par( '/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/',4)
+
+myCluster = parcluster('local');
+myCluster.NumWorkers=num_cores;
+saveProfile(myCluster);
+
+p = parpool(num_cores);
+
+addpath(genpath('../../processing/'));
 
 
 % mkdir(strcat(root_out))
@@ -28,22 +36,11 @@ for rds=1:length(redshift_list)
     filename_out=strcat(root_data_out,spec,aux_path,'check/displ/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_Check_Zel_pos_z',char(redshift_list(rds)),'.dat');
     fid = fopen(filename_out,'w');
     for partic=1:tnp
-        fwrite(fid,[-1,-1,0],'float32','l');        
+        fid_=fid;
+        fwrite(fid_,[-1,-1,0],'float32','l');        
     end
     fclose(fid);
 end
-
-% 
-% for rds=1:length(redshift_list)
-% 
-%     filename_out=strcat(root_data_out,spec,aux_path,'check/displ/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_Check_Zel_pos_z',char(redshift_list(rds)),'.dat');
-%     fid = fopen(filename_out,'w');
-%     for node=1:length(nodes_list)
-%         fwrite(fid,zeros(3,tnp/length(nodes_list)),'float32','l');        
-%     end
-%     fclose(fid);
-% end
-
 
 %stores the z positions of the particles for the no wake case
 
@@ -79,7 +76,7 @@ for rds=1:length(redshift_list)
         
         filename_out=strcat(root_data_out,spec,aux_path,'check/displ/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_Check_Zel_pos_z',char(redshift_list(rds)),'.dat');
         fid = fopen(filename_out,'r+');
-        for partic=1:length(part_id)
+        parfor partic=1:length(part_id)
             fseek(fid,(3*(part_id(partic)-1)*4),'bof');
             fwrite(fid,pos_z(partic),'float32','l');        
         end
@@ -120,7 +117,7 @@ for rds=1:length(redshift_list)
         
         filename_out=strcat(root_data_out,spec,aux_path,'check/displ/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_Check_Zel_pos_z',char(redshift_list(rds)),'.dat');
         fid = fopen(filename_out,'r+');
-        for partic=1:length(part_id)
+        parfor partic=1:length(part_id)
 %             fseek(fid,((3*(part_id(partic)-1)+1)*4),'bof');
 %             fwrite(fid,pos_z(partic),'float32','l');        
             fseek(fid,((3*(part_id(partic)-1))*4),'bof');
