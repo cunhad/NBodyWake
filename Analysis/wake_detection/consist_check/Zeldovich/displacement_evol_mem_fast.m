@@ -125,7 +125,7 @@ for rds=1:length(redshift_list)
         for idx=1:length(sorted_w_(:))
             
             part_id_w=sorted_w_(idx);  %which particle
-            part_z_nw=sorted_pos_z(find(sorted_w_(idx)==sorted_)); %its z position in the no wake case
+            part_z_nw=sorted_pos_z(find(sorted_w_(idx)==sorted_,1)); %its z position in the no wake case
             part_z_w=sorted_pos_z_w(idx);                           %its z position in the wake case
             if ~isempty(part_z_nw)
                 part_id_list_w=[ part_id_list_w part_id_w ];

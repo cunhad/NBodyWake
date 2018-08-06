@@ -126,14 +126,14 @@ for rds=1:length(redshift_list)
         
 %         displacement=pid_posZ_w(:,2)-pid_posZ(find(sorted_w_(:)==sorted_),2);
 
-        lent_out=length(find(sorted_w_(:)==sorted_));
+        lent_out=length(find(sorted_w_(:)==sorted_,1));
         part_id_list_w=zeros(1,lent_out);
         pos_z_w_list=zeros(1,lent_out);
         displac_list=zeros(1,lent_out);
         parfor idx=1:length(sorted_w_(:))
             
             part_id_w=sorted_w_(idx);  %which particle
-            part_z_nw=sorted_pos_z(find(sorted_w_(idx)==sorted_)); %its z position in the no wake case
+            part_z_nw=sorted_pos_z(find(sorted_w_(idx)==sorted_,1)); %its z position in the no wake case
             part_z_w=sorted_pos_z_w(idx);                           %its z position in the wake case
             if ~isempty(part_z_nw)
                 part_id_list_w(1,idx)= part_id_w ;
