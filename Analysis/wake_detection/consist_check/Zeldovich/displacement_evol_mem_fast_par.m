@@ -69,12 +69,10 @@ for rds=1:length(redshift_list)
     
     number_node_dim=nthroot(numel(nodes_list), 3);
     
-    filename_out=strcat(root_data_out,spec,aux_path,'check/displ/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_Check_Zel_wpid_posZ_displ_z',char(redshift_list(rds)),'.dat');
-    fid_o = fopen(filename_out,'w');
-%             h=[];
-%             displ_tot=[];
+    parfor node=1:length(nodes_list)
 
-    for node=1:length(nodes_list)
+	filename_out=strcat(root_data_out,spec,aux_path,'check/displ/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_node',char(nodes_list(node)),'_Check_Zel_wpid_posZ_displ_z',char(redshift_list(rds)),'.dat');
+    fid_o = fopen(filename_out,'w');
         
         filename=strcat(root,spec_nowake,aux_path,char(redshift_list(rds)),'xv',char(nodes_list(node)),'.dat');
         fid = fopen(filename);
@@ -126,43 +124,18 @@ for rds=1:length(redshift_list)
         
 %         displacement=pid_posZ_w(:,2)-pid_posZ(find(sorted_w_(:)==sorted_),2);
 
-        lent_out=length(find(sorted_w_(:)==sorted_,1));
-        part_id_list_w=zeros(1,lent_out);
-        pos_z_w_list=zeros(1,lent_out);
-        displac_list=zeros(1,lent_out);
-        parfor idx=1:length(sorted_w_(:))
-            
-            part_id_w=sorted_w_(idx);  %which particle
-            part_z_nw=sorted_pos_z(find(sorted_w_(idx)==sorted_,1)); %its z position in the no wake case
-            part_z_w=sorted_pos_z_w(idx);                           %its z position in the wake case
-            if ~isempty(part_z_nw)
-                part_id_list_w(1,idx)= part_id_w ;
-                pos_z_w_list(1,idx) =  part_z_w ;
-                
-                if (part_z_w-part_z_nw)>nc/2
-                    displac_list(1,idx)= part_z_w-part_z_nw-nc;
-                elseif  (part_z_w-part_z_nw)<-nc/2
-                    displac_list(1,idx)= part_z_w-part_z_nw+nc;
-                else
-                    displac_list(1,idx)= part_z_w-part_z_nw;
-                end
-                
-            end
-            
-        end
+%         lent_out=length(find(sorted_w_(:)==sorted_));
+        [comom_ID,com_id_w,com_id_nw]=intersect(sorted_w_,sorted_);
+        part_z_nw=sorted_pos_z(com_id_nw);
+        part_z_w=sorted_pos_z_w(com_id_w);
+        displac_list=part_z_w-part_z_nw;
+        displac_list(displac_list>nc/2)=displac_list(displac_list>nc/2)-nc;
+        displac_list(displac_list<-nc/2)=displac_list(displac_list<-nc/2)+nc;
         
-%         displ_tot=[displ_tot displac_list];
-        
-%         if node==1
-%             h=hist(displac_list*size_box/nc,nc);
-%         else
-%             h=h+hist(displac_list*size_box/nc,nc);                
-%         end
-        
-        fwrite(fid_o,[part_id_list_w;pos_z_w_list;displac_list],'float32','l');
-        
+        fwrite(fid_o,[comom_ID;part_z_w;displac_list],'float32','l');
+    fclose(fid_o);        
     end
-    fclose(fid_o);
+
 end
 
 
@@ -173,7 +146,7 @@ cd('../wake_detection/consist_check/Zeldovich/')
 
 
 for rds=1:length(redshift_list)
-    filename_out=strcat(root_data_out,spec,aux_path,'check/displ/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_Check_Zel_wpid_posZ_displ_z',char(redshift_list(rds)),'.dat');
+    filename_out=cellstr(strcat(root_data_out,spec,aux_path,'check/displ/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_node',char(nodes_list),'_Check_Zel_wpid_posZ_displ_z',char(redshift_list(rds)),'.dat'));
     pos_diff_ds = fileDatastore(filename_out,'ReadFcn',@read_bin,'FileExtensions','.dat');
     pos_diff=cell2mat(tall(pos_diff_ds));
     

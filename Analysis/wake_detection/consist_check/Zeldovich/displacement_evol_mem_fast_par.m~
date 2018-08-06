@@ -2,7 +2,7 @@ function [  ] = displacement_evol_mem_fast_par( root,root_data_out,root_plot_out
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
-% (example) []=displacement_evol_mem_fast_par( '/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/')
+% (example) []=displacement_evol_mem_fast_par( '/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/',4)
 
 
 myCluster = parcluster('local');
@@ -125,24 +125,31 @@ for rds=1:length(redshift_list)
 %         find(sorted_w_(:)==sorted_
         
 %         displacement=pid_posZ_w(:,2)-pid_posZ(find(sorted_w_(:)==sorted_),2);
-        part_id_list_w=[];
-        pos_z_w_list=[];
-        displac_list=[];
-        for idx=1:length(sorted_w_(:))
+
+%         lent_out=length(find(sorted_w_(:)==sorted_));
+        [comom_ID,com_id_w,com_id_nw]=intersect(sorted_w_,sorted_);
+        part_z_nw=sorted_pos_z(com_id_nw);
+        part_z_w=sorted_pos_z_w(com_id_w);
+        displac_list=part_z_w-part_z_nw;
+        displac_list(displac_list>nc/2)=displac_list(displac_list>nc/2)-nc;
+        displac_list(displac_list<-nc/2)=displac_list(displac_list>nc/2)-nc;
+        
+        displac_list=zeros(1,lent_out);
+        parfor idx=1:length(sorted_w_(:))
             
             part_id_w=sorted_w_(idx);  %which particle
             part_z_nw=sorted_pos_z(find(sorted_w_(idx)==sorted_)); %its z position in the no wake case
             part_z_w=sorted_pos_z_w(idx);                           %its z position in the wake case
             if ~isempty(part_z_nw)
-                part_id_list_w=[ part_id_list_w part_id_w ];
-                pos_z_w_list = [ pos_z_w_list part_z_w ];
+                part_id_list_w(1,idx)= part_id_w ;
+                pos_z_w_list(1,idx) =  part_z_w ;
                 
                 if (part_z_w-part_z_nw)>nc/2
-                    displac_list=[displac_list part_z_w-part_z_nw-nc];
+                    displac_list(1,idx)= part_z_w-part_z_nw-nc;
                 elseif  (part_z_w-part_z_nw)<-nc/2
-                    displac_list=[displac_list part_z_w-part_z_nw+nc];
+                    displac_list(1,idx)= part_z_w-part_z_nw+nc;
                 else
-                    displac_list=[displac_list part_z_w-part_z_nw];
+                    displac_list(1,idx)= part_z_w-part_z_nw;
                 end
                 
             end
@@ -267,5 +274,6 @@ hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,'check/displ/','_Check_Zel','.png'));
 
+delete(gcp('nocreate'))
 
 end

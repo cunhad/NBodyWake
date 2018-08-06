@@ -35,7 +35,7 @@ for rds=1:length(redshift_list)
 
     filename_out=strcat(root_data_out,spec,aux_path,'check/displ/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_Check_Zel_pos_z',char(redshift_list(rds)),'.dat');
     fid = fopen(filename_out,'w');
-    for partic=1:tnp
+    parfor partic=1:tnp
         fid_=fid;
         fwrite(fid_,[-1,-1,0],'float32','l');        
     end
