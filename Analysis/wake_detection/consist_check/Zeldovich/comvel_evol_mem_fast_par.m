@@ -54,7 +54,10 @@ end
 
 % mkdir(strcat(root_out))
 mkdir(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/'))
+mkdir(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/half/'))
+
 mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/'))
+mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/'))
 
 cd('../../../preprocessing')
 
@@ -114,19 +117,22 @@ spec_nowake=strcat(string(size_box),'Mpc_',string(nc),'c_',string(np),'p_zi',str
 for rds=1:length(redshift_list)
     % for rds=5:5
     
-%     pos_z=[];
-%     part_id=[];
+    %     pos_z=[];
+    %     part_id=[];
     
     number_node_dim=nthroot(numel(nodes_list), 3);
     
     TimConv=(3*((1+str2double(redshift_list(rds)))^(2))*Hzero*(OmegaM^1/2))/2;  %Convert time in simulation units to seconds
     
     parfor node=1:length(nodes_list)
-
-	filename_out=strcat(root_data_out,spec,aux_path,type_folder,'check/vel/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_node',char(nodes_list(node)),'_Check_Zel_wpid_posZ_vel_z',char(redshift_list(rds)),'.dat');
-    fid_o = fopen(filename_out,'w');
         
-%         display(strcat(root,spec_nowake,aux_path,char(redshift_list(rds)),'xv',char(nodes_list(node)),'.dat'))
+        filename_out=strcat(root_data_out,spec,aux_path,type_folder,'check/vel/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_node',char(nodes_list(node)),'_Check_Zel_wpid_posZ_vel_z',char(redshift_list(rds)),'.dat');
+        fid_o = fopen(filename_out,'w');
+        
+        filename_out_half=strcat(root_data_out,spec,aux_path,type_folder,'check/vel/half/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_node',char(nodes_list(node)),'_Check_Zel_wpid_half_posZ_vel_z',char(redshift_list(rds)),'.dat');
+        fid_o_half = fopen(filename_out_half,'w');
+        
+        %         display(strcat(root,spec_nowake,aux_path,char(redshift_list(rds)),'xv',char(nodes_list(node)),'.dat'))
         filename=strcat(root,spec_nowake,aux_path,char(redshift_list(rds)),'xv',char(nodes_list(node)),'.dat');
         fid = fopen(filename);
         fread(fid, [12 1], 'float32','l') ;
@@ -148,7 +154,7 @@ for rds=1:length(redshift_list)
         
         [sorted_ sort_inx]=sort(part_id);
         sorted_vel_z=vel_z(sort_inx);
-%         pid_posZ=[part_id(sort_inx);pos_z(sort_inx)];                
+        %         pid_posZ=[part_id(sort_inx);pos_z(sort_inx)];
         
         
         %now with wake
@@ -162,7 +168,7 @@ for rds=1:length(redshift_list)
         node_ID=node-1;
         k_node=floor(node_ID/number_node_dim^2);
         
-        pos_z=xv(3,:)+(nc/number_node_dim)*k_node;                
+        pos_z=xv(3,:)+(nc/number_node_dim)*k_node;
         vel_z=xv(6,:)/(LinConv/TimConv);
         
         particle_ID_cat=strcat(root,spec,aux_path,type_folder,char(redshift_list(rds)),'PID',char(nodes_list(node)),'.dat');
@@ -170,31 +176,43 @@ for rds=1:length(redshift_list)
         fread(fid,6,'int64');
         part_id=fread(fid,[1 Inf],'int64');
         fclose(fid);
-
+        
         [sorted_w_ sort_inx]=sort(part_id);
         sorted_pos_z_w=pos_z(sort_inx);
         sorted_vel_z_w=vel_z(sort_inx);
         
-%         pid_posZ_w=[part_id(sort_inx);pos_z(sort_inx)];  
+        %         pid_posZ_w=[part_id(sort_inx);pos_z(sort_inx)];
         
         
-%         find(sorted_w_(:)==sorted_
+        %         find(sorted_w_(:)==sorted_
         
-%         displacement=pid_posZ_w(:,2)-pid_posZ(find(sorted_w_(:)==sorted_),2);
-
-%         lent_out=length(find(sorted_w_(:)==sorted_));
+        %         displacement=pid_posZ_w(:,2)-pid_posZ(find(sorted_w_(:)==sorted_),2);
+        
+        %         lent_out=length(find(sorted_w_(:)==sorted_));
         [comom_ID,com_id_w,com_id_nw]=intersect(sorted_w_,sorted_);
         pos_list_z_w=sorted_pos_z_w(com_id_w);
         part_z_nw=sorted_vel_z(com_id_nw);
         part_z_w=sorted_vel_z_w(com_id_w);
         vel_list=part_z_w-part_z_nw;
-%         displac_list(displac_list>nc/2)=displac_list(displac_list>nc/2)-nc;
-%         displac_list(displac_list<-nc/2)=displac_list(displac_list<-nc/2)+nc;
+        %         displac_list(displac_list>nc/2)=displac_list(displac_list>nc/2)-nc;
+        %         displac_list(displac_list<-nc/2)=displac_list(displac_list<-nc/2)+nc;
+        
+        comom_ID_half=comom_ID(pos_list_z_w>nc/4&pos_list_z_w<3*nc/4);
+        pos_list_z_w_half=pos_list_z_w(pos_list_z_w>nc/4&pos_list_z_w<3*nc/4);
+        vel_list_half=vel_list(pos_list_z_w>nc/4&pos_list_z_w<3*nc/4);
+        
+        comom_ID_half=[comom_ID_half 0];
+        pos_list_z_w_half=[pos_list_z_w_half nc/2];
+        vel_list_half=[vel_list_half 0];
         
         fwrite(fid_o,[comom_ID;pos_list_z_w;vel_list],'float32','l');
-    fclose(fid_o);        
+        fclose(fid_o);
+        
+        fwrite(fid_o_half,[comom_ID_half;pos_list_z_w_half;vel_list_half],'float32','l');
+        fclose(fid_o_half);
+        
     end
-
+    
 end
 
 
@@ -229,6 +247,35 @@ for rds=1:length(redshift_list)
     
 end
 
+%         filename_out_half=strcat(root_data_out,spec,aux_path,type_folder,'check/vel/half/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_node',char(nodes_list(node)),'_Check_Zel_wpid_half_posZ_vel_z',char(redshift_list(rds)),'.dat');
+
+
+for rds=1:length(redshift_list)
+    filename_out=cellstr(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/half/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_node',char(nodes_list),'_Check_Zel_wpid_half_posZ_vel_z',char(redshift_list(rds)),'.dat'));
+    vel_diff_ds = fileDatastore(filename_out,'ReadFcn',@read_bin,'FileExtensions','.dat');
+    vel_diff=cell2mat(tall(vel_diff_ds));
+    
+    fig=figure('Visible', 'off');
+    histogram2(mod(vel_diff(:,2),nc)*size_box/nc,vel_diff(:,3)*10^17,nc/2,'DisplayStyle','tile','ShowEmptyBins','on');
+    mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half'));
+    saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_vel_z',char(redshift_list(rds)),'_plot.png'));
+    
+    fig=figure('Visible', 'off');
+    h=histogram(vel_diff(:,3)*10^17);
+    mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/hist/'));    
+    saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/hist/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_vel_z',char(redshift_list(rds)),'_plot.png'));
+
+    half_posit_values=vel_diff(vel_diff(:,3)>0,3);
+    half_mn_pos(rds)=gather(mean(half_posit_values));
+    half_std_pos(rds)=gather(std(half_posit_values,1));
+    
+    half_negat_values=vel_diff(vel_diff(:,3)<0,3);
+    half_mn_neg(rds)=gather(mean(half_negat_values));
+    half_std_neg(rds)=gather(std(half_negat_values,1));
+    
+end
+
+
 cd('../../../../parameters')
     
 for rds=1:length(redshift_list)    
@@ -250,7 +297,7 @@ plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
 
 xlim ([-inf inf]);
 xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
-ylabel('Velocity ((Mpc/h)/s)*10^17', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('Velocity ((Mpc/h)/s)*10^-17', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
 set(gca,'linewidth',2);
@@ -270,7 +317,7 @@ plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
 
 xlim ([-inf inf]);
 xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
-ylabel('Velocity ((Mpc/h)/s)*10^17', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('Velocity ((Mpc/h)/s)*10^-17', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
 set(gca,'linewidth',2);
@@ -291,7 +338,7 @@ plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
 
 xlim ([-inf inf]);
 xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
-ylabel('Velocity ((Mpc/h)/s)*10^17', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('Velocity ((Mpc/h)/s)*10^-17', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
 set(gca,'linewidth',2);
@@ -300,6 +347,72 @@ legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/','_Check_vel_Zel','.png'));
+
+
+%same for half plot
+
+%plot positive values
+
+fig=figure('Visible', 'off');
+% fig=figure;
+errorbar((str2num(char(redshift_list))+1).^-1,half_mn_pos*10^17,half_std_pos*10^17)
+hold on
+plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
+
+xlim ([-inf inf]);
+xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('Velocity ((Mpc/h)/s)*10^-17', 'interpreter', 'latex', 'fontsize', 20);
+set(gca,'FontName','FixedWidth');
+set(gca,'FontSize',16);
+set(gca,'linewidth',2);
+title({strcat('Velocity comparizon: positive')},'interpreter', 'latex', 'fontsize', 20);
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
+hold off;
+
+saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/','_Check_vel_Zel_pos','.png'));
+
+%plot negative values
+
+fig=figure('Visible', 'off');
+% fig=figure;
+errorbar((str2num(char(redshift_list))+1).^-1,abs(half_mn_neg)*10^17,half_std_neg*10^17)
+hold on
+plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
+
+xlim ([-inf inf]);
+xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('Velocity ((Mpc/h)/s)*10^-17', 'interpreter', 'latex', 'fontsize', 20);
+set(gca,'FontName','FixedWidth');
+set(gca,'FontSize',16);
+set(gca,'linewidth',2);
+title({strcat('Velocity comparizon: negative')},'interpreter', 'latex', 'fontsize', 20);
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
+hold off;
+
+saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/','_Check_vel_Zel_neg','.png'));
+
+
+%plot total values
+
+fig=figure('Visible', 'off');
+% fig=figure;
+errorbar((str2num(char(redshift_list))+1).^-1,((half_mn_pos+abs(half_mn_neg))/2)*10^17,((half_std_pos+half_std_neg)/2)*10^17)
+hold on
+plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
+
+xlim ([-inf inf]);
+xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('Velocity ((Mpc/h)/s)*10^-17', 'interpreter', 'latex', 'fontsize', 20);
+set(gca,'FontName','FixedWidth');
+set(gca,'FontSize',16);
+set(gca,'linewidth',2);
+title({strcat('Velocity comparizon')},'interpreter', 'latex', 'fontsize', 20);
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
+hold off;
+
+saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/','_Check_vel_Zel','.png'));
+
+
 
 delete(gcp('nocreate'))
 

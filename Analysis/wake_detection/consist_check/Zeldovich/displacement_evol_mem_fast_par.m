@@ -54,7 +54,10 @@ end
 
 % mkdir(strcat(root_out))
 mkdir(strcat(root_data_out,spec,aux_path,type_folder,'check/displ/'))
+mkdir(strcat(root_data_out,spec,aux_path,type_folder,'check/displ/half/'))
+
 mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/'))
+mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/'))
 
 cd('../../../preprocessing')
 
@@ -114,6 +117,9 @@ for rds=1:length(redshift_list)
 
 	filename_out=strcat(root_data_out,spec,aux_path,type_folder,'check/displ/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_node',char(nodes_list(node)),'_Check_Zel_wpid_posZ_displ_z',char(redshift_list(rds)),'.dat');
     fid_o = fopen(filename_out,'w');
+    
+    filename_out_half=strcat(root_data_out,spec,aux_path,type_folder,'check/displ/half/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_node',char(nodes_list(node)),'_Check_Zel_wpid_half_posZ_displ_z',char(redshift_list(rds)),'.dat');
+    fid_o_half = fopen(filename_out_half,'w');
         
         filename=strcat(root,spec_nowake,aux_path,char(redshift_list(rds)),'xv',char(nodes_list(node)),'.dat');
         fid = fopen(filename);
@@ -174,7 +180,20 @@ for rds=1:length(redshift_list)
         displac_list(displac_list<-nc/2)=displac_list(displac_list<-nc/2)+nc;
         
         fwrite(fid_o,[comom_ID;part_z_w;displac_list],'float32','l');
-    fclose(fid_o);        
+    fclose(fid_o);  
+    
+        comom_ID_half=comom_ID(part_z_w>nc/4&part_z_w<3*nc/4);
+        part_z_w_half=part_z_w(part_z_w>nc/4&part_z_w<3*nc/4);
+        displac_list_half=displac_list(part_z_w>nc/4&part_z_w<3*nc/4);
+        
+        comom_ID_half=[comom_ID_half 0];
+        part_z_w_half=[part_z_w_half nc/2];
+        displac_list_half=[displac_list_half 0];
+        
+        
+        fwrite(fid_o_half,[comom_ID_half;part_z_w_half;displac_list_half],'float32','l');
+        fclose(fid_o_half);
+    
     end
 
 end
@@ -208,6 +227,31 @@ for rds=1:length(redshift_list)
     negat_values=pos_diff(pos_diff(:,3)<0,3);
     mn_neg(rds)=gather(mean(negat_values));
     std_neg(rds)=gather(std(negat_values,1));
+    
+end
+
+for rds=1:length(redshift_list)
+    filename_out=cellstr(strcat(root_data_out,spec,aux_path,type_folder,'check/displ/half/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_node',char(nodes_list),'_Check_Zel_wpid_half_posZ_displ_z',char(redshift_list(rds)),'.dat'));
+    pos_diff_ds = fileDatastore(filename_out,'ReadFcn',@read_bin,'FileExtensions','.dat');
+    pos_diff=cell2mat(tall(pos_diff_ds));
+    
+    fig=figure('Visible', 'off');
+    histogram2(mod(pos_diff(:,2),nc)*size_box/nc,pos_diff(:,3)*size_box/nc,nc/2,'DisplayStyle','tile','ShowEmptyBins','on');
+    mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/'));
+    saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_displacement_z',char(redshift_list(rds)),'_plot.png'));
+    
+    fig=figure('Visible', 'off');
+    h=histogram(pos_diff(:,3)*size_box/nc);
+    mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/hist/'));    
+    saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/hist/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_displacement_z',char(redshift_list(rds)),'_plot.png'));
+
+    half_posit_values=pos_diff(pos_diff(:,3)>0,3);
+    half_mn_pos(rds)=gather(mean(half_posit_values));
+    half_std_pos(rds)=gather(std(half_posit_values,1));
+    
+    half_negat_values=pos_diff(pos_diff(:,3)<0,3);
+    half_mn_neg(rds)=gather(mean(half_negat_values));
+    half_std_neg(rds)=gather(std(half_negat_values,1));
     
 end
 
@@ -282,6 +326,73 @@ legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/','_Check_Zel','.png'));
+
+
+
+%do the same with the half_box
+
+%plot positive values
+
+fig=figure('Visible', 'off');
+% fig=figure;
+errorbar((str2num(char(redshift_list))+1).^-1,half_mn_pos*size_box/nc,half_std_pos*size_box/nc)
+hold on
+plot((str2num(char(redshift_list))+1).^-1,wake_displacement_zeld)
+
+xlim ([-inf inf]);
+xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('Displacement (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+set(gca,'FontName','FixedWidth');
+set(gca,'FontSize',16);
+set(gca,'linewidth',2);
+title({strcat('Displacement comparizon: positive')},'interpreter', 'latex', 'fontsize', 20);
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
+hold off;
+
+saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/','_Check_Zel_pos','.png'));
+
+%plot negative values
+
+fig=figure('Visible', 'off');
+% fig=figure;
+errorbar((str2num(char(redshift_list))+1).^-1,abs(half_mn_neg)*size_box/nc,half_std_neg*size_box/nc)
+hold on
+plot((str2num(char(redshift_list))+1).^-1,wake_displacement_zeld)
+
+xlim ([-inf inf]);
+xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('Displacement (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+set(gca,'FontName','FixedWidth');
+set(gca,'FontSize',16);
+set(gca,'linewidth',2);
+title({strcat('Displacement comparizon: negative')},'interpreter', 'latex', 'fontsize', 20);
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
+hold off;
+
+saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/','_Check_Zel_neg','.png'));
+
+
+%plot total values
+
+fig=figure('Visible', 'off');
+% fig=figure;
+errorbar((str2num(char(redshift_list))+1).^-1,((half_mn_pos+abs(half_mn_neg))/2)*size_box/nc,((half_std_pos+half_std_neg)/2)*size_box/nc)
+hold on
+plot((str2num(char(redshift_list))+1).^-1,wake_displacement_zeld)
+
+xlim ([-inf inf]);
+xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('Displacement (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+set(gca,'FontName','FixedWidth');
+set(gca,'FontSize',16);
+set(gca,'linewidth',2);
+title({strcat('Displacement comparizon')},'interpreter', 'latex', 'fontsize', 20);
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
+hold off;
+
+saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/','_Check_Zel','.png'));
+
+
 
 delete(gcp('nocreate'))
 
