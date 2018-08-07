@@ -1,8 +1,9 @@
-function [  ] = displacement_evol_mem_fast_par( root,root_data_out,root_plot_out,spec,aux_path,num_cores)
+function [  ] = displacement_evol_mem_fast_par( root,root_data_out,root_plot_out,spec,aux_path,wake_type,num_cores)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
-% (example) []=displacement_evol_mem_fast_par( '/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/',4)
+% (example) []=displacement_evol_mem_fast_par( '/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/',0,4)
+% (example) []=displacement_evol_mem_fast_par( '/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/',1,4)
 
 
 myCluster = parcluster('local');
@@ -11,16 +12,56 @@ saveProfile(myCluster);
 
 p = parpool(num_cores);
 
+
+if wake_type==0
+   type_folder='' 
+end
+
+if wake_type==1
+   type_folder='test/' 
+end
+
+if wake_type==2
+   type_folder='no_pert_in_wake_hard/' 
+end
+
+if wake_type==3
+    type_folder='no_pert_in_wake/'
+end
+
+if wake_type==4
+    type_folder='half_lin_cutoff_half_tot_pert/'
+end
+
+if wake_type==5
+    type_folder='quarter_lin_cutoff_half_tot_pert/'
+end
+%combination of 3 and 4
+
+if wake_type==6
+    
+    type_folder='half_lin_cutoff_half_tot_pert_npw/'
+    
+end
+
+%combination of 3 and 5
+
+if wake_type==7
+    
+    type_folder='quarter_lin_cutoff_half_tot_pert_npw/'
+    
+end
+
 % mkdir(strcat(root_out))
-mkdir(strcat(root_data_out,spec,aux_path,'check/displ/'))
-mkdir(strcat(root_plot_out,spec,aux_path,'check/displ/'))
+mkdir(strcat(root_data_out,spec,aux_path,type_folder,'check/displ/'))
+mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/'))
 
 cd('../../../preprocessing')
 
 % test_particle_id=10000;
 
 [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw ] = preprocessing_from_spec( spec);
-[~,redshift_list,nodes_list,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec,aux_path );
+[~,redshift_list,nodes_list,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec,strcat(aux_path ,type_folder));
 
 tnp=np^3;
 
@@ -71,7 +112,7 @@ for rds=1:length(redshift_list)
     
     parfor node=1:length(nodes_list)
 
-	filename_out=strcat(root_data_out,spec,aux_path,'check/displ/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_node',char(nodes_list(node)),'_Check_Zel_wpid_posZ_displ_z',char(redshift_list(rds)),'.dat');
+	filename_out=strcat(root_data_out,spec,aux_path,type_folder,'check/displ/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_node',char(nodes_list(node)),'_Check_Zel_wpid_posZ_displ_z',char(redshift_list(rds)),'.dat');
     fid_o = fopen(filename_out,'w');
         
         filename=strcat(root,spec_nowake,aux_path,char(redshift_list(rds)),'xv',char(nodes_list(node)),'.dat');
@@ -98,7 +139,7 @@ for rds=1:length(redshift_list)
         
         %now with wake
         
-        filename=strcat(root,spec,aux_path,char(redshift_list(rds)),'xv',char(nodes_list(node)),'.dat');
+        filename=strcat(root,spec,aux_path,type_folder,char(redshift_list(rds)),'xv',char(nodes_list(node)),'.dat');
         fid = fopen(filename);
         fread(fid, [12 1], 'float32','l') ;
         xv=fread(fid, [6 Inf], 'float32','l');
@@ -109,7 +150,7 @@ for rds=1:length(redshift_list)
         
         pos_z=xv(3,:)+(nc/number_node_dim)*k_node;
         
-        particle_ID_cat=strcat(root,spec,aux_path,char(redshift_list(rds)),'PID',char(nodes_list(node)),'.dat');
+        particle_ID_cat=strcat(root,spec,aux_path,type_folder,char(redshift_list(rds)),'PID',char(nodes_list(node)),'.dat');
         fid = fopen(particle_ID_cat);
         fread(fid,6,'int64');
         part_id=fread(fid,[1 Inf],'int64');
@@ -146,19 +187,19 @@ cd('../wake_detection/consist_check/Zeldovich/')
 
 
 for rds=1:length(redshift_list)
-    filename_out=cellstr(strcat(root_data_out,spec,aux_path,'check/displ/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_node',char(nodes_list),'_Check_Zel_wpid_posZ_displ_z',char(redshift_list(rds)),'.dat'));
+    filename_out=cellstr(strcat(root_data_out,spec,aux_path,type_folder,'check/displ/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_node',char(nodes_list),'_Check_Zel_wpid_posZ_displ_z',char(redshift_list(rds)),'.dat'));
     pos_diff_ds = fileDatastore(filename_out,'ReadFcn',@read_bin,'FileExtensions','.dat');
     pos_diff=cell2mat(tall(pos_diff_ds));
     
     fig=figure('Visible', 'off');
     histogram2(mod(pos_diff(:,2),nc)*size_box/nc,pos_diff(:,3)*size_box/nc,nc/2,'DisplayStyle','tile','ShowEmptyBins','on');
-    mkdir(strcat(root_plot_out,spec,aux_path,'check/displ/'));
-    saveas(fig,strcat(root_plot_out,spec,aux_path,'check/displ/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_displacement_z',char(redshift_list(rds)),'_plot.png'));
+    mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/'));
+    saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_displacement_z',char(redshift_list(rds)),'_plot.png'));
     
     fig=figure('Visible', 'off');
     h=histogram(pos_diff(:,3)*size_box/nc);
-    mkdir(strcat(root_plot_out,spec,aux_path,'check/displ/hist/'));    
-    saveas(fig,strcat(root_plot_out,spec,aux_path,'check/displ/hist/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_displacement_z',char(redshift_list(rds)),'_plot.png'));
+    mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/hist/'));    
+    saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/hist/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_displacement_z',char(redshift_list(rds)),'_plot.png'));
 
     posit_values=pos_diff(pos_diff(:,3)>0,3);
     mn_pos(rds)=gather(mean(posit_values));
@@ -199,7 +240,7 @@ title({strcat('Displacement comparizon: positive')},'interpreter', 'latex', 'fon
 legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
 hold off;
 
-saveas(fig,strcat(root_plot_out,spec,aux_path,'check/displ/','_Check_Zel_pos','.png'));
+saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/','_Check_Zel_pos','.png'));
 
 %plot negative values
 
@@ -219,7 +260,7 @@ title({strcat('Displacement comparizon: negative')},'interpreter', 'latex', 'fon
 legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
 hold off;
 
-saveas(fig,strcat(root_plot_out,spec,aux_path,'check/displ/','_Check_Zel_neg','.png'));
+saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/','_Check_Zel_neg','.png'));
 
 
 %plot total values
@@ -240,7 +281,7 @@ title({strcat('Displacement comparizon')},'interpreter', 'latex', 'fontsize', 20
 legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
 hold off;
 
-saveas(fig,strcat(root_plot_out,spec,aux_path,'check/displ/','_Check_Zel','.png'));
+saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/','_Check_Zel','.png'));
 
 delete(gcp('nocreate'))
 

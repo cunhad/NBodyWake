@@ -1,8 +1,9 @@
-function [  ] = comvel_evol_mem_fast_par( root,root_data_out,root_plot_out,spec,aux_path,num_cores)
+function [  ] = comvel_evol_mem_fast_par( root,root_data_out,root_plot_out,spec,aux_path,wake_type,num_cores)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
-% (example) []=comvel_evol_mem_fast_par( '/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m','/sample1001/',4)
+% (example) []=comvel_evol_mem_fast_par( '/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','64Mpc_96c_48p_zi255_wakeGmu6t10m6zi63m','/sample1001/',0,4)
+% (example) []=comvel_evol_mem_fast_par( '/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','64Mpc_96c_48p_zi255_wakeGmu6t10m6zi10m','/sample1001/',1,4)
 
 
 myCluster = parcluster('local');
@@ -11,16 +12,56 @@ saveProfile(myCluster);
 
 p = parpool(num_cores);
 
+if wake_type==0
+   type_folder='' 
+end
+
+if wake_type==1
+   type_folder='test/' 
+end
+
+if wake_type==2
+   type_folder='no_pert_in_wake_hard/' 
+end
+
+if wake_type==3
+    type_folder='no_pert_in_wake/'
+end
+
+if wake_type==4
+    type_folder='half_lin_cutoff_half_tot_pert/'
+end
+
+if wake_type==5
+    type_folder='quarter_lin_cutoff_half_tot_pert/'
+end
+
+%combination of 3 and 4
+
+if wake_type==6
+    
+    type_folder='half_lin_cutoff_half_tot_pert_npw/'
+    
+end
+
+%combination of 3 and 5
+
+if wake_type==7
+    
+    type_folder='quarter_lin_cutoff_half_tot_pert_npw/'
+    
+end
+
 % mkdir(strcat(root_out))
-mkdir(strcat(root_data_out,spec,aux_path,'check/vel/'))
-mkdir(strcat(root_plot_out,spec,aux_path,'check/vel/'))
+mkdir(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/'))
+mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/'))
 
 cd('../../../preprocessing')
 
 % test_particle_id=10000;
 
 [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw ] = preprocessing_from_spec( spec);
-[~,redshift_list,nodes_list,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec,aux_path );
+[~,redshift_list,nodes_list,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec,strcat(aux_path,type_folder));
 
 cd ../../parameters/
 
@@ -80,12 +121,12 @@ for rds=1:length(redshift_list)
     
     TimConv=(3*((1+str2double(redshift_list(rds)))^(2))*Hzero*(OmegaM^1/2))/2;  %Convert time in simulation units to seconds
     
-    for node=1:length(nodes_list)
+    parfor node=1:length(nodes_list)
 
-	filename_out=strcat(root_data_out,spec,aux_path,'check/vel/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_node',char(nodes_list(node)),'_Check_Zel_wpid_posZ_vel_z',char(redshift_list(rds)),'.dat');
+	filename_out=strcat(root_data_out,spec,aux_path,type_folder,'check/vel/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_node',char(nodes_list(node)),'_Check_Zel_wpid_posZ_vel_z',char(redshift_list(rds)),'.dat');
     fid_o = fopen(filename_out,'w');
         
-        display(strcat(root,spec_nowake,aux_path,char(redshift_list(rds)),'xv',char(nodes_list(node)),'.dat'))
+%         display(strcat(root,spec_nowake,aux_path,char(redshift_list(rds)),'xv',char(nodes_list(node)),'.dat'))
         filename=strcat(root,spec_nowake,aux_path,char(redshift_list(rds)),'xv',char(nodes_list(node)),'.dat');
         fid = fopen(filename);
         fread(fid, [12 1], 'float32','l') ;
@@ -112,7 +153,7 @@ for rds=1:length(redshift_list)
         
         %now with wake
         
-        filename=strcat(root,spec,aux_path,char(redshift_list(rds)),'xv',char(nodes_list(node)),'.dat');
+        filename=strcat(root,spec,aux_path,type_folder,char(redshift_list(rds)),'xv',char(nodes_list(node)),'.dat');
         fid = fopen(filename);
         fread(fid, [12 1], 'float32','l') ;
         xv=fread(fid, [6 Inf], 'float32','l');
@@ -124,7 +165,7 @@ for rds=1:length(redshift_list)
         pos_z=xv(3,:)+(nc/number_node_dim)*k_node;                
         vel_z=xv(6,:)/(LinConv/TimConv);
         
-        particle_ID_cat=strcat(root,spec,aux_path,char(redshift_list(rds)),'PID',char(nodes_list(node)),'.dat');
+        particle_ID_cat=strcat(root,spec,aux_path,type_folder,char(redshift_list(rds)),'PID',char(nodes_list(node)),'.dat');
         fid = fopen(particle_ID_cat);
         fread(fid,6,'int64');
         part_id=fread(fid,[1 Inf],'int64');
@@ -164,19 +205,19 @@ cd('../wake_detection/consist_check/Zeldovich/')
 
 
 for rds=1:length(redshift_list)
-    filename_out=cellstr(strcat(root_data_out,spec,aux_path,'check/vel/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_node',char(nodes_list),'_Check_Zel_wpid_posZ_vel_z',char(redshift_list(rds)),'.dat'));
+    filename_out=cellstr(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_node',char(nodes_list),'_Check_Zel_wpid_posZ_vel_z',char(redshift_list(rds)),'.dat'));
     vel_diff_ds = fileDatastore(filename_out,'ReadFcn',@read_bin,'FileExtensions','.dat');
     vel_diff=cell2mat(tall(vel_diff_ds));
     
     fig=figure('Visible', 'off');
-    histogram2(mod(vel_diff(:,2),nc)*size_box/nc,vel_diff(:,3),nc/2,'DisplayStyle','tile','ShowEmptyBins','on');
-    mkdir(strcat(root_plot_out,spec,aux_path,'check/vel/'));
-    saveas(fig,strcat(root_plot_out,spec,aux_path,'check/vel/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_vel_z',char(redshift_list(rds)),'_plot.png'));
+    histogram2(mod(vel_diff(:,2),nc)*size_box/nc,vel_diff(:,3)*10^17,nc/2,'DisplayStyle','tile','ShowEmptyBins','on');
+    mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/'));
+    saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_vel_z',char(redshift_list(rds)),'_plot.png'));
     
     fig=figure('Visible', 'off');
-    h=histogram(vel_diff(:,3));
-    mkdir(strcat(root_plot_out,spec,aux_path,'check/vel/hist/'));    
-    saveas(fig,strcat(root_plot_out,spec,aux_path,'check/vel/hist/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_vel_z',char(redshift_list(rds)),'_plot.png'));
+    h=histogram(vel_diff(:,3)*10^17);
+    mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/hist/'));    
+    saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/hist/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_vel_z',char(redshift_list(rds)),'_plot.png'));
 
     posit_values=vel_diff(vel_diff(:,3)>0,3);
     mn_pos(rds)=gather(mean(posit_values));
@@ -203,13 +244,13 @@ cd('../Analysis/wake_detection/consist_check/Zeldovich/')
 
 fig=figure('Visible', 'off');
 % fig=figure;
-errorbar((str2num(char(redshift_list))+1).^-1,mn_pos,std_pos)
+errorbar((str2num(char(redshift_list))+1).^-1,mn_pos*10^17,std_pos*10^17)
 hold on
-plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld)
+plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
 
 xlim ([-inf inf]);
 xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
-ylabel('Velocity ((Mpc/h)/s)', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('Velocity ((Mpc/h)/s)*10^17', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
 set(gca,'linewidth',2);
@@ -217,19 +258,19 @@ title({strcat('Velocity comparizon: positive')},'interpreter', 'latex', 'fontsiz
 legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
 hold off;
 
-saveas(fig,strcat(root_plot_out,spec,aux_path,'check/vel/','_Check_vel_Zel_pos','.png'));
+saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/','_Check_vel_Zel_pos','.png'));
 
 %plot negative values
 
 fig=figure('Visible', 'off');
 % fig=figure;
-errorbar((str2num(char(redshift_list))+1).^-1,abs(mn_neg),std_neg)
+errorbar((str2num(char(redshift_list))+1).^-1,abs(mn_neg)*10^17,std_neg*10^17)
 hold on
-plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld)
+plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
 
 xlim ([-inf inf]);
 xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
-ylabel('Velocity ((Mpc/h)/s)', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('Velocity ((Mpc/h)/s)*10^17', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
 set(gca,'linewidth',2);
@@ -237,20 +278,20 @@ title({strcat('Velocity comparizon: negative')},'interpreter', 'latex', 'fontsiz
 legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
 hold off;
 
-saveas(fig,strcat(root_plot_out,spec,aux_path,'check/vel/','_Check_vel_Zel_neg','.png'));
+saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/','_Check_vel_Zel_neg','.png'));
 
 
 %plot total values
 
 fig=figure('Visible', 'off');
 % fig=figure;
-errorbar((str2num(char(redshift_list))+1).^-1,((mn_pos+abs(mn_neg))/2),((std_pos+std_neg)/2))
+errorbar((str2num(char(redshift_list))+1).^-1,((mn_pos+abs(mn_neg))/2)*10^17,((std_pos+std_neg)/2)*10^17)
 hold on
-plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld)
+plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
 
 xlim ([-inf inf]);
 xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
-ylabel('Velocity ((Mpc/h)/s)', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('Velocity ((Mpc/h)/s)*10^17', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
 set(gca,'linewidth',2);
@@ -258,7 +299,7 @@ title({strcat('Velocity comparizon')},'interpreter', 'latex', 'fontsize', 20);
 legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
 hold off;
 
-saveas(fig,strcat(root_plot_out,spec,aux_path,'check/vel/','_Check_vel_Zel','.png'));
+saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/','_Check_vel_Zel','.png'));
 
 delete(gcp('nocreate'))
 
