@@ -39,7 +39,7 @@ end
 
 if type==6
     
-    type_folder='/half_lin_cutoff_half_tot_pert_npw/'
+    type_folder='/half_lin_cutoff_half_tot_pert_npwh/'
     
 end
 
@@ -47,9 +47,24 @@ end
 
 if type==7
     
+    type_folder='/quarter_lin_cutoff_half_tot_pert_npwh/'
+    
+end
+
+if type==8
+    
+    type_folder='/half_lin_cutoff_half_tot_pert_npw/'
+    
+end
+
+%combination of 3 and 5
+
+if type==9
+    
     type_folder='/quarter_lin_cutoff_half_tot_pert_npw/'
     
 end
+
 
 
 cd('../parameters')
@@ -115,7 +130,7 @@ mkdir(path,spec_out);
         
         %if type=2(no_vel_pert_in_wake_hard) do
         
-        if type==2
+        if type==2|type==6|type==7
             
             dist_to_wake3((dist_to_wake3<1)&(dist_to_wake3>-1))=0;
             
@@ -123,7 +138,7 @@ mkdir(path,spec_out);
         
         %if type=3(no_vel_pert_in_wake) do
         
-        if type==3|type==6|type==7
+        if type==3|type==8|type==9
             
             dist_to_wake3((dist_to_wake3<displacement*LinConv)&(dist_to_wake3>-displacement*LinConv))=0;
             
@@ -135,7 +150,7 @@ mkdir(path,spec_out);
         
         %if type=4(half_lin_cutoff_half_tot_pert) do
         
-        if type==4|type==6
+        if type==4|type==6|type==8
             
             cuttoff=ones(1,length(dist_to_wake3));
             
@@ -146,7 +161,7 @@ mkdir(path,spec_out);
         
         %if type=5(quarter_lin_cutoff_half_tot_pert) do
         
-        if type==5|type==7
+        if type==5|type==7|type==9
             
             cuttoff=ones(1,length(dist_to_wake3));            
             cuttoff(dist_to_wake3<=-3*nc/8)=0;
@@ -171,7 +186,7 @@ mkdir(path,spec_out);
         
         %if type=4(half_lin_cutoff_half_tot_pert) do
         
-        if type==4|type==6
+        if type==4|type==6|type==8
             
             kick_to_wake3=kick_to_wake3.*cuttoff;
             
@@ -179,7 +194,7 @@ mkdir(path,spec_out);
         
         %if type=5(quarter_lin_cutoff_half_tot_pert) do
         
-        if type==5|type==7
+        if type==5|type==7|type==9
             
            kick_to_wake3=kick_to_wake3.*cuttoff;
            

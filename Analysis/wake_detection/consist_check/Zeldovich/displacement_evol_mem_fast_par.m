@@ -40,13 +40,27 @@ end
 
 if wake_type==6
     
-    type_folder='half_lin_cutoff_half_tot_pert_npw/'
+    type_folder='half_lin_cutoff_half_tot_pert_npwh/'
     
 end
 
 %combination of 3 and 5
 
 if wake_type==7
+    
+    type_folder='quarter_lin_cutoff_half_tot_pert_npwh/'
+    
+end
+
+if type==8
+    
+    type_folder='half_lin_cutoff_half_tot_pert_npw/'
+    
+end
+
+%combination of 3 and 5
+
+if type==9
     
     type_folder='quarter_lin_cutoff_half_tot_pert_npw/'
     
