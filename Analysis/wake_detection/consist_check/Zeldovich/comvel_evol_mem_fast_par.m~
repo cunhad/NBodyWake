@@ -21,11 +21,11 @@ if wake_type==1
 end
 
 if wake_type==2
-   type_folder='no_pert_in_wake_hard/' 
+   type_folder='no_vpert_in_wake_hard/' 
 end
 
 if wake_type==3
-    type_folder='no_pert_in_wake/'
+    type_folder='no_vpert_in_wake/'
 end
 
 if wake_type==4
@@ -40,13 +40,27 @@ end
 
 if wake_type==6
     
-    type_folder='half_lin_cutoff_half_tot_pert_npw/'
+    type_folder='half_lin_cutoff_half_tot_pert_nvpwh/'
     
 end
 
 %combination of 3 and 5
 
 if wake_type==7
+    
+    type_folder='quarter_lin_cutoff_half_tot_pert_nvpwh/'
+    
+end
+
+if type==8
+    
+    type_folder='half_lin_cutoff_half_tot_pert_nvpw/'
+    
+end
+
+%combination of 3 and 5
+
+if type==9
     
     type_folder='quarter_lin_cutoff_half_tot_pert_npw/'
     
@@ -197,9 +211,13 @@ for rds=1:length(redshift_list)
         %         displac_list(displac_list>nc/2)=displac_list(displac_list>nc/2)-nc;
         %         displac_list(displac_list<-nc/2)=displac_list(displac_list<-nc/2)+nc;
         
-        comom_ID_half=comom_ID(pos_list_z_w>-nc/2&pos_list_z_w<nc/2);
-        pos_list_z_w_half=pos_list_z_w(pos_list_z_w>-nc/2&pos_list_z_w<nc/2);
-        vel_list_half=vel_list(pos_list_z_w>-nc/2&pos_list_z_w<nc/2);
+        comom_ID_half=comom_ID(pos_list_z_w>nc/4&pos_list_z_w<3*nc/4);
+        pos_list_z_w_half=pos_list_z_w(pos_list_z_w>nc/4&pos_list_z_w<3*nc/4);
+        vel_list_half=vel_list(pos_list_z_w>nc/4&pos_list_z_w<3*nc/4);
+        
+        comom_ID_half=[comom_ID_half 0];
+        pos_list_z_w_half=[pos_list_z_w_half nc/2];
+        vel_list_half=[vel_list_half 0];
         
         fwrite(fid_o,[comom_ID;pos_list_z_w;vel_list],'float32','l');
         fclose(fid_o);

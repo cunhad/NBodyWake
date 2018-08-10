@@ -16,11 +16,11 @@ if type==1
 end
 
 if type==2
-   type_folder='/no_pert_in_wake_hard/' 
+   type_folder='/no_vpert_in_wake_hard/' 
 end
 
 if type==3
-    type_folder='/no_pert_in_wake/'
+    type_folder='/no_vpert_in_wake/'
 end
 
 if type==4
@@ -39,7 +39,7 @@ end
 
 if type==6
     
-    type_folder='/half_lin_cutoff_half_tot_pert_npwh/'
+    type_folder='/half_lin_cutoff_half_tot_pert_nvpwh/'
     
 end
 
@@ -47,13 +47,13 @@ end
 
 if type==7
     
-    type_folder='/quarter_lin_cutoff_half_tot_pert_npwh/'
+    type_folder='/quarter_lin_cutoff_half_tot_pert_nvpwh/'
     
 end
 
 if type==8
     
-    type_folder='/half_lin_cutoff_half_tot_pert_npw/'
+    type_folder='/half_lin_cutoff_half_tot_pert_nvpw/'
     
 end
 
@@ -61,7 +61,7 @@ end
 
 if type==9
     
-    type_folder='/quarter_lin_cutoff_half_tot_pert_npw/'
+    type_folder='/quarter_lin_cutoff_half_tot_pert_nvpw/'
     
 end
 
@@ -130,19 +130,19 @@ mkdir(path,spec_out);
         
         %if type=2(no_vel_pert_in_wake_hard) do
         
-        if type==2|type==6|type==7
-            
-            dist_to_wake3((dist_to_wake3<1)&(dist_to_wake3>-1))=0;
-            
-        end
-        
-        %if type=3(no_vel_pert_in_wake) do
-        
-        if type==3|type==8|type==9
-            
-            dist_to_wake3((dist_to_wake3<displacement*LinConv)&(dist_to_wake3>-displacement*LinConv))=0;
-            
-        end
+%         if type==2|type==6|type==7
+%             
+%             dist_to_wake3((dist_to_wake3<1)&(dist_to_wake3>-1))=0;
+%             
+%         end
+%         
+%         %if type=3(no_vel_pert_in_wake) do
+%         
+%         if type==3|type==8|type==9
+%             
+%             dist_to_wake3((dist_to_wake3<displacement*LinConv)&(dist_to_wake3>-displacement*LinConv))=0;
+%             
+%         end
         
        
         
@@ -185,6 +185,21 @@ mkdir(path,spec_out);
         kick_to_wake3=-sign(dist_to_wake3(1,:))*vel_pert*LinConv/TimConv;
         
         %if type=4(half_lin_cutoff_half_tot_pert) do
+        
+        if type==2|type==6|type==7
+            
+            kick_to_wake3((dist_to_wake3<1)&(dist_to_wake3>-1))=0;
+            
+        end
+        
+        %if type=3(no_vel_pert_in_wake) do
+        
+        if type==3|type==8|type==9
+            
+            kick_to_wake3((dist_to_wake3<displacement*LinConv)&(dist_to_wake3>-displacement*LinConv))=0;
+            
+        end
+
         
         if type==4|type==6|type==8
             

@@ -21,11 +21,11 @@ if wake_type==1
 end
 
 if wake_type==2
-   type_folder='no_pert_in_wake_hard/' 
+   type_folder='no_vpert_in_wake_hard/' 
 end
 
 if wake_type==3
-    type_folder='no_pert_in_wake/'
+    type_folder='no_vpert_in_wake/'
 end
 
 if wake_type==4
@@ -40,7 +40,7 @@ end
 
 if wake_type==6
     
-    type_folder='half_lin_cutoff_half_tot_pert_npwh/'
+    type_folder='half_lin_cutoff_half_tot_pert_nvpwh/'
     
 end
 
@@ -48,13 +48,13 @@ end
 
 if wake_type==7
     
-    type_folder='quarter_lin_cutoff_half_tot_pert_npwh/'
+    type_folder='quarter_lin_cutoff_half_tot_pert_nvpwh/'
     
 end
 
 if type==8
     
-    type_folder='half_lin_cutoff_half_tot_pert_npw/'
+    type_folder='half_lin_cutoff_half_tot_pert_nvpw/'
     
 end
 
@@ -62,7 +62,7 @@ end
 
 if type==9
     
-    type_folder='quarter_lin_cutoff_half_tot_pert_npw/'
+    type_folder='quarter_lin_cutoff_half_tot_pert_nvpw/'
     
 end
 
