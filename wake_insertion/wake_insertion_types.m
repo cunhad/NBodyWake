@@ -196,7 +196,7 @@ mkdir(path,spec_out);
         
         if type==3|type==8|type==9
             
-            kick_to_wake3((dist_to_wake3<displacement*LinConv)&(dist_to_wake3>-displacement*LinConv))=0;
+            kick_to_wake3((dist_to_wake3<2*displacement*LinConv)&(dist_to_wake3>-2*displacement*LinConv))=0;
             
         end
 
