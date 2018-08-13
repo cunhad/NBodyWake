@@ -52,7 +52,7 @@ if wake_type==7
     
 end
 
-if type==8
+if wake_type==8
     
     type_folder='half_lin_cutoff_half_tot_pert_nvpw/'
     
@@ -60,7 +60,7 @@ end
 
 %combination of 3 and 5
 
-if type==9
+if wake_type==9
     
     type_folder='quarter_lin_cutoff_half_tot_pert_nvpw/'
     
