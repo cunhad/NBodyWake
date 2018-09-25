@@ -14,8 +14,12 @@ path_out=strcat(root_data_out,spec,aux_path,'plot/',aux_path_out,num2str(lenght_
 
 cd('../preprocessing');
 
-[ nodes_list redshift_list ] = preprocessing_many_nodes(root,spec,aux_path );
+%[ nodes_list redshift_list ] = preprocessing_many_nodes(root,spec,aux_path );
+[~,redshift_list,nodes_list,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec,aux_path );
+
+
 filename_xv=filename;
+% [ size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw,z,path_file_in,~ ] = preprocessing_part(root,spec,aux_path,filename,length(nodes_list),1);
 [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in header i_node j_node k_node number_node_dim ] = preprocessing_nodes_all_but_phasespace( root,spec,aux_path,strcat(filename_xv(1:strfind(filename,'halo')-1),'xv',filename_xv(strfind(filename,'halo')+4:end)));
 
 cd('../../parameters')

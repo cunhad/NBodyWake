@@ -115,8 +115,9 @@ mass=mass*(np/nc)^3;
 
  node=char(filename);
  node=str2num(node(strfind(filename, 'halo')+4:strfind(filename,'.dat')-1));
- [ nodes_list redshift_list ] = preprocessing_many_nodes(path,spec,aux_path);
- 
+%  [ nodes_list redshift_list ] = preprocessing_many_nodes(path,spec,aux_path);
+ [~,redshift_list,nodes_list,~,~,~,~,~,~,~,~] = preprocessing_info(path,spec,aux_path );
+
  number_node_dim=nthroot(numel(nodes_list), 3);
  k_node=floor(node/number_node_dim^2);
  res=mod(node,number_node_dim^2);

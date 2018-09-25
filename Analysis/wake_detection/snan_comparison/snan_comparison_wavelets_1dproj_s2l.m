@@ -5,7 +5,7 @@
 
 % (example) snan_comparison_wavelets_1dproj_s2l('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_s2l/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_s2l_comparizon/','','',2,1,[0,0,0],1024,16,2,8,32,[1],1,1,'sym6',32,3);
 % (example) snan_comparison_wavelets_1dproj_s2l('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_types_cic_diff_loc/','/home/asus/Dropbox/extras/storage/guillimin/box_snan_s2l_comparizon/','','',2,1,[0,0,0],1024,16,2,8,32,[1],1,1,'sym6',32,3);
-%(example) snan_comparison_wavelets_1dproj_s2l('/home/asus/Dropbox/extras/storage/graham/','/home/asus/Dropbox/extras/storage/graham/snan_gra64/','/home/asus/Dropbox/extras/storage/guillimin/snan_gra64_comparizon/','','',1,2,[0,0,0],[0,0],0.4,'all');
+% (example) snan_comparison_wavelets_1dproj_s2l('/home/asus/Dropbox/extras/storage/graham/','/home/asus/Dropbox/extras/storage/graham/snan_gra64/','/home/asus/Dropbox/extras/storage/guillimin/snan_gra64_comparizon/','','',1,2,[0,0,0],[0,0],0.4,'all');
 
 
 % NBody output should be stored as root+spec+aux_path (root directory, specification in the form size_numberofcellsperdimension_number_particlesperdimension_initialredshift_wakespecification&multiplicity, aux_path is the sample number )

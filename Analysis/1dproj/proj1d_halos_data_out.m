@@ -1,12 +1,17 @@
 function [ cell_bins1d_z  count_sum Pos_halos mass_halos radius_halos count_sum_h_number count_sum_h_mass count_sum_dmdc] = proj1d_halos_data_out( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle)
 %Computes the 2d projections aconding to the input specifications and stores (and returns) the resulting data
 
-%   (example) [ cell_bins1d_z  count_sum Pos_halos mass_halos radius_halos count_sum_h_number count_sum_h_mass count_sum_dmdc] = proj1d_halos_data_out( '/home/asus/Dropbox/extras/storage/guillimin/test/', '/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','','0.000halo0.dat',1,1,[0,0,0],[0,0])
+%   (example) [ cell_bins1d_z  count_sum Pos_halos mass_halos radius_halos
+%   count_sum_h_number count_sum_h_mass count_sum_dmdc] = proj1d_halos_data_out( '/home/asus/Dropbox/extras/storage/guillimin/test/', '/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','','0.000halo0.dat',1,1,[0,0,0],[0,0]);
+%   (example) [ cell_bins1d_z  count_sum Pos_halos mass_halos radius_halos
+%   count_sum_h_number count_sum_h_mass count_sum_dmdc] = proj1d_halos_data_out( '/home/asus/Dropbox/extras/storage/graham/ht/', '/home/asus/Dropbox/extras/storage/graham/ht/','4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m','/sample3001/half_lin_cutoff_half_tot_pert_nvpw/','','3.000halo0.dat',1,1,[0,0,0],[0,0]);
 
 
 cd('../preprocessing');
 
-[ nodes_list redshift_list ] = preprocessing_many_nodes(root,spec,aux_path );
+%[ nodes_list redshift_list ] = preprocessing_many_nodes(root,spec,aux_path );
+% display(strcat(root,spec,aux_path))
+[~,redshift_list,nodes_list,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec,aux_path );
 
 [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos_h mass Radiusd halos] = preprocessing_halo_nodes( root,spec,aux_path,filename);
 
@@ -42,7 +47,8 @@ for node = 1 : length(nodes_list)
     
     [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos_h mass Radiusd halos] = preprocessing_halo_nodes( root,spec,aux_path,filename);
     filename_pos=filename;
-    [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( root,spec,aux_path,strcat(filename_pos(1:strfind(filename,'halo')-1),'xv',filename_pos(strfind(filename,'halo')+4:end)));
+%     display(strcat(root,spec,aux_path,strcat(filename_pos(1:strfind(filename,'halo')-1),'xv',filename_pos(strfind(filename,'halo')+4:end))))
+%     [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( root,spec,aux_path,strcat(filename_pos(1:strfind(filename,'halo')-1),'xv',filename_pos(strfind(filename,'halo')+4:end)));
     
     %to particle mass
     
@@ -110,41 +116,41 @@ for node = 1 : length(nodes_list)
         
     end
     
-    Pos=mod(Pos,nc);    
-    Pos(1,:)=Pos(1,:)-(nc/2)-pivot(1);
-    Pos(2,:)=Pos(2,:)-(nc/2)-pivot(2);
-    Pos(3,:)=Pos(3,:)-(nc/2)-pivot(3);
-    
-    Ry = [cos(theta) 0 sin(theta); 0 1 0; -sin(theta) 0 cos(theta)];
-    Rz = [cos(phi) -sin(phi) 0; sin(phi) cos(phi) 0; 0 0 1];
-    
-    Pos=Rz*Pos;
-    Pos=Ry*Pos;
-    %Pos=Rz*Pos;
-    
-    liminf=-(1/(2*lenght_factor))*nc;
-    limsup= (1/(2*lenght_factor))*nc;
-    conditionsx=Pos(1,:)<=liminf|Pos(1,:)>=limsup;
-    conditionsy=Pos(2,:)<=liminf|Pos(2,:)>=limsup;
-    conditionsz=Pos(3,:)<=liminf|Pos(3,:)>=limsup;
-    conditions=conditionsx|conditionsy|conditionsz;
-    Pos(:,conditions)=[];
-    
-    Pos(1,:)=Pos(1,:)+(nc/2)+pivot(1);
-    Pos(2,:)=Pos(2,:)+(nc/2)+pivot(2);
-    Pos(3,:)=Pos(3,:)+(nc/2)+pivot(3);
-    
-    Pos=transpose(Pos);
-    
-    [count edges mid loc] = histcn(Pos,1,1,cell_bins1d_z);
-    count=count(1:1,1:1,1:numel(cell_bins1d_z)-1);
-    %     average=mean2(count);
-    %     count=(count-average)/average;
-    count=squeeze(count);
-    count=squeeze(count);
-    
-    %    cell_bins1d(end)=[];
-    count_sum=count_sum+transpose(count);
+%     Pos=mod(Pos,nc);    
+%     Pos(1,:)=Pos(1,:)-(nc/2)-pivot(1);
+%     Pos(2,:)=Pos(2,:)-(nc/2)-pivot(2);
+%     Pos(3,:)=Pos(3,:)-(nc/2)-pivot(3);
+%     
+%     Ry = [cos(theta) 0 sin(theta); 0 1 0; -sin(theta) 0 cos(theta)];
+%     Rz = [cos(phi) -sin(phi) 0; sin(phi) cos(phi) 0; 0 0 1];
+%     
+%     Pos=Rz*Pos;
+%     Pos=Ry*Pos;
+%     %Pos=Rz*Pos;
+%     
+%     liminf=-(1/(2*lenght_factor))*nc;
+%     limsup= (1/(2*lenght_factor))*nc;
+%     conditionsx=Pos(1,:)<=liminf|Pos(1,:)>=limsup;
+%     conditionsy=Pos(2,:)<=liminf|Pos(2,:)>=limsup;
+%     conditionsz=Pos(3,:)<=liminf|Pos(3,:)>=limsup;
+%     conditions=conditionsx|conditionsy|conditionsz;
+%     Pos(:,conditions)=[];
+%     
+%     Pos(1,:)=Pos(1,:)+(nc/2)+pivot(1);
+%     Pos(2,:)=Pos(2,:)+(nc/2)+pivot(2);
+%     Pos(3,:)=Pos(3,:)+(nc/2)+pivot(3);
+%     
+%     Pos=transpose(Pos);
+%     
+%     [count edges mid loc] = histcn(Pos,1,1,cell_bins1d_z);
+%     count=count(1:1,1:1,1:numel(cell_bins1d_z)-1);
+%     %     average=mean2(count);
+%     %     count=(count-average)/average;
+%     count=squeeze(count);
+%     count=squeeze(count);
+%     
+%     %    cell_bins1d(end)=[];
+%     count_sum=count_sum+transpose(count);
   
     
 end
@@ -161,23 +167,23 @@ end
 
 count_sum_h_mass=count_sum_h_mass;
 
-average=mean2(count_sum);
-count_sum_dmdc=(count_sum_h_mass-average)/average;
+% average=mean2(count_sum);
+% count_sum_dmdc=(count_sum_h_mass-average)/average;
 
 mkdir(root_out);
 mkdir(root_out,strcat(spec,aux_path));
 
 path_out=strcat(strcat(root_out,spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2))),'ra','/','1dproj/halos/');
 mkdir(strcat(root_out,spec,aux_path),strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2))),'ra','/','1dproj/halos/'));
-
-mkdir(path_out,'aux/total_dm/');
-dlmwrite(strcat(path_out,'aux/total_dm/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_dm_z',num2str(z),'_data.txt'),count_sum,'delimiter','\t');
+% 
+% mkdir(path_out,'aux/total_dm/');
+% dlmwrite(strcat(path_out,'aux/total_dm/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_dm_z',num2str(z),'_data.txt'),count_sum,'delimiter','\t');
 mkdir(path_out,strcat('number/'));
 dlmwrite(strcat(path_out,'number/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_halos_n_z',num2str(z),'_data.txt'),count_sum_h_number,'delimiter','\t');
 mkdir(path_out,'mass/');
 dlmwrite(strcat(path_out,'mass/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_halos_mass_z',num2str(z),'_data.txt'),count_sum_h_mass,'delimiter','\t');
-mkdir(path_out,'h_mass_dc_wrt_dmavr/');
-dlmwrite(strcat(path_out,'h_mass_dc_wrt_dmavr/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_halos_dmdc_z',num2str(z),'_data.txt'),count_sum_dmdc,'delimiter','\t');
+% mkdir(path_out,'h_mass_dc_wrt_dmavr/');
+% dlmwrite(strcat(path_out,'h_mass_dc_wrt_dmavr/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_halos_dmdc_z',num2str(z),'_data.txt'),count_sum_dmdc,'delimiter','\t');
 mkdir(path_out,'aux/Pos_h/');
 dlmwrite(strcat(path_out,'aux/Pos_h/','_',num2str(find(str2num(char(redshift_list))==z)),'_1dproj_Pos_halos_z',num2str(z),'_data.txt'),Pos_halos,'delimiter','\t');
 mkdir(path_out,'aux/mass/');
