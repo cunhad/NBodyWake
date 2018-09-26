@@ -87,7 +87,7 @@ Pos = data(1:3,:);
 %node structure
 
  node=char(filename);
- node=str2num(node(strfind(filename, 'xv')+2:strfind(filename,'.dat')-1))
+ node=str2num(node(strfind(filename, 'xv')+2:strfind(filename,'.dat')-1));
  [ nodes_list redshift_list ] = preprocessing_many_nodes(path,spec,aux_path);
  
  number_node_dim=nthroot(numel(nodes_list), 3);

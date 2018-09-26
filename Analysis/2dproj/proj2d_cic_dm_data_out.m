@@ -77,6 +77,9 @@ for node = 1 : length(nodes_list)
     
     display(filename);
     
+    for Dx=-1:1
+        for Dy=-1:1
+            for Dz=-1:1
     
     [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( root,spec,aux_path,filename);
 %     [ ~,~,~,~,~,~,~,~,~,~,Pos ] = preprocessing_part(root,spec,aux_path,filename,length(nodes_list),node);
@@ -88,9 +91,9 @@ for node = 1 : length(nodes_list)
     Pos=Pos*(np*resol_factor)/(nc);
 
     
-    Pos(1,:)=Pos(1,:)-(np*resol_factor/2)-pivot(1)*(np*resol_factor)/(nc);
-    Pos(2,:)=Pos(2,:)-(np*resol_factor/2)-pivot(2)*(np*resol_factor)/(nc);
-    Pos(3,:)=Pos(3,:)-(np*resol_factor/2)-pivot(3)*(np*resol_factor)/(nc);
+    Pos(1,:)=Pos(1,:)-(np*resol_factor/2)-pivot(1)*(np*resol_factor)/(nc)+Dx*np*resol_factor;
+    Pos(2,:)=Pos(2,:)-(np*resol_factor/2)-pivot(2)*(np*resol_factor)/(nc)+Dy*np*resol_factor;
+    Pos(3,:)=Pos(3,:)-(np*resol_factor/2)-pivot(3)*(np*resol_factor)/(nc)+Dz*np*resol_factor;
     
     Ry = [cos(theta) 0 sin(theta); 0 1 0; -sin(theta) 0 cos(theta)];
     Rz = [cos(phi) -sin(phi) 0; sin(phi) cos(phi) 0; 0 0 1];
@@ -111,7 +114,7 @@ for node = 1 : length(nodes_list)
     
     
     
-    Pos=mod(Pos,np*resol_factor);
+%     Pos=mod(Pos,np*resol_factor);
     
         lim= (1/(lenght_factor))*np*resol_factor;
     conditionsx=Pos(1,:)<0|Pos(1,:)>lim;
@@ -127,7 +130,7 @@ Pos=transpose(Pos);
 
 count=zeros(nb,nb);
 
-display(size(Pos,1))
+% display(size(Pos,1))
 
 if ~isempty(length(Pos))
     
@@ -172,6 +175,11 @@ end
     count_sum=count_sum+count;
     Pos=[];
 %     clearvars count
+
+            end
+        end
+    end
+    
 end
 
 % average=mean2(count_sum);
