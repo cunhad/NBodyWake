@@ -2,7 +2,7 @@ function [ count_sum] = proj2d_cic_dm_data_out( root,root_out,spec,aux_path,aux_
 %Computes the 2d projections aconding to the input specifications and stores (and returns) the resulting data
 
 %   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_cic_dm_data_out('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','0.000xv0.dat',1,1,[0,0,0],[0,0],[1,2]);
-%   (example) [ count_sum] = proj2d_cic_dm_data_out('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,[0,0,0],[0,0],[1,2]);
+%   (example) [ count_sum] = proj2d_cic_dm_data_out('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,[0,0,0],[0,0,0],[1,2]);
 %   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_cic_dm_data_out('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/data/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','10.000xv0.dat',1,1,[0,0,0],[0,0],[1,2]);
 
 
@@ -48,8 +48,11 @@ z_glob=z;
 % cell_bins1d_z(end)=[];
 count_sum=zeros((np*resol_factor/lenght_factor),(np*resol_factor/lenght_factor));
 
-theta=rot_angle(1);
-phi=rot_angle(2);
+
+psi=rot_angle(1);
+theta=rot_angle(2);
+phi=rot_angle(3);
+
 
 %     cell_bins1d_y=[(nc/2)-(nc/(2*lenght_factor))+pivot(2):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(2)];
 %     cell_bins1d_z=[(nc/2)-(nc/(2*lenght_factor))+pivot(3):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(3)];
@@ -59,9 +62,11 @@ phi=rot_angle(2);
 
 % display(length(nodes_list));
 
+nb=np*resol_factor/lenght_factor;
+
 % for node = 1 : 1
 % for node = 1 : 16
-  for node = 1 : length(nodes_list)
+for node = 1 : length(nodes_list)
     
 %     cell_bins1d_y=[(nc/2)-(nc/(2*lenght_factor))+pivot(2):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(2)];
 %     cell_bins1d_z=[(nc/2)-(nc/(2*lenght_factor))+pivot(3):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(3)];
@@ -72,6 +77,7 @@ phi=rot_angle(2);
     
     display(filename);
     
+    
     [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( root,spec,aux_path,filename);
 %     [ ~,~,~,~,~,~,~,~,~,~,Pos ] = preprocessing_part(root,spec,aux_path,filename,length(nodes_list),node);
 
@@ -79,60 +85,78 @@ phi=rot_angle(2);
 
      Pos=mod(Pos,nc);
 
-%     Pos=Pos*(np*resol_factor)/(nc);
-% 
-%     
-%     Pos(1,:)=Pos(1,:)-(np*resol_factor/2)-pivot(1);
-%     Pos(2,:)=Pos(2,:)-(np*resol_factor/2)-pivot(2);
-%     Pos(3,:)=Pos(3,:)-(np*resol_factor/2)-pivot(3);
-%     
-%     Ry = [cos(theta) 0 sin(theta); 0 1 0; -sin(theta) 0 cos(theta)];
-%     Rz = [cos(phi) -sin(phi) 0; sin(phi) cos(phi) 0; 0 0 1];
-%     Pos=Rz*Pos;
-%     Pos=Ry*Pos;
-%     %Pos=Rz*Pos;
-%     
-%     liminf=-(1/(2*lenght_factor))*np*resol_factor;
-%     limsup= (1/(2*lenght_factor))*np*resol_factor;
-%     conditionsx=Pos(1,:)<=liminf|Pos(1,:)>=limsup;
-%     conditionsy=Pos(2,:)<=liminf|Pos(2,:)>=limsup;
-%     conditionsz=Pos(3,:)<=liminf|Pos(3,:)>=limsup;
-%     conditions=conditionsx|conditionsy|conditionsz;
-%     Pos(:,conditions)=[];
-%     
-%     Pos(1,:)=Pos(1,:)+(np*resol_factor/2)+pivot(1);
-%     Pos(2,:)=Pos(2,:)+(np*resol_factor/2)+pivot(2);
-%     Pos(3,:)=Pos(3,:)+(np*resol_factor/2)+pivot(3);
+    Pos=Pos*(np*resol_factor)/(nc);
+
     
-    Pos=transpose(Pos);
+    Pos(1,:)=Pos(1,:)-(np*resol_factor/2)-pivot(1)*(np*resol_factor)/(nc);
+    Pos(2,:)=Pos(2,:)-(np*resol_factor/2)-pivot(2)*(np*resol_factor)/(nc);
+    Pos(3,:)=Pos(3,:)-(np*resol_factor/2)-pivot(3)*(np*resol_factor)/(nc);
     
-    count=zeros((np*resol_factor/lenght_factor),(np*resol_factor/lenght_factor));
-      
+    Ry = [cos(theta) 0 sin(theta); 0 1 0; -sin(theta) 0 cos(theta)];
+    Rz = [cos(phi) -sin(phi) 0; sin(phi) cos(phi) 0; 0 0 1];
+    Rx = [ 1 0 0; 0 cos(psi) -sin(psi); 0 sin(psi) cos(psi)];
     
-    for particle=1:length(Pos)
+    Pos=Rz*Pos;
+    Pos=Ry*Pos;
+    Pos=Rx*Pos;
+    
+    
+%         Pos(:,conditions)=[];
+    
+    Pos(1,:)=Pos(1,:)+(1/(2*lenght_factor))*np*resol_factor;
+    Pos(2,:)=Pos(2,:)+(1/(2*lenght_factor))*np*resol_factor;
+    Pos(3,:)=Pos(3,:)+(1/(2*lenght_factor))*np*resol_factor;
+    
+    
+    
+    
+    
+    Pos=mod(Pos,np*resol_factor);
+    
+        lim= (1/(lenght_factor))*np*resol_factor;
+    conditionsx=Pos(1,:)<0|Pos(1,:)>lim;
+    conditionsy=Pos(2,:)<0|Pos(2,:)>lim;
+    conditionsz=Pos(3,:)<0|Pos(3,:)>lim;
+    conditions=conditionsx|conditionsy|conditionsz;
+    
+    Pos(:,conditions)=[];
+    
+%     Pos(:,conditionsz)=[];
+
+Pos=transpose(Pos);
+
+count=zeros(nb,nb);
+
+display(size(Pos,1))
+
+if ~isempty(length(Pos))
+    
+    for particle=1:size(Pos,1)
         
-       x=Pos(particle,2)-0.5;
-       y=Pos(particle,3)-0.5;
-       i1=floor(x)+1;
-       j1=floor(y)+1;
-       i2=i1+1;
-       j2=j1+1;
-       dx1=i1-x;
-       dy1=j1-y;
-       dx2=1-dx1;
-       dy2=1-dy1;
-       
-%         if (i1>=0 && i2< (np*resol_factor/lenght_factor)&& j1>=0 && j2< (np*resol_factor/lenght_factor)) 
-         count(mod(i1,nc)+1,mod(j1,nc)+1)=count(mod(i1,nc)+1,mod(j1,nc)+1)+dx1*dy1;
-         count(mod(i2,nc)+1,mod(j1,nc)+1)=count(mod(i2,nc)+1,mod(j1,nc)+1)+dx2*dy1;
-         count(mod(i1,nc)+1,mod(j2,nc)+1)=count(mod(i1,nc)+1,mod(j2,nc)+1)+dx1*dy2;
-         count(mod(i2,nc)+1,mod(j2,nc)+1)=count(mod(i2,nc)+1,mod(j2,nc)+1)+dx2*dy2;
-%         else
-%             display([i1,i2,j1,j2])
-%         end
+        
+        
+        x=Pos(particle,1)-0.5;
+        y=Pos(particle,2)-0.5;
+        i1=floor(x)+1;
+        j1=floor(y)+1;
+        i2=i1+1;
+        j2=j1+1;
+        dx1=i1-x;
+        dy1=j1-y;
+        dx2=1-dx1;
+        dy2=1-dy1;
+        
+        %         if (i1>=0 && i2< (np*resol_factor/lenght_factor)&& j1>=0 && j2< (np*resol_factor/lenght_factor))
+        count(mod(i1,nb)+1,mod(j1,nb)+1)=count(mod(i1,nb)+1,mod(j1,nb)+1)+dx1*dy1;
+        count(mod(i2,nb)+1,mod(j1,nb)+1)=count(mod(i2,nb)+1,mod(j1,nb)+1)+dx2*dy1;
+        count(mod(i1,nb)+1,mod(j2,nb)+1)=count(mod(i1,nb)+1,mod(j2,nb)+1)+dx1*dy2;
+        count(mod(i2,nb)+1,mod(j2,nb)+1)=count(mod(i2,nb)+1,mod(j2,nb)+1)+dx2*dy2;
+        %         else
+        %             display([i1,i2,j1,j2])
+        %         end
         
     end
-    
+end
 %     [count edges mid loc] = histcn(Pos,1,cell_bins1d_y,cell_bins1d_z);
 %     count=count(1:1,1:numel(cell_bins1d_y)-1,1:numel(cell_bins1d_z)-1);
 %     %     average=mean2(count);
