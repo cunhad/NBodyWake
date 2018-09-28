@@ -78,8 +78,12 @@ np = str2num(np);
  
 %look at the chunks
  
-files_node_list=dir(strcat(path,spec,aux_path,num2str(z_string),'xv*','.dat'));
-files_node_list={files_node_list.name};
+[~,~,nodes_list,~,~,~,~,~,~,~,~] = preprocessing_info(path,spec,aux_path );
+
+files_node_list=strcat(filename(1:end-5),nodes_list,'.dat');
+% files_node_list=dir(strcat(path,spec,aux_path,num2str(z_string),'xv*','.dat'));
+% files_node_list={files_node_list.name};
+% display(files_node_list)
 
 particle_number_per_file=ones(1,length(files_node_list)+1);
 particle_sum_per_file=zeros(1,length(files_node_list)+1);
@@ -129,13 +133,16 @@ end
 %     end   
 % end
 
-[ nodes_list ~ ] = preprocessing_many_nodes(path,spec,aux_path);
+
+% [~,~,nodes_list,~,~,~,~,~,~,~,~] = preprocessing_info(path,spec,aux_path );
+% [ nodes_list ~ ] = preprocessing_many_nodes(path,spec,aux_path)
 number_node_dim=nthroot(numel(nodes_list), 3);
 
 data=[];
 for node_ID=part_files_start_ID:part_files_end_ID
     header=false;
     fid = fopen(strcat(path,spec,aux_path,files_node_list{node_ID}));
+%     display(strcat(path,spec,aux_path,files_node_list{node_ID}));
     fread(fid, [12 1], 'float32','l') ;
     if (part_chunck_start>particle_sum_per_file(node_ID))
         for i=1:part_chunck_start-particle_sum_per_file(node_ID)-1
@@ -152,6 +159,7 @@ for node_ID=part_files_start_ID:part_files_end_ID
     else 
         data_file=fread(fid, [6 Inf], 'float32','l');
     end
+    fclose(fid);
     node=node_ID-1;
     k_node=floor(node/number_node_dim^2);
     res=mod(node,number_node_dim^2);
