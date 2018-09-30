@@ -107,9 +107,7 @@ for node = 1 : particl_part
     Rx = [ 1 0 0; 0 cos(phi) -sin(phi); 0 sin(phi) cos(phi)];
     Rz = [ cos(psi) -sin(psi) 0;sin(psi) cos(psi) 0; 0 0 1];
     
-    Pos=Rx*Pos;
-    Pos=Ry*Pos;
-    Pos=Rz*Pos;
+
     
     R1=Ry*Rx;
     
