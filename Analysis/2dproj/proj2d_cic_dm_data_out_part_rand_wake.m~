@@ -1,10 +1,40 @@
-function [ count_sum] = proj2d_cic_dm_data_out_part( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,data_stream,particl_part)
+function [ count_sum] = proj2d_cic_dm_data_out_part_rand_wake( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,data_stream,particl_part)
 %Computes the 2d projections aconding to the input specifications and stores (and returns) the resulting data
 
-%   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_cic_dm_data_out('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','0.000xv0.dat',1,1,[0,0,0],[0,0],[1,2],64);
-%   (example) [ count_sum] = proj2d_cic_dm_data_out('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,[0,0,0],[0,0,0],[1,2],64);
-%   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_cic_dm_data_out('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/data/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','10.000xv0.dat',1,1,[0,0,0],[0,0],[1,2],64);
+%   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_cic_dm_data_out_part_rand_wake('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','0.000xv0.dat',1,1,[0,0,0],[0,0],[1,2],64);
+%   (example) [ count_sum] = proj2d_cic_dm_data_out_part_rand_wake('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,[0,0,0],[0,0,0],[1,2],64);
+%   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_cic_dm_data_out_part_rand_wake('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/data/','64Mpc_1024c_512p_zi63_wakeGmu5t10m6zi63m','/sample0001/','','10.000xv0.dat',1,1,[0,0,0],[0,0],[1,2],64);
 
+% rng('shuffle')
+% rng(2);
+
+% %wake
+% 
+% pivot=[0,0,0]
+% rot_angle=[pi/2,0,0]
+
+
+% 
+% 
+% %wake
+% 
+% rand_amplitude_Z=nb/4;
+% rand_amplitude_Y=0; %irrelevant
+% rand_amplitude_X=nb/2;
+% 
+% %general
+% 
+% rand_amplitude_Z=nb/2;
+% rand_amplitude_Y=nb/2; %irrelevant
+% rand_amplitude_X=nb/2;
+% 
+% angl_amplitude=pi;
+% 
+% 
+% 
+% 
+% pivot=[0,0,30]
+% rot_angle=[0,pi/2,0]    %wake
 
 % NBody output should be stored as root+spec+aux_path (root directory, specification in the form size_numberofcellsperdimension_number_particlesperdimension_initialredshift_wakespecification&multiplicity, aux_path is the sample number )
 
@@ -42,6 +72,42 @@ cd('../preprocessing');
 % display(z)
 z_glob=z;
 
+
+nb=np*resol_factor/lenght_factor;
+
+
+%wake
+
+rand_amplitude_Z=nb/4;
+rand_amplitude_Y=0; %irrelevant
+rand_amplitude_X=nb/2;
+
+%general
+
+% rand_amplitude_Z=nb/2;
+% rand_amplitude_Y=nb/2; %irrelevant
+% rand_amplitude_X=nb/2;
+% 
+% angl_amplitude=pi;
+
+% rng(0,'twister');
+ rng('shuffle')
+
+
+prx=randi([-rand_amplitude_X rand_amplitude_X])
+prz=randi([-rand_amplitude_Z rand_amplitude_Z])
+
+ra_along_wake=-pi/2+rand()*pi
+ra_perp_wake=-pi/2+rand()*pi
+
+
+% pivot=[0,0,30]
+% rot_angle=[pi/2,0,0]    %wake
+
+pivot=[prx,0,prz]
+rot_angle=[pi/2,ra_perp_wake,ra_along_wake]
+
+
 % cell_bins1d_y=[(nc/2)-(nc/(2*lenght_factor))+pivot(2):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(2)];
 % cell_bins1d_z=[(nc/2)-(nc/(2*lenght_factor))+pivot(3):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(3)];
 % cell_bins1d_y(end)=[];
@@ -49,9 +115,9 @@ z_glob=z;
 count_sum=zeros((np*resol_factor/lenght_factor),(np*resol_factor/lenght_factor));
 
 
-psi=rot_angle(1);
+psi=rot_angle(3);
 theta=rot_angle(2);
-phi=rot_angle(3);
+phi=rot_angle(1);
 
 
 %     cell_bins1d_y=[(nc/2)-(nc/(2*lenght_factor))+pivot(2):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(2)];
@@ -62,11 +128,12 @@ phi=rot_angle(3);
 
 % display(length(nodes_list));
 
-nb=np*resol_factor/lenght_factor;
+
+
 
 % for node = 1 : 1
 % for node = 1 : 16
-for node = 1 : length(nodes_list)
+for node = 1 : particl_part
     
     %     cell_bins1d_y=[(nc/2)-(nc/(2*lenght_factor))+pivot(2):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(2)];
     %     cell_bins1d_z=[(nc/2)-(nc/(2*lenght_factor))+pivot(3):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(3)];
@@ -75,7 +142,7 @@ for node = 1 : length(nodes_list)
 %     file_name = dir(strcat(path_in,num2str(z_glob),'*xv',char(nodes_list(node)),'.dat'));
 %     filename=file_name.name;
     
-%     display(filename);
+    display(node);
     
     %     for Dx=-1:1
     %         for Dy=-1:1
@@ -88,6 +155,7 @@ for node = 1 : length(nodes_list)
     
     Pos=mod(Pos,nc);
     
+
     Pos=Pos*(np*resol_factor)/(nc);
     
     %
@@ -104,16 +172,18 @@ for node = 1 : length(nodes_list)
     Pos(3,:)=Pos(3,:)-(np*resol_factor/2)-pivot(3)*(np*resol_factor)/(nc);
     
     Ry = [cos(theta) 0 sin(theta); 0 1 0; -sin(theta) 0 cos(theta)];
-    Rz = [cos(phi) -sin(phi) 0; sin(phi) cos(phi) 0; 0 0 1];
-    Rx = [ 1 0 0; 0 cos(psi) -sin(psi); 0 sin(psi) cos(psi)];
+    Rx = [ 1 0 0; 0 cos(phi) -sin(phi); 0 sin(phi) cos(phi)];
+    Rz = [ cos(psi) -sin(psi) 0;sin(psi) cos(psi) 0; 0 0 1];
     
-    Pos=Rz*Pos;
-    Pos=Ry*Pos;
+%     Pos=Rz*Pos;
     Pos=Rx*Pos;
+    Pos=Ry*Pos;
+    Pos=Rz*Pos;
     
-    axis_size=Rz*axis_size;
-    axis_size=Ry*axis_size;
+    
     axis_size=Rx*axis_size;
+    axis_size=Ry*axis_size;
+    axis_size=Rz*axis_size;
     
     %         Pos(:,conditions)=[];
     
