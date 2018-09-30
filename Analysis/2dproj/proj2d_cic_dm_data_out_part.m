@@ -49,9 +49,9 @@ z_glob=z;
 count_sum=zeros((np*resol_factor/lenght_factor),(np*resol_factor/lenght_factor));
 
 
-psi=rot_angle(1);
+psi=rot_angle(3);
 theta=rot_angle(2);
-phi=rot_angle(3);
+phi=rot_angle(1);
 
 
 %     cell_bins1d_y=[(nc/2)-(nc/(2*lenght_factor))+pivot(2):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(2)];
@@ -104,16 +104,21 @@ for node = 1 : particl_part
     Pos(3,:)=Pos(3,:)-(np*resol_factor/2)-pivot(3)*(np*resol_factor)/(nc);
     
     Ry = [cos(theta) 0 sin(theta); 0 1 0; -sin(theta) 0 cos(theta)];
-    Rz = [cos(phi) -sin(phi) 0; sin(phi) cos(phi) 0; 0 0 1];
-    Rx = [ 1 0 0; 0 cos(psi) -sin(psi); 0 sin(psi) cos(psi)];
+    Rx = [ 1 0 0; 0 cos(phi) -sin(phi); 0 sin(phi) cos(phi)];
+    Rz = [ cos(psi) -sin(psi) 0;sin(psi) cos(psi) 0; 0 0 1];
     
-    Pos=Rz*Pos;
-    Pos=Ry*Pos;
     Pos=Rx*Pos;
+    Pos=Ry*Pos;
+    Pos=Rz*Pos;
     
-    axis_size=Rz*axis_size;
-    axis_size=Ry*axis_size;
-    axis_size=Rx*axis_size;
+    R1=Ry*Rx;
+    
+    R=Rz*R1;
+    
+%     Pos=Rz*Pos;
+%     Pos=Rx*Pos;
+%     Pos=Ry*Pos;
+    Pos=R*Pos;
     
     %         Pos(:,conditions)=[];
     
