@@ -92,7 +92,7 @@ rand_amplitude_X=nb/2;
 if numb_rand==0
 rng('shuffle')
 else
- rng(0,'twister');
+ rng(numb_rand,'twister');
 end
 
 prx=randi([-rand_amplitude_X rand_amplitude_X]);
