@@ -327,17 +327,17 @@ if ~ismember(0,data_stream)
     mkdir(strcat(root_out,spec,aux_path),strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/'));
     
     
-    mkdir(path_out,'dc/');
+%     mkdir(path_out,'dc/');
     
     
     if ismember(1,data_stream)
-        fileID = fopen(strcat(path_out,'dc/','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data.bin'),'w');
+        fileID = fopen(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data.bin'),'w');
         fwrite(fileID,count_sum, 'float32','l');
         fclose(fileID);
     end
     
     if ismember(2,data_stream)
-        dlmwrite(strcat(path_out,'dc/','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data.txt'),count_sum,'delimiter','\t');
+        dlmwrite(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data.txt'),count_sum,'delimiter','\t');
     end
     
 end
