@@ -1,4 +1,4 @@
-function [ count_sum] = proj2d_cic_dm_data_out_part_rand_wake( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,data_stream,particl_part)
+function [ count_sum] = proj2d_cic_dm_data_out_part_rand_wake( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,data_stream,particl_part,numb_rand)
 %Computes the 2d projections aconding to the input specifications and stores (and returns) the resulting data
 
 %   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_cic_dm_data_out_part_rand_wake('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','0.000xv0.dat',1,1,[0,0,0],[0,0],[1,2],64);
@@ -60,6 +60,8 @@ function [ count_sum] = proj2d_cic_dm_data_out_part_rand_wake( root,root_out,spe
 % if data_stream = 1, binaries generated
 % if data_stream = 2, text files generated
 
+
+
 cd('../preprocessing');
 
 % [ nodes_list redshift_list ] = preprocessing_many_nodes(root,spec,aux_path );
@@ -89,10 +91,11 @@ rand_amplitude_X=nb/2;
 % rand_amplitude_X=nb/2;
 % 
 % angl_amplitude=pi;
-
-% rng(0,'twister');
- rng('shuffle')
-
+if numb_rand==0
+rng('shuffle')
+else
+ rng(numb_rand,'twister');
+end
 
 prx=randi([-rand_amplitude_X rand_amplitude_X])
 prz=randi([-rand_amplitude_Z rand_amplitude_Z])
@@ -100,7 +103,7 @@ prz=randi([-rand_amplitude_Z rand_amplitude_Z])
 ra_along_wake=-pi/2+rand()*pi
 ra_perp_wake=-pi/2+rand()*pi
 
-
+% 
 % pivot=[0,0,30]
 % rot_angle=[pi/2,0,0]    %wake
 
@@ -175,10 +178,14 @@ for node = 1 : particl_part
     Rx = [ 1 0 0; 0 cos(phi) -sin(phi); 0 sin(phi) cos(phi)];
     Rz = [ cos(psi) -sin(psi) 0;sin(psi) cos(psi) 0; 0 0 1];
     
+    R1=Ry*Rx;
+    
+    R=Rz*R1;
+    
 %     Pos=Rz*Pos;
-    Pos=Rx*Pos;
-    Pos=Ry*Pos;
-    Pos=Rz*Pos;
+%     Pos=Rx*Pos;
+%     Pos=Ry*Pos;
+    Pos=R*Pos;
     
     
     axis_size=Rx*axis_size;
@@ -316,8 +323,8 @@ if ~ismember(0,data_stream)
     mkdir(root_out);
     mkdir(root_out,strcat(spec,aux_path));
     
-    path_out=strcat(strcat(root_out,spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2))),'ra','/','2dproj/dm/');
-    mkdir(strcat(root_out,spec,aux_path),strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2))),'ra','/','2dproj/dm/'));
+    path_out=strcat(strcat(root_out,spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2))),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/');
+    mkdir(strcat(root_out,spec,aux_path),strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2))),'-',num2str(rot_angle(2))),'ra','/','2dproj/dm/'));
     
     
     mkdir(path_out,'dc/');
