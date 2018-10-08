@@ -8,19 +8,19 @@
 addpath(genpath('/home/asus/Programs/CurveLab_matlab-2.1.3/fdct_wrapping_cpp/mex/'));
 addpath(genpath('/home/asus/Programs/CurveLab_matlab-2.1.3/fdct_wrapping_matlab'));
 
-filename='5.000proj_xz.dat';
-nc=2048;
+filename='_2dproj_z5_data.bin';
+nc=1024;
 trsh=20;
 cut=1;
 lev=4;
-anal_lev=2;
+anal_lev=1;
 
-specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/4Mpc_2048c_1024p_zi63_nowakem'
+specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_cic/4Mpc_2048c_1024p_zi63_nowakem'
 sample_list_nowake=dir(strcat(specs_path_list_nowake,'/sample*'));
 sample_list_nowake={sample_list_nowake.name};
 % sample_list_nowake=sort_nat(sample_list_nowake)
 
-specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m'
+specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cic/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m'
 sample_list_wake=dir(strcat(specs_path_list_wake,'/sample*'));
 sample_list_wake={sample_list_wake.name};
 sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw');
@@ -44,13 +44,14 @@ for s=1:length(C)
     end
 end
 
-
-
+fig_curv=figure;
 fig_test1=figure;
 fig_test2=figure;
 fig_test3=figure;
 fig_test4=figure;
 
+
+ax_curv=axes(fig_curv);
 ax_test1=axes(fig_test1);
 ax_test2=axes(fig_test2);
 ax_test3=axes(fig_test3);
@@ -63,19 +64,22 @@ for w_nw=1:2
     if w_nw==1
         specs_path_list=specs_path_list_nowake;
         sample_list=sample_list_nowake;
+        ch='_6';
         coul='b';
     else
         specs_path_list=specs_path_list_wake;
         sample_list=sample_list_wake;
+        ch='_3';
         coul='r';
     end
     
     
+    
     for sample = 1:length(sample_id_range)
         
-        filename_nowake=strcat('',specs_path_list,'/',string(sample_list(sample)),'/',filename)
+        filename_nowake=strcat('',specs_path_list,'/',string(sample_list(sample)),'/data/1lf_1rf_0-0-0pv_1.5708-0ra/2dproj/dm/dc/',ch,filename)
         fid = fopen(filename_nowake);
-        scalefactor = fread(fid, [1 1], 'float32','l') ;
+%         scalefactor = fread(fid, [1 1], 'float32','l') ;
         map = fread(fid,[nc nc], 'float32','l') ;
         fclose(fid);
         dc=(map-mean(map(:)))/mean(map(:));
@@ -92,13 +96,15 @@ for w_nw=1:2
         
         dc_cut=dc;
         dc_cut(dc_cut>cut)=cut;
+%         dc_cut(dc_cut>cut)=-1;
         %         dc_cut = edge(dc_cut,'canny');
         %         dc=double(dc_cut);
         
         thresh = multithresh(dc_cut,trsh);
         seg_I = imquantize(dc_cut,thresh);
+%         test=dc_cut;
 %         test=seg_I;
-         test=log(seg_I);
+        test=log(seg_I);
         
         
         
@@ -112,13 +118,22 @@ for w_nw=1:2
                 Ct{s}{w} = C_zero{s}{w};
             end
         end
+        aux_count=1;
         for s = length(C)-lev:length(C)
             thresh=0;
             for w = 1:length(C{s})
                 Ct{s}{w} = C{s}{w};
+                curv(w_nw,sample,w,aux_count)=kurtosis(abs(C{s}{w}(:)));
             end
+            curv2(w_nw,sample,aux_count)=kurtosis(curv(w_nw,sample,:,aux_count))
+            aux_count=aux_count+1;
         end
+        
+        
+        
         BW2 = real(ifdct_wrapping(Ct,0));
+        
+        
         
         anali(w_nw,sample,1,:)=[max(BW2(:)),std(BW2(:)),max(BW2(:))/std(BW2(:)),kurtosis(kurtosis(BW2)),kurtosis(BW2(:))];
         
@@ -150,26 +165,32 @@ for w_nw=1:2
         anali(w_nw,sample,3,:)=[max(R_nor(:)),std(R_nor(:)),max(R_nor(:))/std(R_nor(:)),kurtosis(kurtosis(R_nor)),kurtosis(R_nor(:))];
         anali(w_nw,sample,4,:)=[max(R_nor_filt(:)),std(R_nor_filt(:)),max(R_nor_filt(:))/std(R_nor_filt(:)),kurtosis(kurtosis(R_nor_filt)),kurtosis(R_nor_filt(:))];
         
+        
+        aa(:)=curv2(w_nw,sample,:);
+        
         a(:)=anali(w_nw,sample,1,:);
         b(:)=anali(w_nw,sample,2,:);
         c(:)=anali(w_nw,sample,3,:);
         d(:)=anali(w_nw,sample,4,:);
         
+        aa
         a
         b
         c
         d
         
+        
+        test_curv_lv{sample}=   plot(ax_curv,aa,coul);
         test1_lv{sample}=   plot(ax_test1,a,coul);
         test2_lv{sample}=   plot(ax_test2,b,coul);
         test3_lv{sample}=   plot(ax_test3,c,coul);
         test4_lv{sample}=   plot(ax_test4,d,coul);
         
-        clearvars a b c d
+        clearvars a b c d aa
         
         %         clearvars R R_nor R_nor_filt kurt2;
         
-        
+        hold(ax_curv,'on');
         hold(ax_test1,'on');
         hold(ax_test2,'on');
         hold(ax_test3,'on');
@@ -181,6 +202,7 @@ for w_nw=1:2
     
 end
 
+set(ax_curv, 'YScale', 'log');
 set(ax_test1, 'YScale', 'log');
 set(ax_test2, 'YScale', 'log');
 set(ax_test3, 'YScale', 'log');
