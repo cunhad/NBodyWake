@@ -200,11 +200,16 @@ for node = 1 : particl_part
                             dx2=1-dx1;
                             dy2=1-dy1;
                             
+                                    if (z_slice>0 && z_slice<= slice)
+                            
                             %         if (i1>=0 && i2< (np*resol_factor/lenght_factor)&& j1>=0 && j2< (np*resol_factor/lenght_factor))
                             count(mod(i1,nb)+1,mod(j1,nb)+1,z_slice)=count(mod(i1,nb)+1,mod(j1,nb)+1,z_slice)+dx1*dy1;
                             count(mod(i2,nb)+1,mod(j1,nb)+1,z_slice)=count(mod(i2,nb)+1,mod(j1,nb)+1,z_slice)+dx2*dy1;
                             count(mod(i1,nb)+1,mod(j2,nb)+1,z_slice)=count(mod(i1,nb)+1,mod(j2,nb)+1,z_slice)+dx1*dy2;
                             count(mod(i2,nb)+1,mod(j2,nb)+1,z_slice)=count(mod(i2,nb)+1,mod(j2,nb)+1,z_slice)+dx2*dy2;
+                                    else
+                                        display([i1,i2,j1,j2])
+                                    end
                             %         else
                             %             display([i1,i2,j1,j2])
                             %         end

@@ -1,9 +1,9 @@
-function [ count_sum] = proj2d_cic_dm_data_out_part( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,data_stream,particl_part,slice)
+function [ count_sum] = proj2d_cic_dm_data_out_part_slice( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,data_stream,particl_part,slice)
 %Computes the 2d projections aconding to the input specifications and stores (and returns) the resulting data
 
-%   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_cic_dm_data_out('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','0.000xv0.dat',1,1,[0,0,0],[0,0],[1,2],64,4);
-%   (example) [ count_sum] = proj2d_cic_dm_data_out('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,[0,0,0],[0,0,0],[1,2],64,4);
-%   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_cic_dm_data_out('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/data/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','10.000xv0.dat',1,1,[0,0,0],[0,0],[1,2],64,4);
+%   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_cic_dm_data_out_part_slice('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','0.000xv0.dat',1,1,[0,0,0],[0,0],[1,2],64,4);
+%   (example) [ count_sum] = proj2d_cic_dm_data_out_part_slice('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,[0,0,0],[0,0,0],[1,2],64,4);
+%   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_cic_dm_data_out_part_slice('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/data/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','10.000xv0.dat',1,1,[0,0,0],[0,0],[1,2],64,4);
 
 
 % NBody output should be stored as root+spec+aux_path (root directory, specification in the form size_numberofcellsperdimension_number_particlesperdimension_initialredshift_wakespecification&multiplicity, aux_path is the sample number )
@@ -200,11 +200,16 @@ for node = 1 : particl_part
                             dx2=1-dx1;
                             dy2=1-dy1;
                             
+                                    if (z_slice>0 && z_slice=< slice)
+                            
                             %         if (i1>=0 && i2< (np*resol_factor/lenght_factor)&& j1>=0 && j2< (np*resol_factor/lenght_factor))
-                            count(mod(i1,nb)+1,mod(j1,nb)+1,z_slice)=count(mod(i1,nb)+1,mod(j1,nb)+1)+dx1*dy1;
-                            count(mod(i2,nb)+1,mod(j1,nb)+1,z_slice)=count(mod(i2,nb)+1,mod(j1,nb)+1)+dx2*dy1;
-                            count(mod(i1,nb)+1,mod(j2,nb)+1,z_slice)=count(mod(i1,nb)+1,mod(j2,nb)+1)+dx1*dy2;
-                            count(mod(i2,nb)+1,mod(j2,nb)+1,z_slice)=count(mod(i2,nb)+1,mod(j2,nb)+1)+dx2*dy2;
+                            count(mod(i1,nb)+1,mod(j1,nb)+1,z_slice)=count(mod(i1,nb)+1,mod(j1,nb)+1,z_slice)+dx1*dy1;
+                            count(mod(i2,nb)+1,mod(j1,nb)+1,z_slice)=count(mod(i2,nb)+1,mod(j1,nb)+1,z_slice)+dx2*dy1;
+                            count(mod(i1,nb)+1,mod(j2,nb)+1,z_slice)=count(mod(i1,nb)+1,mod(j2,nb)+1,z_slice)+dx1*dy2;
+                            count(mod(i2,nb)+1,mod(j2,nb)+1,z_slice)=count(mod(i2,nb)+1,mod(j2,nb)+1,z_slice)+dx2*dy2;
+                                    else
+                                        display([i1,i2,j1,j2])
+                                    end
                             %         else
                             %             display([i1,i2,j1,j2])
                             %         end
@@ -254,17 +259,18 @@ if ~ismember(0,data_stream)
     mkdir(strcat(root_out,spec,aux_path),strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/'));
     
     
-%     mkdir(path_out,'dc/');
+    %     mkdir(path_out,'dc/');
     
-    
-    if ismember(1,data_stream)
-        fileID = fopen(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data.bin'),'w');
-        fwrite(fileID,count_sum, 'float32','l');
-        fclose(fileID);
-    end
-    
-    if ismember(2,data_stream)
-        dlmwrite(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data.txt'),count_sum,'delimiter','\t');
+    for count_slice=1:slice
+        if ismember(1,data_stream)
+            fileID = fopen(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'.bin'),'w');
+            fwrite(fileID,count_sum(:,:,count_slice), 'float32','l');
+            fclose(fileID);
+        end
+        
+        if ismember(2,data_stream)
+            dlmwrite(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'.txt'),count_sum(:,:,count_slice),'delimiter','\t');
+        end
     end
     
 end
