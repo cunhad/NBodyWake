@@ -8,19 +8,19 @@
 addpath(genpath('/home/asus/Programs/CurveLab_matlab-2.1.3/fdct_wrapping_cpp/mex/'));
 addpath(genpath('/home/asus/Programs/CurveLab_matlab-2.1.3/fdct_wrapping_matlab'));
 
-filename='_2dproj_z5_data.bin';
-nc=1024;
+filename='_2dproj_z5_data_sl1.bin';
+nc=2048;
 trsh=20;
 cut=1;
 lev=4;
 anal_lev=1;
 
-specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_cic/4Mpc_2048c_1024p_zi63_nowakem'
+specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps_2024/4Mpc_2048c_1024p_zi63_nowakem'
 sample_list_nowake=dir(strcat(specs_path_list_nowake,'/sample*'));
 sample_list_nowake={sample_list_nowake.name};
 % sample_list_nowake=sort_nat(sample_list_nowake)
 
-specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cic/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m'
+specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps_2024/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m'
 sample_list_wake=dir(strcat(specs_path_list_wake,'/sample*'));
 sample_list_wake={sample_list_wake.name};
 sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw');
@@ -77,7 +77,7 @@ for w_nw=1:2
     
     for sample = 1:length(sample_id_range)
         
-        filename_nowake=strcat('',specs_path_list,'/',string(sample_list(sample)),'/data/1lf_1rf_0-0-0pv_1.5708-0ra/2dproj/dm/dc/',ch,filename)
+        filename_nowake=strcat('',specs_path_list,'/',string(sample_list(sample)),'/data/1lf_2rf_0-0-0pv_1.5708-0-0ra/2dproj/dm/',ch,filename)
         fid = fopen(filename_nowake);
 %         scalefactor = fread(fid, [1 1], 'float32','l') ;
         map = fread(fid,[nc nc], 'float32','l') ;

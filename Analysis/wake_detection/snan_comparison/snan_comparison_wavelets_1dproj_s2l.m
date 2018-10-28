@@ -182,7 +182,7 @@ for sample = 1:length(sample_id_range)
 %     end
     
     
-    %     hold on;
+    %     hold on;sca
     
 end
 
