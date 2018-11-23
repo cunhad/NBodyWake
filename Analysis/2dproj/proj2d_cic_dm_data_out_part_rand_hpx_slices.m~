@@ -1,10 +1,40 @@
-function [ count_sum] = proj2d_cic_dm_data_out( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,data_stream)
+function [ count_sum] = proj2d_cic_dm_data_out_part_rand_hpx_slices( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,data_stream,particl_part,numb_rand,slice)
 %Computes the 2d projections aconding to the input specifications and stores (and returns) the resulting data
 
-%   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_cic_dm_data_out('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','0.000xv0.dat',1,1,[0,0,0],[0,0],[1,2]);
-%   (example) [ count_sum] = proj2d_cic_dm_data_out('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,[0,0,0],[0,0,0],[1,2]);
-%   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_cic_dm_data_out('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/data/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','10.000xv0.dat',1,1,[0,0,0],[0,0],[1,2]);
+%   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_cic_dm_data_out_part_rand_nowake('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','0.000xv0.dat',1,1,[0,0,0],[0,0],[1,2],64);
+%   (example) [ count_sum] = proj2d_cic_dm_data_out_part_rand_hpx_slices('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data_test1/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,1,1,1,4);
+%   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_cic_dm_data_out_part_rand_nowake('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/data/','64Mpc_1024c_512p_zi63_wakeGmu5t10m6zi63m','/sample0001/','','10.000xv0.dat',1,1,[0,0,0],[0,0],[1,2],64);
 
+% rng('shuffle')
+% rng(2);
+
+% %wake
+% 
+% pivot=[0,0,0]
+% rot_angle=[pi/2,0,0]
+
+
+% 
+% 
+% %wake
+% 
+% rand_amplitude_Z=nb/4;
+% rand_amplitude_Y=0; %irrelevant
+% rand_amplitude_X=nb/2;
+% 
+% %general
+% 
+% rand_amplitude_Z=nb/2;
+% rand_amplitude_Y=nb/2; %irrelevant
+% rand_amplitude_X=nb/2;
+% 
+% angl_amplitude=pi;
+% 
+% 
+% 
+% 
+% pivot=[0,0,30]
+% rot_angle=[0,pi/2,0]    %wake
 
 % NBody output should be stored as root+spec+aux_path (root directory, specification in the form size_numberofcellsperdimension_number_particlesperdimension_initialredshift_wakespecification&multiplicity, aux_path is the sample number )
 
@@ -37,21 +67,63 @@ cd('../preprocessing');
 
 
 % [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( root,spec,aux_path,filename);
-[ size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw,z,path_file_in,~ ] = preprocessing_part(root,spec,aux_path,filename,length(nodes_list),1);
+[ size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw,z,path_file_in,~ ] = preprocessing_part(root,spec,aux_path,filename,particl_part,1);
 
 % display(z)
 z_glob=z;
+
+
+nb=np*resol_factor/lenght_factor;
+
+
+%wake
+
+rand_amplitude_Z=nb/4;
+rand_amplitude_Y=0; %irrelevant
+rand_amplitude_X=nb/2;
+
+%general
+
+% rand_amplitude_Z=nb/2;
+% rand_amplitude_Y=nb/2; %irrelevant
+% rand_amplitude_X=nb/2;
+% 
+% angl_amplitude=pi;
+if numb_rand==0
+rng('shuffle')
+else
+ rng(numb_rand,'twister');
+end
+
+prx=randi([-rand_amplitude_X rand_amplitude_X]);
+pry=randi([-rand_amplitude_X rand_amplitude_X]);
+prz=randi([-rand_amplitude_X rand_amplitude_X]);
+
+angles_hpx(1,:)  = dlmread(strcat('../../python/angles',num2str(NSIDE),'_t.cvs'));
+angles_hpx(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'));
+
+ra=-pi/2+rand()*pi;
+ra_along_wake=-pi/2+rand()*pi;
+ra_perp_wake=-pi/2+rand()*pi;
+
+
+% pivot=[0,0,30]
+% rot_angle=[pi/2,0,0]    %wake
+
+pivot=[prx,pry,prz]
+rot_angle=[ra,ra_perp_wake,ra_along_wake]
+
 
 % cell_bins1d_y=[(nc/2)-(nc/(2*lenght_factor))+pivot(2):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(2)];
 % cell_bins1d_z=[(nc/2)-(nc/(2*lenght_factor))+pivot(3):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(3)];
 % cell_bins1d_y(end)=[];
 % cell_bins1d_z(end)=[];
-count_sum=zeros((np*resol_factor/lenght_factor),(np*resol_factor/lenght_factor));
+count_sum=zeros((np*resol_factor/lenght_factor),(np*resol_factor/lenght_factor),slice);
 
 
-psi=rot_angle(1);
+psi=rot_angle(3);
 theta=rot_angle(2);
-phi=rot_angle(3);
+phi=rot_angle(1);
 
 
 %     cell_bins1d_y=[(nc/2)-(nc/(2*lenght_factor))+pivot(2):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(2)];
@@ -62,32 +134,34 @@ phi=rot_angle(3);
 
 % display(length(nodes_list));
 
-nb=np*resol_factor/lenght_factor;
+
+
 
 % for node = 1 : 1
 % for node = 1 : 16
-for node = 1 : length(nodes_list)
+for node = 1 : particl_part
     
     %     cell_bins1d_y=[(nc/2)-(nc/(2*lenght_factor))+pivot(2):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(2)];
     %     cell_bins1d_z=[(nc/2)-(nc/(2*lenght_factor))+pivot(3):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(3)];
     
-    path_in=strcat(root,spec,aux_path);
-    file_name = dir(strcat(path_in,num2str(z_glob),'*xv',char(nodes_list(node)),'.dat'));
-    filename=file_name.name;
+%     path_in=strcat(root,spec,aux_path);
+%     file_name = dir(strcat(path_in,num2str(z_glob),'*xv',char(nodes_list(node)),'.dat'));
+%     filename=file_name.name;
     
-    display(filename);
+    display(node);
     
     %     for Dx=-1:1
     %         for Dy=-1:1
     %             for Dz=-1:1
     
-    [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( root,spec,aux_path,filename);
-    %     [ ~,~,~,~,~,~,~,~,~,~,Pos ] = preprocessing_part(root,spec,aux_path,filename,length(nodes_list),node);
+%     [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( root,spec,aux_path,filename);
+        [ ~,~,~,~,~,~,~,~,~,~,Pos ] = preprocessing_part(root,spec,aux_path,filename,particl_part,node);
     
     % display(length(Pos));
     
     Pos=mod(Pos,nc);
     
+
     Pos=Pos*(np*resol_factor)/(nc);
     
     %
@@ -102,19 +176,24 @@ for node = 1 : length(nodes_list)
     Pos(1,:)=Pos(1,:)-(np*resol_factor/2)-pivot(1)*(np*resol_factor)/(nc);
     Pos(2,:)=Pos(2,:)-(np*resol_factor/2)-pivot(2)*(np*resol_factor)/(nc);
     Pos(3,:)=Pos(3,:)-(np*resol_factor/2)-pivot(3)*(np*resol_factor)/(nc);
-
     
     Ry = [cos(theta) 0 sin(theta); 0 1 0; -sin(theta) 0 cos(theta)];
-    Rz = [cos(phi) -sin(phi) 0; sin(phi) cos(phi) 0; 0 0 1];
-    Rx = [ 1 0 0; 0 cos(psi) -sin(psi); 0 sin(psi) cos(psi)];
+    Rx = [ 1 0 0; 0 cos(phi) -sin(phi); 0 sin(phi) cos(phi)];
+    Rz = [ cos(psi) -sin(psi) 0;sin(psi) cos(psi) 0; 0 0 1];
     
-    Pos=Rz*Pos;
-    Pos=Ry*Pos;
-    Pos=Rx*Pos;
+    R1=Ry*Rx;
     
-    axis_size=Rz*axis_size;
-    axis_size=Ry*axis_size;
+    R=Rz*R1;
+    
+%     Pos=Rz*Pos;
+%     Pos=Rx*Pos;
+%     Pos=Ry*Pos;
+    Pos=R*Pos;
+    
+    
     axis_size=Rx*axis_size;
+    axis_size=Ry*axis_size;
+    axis_size=Rz*axis_size;
     
     %         Pos(:,conditions)=[];
     
@@ -176,7 +255,7 @@ for node = 1 : length(nodes_list)
                         
                         Pos_aux=transpose(Pos_aux);
                         
-                        count=zeros(nb,nb);
+                        count=zeros(nb,nb,slice);
                         
                         % display(size(Pos,1))
                         
@@ -188,6 +267,7 @@ for node = 1 : length(nodes_list)
                             
                             x=Pos_aux(particle,1)-0.5;
                             y=Pos_aux(particle,2)-0.5;
+                            z_slice=ceil(Pos_aux(particle,3)/(lim/slice));                            
                             i1=floor(x)+1;
                             j1=floor(y)+1;
                             i2=i1+1;
@@ -197,14 +277,19 @@ for node = 1 : length(nodes_list)
                             dx2=1-dx1;
                             dy2=1-dy1;
                             
+                            
+
+                                   if (z_slice>0 && z_slice<= slice)
+                            
+                            
                             %         if (i1>=0 && i2< (np*resol_factor/lenght_factor)&& j1>=0 && j2< (np*resol_factor/lenght_factor))
-                            count(mod(i1,nb)+1,mod(j1,nb)+1)=count(mod(i1,nb)+1,mod(j1,nb)+1)+dx1*dy1;
-                            count(mod(i2,nb)+1,mod(j1,nb)+1)=count(mod(i2,nb)+1,mod(j1,nb)+1)+dx2*dy1;
-                            count(mod(i1,nb)+1,mod(j2,nb)+1)=count(mod(i1,nb)+1,mod(j2,nb)+1)+dx1*dy2;
-                            count(mod(i2,nb)+1,mod(j2,nb)+1)=count(mod(i2,nb)+1,mod(j2,nb)+1)+dx2*dy2;
-                            %         else
-                            %             display([i1,i2,j1,j2])
-                            %         end
+                            count(mod(i1,nb)+1,mod(j1,nb)+1,z_slice)=count(mod(i1,nb)+1,mod(j1,nb)+1,z_slice)+dx1*dy1;
+                            count(mod(i2,nb)+1,mod(j1,nb)+1,z_slice)=count(mod(i2,nb)+1,mod(j1,nb)+1,z_slice)+dx2*dy1;
+                            count(mod(i1,nb)+1,mod(j2,nb)+1,z_slice)=count(mod(i1,nb)+1,mod(j2,nb)+1,z_slice)+dx1*dy2;
+                            count(mod(i2,nb)+1,mod(j2,nb)+1,z_slice)=count(mod(i2,nb)+1,mod(j2,nb)+1,z_slice)+dx2*dy2;
+                                    else
+                                        display([i1,i2,j1,j2])
+                                    end
                             
                         end
                     end
@@ -247,21 +332,24 @@ if ~ismember(0,data_stream)
     mkdir(root_out);
     mkdir(root_out,strcat(spec,aux_path));
     
-    path_out=strcat(strcat(root_out,spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2))),'ra','/','2dproj/dm/');
-    mkdir(strcat(root_out,spec,aux_path),strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2))),'ra','/','2dproj/dm/'));
+    path_out=strcat(strcat(root_out,spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/');
+    mkdir(strcat(root_out,spec,aux_path),strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/'));
     
     
-    mkdir(path_out,'dc/');
+    %     mkdir(path_out,'dc/');
     
-    
-    if ismember(1,data_stream)
-        fileID = fopen(strcat(path_out,'dc/','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data.bin'),'w');
-        fwrite(fileID,count_sum, 'float32','l');
-        fclose(fileID);
-    end
-    
-    if ismember(2,data_stream)
-        dlmwrite(strcat(path_out,'dc/','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data.txt'),count_sum,'delimiter','\t');
+    for count_slice=1:slice
+        
+        if ismember(1,data_stream)
+            fileID = fopen(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'.bin'),'w');
+            fwrite(fileID,count_sum(:,:,count_slice), 'float32','l');
+            fclose(fileID);
+        end
+        
+        if ismember(2,data_stream)
+            dlmwrite(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'.txt'),count_sum(:,:,count_slice),'delimiter','\t');
+        end
+        
     end
     
 end

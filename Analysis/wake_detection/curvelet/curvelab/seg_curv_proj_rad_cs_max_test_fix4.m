@@ -1,4 +1,4 @@
-function [ anali ] = seg_curv_proj_rad_cs_max_test(  )
+function [ anali ] = seg_curv_proj_rad_cs_max_test_fix4(  )
 
 
 %example:
@@ -14,7 +14,7 @@ nc=1024;
 trsh=20;
 cut=1;
 lev=2;
-sigma = 0;        
+sigma = 5;        
 slice=32;
 anal_lev=2;
 
@@ -147,7 +147,9 @@ for w_nw=1:2
                 thresh = sigma + sigma*(s == length(C));
                 for w = 1:length(C{s})
 %                     Ct{s}{w} = C{s}{w};
-                Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > thresh*E{s}{w});
+%                     Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > thresh*E{s}{w});
+                    Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > -thresh*E{s}{w}&(C{s}{w}) < thresh*E{s}{w});
+%                 Ct{s}{w} = C{s}{w};
                     curv(w_nw,sample,slice_id,w,aux_count)=kurtosis(abs(C{s}{w}(:)));
                 end
                 curv2(w_nw,sample,slice_id,aux_count)=kurtosis(curv(w_nw,sample,slice_id,:,aux_count));
@@ -174,17 +176,24 @@ for w_nw=1:2
             R_nor(R_u>nc*frac_cut)=R_nor(R_u>nc*frac_cut)./R_u(R_u>nc*frac_cut);
             R_nor(R_u<=nc*frac_cut)=0;
             
+            boudary_removal_factor=2048/n;
+            
             n_levels=floor(log2(length(R_nor(:,1))));
             R_nor_filt=zeros(size(R_nor));
             for i=1:length(R(1,:))
                 [dc_dwt,levels] = wavedec(R(:,i),n_levels,'db1');
                 D = wrcoef('d',dc_dwt,levels,'db1',lev);
-                D(2465-200:end)=0;
-                D(1:448+200)=0;
+%                 D(floor((2465-200)/boudary_removal_factor):end)=0;
+%                 D(1:floor((448+200)/boudary_removal_factor))=0;
+                 D(1237-256:end)=0;
+                 D(1:217+256)=0;
+
                 R_nor_filt(:,i)=D;
             end
-            R_nor_filt(2465-200:end,:)=[];
-            R_nor_filt(1:448+200,:)=[];
+%             R_nor_filt(floor((2465-200)/boudary_removal_factor):end,:)=[];
+%             R_nor_filt(1:floor((448+200)/boudary_removal_factor),:)=[];
+             R_nor_filt(1237-256:end,:)=[];
+             R_nor_filt(1:217+256,:)=[];
             
             
             

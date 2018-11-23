@@ -1,0 +1,225 @@
+function [ size_box, nc, np, zi, wake_or_no_wake ,multiplicity_of_files ,Gmu ,ziw ,z, path_file_in, Pos, mass, Radiusd ] = preprocessing_halo_part( path,spec,aux_path,filename,part,part_id)
+%   This function takes the phase space output from CUBEP3M and returns
+%   some relevant information plus the global positions of all particles at the
+%   corresponding redshift and node volume
+
+
+%(example) preprocessing_halo_part( '/home/asus/Dropbox/extras/storage/graham/small_res/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','0.000halo0.dat',1,1);
+%(example) preprocessing_halo_part( '/home/asus/Dropbox/extras/storage/guillimin/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','10.000halo0.dat',1,1);
+ 
+% (example) preprocessing_halo_part( '/home/asus/Dropbox/extras/storage/graham/ht/','4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m','/sample1001/half_lin_cutoff_half_tot_pert_nvpw/','3.000halo0.dat',1,1);
+
+
+%   Detailed explanation:
+
+%reads the specifications and extract the information on variables
+spec_arr = strsplit(spec,'_');
+
+%extract the box size
+
+size_box = spec_arr(1);
+size_box = char(size_box);
+size_box = size_box(1:end-3);
+size_box = str2num(size_box);
+
+%extract the number of cells per dimension
+
+nc = spec_arr(2);
+nc = char(nc);
+nc = nc(1:end-1);
+nc = str2num(nc);
+
+%extract the number of particle per dimension
+
+np = spec_arr(3);
+np = char(np);
+np = np(1:end-1);
+np = str2num(np);
+ 
+%extract the initial redshift of the simulation
+  
+ zi = spec_arr(4);
+ zi = char(zi);
+ zi = zi(3:end);
+ zi = str2num(zi);
+ 
+  %extracts the redshift of the file to be analised
+ 
+ z_string=char(filename);
+ z_string=z_string(1:end-9);
+ z=str2num(z_string);
+ 
+ % extracts the informations of the wake if there is one
+ 
+ wake_spec = spec_arr(5);
+ wake_spec = char(wake_spec);
+ if wake_spec(1)=='n'
+    wake_or_no_wake='no wake';
+    multiplicity_of_files=wake_spec(end); 
+    Gmu=0;
+    ziw=0;
+ end
+ if wake_spec(1)=='w'
+     wake_or_no_wake='wake';
+     wake_spec2=strsplit(wake_spec,{'u','t10m','zi'},'CollapseDelimiters',true);
+     Gmu=str2num(char(wake_spec2(2)))*10^(-str2num(char(wake_spec2(3))));
+     ziw=char(wake_spec2(4));
+     ziw=str2num(ziw(1:end-1));
+     multiplicity_of_files=char(wake_spec(end));
+ end
+ 
+ %extract the information of the multiplicity of the files to be analysed
+ 
+ if multiplicity_of_files=='s'
+     path_file_in=strcat(path,spec,aux_path,filename);
+ end
+ if multiplicity_of_files=='m'
+     path_file_in=strcat(path,spec,aux_path,filename);
+ end
+ 
+%look at the chunks
+ 
+[~,~,nodes_list,~,~,~,~,~,~,~,~] = preprocessing_info(path,spec,aux_path );
+
+files_node_list=strcat(filename(1:end-5),nodes_list,'.dat');
+% files_node_list=dir(strcat(path,spec,aux_path,num2str(z_string),'xv*','.dat'));
+% files_node_list={files_node_list.name};
+% display(files_node_list)
+
+particle_number_per_file=ones(1,length(files_node_list)+1);
+particle_sum_per_file=zeros(1,length(files_node_list)+1);
+particle_sum=0;
+for node_ID=1:length(files_node_list)
+    directory = dir(strcat(path,spec,aux_path,files_node_list{node_ID}));
+    particle_number_per_file(node_ID+1)=(directory.bytes-4)/(4*422);
+    particle_sum = (directory.bytes-4)/(4*422) + particle_sum;
+    particle_sum_per_file(node_ID+1)=particle_sum;
+end
+
+% sum(particle_number_per_file)
+
+particle_sum
+
+% particle_number_per_file
+
+total_number_of_particles=sum(particle_number_per_file)-1;
+size_of_particle_chunk=ceil(total_number_of_particles/part);
+
+particle_sum_per_chunk=ones(1,part+1);
+for part_ID=1:part
+    particle_sum_per_chunk(part_ID+1)=size_of_particle_chunk*part_ID;
+end
+particle_sum_per_chunk(part+1)=total_number_of_particles;
+
+part_chunck_start=particle_sum_per_chunk(part_id)
+part_chunck_end=particle_sum_per_chunk(part_id+1)
+
+
+for node_ID=1:length(files_node_list)
+    if ((part_chunck_start>particle_sum_per_file(node_ID))&&(part_chunck_start<=particle_sum_per_file(node_ID+1)))
+        part_files_start_ID=node_ID;
+    end
+    if ((part_chunck_end>particle_sum_per_file(node_ID))&&(part_chunck_end<=particle_sum_per_file(node_ID+1)))
+        part_files_end_ID=node_ID;
+    end
+end
+
+% data=[];
+% for node_ID=part_files_start_ID:part_files_end_ID
+%     fid = fopen(strcat(path,spec,aux_path,files_node_list{node_ID}));
+%     fread(fid, [12 1], 'float32','l') ;
+%     if (part_chunck_start>particle_sum_per_file(node_ID))
+%         for i=1:part_chunck_start-particle_sum_per_file(node_ID)-1
+%             fread(fid, [6 1], 'float32','l');                            
+%         end
+%     end
+%     if (part_chunck_end<=particle_sum_per_file(node_ID+1))
+%         data=[data fread(fid, [6 size_of_particle_chunk], 'float32','l')];
+%     else 
+%         data=[data fread(fid, [6 Inf], 'float32','l')];
+%     end   
+% end
+
+
+% [~,~,nodes_list,~,~,~,~,~,~,~,~] = preprocessing_info(path,spec,aux_path );
+% [ nodes_list ~ ] = preprocessing_many_nodes(path,spec,aux_path)
+number_node_dim=nthroot(numel(nodes_list), 3);
+
+test=0;
+
+% part_files_start_ID
+
+% part_files_end_ID
+
+data=[];
+for node_ID=part_files_start_ID:part_files_end_ID
+%     node_ID
+    header=false;
+    fid = fopen(strcat(path,spec,aux_path,files_node_list{node_ID}));
+%     display(strcat(path,spec,aux_path,files_node_list{node_ID}));
+   fread(fid, 1, 'int32','l') ;
+    if (part_chunck_start>particle_sum_per_file(node_ID))
+%         part_chunck_start
+%         particle_sum_per_file(node_ID)
+        for i=1:part_chunck_start-particle_sum_per_file(node_ID)-1
+            fread(fid, [422 1], 'float32','l');                            
+        end
+        header=true;
+    end
+    if (part_chunck_end<=particle_sum_per_file(node_ID+1))
+%          part_chunck_end 
+          
+%          particle_sum_per_file(node_ID)
+%          particle_sum_per_file(node_ID+1)
+        if header
+        data_file=fread(fid, [422 size_of_particle_chunk], 'float32','l');
+        else
+        data_file=fread(fid, [422 part_chunck_end-particle_sum_per_file(node_ID)], 'float32','l');            
+        end
+    else 
+        data_file=fread(fid, [422 Inf], 'float32','l');
+    end
+%     size(data_file)
+%     test=test+size(data_file,2)
+    fclose(fid);
+    node=node_ID-1;
+    k_node=floor(node/number_node_dim^2);
+    res=mod(node,number_node_dim^2);
+    j_node=floor(res/number_node_dim);
+%     i_node=mod(res,number_node_dim);
+%     data_file(4,:)=data_file(4,:)+(nc/number_node_dim)*i_node;
+%     data_file(5,:)=data_file(5,:)+(nc/number_node_dim)*j_node;
+%     data_file(6,:)=data_file(6,:)+(nc/number_node_dim)*k_node;
+    data=[data data_file];
+end
+
+% test
+
+Pos = data(4:6,:);
+Radiusd= data(16,:);
+mass=data(17,:);
+mass=mass*(np/nc)^3;
+
+
+
+%Pos=transpose(Pos);
+%Pos=mod(Pos,nc);
+ 
+%in this part we will get the position of the wake taking into acount the
+%node structure
+
+
+%  k_node=floor(node/number_node_dim^2);
+%  res=mod(node,number_node_dim^2);
+%  j_node=floor(res/number_node_dim);
+%  i_node=mod(res,number_node_dim);
+%  
+%  
+%  Pos(1,:)=Pos(1,:)+(nc/number_node_dim)*i_node;
+%  Pos(2,:)=Pos(2,:)+(nc/number_node_dim)*j_node;
+%  Pos(3,:)=Pos(3,:)+(nc/number_node_dim)*k_node;
+%  
+ 
+
+end
+

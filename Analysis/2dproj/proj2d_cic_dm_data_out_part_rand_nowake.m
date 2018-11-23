@@ -1,4 +1,4 @@
-function [ count_sum] = proj2d_cic_dm_data_out_part_rand_wake( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,data_stream,particl_part,numb_rand)
+function [ count_sum] = proj2d_cic_dm_data_out_part_rand_nowake( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,data_stream,particl_part,numb_rand)
 %Computes the 2d projections aconding to the input specifications and stores (and returns) the resulting data
 
 %   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_cic_dm_data_out_part_rand_wake('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','0.000xv0.dat',1,1,[0,0,0],[0,0],[1,2],64);

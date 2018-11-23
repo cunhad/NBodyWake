@@ -124,11 +124,11 @@ mass=mass*(np/nc)^3;
  j_node=floor(res/number_node_dim);
  i_node=mod(res,number_node_dim);
  
- 
+%  
 %  Pos(1,:)=Pos(1,:)+(nc/number_node_dim)*i_node;
 %  Pos(2,:)=Pos(2,:)+(nc/number_node_dim)*j_node;
 %  Pos(3,:)=Pos(3,:)+(nc/number_node_dim)*k_node;
- 
+%  
  
 %  XM=nc;
 %  Xm=0;
@@ -163,4 +163,15 @@ mass=mass*(np/nc)^3;
  
 end
 end
+
+%  clearvars
+% Pos=[];
+% for node=1:64
+% filename=strcat('3.000halo',num2str(node-1),'.dat')
+% [ size_box, nc, np, zi, wake_or_no_wake ,multiplicity_of_files ,Gmu ,ziw ,z, path_file_in, Pos_n, mass, Radiusd ] = preprocessing_halo_nodes( '/home/asus/Dropbox/extras/storage/graham/ht/','4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m','/sample3001/half_lin_cutoff_half_tot_pert_nvpw/',filename);
+% Pos=[Pos Pos_n];
+% end
+% %Pos_old=Pos;
+% %Pos=mod(Pos,nc);
+% figure;
 
