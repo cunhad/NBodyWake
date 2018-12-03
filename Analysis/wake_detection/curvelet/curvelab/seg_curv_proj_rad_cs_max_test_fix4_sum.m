@@ -1,4 +1,4 @@
-function [ anali ] = seg_curv_proj_rad_cs_max_test_fix4(  )
+function [ anali,anali_sum,anali_sum2 ] = seg_curv_proj_rad_cs_max_test_fix4_sum(  )
 
 
 %example:
@@ -59,6 +59,15 @@ fig_test2_m=figure;
 fig_test3_m=figure;
 fig_test4_m=figure;
 
+fig_test1_max=figure;
+fig_test2_max=figure;
+fig_test3_max=figure;
+fig_test4_max=figure;
+
+fig_test1_max2=figure;
+fig_test2_max2=figure;
+fig_test3_max2=figure;
+fig_test4_max2=figure;
 
 ax_curv=axes(fig_curv);
 ax_test1=axes(fig_test1);
@@ -70,6 +79,16 @@ ax_test1_m=axes(fig_test1_m);
 ax_test2_m=axes(fig_test2_m);
 ax_test3_m=axes(fig_test3_m);
 ax_test4_m=axes(fig_test4_m);
+
+ax_test1_max=axes(fig_test1_max);
+ax_test2_max=axes(fig_test2_max);
+ax_test3_max=axes(fig_test3_max);
+ax_test4_max=axes(fig_test4_max);
+
+ax_test1_max2=axes(fig_test1_max2);
+ax_test2_max2=axes(fig_test2_max2);
+ax_test3_max2=axes(fig_test3_max2);
+ax_test4_max2=axes(fig_test4_max2);
 
 sample_id_range=[1 : length(sample_list_nowake)];
 
@@ -90,6 +109,11 @@ for w_nw=1:2
     
     
     for sample = 1:length(sample_id_range)
+%       for sample = 7:7
+          
+          
+          
+    dc_sum_filt=zeros(nc);
         
         for slice_id=1:slice
             
@@ -147,7 +171,6 @@ for w_nw=1:2
                 thresh = sigma + sigma*(s == length(C));
                 for w = 1:length(C{s})
 %                     Ct{s}{w} = C{s}{w};
-%                     Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > 0*E{s}{w});
 %                     Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > thresh*E{s}{w});
                     Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > -thresh*E{s}{w}&(C{s}{w}) < thresh*E{s}{w});
 %                 Ct{s}{w} = C{s}{w};
@@ -160,6 +183,8 @@ for w_nw=1:2
             
             
             BW2 = real(ifdct_wrapping(Ct,0));
+            
+            dc_sum_filt=dc_sum_filt+BW2;
             
             
             
@@ -181,7 +206,8 @@ for w_nw=1:2
             
             n_levels=floor(log2(length(R_nor(:,1))));
             R_nor_filt=zeros(size(R_nor));
-            for i=1:length(R(1,:))
+            for i=1:length(R_nor(1,:))
+%                 [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
                 [dc_dwt,levels] = wavedec(R(:,i),n_levels,'db1');
                 D = wrcoef('d',dc_dwt,levels,'db1',lev);
 %                 D(floor((2465-200)/boudary_removal_factor):end)=0;
@@ -235,6 +261,47 @@ for w_nw=1:2
             
         end
         
+        theta = 0:180;
+            [R,xp] = radon(dc_sum_filt,theta);
+            
+            unit=ones(nc);
+            [R_u,xp] = radon(unit,theta);
+            
+            frac_cut=0.5;
+            R_nor=R;
+            R_nor(R_u>nc*frac_cut)=R_nor(R_u>nc*frac_cut)./R_u(R_u>nc*frac_cut);
+            R_nor(R_u<=nc*frac_cut)=0;
+            
+            boudary_removal_factor=2048/n;
+            
+            n_levels=floor(log2(length(R_nor(:,1))));
+            R_nor_filt=zeros(size(R_nor));
+            for i=1:length(R_nor(1,:))
+%                 [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
+                [dc_dwt,levels] = wavedec(R(:,i),n_levels,'db1');
+                D = wrcoef('d',dc_dwt,levels,'db1',lev);
+%                 D(floor((2465-200)/boudary_removal_factor):end)=0;
+%                 D(1:floor((448+200)/boudary_removal_factor))=0;
+                 D(1237-256:end)=0;
+                 D(1:217+256)=0;
+
+                R_nor_filt(:,i)=D;
+            end
+%             R_nor_filt(floor((2465-200)/boudary_removal_factor):end,:)=[];
+%             R_nor_filt(1:floor((448+200)/boudary_removal_factor),:)=[];
+             R_nor_filt(1237-256:end,:)=[];
+             R_nor_filt(1:217+256,:)=[];
+             
+             anali_sum(w_nw,sample,1,:)=[max(dc_sum_filt(:)),std(dc_sum_filt(:)),max(dc_sum_filt(:))/std(dc_sum_filt(:)),kurtosis(kurtosis(dc_sum_filt)),kurtosis(dc_sum_filt(:))];
+             anali_sum(w_nw,sample,2,:)=[max(R(:)),std(R(:)),max(R(:))/std(R(:)),kurtosis(kurtosis(R)),kurtosis(R(:))];
+             anali_sum(w_nw,sample,3,:)=[max(R_nor(:)),std(R_nor(:)),max(R_nor(:))/std(R_nor(:)),kurtosis(kurtosis(R_nor)),kurtosis(R_nor(:))];
+             anali_sum(w_nw,sample,4,:)=[max(R_nor_filt(:)),std(R_nor_filt(:)),max(R_nor_filt(:))/std(R_nor_filt(:)),kurtosis(kurtosis(R_nor_filt)),kurtosis(R_nor_filt(:))];
+        
+             a_max(:)=anali_sum(w_nw,sample,1,:);
+             b_max(:)=anali_sum(w_nw,sample,2,:);
+             c_max(:)=anali_sum(w_nw,sample,3,:);
+             d_max(:)=anali_sum(w_nw,sample,4,:);
+             
         a(:)=max(anali(w_nw,sample,:,1,:),[],3);
         b(:)=max(anali(w_nw,sample,:,2,:),[],3);
         c(:)=max(anali(w_nw,sample,:,3,:),[],3);
@@ -251,7 +318,88 @@ for w_nw=1:2
         test3m_lv{sample_id}=   plot(ax_test3_m,c,coul);
         test4m_lv{sample_id}=   plot(ax_test4_m,d,coul);
         
-        clearvars a b c d aa
+        test1max_lv{sample_id}=   plot(ax_test1_max,a_max,coul);
+        test2max_lv{sample_id}=   plot(ax_test2_max,b_max,coul);
+        test3max_lv{sample_id}=   plot(ax_test3_max,c_max,coul);
+        test4max_lv{sample_id}=   plot(ax_test4_max,d_max,coul);
+        
+        n = length(dc_sum_filt);
+            C = fdct_wrapping(dc_sum_filt,0);
+            F=zeros(n);
+            C_zero = fdct_wrapping(F,0);
+            Ct = C;
+            for s = 1:length(C)
+                for w = 1:length(C{s})
+                    Ct{s}{w} = C_zero{s}{w};
+                end
+            end
+            
+            aux_count=1;
+            for s = length(C)-lev:length(C)
+%                 thresh=0;
+                thresh = sigma + sigma*(s == length(C));
+                for w = 1:length(C{s})
+%                     Ct{s}{w} = C{s}{w};
+                    Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > thresh*E{s}{w});
+%                     Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > -thresh*E{s}{w}&(C{s}{w}) < thresh*E{s}{w});
+%                 Ct{s}{w} = C{s}{w};
+                    curv(w_nw,sample,slice_id,w,aux_count)=kurtosis(abs(C{s}{w}(:)));
+                end
+                curv2(w_nw,sample,slice_id,aux_count)=kurtosis(curv(w_nw,sample,slice_id,:,aux_count));
+                aux_count=aux_count+1;
+            end
+            
+            
+            
+            dc_sum_filt2 = real(ifdct_wrapping(Ct,0));
+            
+            
+            theta = 0:180;
+            [R,xp] = radon(dc_sum_filt2,theta);
+            
+            unit=ones(nc);
+            [R_u,xp] = radon(unit,theta);
+            
+            frac_cut=0.5;
+            R_nor=R;
+            R_nor(R_u>nc*frac_cut)=R_nor(R_u>nc*frac_cut)./R_u(R_u>nc*frac_cut);
+            R_nor(R_u<=nc*frac_cut)=0;
+            
+            boudary_removal_factor=2048/n;
+            
+            n_levels=floor(log2(length(R_nor(:,1))));
+            R_nor_filt=zeros(size(R_nor));
+            for i=1:length(R(1,:))
+                [dc_dwt,levels] = wavedec(R(:,i),n_levels,'db1');
+                D = wrcoef('d',dc_dwt,levels,'db1',lev);
+%                 D(floor((2465-200)/boudary_removal_factor):end)=0;
+%                 D(1:floor((448+200)/boudary_removal_factor))=0;
+                 D(1237-256:end)=0;
+                 D(1:217+256)=0;
+
+                R_nor_filt(:,i)=D;
+            end
+%             R_nor_filt(floor((2465-200)/boudary_removal_factor):end,:)=[];
+%             R_nor_filt(1:floor((448+200)/boudary_removal_factor),:)=[];
+             R_nor_filt(1237-256:end,:)=[];
+             R_nor_filt(1:217+256,:)=[];
+             
+             anali_sum2(w_nw,sample,1,:)=[max(dc_sum_filt2(:)),std(dc_sum_filt2(:)),max(dc_sum_filt2(:))/std(dc_sum_filt2(:)),kurtosis(kurtosis(dc_sum_filt2)),kurtosis(dc_sum_filt2(:))];
+             anali_sum2(w_nw,sample,2,:)=[max(R(:)),std(R(:)),max(R(:))/std(R(:)),kurtosis(kurtosis(R)),kurtosis(R(:))];
+             anali_sum2(w_nw,sample,3,:)=[max(R_nor(:)),std(R_nor(:)),max(R_nor(:))/std(R_nor(:)),kurtosis(kurtosis(R_nor)),kurtosis(R_nor(:))];
+             anali_sum2(w_nw,sample,4,:)=[max(R_nor_filt(:)),std(R_nor_filt(:)),max(R_nor_filt(:))/std(R_nor_filt(:)),kurtosis(kurtosis(R_nor_filt)),kurtosis(R_nor_filt(:))];
+        
+             a_max2(:)=anali_sum2(w_nw,sample,1,:);
+             b_max2(:)=anali_sum2(w_nw,sample,2,:);
+             c_max2(:)=anali_sum2(w_nw,sample,3,:);
+             d_max2(:)=anali_sum2(w_nw,sample,4,:);
+             
+        test1max2_lv{sample_id}=   plot(ax_test1_max2,a_max2,coul);
+        test2max2_lv{sample_id}=   plot(ax_test2_max2,b_max2,coul);
+        test3max2_lv{sample_id}=   plot(ax_test3_max2,c_max2,coul);
+        test4max2_lv{sample_id}=   plot(ax_test4_max2,d_max2,coul);
+        
+        clearvars a b c d aa a_max b_max c_max d_max2 a_max2 b_max2 c_max2 d_max2
         
         %         clearvars R R_nor R_nor_filt kurt2;
         
@@ -260,6 +408,16 @@ for w_nw=1:2
         hold(ax_test3_m,'on');
         hold(ax_test4_m,'on');
         
+        hold(ax_test1_max,'on');
+        hold(ax_test2_max,'on');
+        hold(ax_test3_max,'on');
+        hold(ax_test4_max,'on');
+        
+        hold(ax_test1_max2,'on');
+        hold(ax_test2_max2,'on');
+        hold(ax_test3_max2,'on');
+        hold(ax_test4_max2,'on');
+        
     end
     
     
@@ -267,15 +425,43 @@ for w_nw=1:2
 end
 
 set(ax_curv, 'YScale', 'log');
+title(ax_curv,'curvelet kurtosis')
 set(ax_test1, 'YScale', 'log');
+title(ax_test1,'all map curvelet');
 set(ax_test2, 'YScale', 'log');
+title(ax_test2,'all ridgelet');
 set(ax_test3, 'YScale', 'log');
+title(ax_test3,'all ridgelet normalized');
 set(ax_test4, 'YScale', 'log');
+title(ax_test4,'all ridgelet normalized with wavelet');
+
 
 set(ax_test1_m, 'YScale', 'log');
+title(ax_test1_m,'map curvelet sum max');
 set(ax_test2_m, 'YScale', 'log');
+title(ax_test2_m,'ridgelet from max');
 set(ax_test3_m, 'YScale', 'log');
+title(ax_test3_m,'ridgelet normalized from max');
 set(ax_test4_m, 'YScale', 'log');
+title(ax_test4_m,'ridgelet normalized with wavelet from max');
 
+
+set(ax_test1_max, 'YScale', 'log');
+title(ax_test1_max,'map curvelet from sum');
+set(ax_test2_max, 'YScale', 'log');
+title(ax_test2_max,'ridgelet from sum');
+set(ax_test3_max, 'YScale', 'log');
+title(ax_test3_max,'ridgelet normalized from sum');
+set(ax_test4_max, 'YScale', 'log');
+title(ax_test4_max,'ridgelet normalized with wavelet from sum');
+
+set(ax_test1_max2, 'YScale', 'log');
+title(ax_test1_max2,'map curvelet from sum plus curv');
+set(ax_test2_max2, 'YScale', 'log');
+title(ax_test2_max2,'ridgelet from sum plus curv');
+set(ax_test3_max2, 'YScale', 'log');
+title(ax_test3_max2,'ridgelet normalized from sum plus curv');
+set(ax_test4_max2, 'YScale', 'log');
+title(ax_test4_max2,'ridgelet normalized with wavelet from sum plus curv');
 end
 
