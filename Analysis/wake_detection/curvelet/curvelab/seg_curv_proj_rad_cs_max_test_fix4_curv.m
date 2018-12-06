@@ -469,11 +469,10 @@ for w_nw=1:2
 %             test4max2_lv{sample_id}=   plot(ax_test4_max2,d_max2,coul);
         end
         
-        a_max2(:)=max(anali_sum2(w_nw,sample,:,1,:),3);
-            b_max2(:)=max(anali_sum2(w_nw,sample,:,2,:),3);
-            c_max2(:)=max(anali_sum2(w_nw,sample,:,3,:),3);
-            d_max2(:)=max(anali_sum2(w_nw,sample,:,4,:),3
-            u );
+        a_max2(:)=max(anali_sum2(w_nw,sample,:,1,:),[],3);
+            b_max2(:)=max(anali_sum2(w_nw,sample,:,2,:),[],3);
+            c_max2(:)=max(anali_sum2(w_nw,sample,:,3,:),[],3);
+            d_max2(:)=max(anali_sum2(w_nw,sample,:,4,:),[],3);
             
             test1max2_lv{sample_id}=   plot(ax_test1_max2,a_max2,coul);
             test2max2_lv{sample_id}=   plot(ax_test2_max2,b_max2,coul);
