@@ -7,7 +7,8 @@ Created on Mon Dec  3 12:09:26 2018
 """
 
 #(run as) python powerSpectrum /home/asus/Dropbox/extras/storage/laptop/simulations_gadget/32Mpc_64c_64p_zi63_nowakem/sample0001/ /home/asus/Dropbox/extras/storage/laptop/simulations_gadget/plot/32Mpc_64c_64p_zi63_nowakem/sample0001/ps5/ 32 16
-
+import matplotlib
+matplotlib.use('agg')
 import sys
 import os
 import glob
