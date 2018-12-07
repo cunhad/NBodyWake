@@ -38,10 +38,12 @@ for angle_id=1:N_angles
 end
 
 
-signal=reshape(permute(anali(:,:,2,1),[1,3,2,4,5]),[1,numel(anali(:,:,2,1))]);
+% signal=reshape(permute(anali(:,:,2,1),[1,3,2,4,5]),[1,numel(anali(:,:,2,1))]);
 % signal = reshape(signal,[N_angles,2])';
-signal = reshape(signal,[slice,N_angles]);
-signal = max(signal);
+% signal = reshape(signal,[slice,N_angles]);
+signal=anali(:,:,2,1);
+signal=max(signal');
+% signal = max(signal);
 
 signal2=signal;
 
