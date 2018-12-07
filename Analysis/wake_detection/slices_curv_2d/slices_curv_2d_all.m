@@ -114,7 +114,7 @@ mkdir(tot_anali_data_path_out);
 % fig=figure
  
     set(gcf, 'Position', [0 0 1200 600]);
-        ax1 = axes('Position',[0.05 0.13 0.7 0.7]);
+        ax1 = axes('Position',[0.01 0.13 0.7 0.7]);
     gridDelaunay = delaunay(x,y);
     h = trisurf(gridDelaunay,x,y,signal(:)*0.0,signal(:));
     set(h, 'LineStyle', 'none')
@@ -124,14 +124,17 @@ mkdir(tot_anali_data_path_out);
     campos([0 0 1])
     camup([0 1 0])
     [x_max, y_max] = ssht_mollweide(thetas_max, phis_max,0,0);
+    colorbar('southoutside');
         scatter(x_max, y_max,255,'r');
         descr = {strcat('max = ',num2str(peak));
+            strcat('mean = ',num2str(mean(signal(:))));
             strcat('std = ',num2str(std(signal(:))));
-            strcat('stn = ',num2str(peak/std(signal(:))))};
+            strcat('satn = ',num2str((peak-mean(signal(:)))/std(signal(:))))};
         ax1 = axes('Position',[0 0 1 1],'Visible','off');
         txt=text(0.75,0.5,descr);
         set(txt,'Parent',ax1,'interpreter', 'latex');
         hold off;
+       
     
     mkdir(tot_anali_path_out,strcat('/molvp_det/'));
     saveas(fig,strcat(tot_anali_path_out,strcat('/molvp_det'),'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2d_z',z,'_plot.png'));
