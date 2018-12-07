@@ -108,6 +108,11 @@ for slice_id=1:slice
     
     map_filt= real(ifdct_wrapping(Ct,0));
     
+    map_filt(1:16,:)=0;
+    map_filt(end-16:end,:)=0;
+    map_filt(:,1:16)=0;
+    map_filt(:,end-16:end)=0;
+    
     fileID = fopen(strcat(path_out_2d_filt_slices,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurvfilt_z',num2str(z_glob),'_data_sl',num2str(slice_id),'.bin'),'w');
     fwrite(fileID,map_filt, 'float32','l');
     fclose(fileID);
