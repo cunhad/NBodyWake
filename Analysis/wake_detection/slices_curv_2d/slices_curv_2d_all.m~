@@ -40,7 +40,7 @@ end
 
 signal=reshape(permute(anali(:,:,2,1),[1,3,2,4,5]),[1,numel(anali(:,:,2,1))]);
 % signal = reshape(signal,[N_angles,2])';
-signal = reshape(signal,[slice,N_angles]);
+
 signal = max(signal);
 
 signal2=signal;
@@ -63,10 +63,10 @@ cd('../wake_detection/slices_curv_2d/');
 
 %plot/data out
 
-tot_anali_path_out=char(strcat(root_2d_anali_hpx,spec,aux_path,'anali/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/slices_curv_2d/hpx/'))
+tot_anali_path_out=char(strcat(root_2d_anali_hpx,spec,spec,aux_path,'anali/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/slices_curv_2d/hpx/'))
 mkdir(tot_anali_path_out);
         
-tot_anali_data_path_out=char(strcat(root_2d_anali_hpx,spec,aux_path,'data_anali/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/slices_curv_2d/hpx/'))
+tot_anali_data_path_out=char(strcat(root_2d_anali_hpx,spec,spec,aux_path,'data_anali/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/slices_curv_2d/hpx/'))
 mkdir(tot_anali_data_path_out);
 
 
