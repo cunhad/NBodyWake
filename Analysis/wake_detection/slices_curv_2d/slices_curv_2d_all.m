@@ -129,8 +129,10 @@ mkdir(tot_anali_data_path_out);
         descr = {strcat('max = ',num2str(peak));
             strcat('mean = ',num2str(mean(signal(:))));
             strcat('std = ',num2str(std(signal(:))));
-            strcat('satn = ',num2str((peak-mean(signal(:)))/std(signal(:))))};
-        ax1 = axes('Position',[0 0 1 1],'Visible','off');
+            strcat('satn = ',num2str((peak-mean(signal(:)))/std(signal(:))));
+            strcat('kurt = ',num2str(kurtosis(signal(:))))};
+            
+        ax1 = axes('Position',[0 0 1 1],'Visible','off');        
         txt=text(0.75,0.5,descr);
         set(txt,'Parent',ax1,'interpreter', 'latex');
         hold off;
