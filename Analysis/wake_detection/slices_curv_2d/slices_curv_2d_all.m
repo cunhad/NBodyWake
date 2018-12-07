@@ -141,6 +141,27 @@ mkdir(tot_anali_data_path_out);
    
     dlmwrite(strcat(tot_anali_data_path_out,strcat('/molvd'),'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2d_z',z,'_data_summary.txt'),[thetas_max, phis_max,peak,std(signal(:)),peak/std(signal(:))],'delimiter','\t')
     
+    
+    %molweide projection histogram
+
+
+    
+    fig=figure('Visible', 'off');
+% fig=figure
+ 
+    
+    histogram(signal(:));
+   
+    hold on
+    
+        hold off;
+       
+    
+    mkdir(tot_anali_path_out,strcat('/hist/'));
+    saveas(fig,strcat(tot_anali_path_out,strcat('/hist'),'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_hist_hpx_slice_cuvr_2d_z',z,'_plot.png'));
+   
+
+    
     %plot equator
     
     equator_idx=find(abs(thetas-pi/2)==0);
