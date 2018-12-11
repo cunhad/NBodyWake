@@ -50,7 +50,7 @@ end
 F=zeros(nb);
 C_zero = fdct_wrapping(F,0);
 
-F2 = ones(nb,nb,slices/2);
+F2 = ones(nb,nb,slice/2);
 X2 = fftshift(ifft2(F2)) * sqrt(prod(size(F2)));
 C2 = fdct3d_forward(X2);
 E2 = cell(size(C2));
