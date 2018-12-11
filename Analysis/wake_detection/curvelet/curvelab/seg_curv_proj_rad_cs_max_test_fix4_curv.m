@@ -134,7 +134,7 @@ for w_nw=1:2
     
     
     
-        for sample = 1:length(sample_id_range)
+    for sample = 1:length(sample_id_range)
 %     for sample = 1:2
         
         map_3d_slices=zeros(nc,nc,slices);
