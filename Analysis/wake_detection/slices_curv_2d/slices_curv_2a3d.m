@@ -64,7 +64,7 @@ end
 
 
 
-F2=zeros(nb,nb,slices/2);
+F2=zeros(nb,nb,slice/2);
 C_zero2 = fdct3d_forward(F2);
 
 
