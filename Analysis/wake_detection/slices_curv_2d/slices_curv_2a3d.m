@@ -214,7 +214,7 @@ end
                 aux_count=aux_count+1;
             end
             
-            map_3d_slices_filt2a3d(:,:,(partition)*slices/2+1:(partition)*slices/2+slices/2) = real(fdct3d_inverse(Ct));
+            map_3d_slices_filt2a3d(:,:,(partition)*slices/2+1:(partition)*slice/2+slice/2) = real(fdct3d_inverse(Ct));
             
         end
         
