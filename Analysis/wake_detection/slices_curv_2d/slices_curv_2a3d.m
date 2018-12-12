@@ -188,7 +188,7 @@ end
 
         for partition=0:1
             
-            C_aux=map_3d_slices_filt2d(:,:,(partition)*slices/2+1:(partition)*slices/2+slices/2);
+            C_aux=map_3d_slices_filt2d(:,:,(partition)*slice/2+1:(partition)*slice/2+slice/2);
             
             C = fdct3d_forward(C_aux);
             
