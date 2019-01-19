@@ -1,4 +1,4 @@
-function [ anali ] = seg_curv_proj_rad_cs_max_test_fix4sl2(  )
+function [ anali ] = seg_curv_proj_rad_cs_max_test_fix4_out(  )
 
 
 %example:
@@ -14,7 +14,7 @@ nc=1024;
 trsh=20;
 cut=1;
 lev=2;
-sigma = 10;        
+sigma = 5;        
 slice=32;
 anal_lev=2;
 
@@ -29,14 +29,21 @@ sample_list_wake={sample_list_wake.name};
 sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw');
 % sample_list_wake=sort_nat(sample_list_wake)
 
+path_out_root='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurvfilt/';
 
+% mkdir(path_out_root);
+% path_out_name='data_cps32_1024_2dcurvfilt/';
+
+mkdir(strcat(path_out_root));
+
+path_out_nowake='4Mpc_2048c_1024p_zi63_nowakem/';
+path_out_wake='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m/';
 %
 % F=zeros(nc);
 % C_zero = fdct_wrapping(F,0);
 F = ones(nc);
 X = fftshift(ifft2(F)) * sqrt(prod(size(F)));
-%X = F * sqrt(prod(size(F)));
-%C = fdct_wrapping(X,0);
+%X = F * sqrt(prod(size(F))); C = fdct_wrapping(X,0);
 C = fdct_wrapping(X,0,2);
 %C = fdct_wrapping(F,0);
 E = cell(size(C));
@@ -78,11 +85,13 @@ for w_nw=1:2
     if w_nw==1
         specs_path_list=specs_path_list_nowake;
         sample_list=sample_list_nowake;
+        path_out_waketype=path_out_nowake;
         ch='_7';
         coul='b';
     else
         specs_path_list=specs_path_list_wake;
         sample_list=sample_list_wake;
+        path_out_waketype=path_out_wake;
         ch='_4';
         coul='r';
     end
@@ -147,18 +156,32 @@ for w_nw=1:2
                 thresh = sigma + sigma*(s == length(C));
                 for w = 1:length(C{s})
 %                     Ct{s}{w} = C{s}{w};
-                Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > 0*E{s}{w} && (C{s}{w}) < thresh*E{s}{w});
+%                     Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > 0*E{s}{w});
+%                     Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > thresh*E{s}{w});
+                    Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > -thresh*E{s}{w}&(C{s}{w}) < thresh*E{s}{w});
+%                 Ct{s}{w} = C{s}{w};
                     curv(w_nw,sample,slice_id,w,aux_count)=kurtosis(abs(C{s}{w}(:)));
                 end
                 curv2(w_nw,sample,slice_id,aux_count)=kurtosis(curv(w_nw,sample,slice_id,:,aux_count));
                 aux_count=aux_count+1;
             end
             
-            
-            
+%             filename_nowake=strcat('',specs_path_list,'/',string(sample_list(sample)),'/data/1lf_1rf_0-0-0pv_1.5708-0-0ra/2dproj/dm/',ch,filename,num2str(slice_id),'.bin')
+
+             
+
+
             BW2 = real(ifdct_wrapping(Ct,0));
             
             
+            mkdir(path_out_root,char(strcat(path_out_waketype,string(sample_list(sample)),'/data/1lf_1rf_0-0-0pv_1.5708-0-0ra/2dproj/dm/2d_curvfilt/')));
+            path_out=strcat(path_out_root,path_out_waketype,string(sample_list(sample)),'/data/1lf_1rf_0-0-0pv_1.5708-0-0ra/2dproj/dm/2d_curvfilt/');            
+            
+            fileID = fopen(strcat(path_out,ch,filename,num2str(slice_id),'_curvfilt2d','.bin'),'w');
+            fwrite(fileID,BW2, 'float32','l');
+            fclose(fileID);
+            
+%             dlmwrite(strcat(path_out,ch,filename,num2str(slice_id),'_curvfilt2d','.txt'),BW2,'delimiter','\t');
             
             anali(w_nw,sample,slice_id,1,:)=[max(BW2(:)),std(BW2(:)),max(BW2(:))/std(BW2(:)),kurtosis(kurtosis(BW2)),kurtosis(BW2(:))];
             
@@ -183,15 +206,15 @@ for w_nw=1:2
                 D = wrcoef('d',dc_dwt,levels,'db1',lev);
 %                 D(floor((2465-200)/boudary_removal_factor):end)=0;
 %                 D(1:floor((448+200)/boudary_removal_factor))=0;
-                D(floor(1453-256):end)=0;
-                D(1:floor(256))=0;
+                 D(1237-256:end)=0;
+                 D(1:217+256)=0;
 
                 R_nor_filt(:,i)=D;
             end
 %             R_nor_filt(floor((2465-200)/boudary_removal_factor):end,:)=[];
 %             R_nor_filt(1:floor((448+200)/boudary_removal_factor),:)=[];
-            R_nor_filt(1453-256:end,:)=[];
-            R_nor_filt(1:256,:)=[];
+             R_nor_filt(1237-256:end,:)=[];
+             R_nor_filt(1:217+256,:)=[];
             
             
             
@@ -273,6 +296,49 @@ set(ax_test1_m, 'YScale', 'log');
 set(ax_test2_m, 'YScale', 'log');
 set(ax_test3_m, 'YScale', 'log');
 set(ax_test4_m, 'YScale', 'log');
+
+% 
+nowake=reshape(permute(anali(1,:,:,4,1),[1,3,2,4,5]),[1,numel(anali(1,:,:,2,1))])
+wake=reshape(permute(anali(2,:,:,4,1),[1,3,2,4,5]),[1,numel(anali(1,:,:,2,1))])
+mean_wake=mean(wake)
+mean_nowake=mean(nowake)
+std_nowake=std(nowake,1)
+stn_nowake=(nowake-mean_nowake)/std_nowake
+stn_wake=(wake-mean_nowake)/std_nowake
+mean_stn=mean(stn_wake)
+std_stn=std(stn_wake,1)
+mean_stn-std_stn
+wake_slices = reshape(wake,[32,10])
+nowake_slices = reshape(nowake,[32,10])
+max_wake_slices_=sort(wake_slices')
+max_nowake_slices_=sort(nowake_slices')
+%data=wake_slices(:,:)
+%wake_slices_=conv2(wake_slices',[1 1 1 1],'valid')'
+%nowake_slices_=conv2(nowake_slices',[1 1 1 1],'valid')'
+max_wake_slices_=max(wake_slices(:,:))
+max_nowake_slices_=max(nowake_slices(:,:))
+% max_wake_slices=(max_wake_slices_(end-1,:))
+% max_nowake_slices=(max_nowake_slices_(end-1,:))
+mean_wake=mean(max_wake_slices_)
+mean_nowake=mean(max_nowake_slices_)
+std_nowake=std(max_nowake_slices_,1)
+stn_nowake=(max_nowake_slices_-mean_nowake)/std_nowake
+stn_wake=(max_wake_slices_-mean_nowake)/std_nowake
+mean_stn=mean(stn_wake)
+std_stn=std(stn_wake,1)
+mean_stn-std_stn
+% clearvars nowake wake max_wake_slices max_nowake_slices wake_slices_ max_nowake_slices_
+
+
+trsh_nowake=max(nowake_slices(:));
+label_numbers_statistics=[nowake_slices(:);wake_slices(:)];
+label_logical=label_numbers_statistics>=trsh_nowake;
+label_number=double(label_logical);
+sum_label_number=sum(label_number);
+
+mkdir(strcat(path_out_root(1:end-1),'_all'));
+dlmwrite(strcat(path_out_root(1:end-1),'_all','/curvfilt2d_label_numbers_statistics','.txt'),label_numbers_statistics,'delimiter','\t');
+dlmwrite(strcat(path_out_root(1:end-1),'_all','/curvfilt2d_label','.txt'),label_number,'delimiter','\t');
 
 end
 

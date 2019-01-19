@@ -45,7 +45,7 @@ signal=anali(:,:,4,1);
 signal=max(signal');
 % signal = max(signal);
 
-signal2=signal;
+signal_det=anali(:,:,4,1);
 
 for angl=N_angles+1:N_angles_t
     
@@ -104,6 +104,7 @@ mkdir(tot_anali_data_path_out);
    
     mkdir(tot_anali_data_path_out,strcat('/molvd/'));
     dlmwrite(strcat(tot_anali_data_path_out,strcat('/molvd'),'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2a3d_z',z,'_data.txt'),[thetas,phis,signal'],'delimiter','\t')
+    dlmwrite(strcat(tot_anali_data_path_out,strcat('/molvd'),'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2a3d_z',z,'_data_det.txt'),signal_det,'delimiter','\t')
 
     
 %molweide projection details

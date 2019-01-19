@@ -1,6 +1,6 @@
 function [ anali,signal,equator_phi ] = slices_curv_2d_all( root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE)
 
-%(example)  [ anali] = slices_curv_2d_all('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','/home/asus/Dropbox/extras/storage/graham/small_res/anali_hpx/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,2,2 );
+%(example)  [ anali,signal,equator_phi ] = slices_curv_2d_all('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','/home/asus/Dropbox/extras/storage/graham/small_res/anali_hpx/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,2,2 );
 
 angles_hpx(1,:) = dlmread(strcat('../../../python/angles',num2str(NSIDE),'_t.cvs'));
 angles_hpx(2,:) = dlmread(strcat('../../../python/angles',num2str(NSIDE),'_p.cvs'));
@@ -31,7 +31,7 @@ for angle_id=1:N_angles
     
     path_in=string(strcat(strcat(root_anali_2d_in,spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(angle_id),'/',path2,'/2dproj/dm/'))
     
-    aux=dlmread(strcat(path_in,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_2a3dcurv_sl','.txt'));
+    aux=dlmread(strcat(path_in,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_curv_sl','.txt'));
     
     anali(angle_id,:,:,:)=reshape(aux,slice,4,5);
     
@@ -41,11 +41,11 @@ end
 % signal=reshape(permute(anali(:,:,2,1),[1,3,2,4,5]),[1,numel(anali(:,:,2,1))]);
 % signal = reshape(signal,[N_angles,2])';
 % signal = reshape(signal,[slice,N_angles]);
-signal=anali(:,:,4,1);
+signal=anali(:,:,2,1);
 signal=max(signal');
 % signal = max(signal);
 
-signal2=signal;
+signal_det=anali(:,:,2,1);
 
 for angl=N_angles+1:N_angles_t
     
@@ -65,10 +65,10 @@ cd('../wake_detection/slices_curv_2d/');
 
 %plot/data out
 
-tot_anali_path_out=char(strcat(root_2d_anali_hpx,spec,aux_path,'anali/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/slices_curv_2a3d/hpx/'))
+tot_anali_path_out=char(strcat(root_2d_anali_hpx,spec,aux_path,'anali/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/slices_curv_2d/hpx/'))
 mkdir(tot_anali_path_out);
         
-tot_anali_data_path_out=char(strcat(root_2d_anali_hpx,spec,aux_path,'data_anali/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/slices_curv_2a3d/hpx/'))
+tot_anali_data_path_out=char(strcat(root_2d_anali_hpx,spec,aux_path,'data_anali/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/slices_curv_2d/hpx/'))
 mkdir(tot_anali_data_path_out);
 
 
@@ -100,10 +100,10 @@ mkdir(tot_anali_data_path_out);
     camup([0 1 0])
     
     mkdir(tot_anali_path_out,strcat('/molvp/'));
-    saveas(fig,strcat(tot_anali_path_out,strcat('/molvp'),'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2a3d_z',z,'_plot.png'));
+    saveas(fig,strcat(tot_anali_path_out,strcat('/molvp'),'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2d_z',z,'_plot.png'));
    
     mkdir(tot_anali_data_path_out,strcat('/molvd/'));
-    dlmwrite(strcat(tot_anali_data_path_out,strcat('/molvd'),'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2a3d_z',z,'_data.txt'),[thetas,phis,signal'],'delimiter','\t')
+    dlmwrite(strcat(tot_anali_data_path_out,strcat('/molvd'),'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2d_z',z,'_data.txt'),[thetas,phis,signal'],'delimiter','\t')
 
     
 %molweide projection details
@@ -139,9 +139,9 @@ mkdir(tot_anali_data_path_out);
        
     
     mkdir(tot_anali_path_out,strcat('/molvp_det/'));
-    saveas(fig,strcat(tot_anali_path_out,strcat('/molvp_det'),'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2a3d_z',z,'_plot.png'));
+    saveas(fig,strcat(tot_anali_path_out,strcat('/molvp_det'),'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2d_z',z,'_plot.png'));
    
-    dlmwrite(strcat(tot_anali_data_path_out,strcat('/molvd'),'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2a3d_z',z,'_data_summary.txt'),[thetas_max, phis_max,peak,std(signal(:)),peak/std(signal(:))],'delimiter','\t')
+    dlmwrite(strcat(tot_anali_data_path_out,strcat('/molvd'),'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2d_z',z,'_data_summary.txt'),[thetas_max, phis_max,peak,std(signal(:)),peak/std(signal(:))],'delimiter','\t')
     
     
     %molweide projection histogram

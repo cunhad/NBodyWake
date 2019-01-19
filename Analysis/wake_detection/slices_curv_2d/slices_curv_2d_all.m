@@ -1,6 +1,6 @@
 function [ anali,signal,equator_phi ] = slices_curv_2d_all( root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE)
 
-%(example)  [ anali] = slices_curv_2d_all('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','/home/asus/Dropbox/extras/storage/graham/small_res/anali_hpx/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,2,2 );
+%(example)  [ anali,signal,equator_phi ] = slices_curv_2d_all('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','/home/asus/Dropbox/extras/storage/graham/small_res/anali_hpx/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,2,2 );
 
 angles_hpx(1,:) = dlmread(strcat('../../../python/angles',num2str(NSIDE),'_t.cvs'));
 angles_hpx(2,:) = dlmread(strcat('../../../python/angles',num2str(NSIDE),'_p.cvs'));
@@ -45,7 +45,7 @@ signal=anali(:,:,2,1);
 signal=max(signal');
 % signal = max(signal);
 
-signal2=signal;
+signal_det=anali(:,:,2,1);
 
 for angl=N_angles+1:N_angles_t
     
@@ -104,6 +104,7 @@ mkdir(tot_anali_data_path_out);
    
     mkdir(tot_anali_data_path_out,strcat('/molvd/'));
     dlmwrite(strcat(tot_anali_data_path_out,strcat('/molvd'),'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2d_z',z,'_data.txt'),[thetas,phis,signal'],'delimiter','\t')
+    dlmwrite(strcat(tot_anali_data_path_out,strcat('/molvd'),'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2d_z',z,'_data_det.txt'),signal_det,'delimiter','\t')
 
     
 %molweide projection details
