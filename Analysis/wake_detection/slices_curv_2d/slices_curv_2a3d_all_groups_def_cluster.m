@@ -1,4 +1,4 @@
-function [ signal_nw,signal_w ] = slices_curv_2a3d_all_groups_cluster( )
+function [ signal_nw,signal_w ] = slices_curv_2a3d_all_groups_def_cluster( )
 
 %(example)  [ signal_nw,signal_w ] = slices_curv_2a3d_all_groups_cluster('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','/home/asus/Dropbox/extras/storage/graham/small_res/anali_hpx/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,2,2 );
 
@@ -83,6 +83,8 @@ for w_nw=1:2
 
     
 end
+
+
 
 % fig=figure;     
 %     histogram(signal_nw(:));

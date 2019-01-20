@@ -114,17 +114,17 @@ for w_nw=1:2
 %                 %             fclose(fid);
                 
                 
-                path1=strcat(specs_path_list,specs_path_list,aux_path,'data_2d_filt_slices/1lf_1rf/','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(angle_id),'/')
+                path1=strcat(specs_path_list,'/',string(sample_list(sample)),'/data_2d_filt_slices/1lf_1rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(angle_id),'/');
                 
                 path2=dir(char(strcat(path1,"*pv*")));
-                path2={path2.name}
+                path2={path2.name};
                 path2=path2(1);
                 
                 path3='/2dproj/dm/';
                 
-                path_in=strcat(specs_path_list,specs_path_list,aux_path,'data_2d_filt_slices/1lf_1rf/','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(angle_id),'/',string(path2),'/2dproj/dm/'ch,filename,num2str(slice_id),'.bin')
+                path_in=strcat(specs_path_list,'/',string(sample_list(sample)),'/data_2d_filt_slices/1lf_1rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(angle_id),'/',string(path2),'/2dproj/dm/',ch,filename,num2str(slice_id),'.bin');
                 
-                list{count}=filename_nowake;
+                list{count}=path_in;
                 count=count+1;
                 
             end
@@ -171,7 +171,7 @@ label_eq = categorical(abs(double(label_number_eq)));
 
 % imds = imageDatastore(list,'ReadFcn',@read_slices_bin,'FileExtensions','.bin','Labels',label);
 % imds = imageDatastore(list_impro,'ReadFcn',@read_slices_bin,'FileExtensions','.bin','Labels',label_impro);
-imds = imageDatastore(list_eq,'ReadFcn',@read_slices_bin,'FileExtensions','.bin','Labels',label_eq);
+imds = imageDatastore(string(list_eq),'ReadFcn',@read_slices_bin,'FileExtensions','.bin','Labels',label_eq);
 labelCount = countEachLabel(imds);
 img = readimage(imds,1);
 size(img);
@@ -208,32 +208,85 @@ auimdsValidation = augmentedImageDatastore([1024 1024],imdsValidation,'DataAugme
 
 % Define the convolutional neural network architecture
 
-layers = [
-    imageInputLayer([1024 1024 1])
-    
-    convolution2dLayer(3,8,'Padding','same')
-    batchNormalizationLayer
-    reluLayer
-    
-    maxPooling2dLayer(2,'Stride',2)
-    
-    convolution2dLayer(3,16,'Padding','same')
-    batchNormalizationLayer
-    reluLayer
-    
-    maxPooling2dLayer(2,'Stride',2)
-    
-    convolution2dLayer(3,32,'Padding','same')
-    batchNormalizationLayer
-    reluLayer
-    
-    convolution2dLayer(3,32,'Padding','same')
-    batchNormalizationLayer
-    reluLayer
-    
-    fullyConnectedLayer(2)
-    softmaxLayer
-    classificationLayer];
+% layers = [
+%     imageInputLayer([1024 1024 1])
+%     
+%     convolution2dLayer(3,8,'Padding','same')
+%     batchNormalizationLayer
+%     reluLayer
+%     
+%     maxPooling2dLayer(2,'Stride',2)
+%     
+%     convolution2dLayer(3,16,'Padding','same')
+%     batchNormalizationLayer
+%     reluLayer
+%     
+%     maxPooling2dLayer(2,'Stride',2)
+%     
+%     convolution2dLayer(3,32,'Padding','same')
+%     batchNormalizationLayer
+%     reluLayer
+%     
+%     convolution2dLayer(3,32,'Padding','same')
+%     batchNormalizationLayer
+%     reluLayer
+%     
+%     fullyConnectedLayer(2)
+%     softmaxLayer
+%     classificationLayer];
+
+ layers = [
+imageInputLayer([1024 1024 1])
+convolution2dLayer(2,1,'Padding','same')
+batchNormalizationLayer
+reluLayer
+convolution2dLayer(2,2,'Padding','same')
+batchNormalizationLayer
+reluLayer
+maxPooling2dLayer(2,'Stride',2)
+convolution2dLayer(4,4,'Padding','same')
+batchNormalizationLayer
+reluLayer
+convolution2dLayer(4,8,'Padding','same')
+batchNormalizationLayer
+maxPooling2dLayer(2,'Stride',2)
+reluLayer
+convolution2dLayer(8,8,'Padding','same')
+batchNormalizationLayer
+reluLayer
+convolution2dLayer(8,16,'Padding','same')
+batchNormalizationLayer
+reluLayer
+maxPooling2dLayer(2,'Stride',2)
+convolution2dLayer(16,16,'Padding','same')
+batchNormalizationLayer
+reluLayer
+convolution2dLayer(16,32,'Padding','same')
+batchNormalizationLayer
+reluLayer
+maxPooling2dLayer(2,'Stride',2)
+convolution2dLayer(32,32,'Padding','same')
+batchNormalizationLayer
+reluLayer
+convolution2dLayer(32,64,'Padding','same')
+batchNormalizationLayer
+reluLayer
+maxPooling2dLayer(2,'Stride',2)
+% convolution2dLayer(64,64,'Padding','same')
+% batchNormalizationLayer
+% reluLayer
+% convolution2dLayer(64,128,'Padding','same')
+% batchNormalizationLayer
+% reluLayer
+% maxPooling2dLayer(2,'Stride',2)
+fullyConnectedLayer(256)
+fullyConnectedLayer(256)
+fullyConnectedLayer(64)
+fullyConnectedLayer(2)
+softmaxLayer
+classificationLayer];
+
+
 
 % see the image
 
@@ -258,14 +311,14 @@ layers = [
 
 %minibatch size
 
-miniBatchSize=2;
+miniBatchSize=16;
 
 %Specify Training Options
 
 options = trainingOptions('sgdm', ...
     'MiniBatchSize',miniBatchSize, ...
     'InitialLearnRate',0.01, ...
-    'MaxEpochs',4, ...
+    'MaxEpochs',32, ...
     'Shuffle','every-epoch', ...
     'ValidationData',auimdsValidation, ...
     'ValidationFrequency',30);
