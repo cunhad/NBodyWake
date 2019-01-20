@@ -1,6 +1,6 @@
-function [ anali,signal,equator_phi ] = slices_curv_2a3d_all_groups( root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE)
+function [ signal_nw,signal_w ] = slices_curv_2a3d_all_groups_cluster( )
 
-%(example)  [ anali] = slices_curv_2a3d_all('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','/home/asus/Dropbox/extras/storage/graham/small_res/anali_hpx/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,2,2 );
+%(example)  [ signal_nw,signal_w ] = slices_curv_2a3d_all_groups_cluster('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','/home/asus/Dropbox/extras/storage/graham/small_res/anali_hpx/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,2,2 );
 
 
 cd('../../preprocessing');
@@ -19,16 +19,20 @@ anal_lev=2;
 z_glob=str2num('3.000')
 z='3.000';
 
-specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_hpx_2a3d_anali_all/4Mpc_2048c_1024p_zi63_nowakem'
+specs_path_list_nowake='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_hpx_2a3d_anali_all/4Mpc_2048c_1024p_zi63_nowakem'
 sample_list_nowake=dir(strcat(specs_path_list_nowake,'/sample*'));
 sample_list_nowake={sample_list_nowake.name};
 % sample_list_nowake=sort_nat(sample_list_nowake)
 
-specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_hpx_2a3d_anali_all/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m'
+specs_path_list_wake='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_hpx_2a3d_anali_all/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m'
 sample_list_wake=dir(strcat(specs_path_list_wake,'/sample*'));
 sample_list_wake={sample_list_wake.name};
 sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw');
 % sample_list_wake=sort_nat(sample_list_wake)
+
+label_numbers_path='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_hpx_2a3d_anali_all_group';
+mkdir(label_numbers_path);
+
 
 for w_nw=1:2
     % for w_nw=2
@@ -59,14 +63,18 @@ for w_nw=1:2
         
         path_in=strcat(specs_path_list,'/',string(sample_list(sample)),'/data_anali/1lf_1rf/NSIDE_8/slices_curv_2a3d/hpx/molvd/')
         
-        filename=strcat(path_in,'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2a3d_z',z,'_data.txt')
+        filename=strcat(path_in,'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2a3d_z',z,'_data_det.txt')
+        
         
         info = dlmread(filename);
         
+                info=info';
+
+        
         if w_nw==1
-            signal_nw=[signal_nw info(1:384,3)'];
+            signal_nw=[signal_nw info(:)'];
         else
-            signal_w=[signal_w info(1:384,3)'];
+            signal_w=[signal_w info(:)'];
         end
         
     end
@@ -76,33 +84,25 @@ for w_nw=1:2
     
 end
 
-fig=figure;     
-    histogram(signal_nw(:));
+% fig=figure;     
+%     histogram(signal_nw(:));
        
     sorted_signal_nw=sort(signal_nw(:),'descend'); 
-    truncated_sorted_signal_nw=sorted_signal_nw((1:100));
-    fig=figure;     
-    histogram(truncated_sorted_signal_nw);
+    truncated_sorted_signal_nw=sorted_signal_nw((1:500));
+%     fig=figure;     
+%     histogram(truncated_sorted_signal_nw);
     
- fig=figure;     
-    histogram(signal_w(:));
+%  fig=figure;     
+%     histogram(signal_w(:));
        
     sorted_signal_w=sort(signal_w(:),'descend');    
-    truncated_sorted_signal_w=sorted_signal_w(1:100);
-    fig=figure;     
-    histogram(truncated_sorted_signal_w);
+    truncated_sorted_signal_w=sorted_signal_w(1:500);
+%     fig=figure;     
+%     histogram(truncated_sorted_signal_w);
     
-
-% mean_wake=mean(truncated_sorted_signal_w)
-% mean_nowake=mean(truncated_sorted_signal_nw)
-% std_nowake=std(truncated_sorted_signal_w,1)
-% std_wake=std(truncated_sorted_signal_nw,1)
-% stn_nowake=(max_nowake_slices-mean_nowake)/std_nowake
-% stn_wake=(max_wake_slices-mean_nowake)/std_nowake
-% mean_stn=mean(stn_wake)
-% std_stn=std(stn_wake,1)
-% mean_stn-std_stn    
-
+    
+truncated_sorted_signal_nw;
+truncated_sorted_signal_w;
 
 mean_wake=mean(truncated_sorted_signal_w)
 mean_nowake=mean(truncated_sorted_signal_nw)
@@ -116,12 +116,37 @@ stn_nowake=(truncated_sorted_signal_nw-mean_nowake)/std_nowake;
 stn_wake=(truncated_sorted_signal_w-mean_nowake)/std_nowake;
 mean_stn=mean(stn_wake)
 std_stn=std(stn_wake,1)
+mean_stn-std_stn
+
+
+
+trsh_nowake=max(signal_nw(:));
+label_numbers_statistics=[signal_nw(:);signal_w(:)];
+label_logical=label_numbers_statistics>trsh_nowake;
+label_number=double(label_logical);
+sum_label_number=sum(label_number)
+
+
     
 kurtosis(sorted_signal_nw)
 kurtosis(sorted_signal_w)
 
 
-    
+
+trsh_nowake=min(truncated_sorted_signal_w(:));
+label_large_numbers_statistics=[signal_nw(:);signal_w(:)];
+label_numbers_statistics_aux=[zeros(size(signal_nw(:)));signal_w(:)];
+label_logical=label_numbers_statistics_aux>=trsh_nowake;
+label_large_number=double(label_logical);
+sum_label_large_number=sum(label_number)
+
+dlmwrite(strcat(label_numbers_path,'/curvfilt2a3d_label_notover_numbers_statistics','.txt'),label_numbers_statistics,'delimiter','\t');
+dlmwrite(strcat(label_numbers_path,'/curvfilt2a3d_label_notover','.txt'),label_number,'delimiter','\t');
+
+
+dlmwrite(strcat(label_numbers_path,'/curvfilt2a3d_label_large_numbers_statistics','.txt'),label_large_numbers_statistics,'delimiter','\t');
+dlmwrite(strcat(label_numbers_path,'/curvfilt2a3d_label_large','.txt'),label_large_number,'delimiter','\t');
+
 
 cd('../wake_detection/slices_curv_2d/');
 

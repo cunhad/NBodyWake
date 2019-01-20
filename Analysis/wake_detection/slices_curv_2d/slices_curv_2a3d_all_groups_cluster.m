@@ -1,6 +1,6 @@
-function [ anali,signal,equator_phi ] = slices_curv_2a3d_all_groups( root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE)
+function [ signal_nw,signal_w ] = slices_curv_2a3d_all_groups_cluster( )
 
-%(example)  [ anali] = slices_curv_2a3d_all('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','/home/asus/Dropbox/extras/storage/graham/small_res/anali_hpx/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,2,2 );
+%(example)  [ signal_nw,signal_w ] = slices_curv_2a3d_all_groups_cluster('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','/home/asus/Dropbox/extras/storage/graham/small_res/anali_hpx/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,2,2 );
 
 
 cd('../../preprocessing');
@@ -76,33 +76,25 @@ for w_nw=1:2
     
 end
 
-fig=figure;     
-    histogram(signal_nw(:));
+% fig=figure;     
+%     histogram(signal_nw(:));
        
     sorted_signal_nw=sort(signal_nw(:),'descend'); 
     truncated_sorted_signal_nw=sorted_signal_nw((1:100));
-    fig=figure;     
-    histogram(truncated_sorted_signal_nw);
+%     fig=figure;     
+%     histogram(truncated_sorted_signal_nw);
     
- fig=figure;     
-    histogram(signal_w(:));
+%  fig=figure;     
+%     histogram(signal_w(:));
        
     sorted_signal_w=sort(signal_w(:),'descend');    
     truncated_sorted_signal_w=sorted_signal_w(1:100);
-    fig=figure;     
-    histogram(truncated_sorted_signal_w);
+%     fig=figure;     
+%     histogram(truncated_sorted_signal_w);
     
-
-% mean_wake=mean(truncated_sorted_signal_w)
-% mean_nowake=mean(truncated_sorted_signal_nw)
-% std_nowake=std(truncated_sorted_signal_w,1)
-% std_wake=std(truncated_sorted_signal_nw,1)
-% stn_nowake=(max_nowake_slices-mean_nowake)/std_nowake
-% stn_wake=(max_wake_slices-mean_nowake)/std_nowake
-% mean_stn=mean(stn_wake)
-% std_stn=std(stn_wake,1)
-% mean_stn-std_stn    
-
+    
+truncated_sorted_signal_nw
+truncated_sorted_signal_w
 
 mean_wake=mean(truncated_sorted_signal_w)
 mean_nowake=mean(truncated_sorted_signal_nw)
@@ -116,9 +108,22 @@ stn_nowake=(truncated_sorted_signal_nw-mean_nowake)/std_nowake;
 stn_wake=(truncated_sorted_signal_w-mean_nowake)/std_nowake;
 mean_stn=mean(stn_wake)
 std_stn=std(stn_wake,1)
+% mean_stn-std_stn    
+
+
+
+trsh_nowake=max(signal_nw(:));
+label_numbers_statistics=[signal_nw(:);signal_w(:)];
+label_logical=label_numbers_statistics>trsh_nowake;
+label_number=double(label_logical);
+sum_label_number=sum(label_number);
+
+
     
 kurtosis(sorted_signal_nw)
 kurtosis(sorted_signal_w)
+
+
 
 
     

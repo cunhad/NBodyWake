@@ -1,4 +1,4 @@
-function [ anali,signal,equator_phi ] = slices_curv_2a3d_all_groups( root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE)
+function [ anali,signal,equator_phi ] = slices_curv_2a3d_all_groups_det( root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE)
 
 %(example)  [ anali] = slices_curv_2a3d_all('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','/home/asus/Dropbox/extras/storage/graham/small_res/anali_hpx/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,2,2 );
 
@@ -59,14 +59,16 @@ for w_nw=1:2
         
         path_in=strcat(specs_path_list,'/',string(sample_list(sample)),'/data_anali/1lf_1rf/NSIDE_8/slices_curv_2a3d/hpx/molvd/')
         
-        filename=strcat(path_in,'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2a3d_z',z,'_data.txt')
+        filename=strcat(path_in,'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2a3d_z',z,'_data_det.txt')
         
         info = dlmread(filename);
         
+        info=info';
+        
         if w_nw==1
-            signal_nw=[signal_nw info(1:384,3)'];
+            signal_nw=[signal_nw info(:)'];
         else
-            signal_w=[signal_w info(1:384,3)'];
+            signal_w=[signal_w info(:)'];
         end
         
     end
