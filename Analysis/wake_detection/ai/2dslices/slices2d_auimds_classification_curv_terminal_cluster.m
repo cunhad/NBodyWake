@@ -146,7 +146,8 @@ end
 
 
 sum_label_number=sum(label_number);
-number_of_nowake=500;
+% number_of_nowake=500;
+number_of_nowake=5000;
 
 aug_wake=floor(number_of_nowake/sum_label_number);
 
@@ -175,6 +176,10 @@ imds = imageDatastore(string(list_eq),'ReadFcn',@read_slices_bin,'FileExtensions
 labelCount = countEachLabel(imds);
 img = readimage(imds,1);
 size(img);
+
+labelCount
+
+percent=labelCount{1,2}/(labelCount{1,2}+labelCount{2,2})
 
 % figure; imshow(readimage(imds,1));
 
@@ -311,14 +316,14 @@ classificationLayer];
 
 %minibatch size
 
-miniBatchSize=16;
+miniBatchSize=32;
 
 %Specify Training Options
 
 options = trainingOptions('sgdm', ...
     'MiniBatchSize',miniBatchSize, ...
     'InitialLearnRate',0.01, ...
-    'MaxEpochs',32, ...
+    'MaxEpochs',200, ...
     'Shuffle','every-epoch', ...
     'ValidationData',auimdsValidation, ...
     'ValidationFrequency',30);
