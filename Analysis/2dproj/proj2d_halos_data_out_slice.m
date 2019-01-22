@@ -1,9 +1,8 @@
-function [ cell_bins1d_y, cell_bins1d_z , Pos_halos ,mass_halos ,radius_halos, count_sum_h_number] = proj2d_halos_data_out( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle)
+function [ cell_bins1d_y, cell_bins1d_z , Pos_halos ,mass_halos ,radius_halos, count_sum_h_number] = proj2d_halos_data_out_slice( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,slice)
 %Computes the 2d projections aconding to the input specifications and stores (and returns) the resulting data
 
-%   (example) [ cell_bins1d_y cell_bins1d_z  Pos_halos mass_halos radius_halos count_sum_h_number count_sum_h_mass] = proj2d_halos_data_out( '/home/asus/Dropbox/extras/storage/guillimin/test/', '/home/asus/Dropbox/extras/storage/guillimin/test/','64Mpc_96c_48p_zi63_nowakes','/','','31.000halo0.dat',1,1,[0,0,0],[0,0])
 
-%   (example) proj2d_halos_data_out( '/home/asus/Dropbox/extras/storage/graham/ht/', '/home/asus/Dropbox/extras/storage/graham/ht/data/','4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m','/sample3001/half_lin_cutoff_half_tot_pert_nvpw/','','3.000halo0.dat',1,1,[0,0,0],[pi/2,0,0]);
+%   (example) proj2d_halos_data_out_slice( '/home/asus/Dropbox/extras/storage/graham/ht/', '/home/asus/Dropbox/extras/storage/graham/ht/data/','4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m','/sample3001/half_lin_cutoff_half_tot_pert_nvpw/','','3.000halo0.dat',1,1,[0,0,0],[pi/2,0,0],32);
 
 cd('../preprocessing');
 
@@ -19,13 +18,14 @@ cd('../preprocessing');
 
 % mass=mass*(np/nc)^3;
 
+cell_bins1d_x=[(np/2)-(np/(2*lenght_factor))+pivot(2)*(np*resol_factor)/(nc):np/slice:(np/2)+(np/(2*lenght_factor))+pivot(2)*(np*resol_factor)/(nc)];
 cell_bins1d_y=[(np/2)-(np/(2*lenght_factor))+pivot(2)*(np*resol_factor)/(nc):1:(np/2)+(np/(2*lenght_factor))+pivot(2)*(np*resol_factor)/(nc)];
 cell_bins1d_z=[(np/2)-(np/(2*lenght_factor))+pivot(3)*(np*resol_factor)/(nc):1:(np/2)+(np/(2*lenght_factor))+pivot(3)*(np*resol_factor)/(nc)];
 cell_bins1d_y(end)=[];
 cell_bins1d_z(end)=[];
 
-count_sum_h_number=zeros(numel(cell_bins1d_y),numel(cell_bins1d_z));
-count_sum_h_mass=zeros(numel(cell_bins1d_y),numel(cell_bins1d_z));
+count_sum_h_number=zeros(numel(cell_bins1d_y),numel(cell_bins1d_z),slice);
+count_sum_h_mass=zeros(numel(cell_bins1d_y),numel(cell_bins1d_z),slice);
 % count_sum=zeros(numel(cell_bins1d_y),numel(cell_bins1d_z));
 
 psi=rot_angle(3);
@@ -123,21 +123,21 @@ for part = 1 : length(nodes_list)
     if (~isempty(Pos_h))
         
         
-        [count_h_n edges mid loc] = histcn(transpose(Pos_h),cell_bins1d_y,cell_bins1d_z,1);
-        count_h_n=count_h_n(1:numel(cell_bins1d_y)-1,1:numel(cell_bins1d_z)-1,1:1);
+        [count_h_n edges mid loc] = histcn(transpose(Pos_h),cell_bins1d_y,cell_bins1d_z,cell_bins1d_x);
+%         count_h_n=count_h_n(1:numel(cell_bins1d_y)-1,1:numel(cell_bins1d_z)-1,1:1);
         %     average=mean2(count);
         %     count=(count-average)/average;
-        count_h_n=squeeze(count_h_n);
+%         count_h_n=squeeze(count_h_n);
         
         %    cell_bins1d(end)=[];
         count_sum_h_number=count_sum_h_number+count_h_n;
         
         
-        [count_h_m edges mid loc] = histcn(transpose(Pos_h),cell_bins1d_y,cell_bins1d_z,1,'AccumData',transpose(mass));
-        count_h_m=count_h_m(1:numel(cell_bins1d_y)-1,1:numel(cell_bins1d_z)-1,1:1);
+        [count_h_m edges mid loc] = histcn(transpose(Pos_h),cell_bins1d_y,cell_bins1d_z,cell_bins1d_x,'AccumData',transpose(mass));
+%         count_h_m=count_h_m(1:numel(cell_bins1d_y)-1,1:numel(cell_bins1d_z)-1,1:1);
         %     average=mean2(count);
         %     count=(count-average)/average;
-        count_h_m=squeeze(count_h_m);
+%         count_h_m=squeeze(count_h_m);
         
         %    cell_bins1d(end)=[];
         count_sum_h_mass=count_sum_h_mass+count_h_m;  
@@ -206,11 +206,23 @@ mkdir(strcat(root_out,spec,aux_path),strcat('data/',aux_path_out,num2str(lenght_
 %mkdir(path_out,'aux/total_dm/');
 %dlmwrite(strcat(path_out,'aux/total_dm/','_',num2str(find(str2num(char(redshift_list))==z)),'_2dproj_dm_z',num2str(z),'_data.txt'),count_sum,'delimiter','\t');
 mkdir(path_out,strcat('number/'));
-dlmwrite(strcat(path_out,'number/','_',num2str(find(str2num(char(redshift_list))==z)),'_2dproj_halos_n_z',num2str(z),'_data.txt'),count_sum_h_number,'delimiter','\t');
+% dlmwrite(strcat(path_out,'number/','_',num2str(find(str2num(char(redshift_list))==z)),'_2dproj_halos_n_z',num2str(z),'_data.txt'),count_sum_h_number,'delimiter','\t');
 mkdir(path_out,'mass/');
-dlmwrite(strcat(path_out,'mass/','_',num2str(find(str2num(char(redshift_list))==z)),'_2dproj_halos_mass_z',num2str(z),'_data.txt'),count_sum_h_mass,'delimiter','\t');
+% dlmwrite(strcat(path_out,'mass/','_',num2str(find(str2num(char(redshift_list))==z)),'_2dproj_halos_mass_z',num2str(z),'_data.txt'),count_sum_h_mass,'delimiter','\t');
 %mkdir(path_out,'h_mass_dc_wrt_dmavr/');
 %dlmwrite(strcat(path_out,'h_mass_dc_wrt_dmavr/','_',num2str(find(str2num(char(redshift_list))==z)),'_2dproj_halos_dmdc_z',num2str(z),'_data.txt'),count_sum_dmdc,'delimiter','\t');
+
+    for count_slice=1:slice
+        
+            fileID = fopen(strcat(path_out,'number/','_',num2str(find(str2num(char(redshift_list))==z)),'_2dproj_halos_n_z',num2str(z),'_data_sl',num2str(count_slice),'.bin'),'w');
+            fwrite(fileID,count_sum_h_number(:,:,count_slice), 'float32','l');
+            fclose(fileID);
+            
+            fileID = fopen(strcat(path_out,'mass/','_',num2str(find(str2num(char(redshift_list))==z)),'_2dproj_halos_mass_z',num2str(z),'_data_sl',num2str(count_slice),'.bin'),'w');
+            fwrite(fileID,count_sum_h_mass(:,:,count_slice), 'float32','l');
+            fclose(fileID);
+    end
+
 mkdir(path_out,'aux/Pos_h/');
 dlmwrite(strcat(path_out,'aux/Pos_h/','_',num2str(find(str2num(char(redshift_list))==z)),'_2dproj_Pos_halos_z',num2str(z),'_data.txt'),Pos_halos,'delimiter','\t');
 mkdir(path_out,'aux/mass/');

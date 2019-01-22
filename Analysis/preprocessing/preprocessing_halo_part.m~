@@ -111,8 +111,8 @@ for part_ID=1:part
 end
 particle_sum_per_chunk(part+1)=total_number_of_particles;
 
-part_chunck_start=particle_sum_per_chunk(part_id);
-part_chunck_end=particle_sum_per_chunk(part_id+1);
+part_chunck_start=particle_sum_per_chunk(part_id)
+part_chunck_end=particle_sum_per_chunk(part_id+1)
 
 
 for node_ID=1:length(files_node_list)
@@ -145,7 +145,7 @@ end
 % [ nodes_list ~ ] = preprocessing_many_nodes(path,spec,aux_path)
 number_node_dim=nthroot(numel(nodes_list), 3);
 
-% test=0;
+test=0;
 
 % part_files_start_ID
 
