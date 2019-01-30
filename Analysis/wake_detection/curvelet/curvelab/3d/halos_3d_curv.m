@@ -262,7 +262,7 @@ list=cell(length(C),1);
     spec
     aux_path
 
-for s = 1:length(C)
+for s = length(C):-1:1
     for w = 1:length(C{s})
 %         w/length(C{s})
         list{s} = [list{s};(C{s}{w}(:))];
