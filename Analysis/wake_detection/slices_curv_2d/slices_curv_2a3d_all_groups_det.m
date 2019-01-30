@@ -122,7 +122,16 @@ std_stn=std(stn_wake,1)
 kurtosis(sorted_signal_nw)
 kurtosis(sorted_signal_w)
 
+% ks test
 
+idx = randperm(lenght(signal_nw));
+idx = randperm(length(signal_nw));
+indexToGroup1 = (idx<=length(signal_nw)/2);
+indexToGroup2 = (idx>length(signal_nw)/2);
+group1 = signal_nw(indexToGroup1);
+group2 = signal_nw(indexToGroup2);
+[h,p,ks2stat] = kstest2(group1,group2,'Alpha',0.1)
+[h,p,ks2stat] = kstest2(signal_nw(:),signal_w(:),'Alpha',0.1)
     
 
 cd('../wake_detection/slices_curv_2d/');
