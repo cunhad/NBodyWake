@@ -19,12 +19,12 @@ anal_lev=2;
 z_glob=str2num('3.000')
 z='3.000';
 
-specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_hpx_2a3d_anali_all/4Mpc_2048c_1024p_zi63_nowakem'
+specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_hpx_2a3d_NSIDE4_anali_all/4Mpc_2048c_1024p_zi63_nowakem'
 sample_list_nowake=dir(strcat(specs_path_list_nowake,'/sample*'));
 sample_list_nowake={sample_list_nowake.name};
 % sample_list_nowake=sort_nat(sample_list_nowake)
 
-specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_hpx_2a3d_anali_all/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m'
+specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_hpx_2a3d_NSIDE4_anali_all/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m'
 sample_list_wake=dir(strcat(specs_path_list_wake,'/sample*'));
 sample_list_wake={sample_list_wake.name};
 sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw');
@@ -57,7 +57,7 @@ for w_nw=1:2
     
     for sample = 1:length(sample_list)
         
-        path_in=strcat(specs_path_list,'/',string(sample_list(sample)),'/data_anali/1lf_1rf/NSIDE_8/slices_curv_2a3d/hpx/molvd/')
+        path_in=strcat(specs_path_list,'/',string(sample_list(sample)),'/data_anali/1lf_1rf/NSIDE_4/slices_curv_2a3d/hpx/molvd/')
         
         filename=strcat(path_in,'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2a3d_z',z,'_data_det.txt')
         
@@ -124,7 +124,7 @@ kurtosis(sorted_signal_w)
 
 % ks test
 
-idx = randperm(lenght(signal_nw));
+idx = randperm(length(signal_nw));
 idx = randperm(length(signal_nw));
 indexToGroup1 = (idx<=length(signal_nw)/2);
 indexToGroup2 = (idx>length(signal_nw)/2);
