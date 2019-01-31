@@ -1,4 +1,4 @@
-function [ count_sum] = dm_3d_curv( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,data_stream,particl_part)
+function [ count_sum] = dm_3d_curv( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,w)
 %Computes the 2d projections aconding to the input specifications and stores (and returns) the resulting data
 
 %   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = dm_3d_curv('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','0.000xv0.dat',1,1,[0,0,0],[0,0],[1,2],64,4);
@@ -286,6 +286,8 @@ count_sum=count_sum+1;
 count_sum=log(count_sum);
 
 C = fdct3d_forward(count_sum);
+
+list=cell(length(C),1);
 
  spec
  aux_path
