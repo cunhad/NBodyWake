@@ -1,4 +1,4 @@
-function [ count_sum] = dm_3d_curv( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,)
+function [ count_sum] = dm_3d_curv_par( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,particl_part,num_cores)
 %Computes the 2d projections aconding to the input specifications and stores (and returns) the resulting data
 
 %   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = dm_3d_curv('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','0.000xv0.dat',1,1,[0,0,0],[0,0],[1,2],64,4);
@@ -29,6 +29,13 @@ function [ count_sum] = dm_3d_curv( root,root_out,spec,aux_path,aux_path_out,fil
 % if data_stream = 0, no output
 % if data_stream = 1, binaries generated
 % if data_stream = 2, text files generated
+
+
+myCluster = parcluster('local');
+myCluster.NumWorkers=num_cores;
+saveProfile(myCluster);
+
+p = parpool(num_cores);
 
 cd('../../../../preprocessing');
 
@@ -287,28 +294,75 @@ count_sum=log(count_sum);
 
 C = fdct3d_forward(count_sum);
 
+    spec
+    aux_path
 list=cell(length(C),1);
-
- spec
- aux_path
-
 for s = length(C):-1:1
-    for w = 1:length(C{s})
+%     aux_list=cell(length(C{s}),1);
+    sz=length(C{s}{1}(:));
+    aux_list=zeros(length(C{s}),sz);
+    aux_C=C{s};
+    parfor w = 1:length(C{s})
 %         w/length(C{s})
-        list{s} = [list{s};(C{s}{w}(:))];
+%     aux_list{w}=C{s}{w}(:);
+%         list{s} = [list{s};(C{s}{w}(:))];
+        aux_list(w,:)=aux_C{w}(:);
+%         aux_list(w,:)=reshape(aux_C{w},[sz,1]);
     end
-%     fig=figure;
-%     histogram(abs(list{s}))
-    title({strcat('level=',num2str(s)),strcat('max=',num2str(max(abs(list{s})))),strcat('kurtosis = ',num2str(kurtosis(abs(list{s}))))})
+    list{s} =aux_list;
+% %     fig=figure;
+% %     histogram(abs(list{s}))
+% %    title({strcat('level=',num2str(s)),strcat('max=',num2str(max(abs(list{s})))),strcat('kurtosis = ',num2str(kurtosis(abs(list{s}))))})
     strcat('level=',num2str(s))
-    strcat('abs max=',num2str(max(abs(list{s}))))
-    strcat('abs kurtosis = ',num2str(kurtosis(abs(list{s}))))
-    strcat('max=',num2str(max([real(list{s}),imag(list{s})])))
-    strcat('kurtosis = ',num2str(kurtosis([real(list{s}),imag(list{s})])))
+    strcat('abs max=',num2str(max(abs(list{s}(:)))))
+    strcat('abs kurtosis = ',num2str(kurtosis(abs(list{s}(:)))))
+    strcat('max=',num2str(max([real(list{s}(:)),imag(list{s}(:))])))
+    strcat('kurtosis = ',num2str(kurtosis([real(list{s}(:)),imag(list{s}(:))])))
 end
 
 
+
+
+mkdir(root_out);
+mkdir(root_out,strcat('plot/',spec,aux_path));
+ 
+%do plots
+
+path_out_plot=strcat(strcat(root_out,'plot/',spec,aux_path),aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','3d/dm/');
+mkdir(strcat(root_out,'plot/',spec,aux_path),strcat(aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','3d/dm/'));
+mkdir(path_out_plot,'real');
+mkdir(path_out_plot,'imag');
+for lev=1:length(C)
+    
+%     mkdir(path_out_plot,strcat('lev',num2str(lev)));
+    fig=figure('visible','off');
+    histogram(abs(list{lev}(:)));
+    title({strcat('level=',num2str(lev)),strcat('max=',num2str(max(abs(list{lev}(:))))),strcat('std=',num2str(std(abs(list{lev}(:))))),strcat('skw=',num2str(skewness(abs(list{lev}(:))))),strcat('kurtosis = ',num2str(kurtosis(abs(list{lev}(:)))))})
+    set(gca,'YScale','log');
+    saveas(fig,strcat(path_out_plot,'lev',num2str(lev),'hist_plot.png'));
+    close(fig);
+    
+    fig=figure('visible','off');
+    histogram(real(list{lev}(:)));
+    title({strcat('level=',num2str(lev)),strcat('max=',num2str(max(real(list{lev}(:))))),strcat('std=',num2str(std(real(list{lev}(:))))),strcat('skw=',num2str(skewness(real(list{lev}(:))))),strcat('kurtosis = ',num2str(kurtosis(real(list{lev}(:)))))})
+    set(gca,'YScale','log');
+    saveas(fig,strcat(path_out_plot,'real/lev',num2str(lev),'hist_plot.png'));
+    close(fig);
+    
+    fig=figure('visible','off');
+    histogram(imag(list{lev}(:)));
+    title({strcat('level=',num2str(lev)),strcat('max=',num2str(max(imag(list{lev}(:))))),strcat('std=',num2str(std(imag(list{lev}(:))))),strcat('skw=',num2str(skewness(imag(list{lev}(:))))),strcat('kurtosis = ',num2str(kurtosis(imag(list{lev}(:)))))})
+    set(gca,'YScale','log');
+    saveas(fig,strcat(path_out_plot,'imag/lev',num2str(lev),'hist_plot.png'));
+    close(fig);
+    
+end
+
+
+
 cd('../wake_detection/curvelet/curvelab/3d/');
+
+delete(gcp('nocreate'))
 
 end
 
