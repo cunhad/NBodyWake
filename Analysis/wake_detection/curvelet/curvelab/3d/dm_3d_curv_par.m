@@ -31,11 +31,11 @@ function [ count_sum] = dm_3d_curv_par( root,root_out,spec,aux_path,aux_path_out
 % if data_stream = 2, text files generated
 
 
-myCluster = parcluster('local');
-myCluster.NumWorkers=num_cores;
-saveProfile(myCluster);
-
-p = parpool(num_cores);
+% myCluster = parcluster('local');
+% myCluster.NumWorkers=num_cores;
+% saveProfile(myCluster);
+% 
+% p = parpool(num_cores);
 
 cd('../../../../preprocessing');
 
@@ -44,7 +44,7 @@ cd('../../../../preprocessing');
 
 
 % [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( root,spec,aux_path,filename);
-[ size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw,z,path_file_in,~ ] = preprocessing_part(root,spec,aux_path,filename,particl_part,1);
+[ size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw,z,path_file_in,~ ] = preprocessing_part(root,spec,aux_path,filename,length(nodes_list),1);
 
 % display(z)
 z_glob=z;
@@ -293,6 +293,12 @@ count_sum=count_sum+1;
 count_sum=log(count_sum);
 
 C = fdct3d_forward(count_sum);
+
+myCluster = parcluster('local');
+myCluster.NumWorkers=num_cores;
+saveProfile(myCluster);
+
+p = parpool(num_cores);
 
     spec
     aux_path

@@ -26,26 +26,26 @@ function [ count_sum] = dm_3d_curv( root,root_out,spec,aux_path,aux_path_out,fil
 
 
 % data_stream=[0,1,2]
-% if data_stream = 0, no output
-% if data_stream = 1, binaries generated
-% if data_stream = 2, text files generated
+    % if data_stream = 0, no output
+    % if data_stream = 1, binaries generated
+    % if data_stream = 2, text files generated
 
-cd('../../../../preprocessing');
+    cd('../../../../preprocessing');
 
-% [ nodes_list redshift_list ] = preprocessing_many_nodes(root,spec,aux_path );
-[~,redshift_list,nodes_list,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec,aux_path );
+    % [ nodes_list redshift_list ] = preprocessing_many_nodes(root,spec,aux_path );
+    [~,redshift_list,nodes_list,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec,aux_path );
 
 
-% [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( root,spec,aux_path,filename);
-[ size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw,z,path_file_in,~ ] = preprocessing_part(root,spec,aux_path,filename,particl_part,1);
+    % [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( root,spec,aux_path,filename);
+    [ size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw,z,path_file_in,~ ] = preprocessing_part(root,spec,aux_path,filename,particl_part,1);
 
-% display(z)
-z_glob=z;
+    % display(z)
+    z_glob=z;
 
-% cell_bins1d_y=[(nc/2)-(nc/(2*lenght_factor))+pivot(2):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(2)];
-% cell_bins1d_z=[(nc/2)-(nc/(2*lenght_factor))+pivot(3):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(3)];
-% cell_bins1d_y(end)=[];
-% cell_bins1d_z(end)=[];
+    % cell_bins1d_y=[(nc/2)-(nc/(2*lenght_factor))+pivot(2):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(2)];
+    % cell_bins1d_z=[(nc/2)-(nc/(2*lenght_factor))+pivot(3):nc/(np*resol_factor):(nc/2)+(nc/(2*lenght_factor))+pivot(3)];
+    % cell_bins1d_y(end)=[];
+    % cell_bins1d_z(end)=[];
 
 slice=(np*resol_factor/lenght_factor);
 count_sum=zeros((np*resol_factor/lenght_factor),(np*resol_factor/lenght_factor),slice);
@@ -314,3 +314,4 @@ end
 
 
 
+    
