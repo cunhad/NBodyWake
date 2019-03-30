@@ -169,40 +169,40 @@ auimdsValidation = augmentedImageDatastore([1024 1024],imdsValidation,'DataAugme
 
 % Define the convolutional neural network architecture
 
-layers = [
-imageInputLayer([1024 1024 3])
-convolution2dLayer(4,8,'Padding','same')
-batchNormalizationLayer
-reluLayer
-convolution2dLayer(4,8,'Padding','same')
-batchNormalizationLayer
-reluLayer
-maxPooling2dLayer(2,'Stride',2)
-convolution2dLayer(4,8,'Padding','same')
-batchNormalizationLayer
-reluLayer
-maxPooling2dLayer(2,'Stride',2)
-convolution2dLayer(8,16,'Padding','same')
-batchNormalizationLayer
-reluLayer
-maxPooling2dLayer(2,'Stride',2)
-convolution2dLayer(16,32,'Padding','same')
-batchNormalizationLayer
-reluLayer
-maxPooling2dLayer(2,'Stride',2)
-convolution2dLayer(16,32,'Padding','same')
-batchNormalizationLayer
-reluLayer
-maxPooling2dLayer(2,'Stride',2)
-convolution2dLayer(32,64,'Padding','same')
-batchNormalizationLayer
-reluLayer
-maxPooling2dLayer(2,'Stride',2)
-fullyConnectedLayer(128)
-fullyConnectedLayer(64)
-fullyConnectedLayer(2)
-softmaxLayer
-classificationLayer];
+% layers = [
+% imageInputLayer([1024 1024 3])
+% convolution2dLayer(4,8,'Padding','same')
+% batchNormalizationLayer
+% reluLayer
+% convolution2dLayer(4,8,'Padding','same')
+% batchNormalizationLayer
+% reluLayer
+% maxPooling2dLayer(2,'Stride',2)
+% convolution2dLayer(4,8,'Padding','same')
+% batchNormalizationLayer
+% reluLayer
+% maxPooling2dLayer(2,'Stride',2)
+% convolution2dLayer(8,16,'Padding','same')
+% batchNormalizationLayer
+% reluLayer
+% maxPooling2dLayer(2,'Stride',2)
+% convolution2dLayer(16,32,'Padding','same')
+% batchNormalizationLayer
+% reluLayer
+% maxPooling2dLayer(2,'Stride',2)
+% convolution2dLayer(16,32,'Padding','same')
+% batchNormalizationLayer
+% reluLayer
+% maxPooling2dLayer(2,'Stride',2)
+% convolution2dLayer(32,64,'Padding','same')
+% batchNormalizationLayer
+% reluLayer
+% maxPooling2dLayer(2,'Stride',2)
+% fullyConnectedLayer(128)
+% fullyConnectedLayer(64)
+% fullyConnectedLayer(2)
+% softmaxLayer
+% classificationLayer];
 
 % layers = [
 %     imageInputLayer([1024 1024 3])

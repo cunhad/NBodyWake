@@ -155,6 +155,25 @@ for slice_id=1:slice
     anali(slice_id,3,:)=[max(R_nor(:)),std(R_nor(:)),max(R_nor(:))/std(R_nor(:)),kurtosis(kurtosis(R_nor)),kurtosis(R_nor(:))];
     anali(slice_id,4,:)=[max(R_nor_filt(:)),std(R_nor_filt(:)),max(R_nor_filt(:))/std(R_nor_filt(:)),kurtosis(kurtosis(R_nor_filt)),kurtosis(R_nor_filt(:))];
     
+     if ismember(slice_id,display_slice{find(sample_id_range==sample)})
+                
+%                 figure; imagesc((size_mpc/nc)*[1:nc],(size_mpc/1024)*[1:nc],map_3d_slices_filt2a3d(:,:,slice_id)); colorbar; axis('image');
+                figure; imagesc(0:step_of_degree:180,(size_mpc/nc_anal2d)*[1:nc_anal2d],R_nor_filt);colorbar;
+                xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
+                ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+                set(gca,'FontName','FixedWidth');
+                set(gca,'FontSize',16);
+                set(gca,'linewidth',2);
+                title(strcat('wfilt ridg filt2a3 for sample ',num2str(sample),' slice ',num2str(slice_id)));
+                
+                figure; imagesc(0:step_of_degree:180,(size_mpc/nc_anal2d)*[1:nc_anal2d],R_2dwav_filt);colorbar;
+                xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
+                ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+                set(gca,'FontName','FixedWidth');
+                set(gca,'FontSize',16);
+                set(gca,'linewidth',2);
+                title(strcat('wfilt ridg filt2a3 for sample ',num2str(sample),' slice ',num2str(slice_id)));
+            end
     
 end
 
