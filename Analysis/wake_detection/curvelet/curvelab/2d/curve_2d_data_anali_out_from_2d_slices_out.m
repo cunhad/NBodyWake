@@ -1,33 +1,36 @@
-function [  ] = curve_2d_data_anali_out_from_2d_slices_out( root,root_data_2d_in,root_data_2d_out,root_anali_2d_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,slices,lev,sigma,step_of_degree,wavel_removal_factor,snapshot,visual_type,visual_in_or_out)
+function [  ] = curve_2d_data_anali_out_from_2d_slices_out( root,root_data_2d_in,root_data_2d_out,root_anali_2d_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,slices,lev,sigma,step_of_degree,wavel_removal_factor,snapshot,visual_type,visual_in_or_out,sum_depth)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
 % root='/home/asus/Dropbox/extras/storage/graham/ht/';
-% root_data_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_1024/';
+% root_data_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps64_1024/';
 % % root_data_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_1024_2dcurv_s5lv3_data/';
 % root_data_2d_out='';
-% root_anali_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_1024_2dcurv_s5lv3_anali/';
-% root_visual_2d='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_1024_2dcurv_s5lv3_visual/';
-% spec='4Mpc_2048c_1024p_zi63_nowakem';
-% % spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
-% aux_path='/sample3007/';
-% % aux_path='/sample3003/half_lin_cutoff_half_tot_pert_nvpw/';
+% root_anali_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_cps64_1024_2dcurv_s5lv3_anali/';
+% root_visual_2d='/home/asus/Dropbox/extras/storage/graham/ht/data_cps64_1024_2dcurv_s5lv3_visual/';
+% % spec='4Mpc_2048c_1024p_zi63_nowakem';
+% spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
+% % aux_path='/sample3007/';
+% aux_path='/sample3007/half_lin_cutoff_half_tot_pert_nvpw/';
 % aux_path_out='';
 % filename='3.000xv0.dat';
 % lenght_factor=1;
 % resol_factor=1;
 % pivot=[0,0,0];
 % rot_angle=[1.5708,0,0];
-% slices=128;
+% slices=64;
 % lev=2;
 % sigma=5;
 % step_of_degree=1;
 % wavel_removal_factor=1/2;
 % % snapshot=[];
 % % snapshot=[13,28]*(128/32);
-% snapshot=[9,29]*(128/32);
+% snapshot=[9,29]*(slices/32);
 % visual_type=[1:2]; %if 1, shows the 2d proj; if 2 shows the ridgelet transformation
-%  visual_in_or_out=[1,2]; %if 1 do visualization of the input, if 2 of the output
+% visual_in_or_out=[1,2]; %if 1 do visualization of the input, if 2 of the output
+% %  sum_depth=1;
+% sum_depth=2;
+
 
 % filename_read_path=_2dproj_z3_data_sl;
 
@@ -47,12 +50,12 @@ addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3
 %making path to data out
 
 if ~isempty(root_data_2d_out)
-
-path_data_out=string(strcat(strcat(root_data_2d_out,spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/'));
-% string(strcat(root_data_2d_out,spec,aux_path))
-% string(strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'))
-mkdir(char(strcat(root_data_2d_out,spec,aux_path)),char(strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/')));
-
+    
+    path_data_out=string(strcat(strcat(root_data_2d_out,spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/'));
+    % string(strcat(root_data_2d_out,spec,aux_path))
+    % string(strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'))
+    mkdir(char(strcat(root_data_2d_out,spec,aux_path)),char(strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/')));
+    
 end
 
 
@@ -63,29 +66,39 @@ path_anali_out=string(strcat(strcat(root_anali_2d_out,spec,aux_path),'anali/',au
 % string(strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'))
 mkdir(char(strcat(root_anali_2d_out,spec,aux_path)),char(strcat('anali/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/')));
 
+%making path to analisis depth out
+
+if ~ismember(1,sum_depth)
+    
+    path_anali_depth_out=string(strcat(strcat(root_anali_2d_out,spec,aux_path),'anali_depth_',num2str(sum_depth),'/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2d/dm/'));
+    % string(strcat(root_data_2d_anali,spec,aux_path))
+    % string(strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'))
+    mkdir(char(strcat(root_anali_2d_out,spec,aux_path)),char(strcat('anali_depth_',num2str(sum_depth),'/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2d/dm/')));
+    
+end
 
 %making path to visualization out
 
 if ~isempty(snapshot)
     
-
+    
     if ismember(1,visual_in_or_out)
         
-    path_visual_in=string(strcat(strcat(root_visual_2d,spec,aux_path),'visual_in/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/'));
-    % string(strcat(root_data_2d_anali,spec,aux_path))
-    % string(strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'))
-    mkdir(char(strcat(root_visual_2d,spec,aux_path)),char(strcat('visual_in/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/')));
-    
+        path_visual_in=string(strcat(strcat(root_visual_2d,spec,aux_path),'visual_in/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/'));
+        % string(strcat(root_data_2d_anali,spec,aux_path))
+        % string(strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'))
+        mkdir(char(strcat(root_visual_2d,spec,aux_path)),char(strcat('visual_in/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/')));
+        
         
     end
     
     if ismember(2,visual_in_or_out)
         
         path_visual=string(strcat(strcat(root_visual_2d,spec,aux_path),'visual/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/'));
-    % string(strcat(root_data_2d_anali,spec,aux_path))
-    % string(strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'))
-    mkdir(char(strcat(root_visual_2d,spec,aux_path)),char(strcat('visual/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/')));
-    
+        % string(strcat(root_data_2d_anali,spec,aux_path))
+        % string(strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'))
+        mkdir(char(strcat(root_visual_2d,spec,aux_path)),char(strcat('visual/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/')));
+        
         
     end
     
@@ -93,12 +106,12 @@ if ~isempty(snapshot)
     
     if (ismember(2,visual_type))
         
-%         if ismember(1,visual_in_or_out)
-%             
-%             path_visual_rid_in=strcat(path_visual_in,'rid/');
-%             mkdir(char(path_visual_in),'rid/')
-%             
-%         end
+        %         if ismember(1,visual_in_or_out)
+        %
+        %             path_visual_rid_in=strcat(path_visual_in,'rid/');
+        %             mkdir(char(path_visual_in),'rid/')
+        %
+        %         end
         
         if ismember(2,visual_in_or_out)
             
@@ -108,7 +121,49 @@ if ~isempty(snapshot)
         end
     end
     
-    
+    if ~ismember(1,sum_depth)
+        
+        if ismember(1,visual_in_or_out)
+            
+            path_visual_depth_in=string(strcat(strcat(root_visual_2d,spec,aux_path),'visual_depth_',num2str(sum_depth),'_in/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2d/dm/'));
+            % string(strcat(root_data_2d_anali,spec,aux_path))
+            % string(strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'))
+            mkdir(char(strcat(root_visual_2d,spec,aux_path)),char(strcat('visual_depth_',num2str(sum_depth),'_in/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2d/dm/')));
+            
+            
+        end
+        
+        if ismember(2,visual_in_or_out)
+            
+            path_visual_depth=string(strcat(strcat(root_visual_2d,spec,aux_path),'visual_depth_',num2str(sum_depth),'/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2d/dm/'));
+            % string(strcat(root_data_2d_anali,spec,aux_path))
+            % string(strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'))
+            mkdir(char(strcat(root_visual_2d,spec,aux_path)),char(strcat('visual_depth_',num2str(sum_depth),'/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2d/dm/')));
+            
+            
+        end
+        
+        
+        
+        if (ismember(2,visual_type))
+            
+            %         if ismember(1,visual_in_or_out)
+            %
+            %             path_visual_rid_in=strcat(path_visual_in,'rid/');
+            %             mkdir(char(path_visual_in),'rid/')
+            %
+            %         end
+            
+            if ismember(2,visual_in_or_out)
+                
+                path_visual_rid_depth=strcat(path_visual_depth,'rid_depth/');
+                mkdir(char(path_visual_depth),'rid_depth/')
+                
+            end
+        end
+        
+        
+    end
     
 end
 
@@ -163,9 +218,14 @@ end
 F=zeros(nb);
 C_zero = fdct_wrapping(F,0);
 
+slices_depth=slices/sum_depth;
+slice_depth_count=1;
+map_2d_slices_depth=zeros(nb,nb);
+map_2d_slices_filt2d_depth=zeros(nb,nb);
+
 for slice_id=1:slices
-        
-      
+    
+    
     
     filename_read_path=strcat(strcat(root_data_2d_in,spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/',filename_read,num2str(slice_id),'.bin')
     fid = fopen(filename_read_path);
@@ -173,12 +233,12 @@ for slice_id=1:slices
     fclose(fid);
     %             map = imresize(map,new_nc/nc,'triangle');
     
-       
+    
     map(map<=1)=1;%to remove problem with holes
     
     map_3d_slices=log(map);
     
-
+    
     
     
     
@@ -206,24 +266,24 @@ for slice_id=1:slices
     %             %         test=dc_cut;
     %             %         test=seg_I;
     %             test=log(seg_I);
-%     map(map<=1)=1;%to remove problem with holes
-%     map_3d_slices(:,:,slice_id)=log(map);
+    %     map(map<=1)=1;%to remove problem with holes
+    %     map_3d_slices(:,:,slice_id)=log(map);
     %
     %             map(map<=1)=1;%to remove problem with holes
     %             map=map+1;
     %             test=log(log(map));
     
     %             if false
-%     if ismember(slice_id,display_slice{find(sample_id_range==sample)})
-%         
-%         figure; imagesc((size_mpc/new_nc)*[1:new_nc],(size_mpc/new_nc)*[1:new_nc],map_3d_slices(:,:,slice_id)); colorbar; axis('image');
-%         xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
-%         ylabel('$Y(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
-%         set(gca,'FontName','FixedWidth');
-%         set(gca,'FontSize',16);
-%         set(gca,'linewidth',2);
-%         title(strcat('log for sample ',num2str(sample),' slice ',num2str(slice_id)));
-%     end
+    %     if ismember(slice_id,display_slice{find(sample_id_range==sample)})
+    %
+    %         figure; imagesc((size_mpc/new_nc)*[1:new_nc],(size_mpc/new_nc)*[1:new_nc],map_3d_slices(:,:,slice_id)); colorbar; axis('image');
+    %         xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+    %         ylabel('$Y(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+    %         set(gca,'FontName','FixedWidth');
+    %         set(gca,'FontSize',16);
+    %         set(gca,'linewidth',2);
+    %         title(strcat('log for sample ',num2str(sample),' slice ',num2str(slice_id)));
+    %     end
     
     C = fdct_wrapping(map_3d_slices,0);
     Ct = C;
@@ -243,9 +303,9 @@ for slice_id=1:slices
             %                    Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > 0*E{s}{w});
             Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > -thresh*E{s}{w}&(C{s}{w}) < thresh*E{s}{w});
             %                 Ct{s}{w} = C{s}{w};
-%              curv(slice_id,w,aux_count)=kurtosis(abs(C{s}{w}(:)));
+            %              curv(slice_id,w,aux_count)=kurtosis(abs(C{s}{w}(:)));
         end
-%          curv2(w_nw,sample,slice_id,aux_count)=kurtosis(curv(slice_id,:,aux_count));
+        %          curv2(w_nw,sample,slice_id,aux_count)=kurtosis(curv(slice_id,:,aux_count));
         aux_count=aux_count+1;
     end
     
@@ -255,38 +315,38 @@ for slice_id=1:slices
     
     map_3d_slices_filt2d = real(ifdct_wrapping(Ct,0));
     
-
-%     strcat(root_data_2d_in,'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/',filename_read,num2str(slice_id),'.bin')
     
-               
+    %     strcat(root_data_2d_in,'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/',filename_read,num2str(slice_id),'.bin')
+    
+    
     if ismember(slice_id,snapshot)&(ismember(1,visual_type))
         
         if ismember(1,visual_in_or_out)
-        
-        fig=figure('Visible', 'off'); imagesc((size_box/nb)*[1:nb],(size_box/nb)*[1:nb],map_3d_slices); colorbar; axis('image');
-        xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
-        ylabel('$Y(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
-        set(gca,'FontName','FixedWidth');
-        set(gca,'FontSize',10);
-        set(gca,'linewidth',2);
-        title(strcat('filt2 info:',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
-        
-        saveas(fig,char(strcat(path_visual_in','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
-                
+            
+            fig=figure('Visible', 'off'); imagesc((size_box/nb)*[1:nb],(size_box/nb)*[1:nb],map_3d_slices); colorbar; axis('image');
+            xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+            ylabel('$Y(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+            set(gca,'FontName','FixedWidth');
+            set(gca,'FontSize',10);
+            set(gca,'linewidth',2);
+            title(strcat('filt2 info:',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
+            
+            saveas(fig,char(strcat(path_visual_in','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
+            
         end
         
         if ismember(2,visual_in_or_out)
-        
-        fig=figure('Visible', 'off'); imagesc((size_box/nb)*[1:nb],(size_box/nb)*[1:nb],map_3d_slices_filt2d); colorbar; axis('image');
-        xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
-        ylabel('$Y(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
-        set(gca,'FontName','FixedWidth');
-        set(gca,'FontSize',10);
-        set(gca,'linewidth',2);
-        title(strcat('filt2 info:',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
-        
-        saveas(fig,char(strcat(path_visual','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
-                
+            
+            fig=figure('Visible', 'off'); imagesc((size_box/nb)*[1:nb],(size_box/nb)*[1:nb],map_3d_slices_filt2d); colorbar; axis('image');
+            xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+            ylabel('$Y(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+            set(gca,'FontName','FixedWidth');
+            set(gca,'FontSize',10);
+            set(gca,'linewidth',2);
+            title(strcat('filt2 info:',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
+            
+            saveas(fig,char(strcat(path_visual','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
+            
         end
     end
     
@@ -307,7 +367,7 @@ for slice_id=1:slices
     R_nor(R_u>nb*frac_cut)=R_nor(R_u>nb*frac_cut)./R_u(R_u>nb*frac_cut);
     R_nor(R_u<=nb*frac_cut)=0;
     
-%     boudary_removal_factor=2048/nb;
+    %     boudary_removal_factor=2048/nb;
     
     n_levels=floor(log2(length(R_nor(:,1))));
     R_nor_filt=zeros(size(R_nor));
@@ -328,45 +388,174 @@ for slice_id=1:slices
     R_nor_filt(1:nb*wavel_removal_factor,:)=[];
     
     
-     if ismember(slice_id,snapshot)&(ismember(1,visual_type))&ismember(2,visual_in_or_out)
-                
-%                 figure; imagesc((size_mpc/nc)*[1:nc],(size_mpc/1024)*[1:nc],map_3d_slices_filt2a3d(:,:,slice_id)); colorbar; axis('image');
-                fig=figure('Visible', 'off'); imagesc(0:step_of_degree:180,(size_box/nb)*[1:nb],R_nor_filt);colorbar;
-                xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
-                ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
-                set(gca,'FontName','FixedWidth');
-                set(gca,'FontSize',10);
-                set(gca,'linewidth',2);
-                title(strcat('ridg filt2 for ',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
-                        
-                saveas(fig,char(strcat(path_visual_rid','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurv&rid_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
-
-     end
+    if ismember(slice_id,snapshot)&(ismember(1,visual_type))&ismember(2,visual_in_or_out)
+        
+        %                 figure; imagesc((size_mpc/nc)*[1:nc],(size_mpc/1024)*[1:nc],map_3d_slices_filt2a3d(:,:,slice_id)); colorbar; axis('image');
+        fig=figure('Visible', 'off'); imagesc(0:step_of_degree:180,(size_box/nb)*[1:nb],R_nor_filt);colorbar;
+        xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
+        ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+        set(gca,'FontName','FixedWidth');
+        set(gca,'FontSize',10);
+        set(gca,'linewidth',2);
+        title(strcat('ridg filt2 for ',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
+        
+        saveas(fig,char(strcat(path_visual_rid','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurv&rid_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
+        
+    end
     
     
     anali(slice_id,2,:)=[max(R(:)),std(R(:)),max(R(:))/std(R(:)),kurtosis(kurtosis(R)),kurtosis(R(:))];
     anali(slice_id,3,:)=[max(R_nor(:)),std(R_nor(:)),max(R_nor(:))/std(R_nor(:)),kurtosis(kurtosis(R_nor)),kurtosis(R_nor(:))];
     anali(slice_id,4,:)=[max(R_nor_filt(:)),std(R_nor_filt(:)),max(R_nor_filt(:))/std(R_nor_filt(:)),kurtosis(kurtosis(R_nor_filt)),kurtosis(R_nor_filt(:))];
     
-
     
-%     path_out=string(strcat(strcat(root_data_2d_anali,spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'));
-% string(strcat(root_data_2d_anali,spec,aux_path))
-% string(strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'))
-% mkdir(char(strcat(root_data_2d_anali,spec,aux_path)),char(strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/')));
-% mkdir(char(strcat(root_data_2d_anali,spec,aux_path)));
-
-% dlmwrite(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_curv_sl',num2str(count_slice),'.txt'),anali,'delimiter','\t');
-
-if ~isempty(root_data_2d_out)
-
-fileID = fopen(strcat(path_data_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_data_sl',num2str(slice_id),'.bin'),'w');
-            fwrite(fileID,map_3d_slices_filt2d, 'float32','l');
-            fclose(fileID);
+    
+    %     path_out=string(strcat(strcat(root_data_2d_anali,spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'));
+    % string(strcat(root_data_2d_anali,spec,aux_path))
+    % string(strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'))
+    % mkdir(char(strcat(root_data_2d_anali,spec,aux_path)),char(strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/')));
+    % mkdir(char(strcat(root_data_2d_anali,spec,aux_path)));
+    
+    % dlmwrite(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_curv_sl',num2str(count_slice),'.txt'),anali,'delimiter','\t');
+    
+    if ~isempty(root_data_2d_out)
+        
+        fileID = fopen(strcat(path_data_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_data_sl',num2str(slice_id),'.bin'),'w');
+        fwrite(fileID,map_3d_slices_filt2d, 'float32','l');
+        fclose(fileID);
+        
+    end
+    
+    
+    %now the slice stuff
+    
+    if ~ismember(1,sum_depth)
+        
+        map_2d_slices_depth=map_2d_slices_depth+map_3d_slices;
+        map_2d_slices_filt2d_depth=map_2d_slices_filt2d_depth+map_3d_slices_filt2d;
+        slice_depth_id=floor(slice_id/sum_depth);
+        
+        if slice_depth_count==sum_depth
             
-end          
-
+            if ismember(slice_depth_id,floor(snapshot/sum_depth))&(ismember(1,visual_type))
+                
+                if ismember(1,visual_in_or_out)
+                    
+                    fig=figure('Visible', 'off'); imagesc((size_box/nb)*[1:nb],(size_box/nb)*[1:nb],map_2d_slices_depth(:,:)); colorbar; axis('image');
+                    xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+                    ylabel('$Y(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+                    set(gca,'FontName','FixedWidth');
+                    set(gca,'FontSize',10);
+                    set(gca,'linewidth',2);
+                    title(strcat('filt2 info:',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
+                    
+                    saveas(fig,char(strcat(path_visual_depth_in','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id*sum_depth),'.png')));
+                    
+                end
+                
+                if ismember(2,visual_in_or_out)
+                    
+                    fig=figure('Visible', 'off'); imagesc((size_box/nb)*[1:nb],(size_box/nb)*[1:nb],map_2d_slices_filt2d_depth(:,:)); colorbar; axis('image');
+                    xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+                    ylabel('$Y(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+                    set(gca,'FontName','FixedWidth');
+                    set(gca,'FontSize',10);
+                    set(gca,'linewidth',2);
+                    title(strcat('filt2 info:',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
+                    
+                    saveas(fig,char(strcat(path_visual_depth','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id*sum_depth),'.png')));
+                    
+                end
+                
+            end
+            
+            
+            this=map_2d_slices_filt2d_depth(:,:);
+            
+            anali_depth(slice_depth_id,1,:)=[max(this(:)),std(this(:)),max(this(:))/std(this(:)),kurtosis(kurtosis(this)),kurtosis(this(:))];
+            
+            % theta = 0:180/nc:180;
+            
+            
+            
+            theta = 0:step_of_degree:180;
+            [R,xp] = radon(map_2d_slices_filt2d_depth(:,:),theta);
+            
+            unit=ones(nb);
+            [R_u,xp] = radon(unit,theta);
+            
+            frac_cut=0.5;
+            R_nor=R;
+            R_nor(R_u>nb*frac_cut)=R_nor(R_u>nb*frac_cut)./R_u(R_u>nb*frac_cut);
+            R_nor(R_u<=nb*frac_cut)=0;
+            
+            %     boudary_removal_factor=2048/nb;
+            
+            n_levels=floor(log2(length(R_nor(:,1))));
+            R_nor_filt=zeros(size(R_nor));
+            for i=1:length(R_nor(1,:))
+                %                 [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
+                [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
+                D = wrcoef('d',dc_dwt,levels,'db1',lev);
+                %                 D(floor((2465-200)/boudary_removal_factor):end)=0;
+                %                 D(1:floor((448+200)/boudary_removal_factor))=0;
+                D(length(xp)-nb*wavel_removal_factor:end)=0;
+                D(1:nb*wavel_removal_factor)=0;
+                
+                R_nor_filt(:,i)=D;
+            end
+            %             R_nor_filt(floor((2465-200)/boudary_removal_factor):end,:)=[];
+            %             R_nor_filt(1:floor((448+200)/boudary_removal_factor),:)=[];
+            R_nor_filt(length(xp)-nb*wavel_removal_factor:end,:)=[];
+            R_nor_filt(1:nb*wavel_removal_factor,:)=[];
+            
+            if ismember(slice_depth_id,floor(snapshot/sum_depth))&(ismember(2,visual_type))&ismember(2,visual_in_or_out)
+                
+                %                 figure; imagesc((size_mpc/nc)*[1:nc],(size_mpc/1024)*[1:nc],map_3d_slices_filt2a3d(:,:,slice_id)); colorbar; axis('image');
+                fig=figure('Visible', 'off'); imagesc(0:step_of_degree:180,(size_box/nb)*[1:nb],R_nor_filt);colorbar;
+                xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
+                ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+                set(gca,'FontName','FixedWidth');
+                set(gca,'FontSize',10);
+                set(gca,'linewidth',2);
+                title(strcat('ridg filt2 for ',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
+                
+                saveas(fig,char(strcat(path_visual_rid_depth','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurv&rid_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id*sum_depth),'.png')));
+                
+            end
+            
+            
+            anali_depth(slice_depth_id,2,:)=[max(R(:)),std(R(:)),max(R(:))/std(R(:)),kurtosis(kurtosis(R)),kurtosis(R(:))];
+            anali_depth(slice_depth_id,3,:)=[max(R_nor(:)),std(R_nor(:)),max(R_nor(:))/std(R_nor(:)),kurtosis(kurtosis(R_nor)),kurtosis(R_nor(:))];
+            anali_depth(slice_depth_id,4,:)=[max(R_nor_filt(:)),std(R_nor_filt(:)),max(R_nor_filt(:))/std(R_nor_filt(:)),kurtosis(kurtosis(R_nor_filt)),kurtosis(R_nor_filt(:))];
+            
+            
+            
+        end
+        
+        
+        
+        slice_depth_count=slice_depth_count+1;
+        
+        if slice_depth_count==sum_depth+1
+            
+            slice_depth_count=1;
+            map_2d_slices_depth=zeros(nb,nb);
+            map_2d_slices_filt2d_depth=zeros(nb,nb);
+            
+        end
+        
+        
+        
+        
+        
+        
+    end
     
+end
+
+if ~ismember(1,sum_depth)
+    dlmwrite(strcat(path_anali_depth_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv_z',num2str(z_glob),'_anali.txt'),anali_depth,'delimiter','\t');
 end
 
 dlmwrite(strcat(path_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali.txt'),anali,'delimiter','\t');
