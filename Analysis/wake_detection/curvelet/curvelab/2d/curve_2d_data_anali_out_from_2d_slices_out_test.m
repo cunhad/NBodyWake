@@ -295,16 +295,6 @@ for slice_id=1:slices
     
     aux_count=1;
     for s = length(C)-lev:length(C)-1
-        
-        As=0;
-        Bs=0;
-        Cs=0;
-        Ds=0;
-        
-        size_nt=0;
-        
-        
-        
         %                 thresh=0;
         thresh = sigma + sigma*(s == length(C));
         for w = 1:length(C{s})
@@ -314,53 +304,8 @@ for slice_id=1:slices
             Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > -thresh*E{s}{w}&(C{s}{w}) < thresh*E{s}{w});
             %                 Ct{s}{w} = C{s}{w};
             %              curv(slice_id,w,aux_count)=kurtosis(abs(C{s}{w}(:)));
-            
-%             ave=mean(abs(Ct{s}{w}(:)));
-%             sig=std(abs(Ct{s}{w}(:)))^2;
-%             del=skewness(abs(Ct{s}{w}(:)))*(sig^(3/2));
-%             rho=kurtosis(abs(Ct{s}{w}(:)))*(sig^(2));
-
-            ave=mean(abs(Ct{s}{w}(:))/E{s}{w});
-            sig=std(abs(Ct{s}{w}(:))/E{s}{w})^2;
-            del=skewness(abs(Ct{s}{w}(:))/E{s}{w})*(sig^(3/2));
-            rho=kurtosis(abs(Ct{s}{w}(:))/E{s}{w})*(sig^(2));
-
-            A_=ave;
-            B_=sig+A_^2;
-            C_=del+3*B_*A_-2*A_^3;
-            D_=rho+4*C_*A_-6*B_*A_^2+3*A_^4;
-            
-            size_n=prod(size(Ct{s}{w}(:)));
-            size_nt=size_nt+size_n;
-            
-            As=A_*size_n+As;
-            Bs=B_*size_n+Bs;
-            Cs=C_*size_n+Cs;
-            Ds=D_*size_n+Ds;
-            
-            
-            
         end
         %          curv2(w_nw,sample,slice_id,aux_count)=kurtosis(curv(slice_id,:,aux_count));
-        AT=As/size_nt;
-        BT=Bs/size_nt;
-        CT=Cs/size_nt;
-        DT=Ds/size_nt;
-        
-        sigma_t=BT-AT^2;
-        delta_t=CT-3*BT*AT+2*AT^3;
-        rho_t=DT-4*CT*AT+6*BT*AT^2-3*AT^4;
-        
-        var_t=sigma_t;
-        skew_t=delta_t/var_t^(3/2);
-        kurt_t=rho_t/var_t^2;
-        
-        curv_1(aux_count)=AT;
-        curv_2(aux_count)=var_t;
-        curv_3(aux_count)=skew_t;
-        curv_4(aux_count)=kurt_t;
-        curv_5(aux_count)=rho_t;
-        
         aux_count=aux_count+1;
     end
     
@@ -405,12 +350,10 @@ for slice_id=1:slices
         end
     end
     
-%     anali(slice_id,1,:)=[max(map_3d_slices_filt2d(:)),std(map_3d_slices_filt2d(:)),max(map_3d_slices_filt2d(:))/std(map_3d_slices_filt2d(:)),kurtosis(kurtosis(map_3d_slices_filt2d)),kurtosis(map_3d_slices_filt2d(:))];
+    anali(slice_id,1,:)=[max(map_3d_slices_filt2d(:)),std(map_3d_slices_filt2d(:)),max(map_3d_slices_filt2d(:))/std(map_3d_slices_filt2d(:)),kurtosis(kurtosis(map_3d_slices_filt2d)),kurtosis(map_3d_slices_filt2d(:))];
     
     % theta = 0:180/nc:180;
     
-    
-   
     
     
     theta = 0:step_of_degree:180;
@@ -460,16 +403,12 @@ for slice_id=1:slices
         
     end
     
-    anali(slice_id,1,:)=[max(map_3d_slices_filt2d(:)),std(map_3d_slices_filt2d(:)),max(map_3d_slices_filt2d(:))/std(map_3d_slices_filt2d(:)),kurtosis(kurtosis(map_3d_slices_filt2d)),kurtosis(map_3d_slices_filt2d(:))];
+    
     anali(slice_id,2,:)=[max(R(:)),std(R(:)),max(R(:))/std(R(:)),kurtosis(kurtosis(R)),kurtosis(R(:))];
     anali(slice_id,3,:)=[max(R_nor(:)),std(R_nor(:)),max(R_nor(:))/std(R_nor(:)),kurtosis(kurtosis(R_nor)),kurtosis(R_nor(:))];
     anali(slice_id,4,:)=[max(R_nor_filt(:)),std(R_nor_filt(:)),max(R_nor_filt(:))/std(R_nor_filt(:)),kurtosis(kurtosis(R_nor_filt)),kurtosis(R_nor_filt(:))];
     
-    anali_curv(slice_id,1,:)=curv_1;
-    anali_curv(slice_id,2,:)=curv_2;
-    anali_curv(slice_id,3,:)=curv_3;
-    anali_curv(slice_id,4,:)=curv_4;
-    anali_curv(slice_id,5,:)=curv_5;
+    
     
     %     path_out=string(strcat(strcat(root_data_2d_anali,spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'));
     % string(strcat(root_data_2d_anali,spec,aux_path))
@@ -530,87 +469,10 @@ for slice_id=1:slices
                 
             end
             
-            C = fdct_wrapping(map_2d_slices_filt2d_depth,0);
-    Ct = C;
-    for s = 1:length(C)
-        for w = 1:length(C{s})
-            Ct{s}{w} = C_zero{s}{w};
-        end
-    end
-    
-    aux_count=1;
-    for s = length(C)-lev:length(C)-1
-        
-        As=0;
-        Bs=0;
-        Cs=0;
-        Ds=0;
-        
-        size_nt=0;
-        
-        
-        
-        %                 thresh=0;
-        for w = 1:length(C{s})
-            %                     Ct{s}{w} = C{s}{w};
-            %                     Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > thresh*E{s}{w});
-            %                    Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > 0*E{s}{w});
-            Ct{s}{w} = C{s}{w};
-            %                 Ct{s}{w} = C{s}{w};
-            %              curv(slice_id,w,aux_count)=kurtosis(abs(C{s}{w}(:)));
-            
-%             ave=mean(abs(Ct{s}{w}(:)));
-%             sig=std(abs(Ct{s}{w}(:)))^2;
-%             del=skewness(abs(Ct{s}{w}(:)))*(sig^(3/2));
-%             rho=kurtosis(abs(Ct{s}{w}(:)))*(sig^(2));
-
-            ave=mean(abs(Ct{s}{w}(:))/E{s}{w});
-            sig=std(abs(Ct{s}{w}(:))/E{s}{w})^2;
-            del=skewness(abs(Ct{s}{w}(:))/E{s}{w})*(sig^(3/2));
-            rho=kurtosis(abs(Ct{s}{w}(:))/E{s}{w})*(sig^(2));
-
-            A_=ave;
-            B_=sig+A_^2;
-            C_=del+3*B_*A_-2*A_^3;
-            D_=rho+4*C_*A_-6*B_*A_^2+3*A_^4;
-            
-            size_n=prod(size(Ct{s}{w}(:)));
-            size_nt=size_nt+size_n;
-            
-            As=A_*size_n+As;
-            Bs=B_*size_n+Bs;
-            Cs=C_*size_n+Cs;
-            Ds=D_*size_n+Ds;
-            
-            
-            
-        end
-        %          curv2(w_nw,sample,slice_id,aux_count)=kurtosis(curv(slice_id,:,aux_count));
-        AT=As/size_nt;
-        BT=Bs/size_nt;
-        CT=Cs/size_nt;
-        DT=Ds/size_nt;
-        
-        sigma_t=BT-AT^2;
-        delta_t=CT-3*BT*AT+2*AT^3;
-        rho_t=DT-4*CT*AT+6*BT*AT^2-3*AT^4;
-        
-        var_t=sigma_t;
-        skew_t=delta_t/var_t^(3/2);
-        kurt_t=rho_t/var_t^2;
-        
-        curv_1_depth(aux_count)=AT;
-        curv_2_depth(aux_count)=var_t;
-        curv_3_depth(aux_count)=skew_t;
-        curv_4_depth(aux_count)=kurt_t;
-        curv_5_depth(aux_count)=rho_t;
-        
-        aux_count=aux_count+1;
-    end
-            
             
             this=map_2d_slices_filt2d_depth(:,:);
             
+            anali_depth(slice_depth_id,1,:)=[max(this(:)),std(this(:)),max(this(:))/std(this(:)),kurtosis(kurtosis(this)),kurtosis(this(:))];
             
             % theta = 0:180/nc:180;
             
@@ -662,7 +524,7 @@ for slice_id=1:slices
                 
             end
             
-                       anali_depth(slice_depth_id,1,:)=[max(this(:)),std(this(:)),max(this(:))/std(this(:)),kurtosis(kurtosis(this)),kurtosis(this(:))];
+            
             anali_depth(slice_depth_id,2,:)=[max(R(:)),std(R(:)),max(R(:))/std(R(:)),kurtosis(kurtosis(R)),kurtosis(R(:))];
             anali_depth(slice_depth_id,3,:)=[max(R_nor(:)),std(R_nor(:)),max(R_nor(:))/std(R_nor(:)),kurtosis(kurtosis(R_nor)),kurtosis(R_nor(:))];
             anali_depth(slice_depth_id,4,:)=[max(R_nor_filt(:)),std(R_nor_filt(:)),max(R_nor_filt(:))/std(R_nor_filt(:)),kurtosis(kurtosis(R_nor_filt)),kurtosis(R_nor_filt(:))];

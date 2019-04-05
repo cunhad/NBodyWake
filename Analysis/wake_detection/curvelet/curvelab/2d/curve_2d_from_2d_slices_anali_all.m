@@ -1,16 +1,17 @@
 function [  ] = curve_2d_from_2d_slices_anali_all(  )
 
 root='/home/asus/Dropbox/extras/storage/graham/ht/';
-root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps512_1024_2dcurv_s5lv3_anali/';
-root_anali_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_cps512_1024_2dcurv_s5lv3_anali_all/';
-root_visual_2d='/home/asus/Dropbox/extras/storage/graham/ht/data_cps512_1024_2dcurv_s5lv3_visual_all/';
+root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurv_s5lv2_anali/';
+root_anali_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurv_s5lv2_anali_all/';
+root_visual_2d='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurv_s5lv2_visual_all/';
 
 filename='3.000xv0.dat';
 lenght_factor=1;
 resol_factor=1;
 pivot=[0,0,0];
 rot_angle=[1.5708,0,0];
-slices=512;
+slices=32;
+sum_depth=1;
 % lev=2;
 % sigma=5;
 % step_of_degree=1;
@@ -64,14 +65,27 @@ fig1=figure;
 fig2=figure;
 fig3=figure;
 fig4=figure;
-fig5=figure;
+% fig5=figure;
+
+fig1_curv=figure;
+fig2_curv=figure;
+fig3_curv=figure;
+fig4_curv=figure;
+fig5_curv=figure;
+
 
 ax1=axes(fig1);
 ax2=axes(fig2);
 ax3=axes(fig3);
 ax4=axes(fig4);
-ax5=axes(fig5);
+% ax5=axes(fig5);
 
+
+ax1_curv=axes(fig1_curv);
+ax2_curv=axes(fig2_curv);
+ax3_curv=axes(fig3_curv);
+ax4_curv=axes(fig4_curv);
+ax5_curv=axes(fig5_curv);
 
 
 
@@ -114,46 +128,73 @@ for w_nw=1:2
         path_in=strcat(strcat(root_anali_2d_in,spec,char(sample_list(sample))),'anali/',num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/')
         
         filename=strcat(path_in,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali.txt')
+        filename_curv=strcat(path_in,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali_curv.txt')
         
         info = dlmread(filename);
+        info_curv = dlmread(filename_curv);
+        lv_sz=prod(size(info_curv))/(slices*5);
         
         anali(w_nw,sample,:,:,:)=reshape(info,slices,4,5);
+        anali_curv(w_nw,sample,:,:,:)=reshape(info_curv,slices,5,lv_sz);
+
+        a(:)=max(anali(w_nw,sample,:,1,:),[],3);
+        b(:)=max(anali(w_nw,sample,:,2,:),[],3);
+        c(:)=max(anali(w_nw,sample,:,3,:),[],3);
+        d(:)=max(anali(w_nw,sample,:,4,:),[],3);
         
-        a(:)=max(anali(w_nw,sample,:,:,1),[],3);
-        b(:)=max(anali(w_nw,sample,:,:,2),[],3);
-        c(:)=max(anali(w_nw,sample,:,:,3),[],3);
-        d(:)=max(anali(w_nw,sample,:,:,4),[],3);
-        e(:)=max(anali(w_nw,sample,:,:,5),[],3);
-        
+        a_curv(:)=max(anali_curv(w_nw,sample,:,1,:),[],3);
+        b_curv(:)=max(anali_curv(w_nw,sample,:,2,:),[],3);
+        c_curv(:)=max(anali_curv(w_nw,sample,:,3,:),[],3);
+        d_curv(:)=max(anali_curv(w_nw,sample,:,4,:),[],3);
+        e_curv(:)=max(anali_curv(w_nw,sample,:,5,:),[],3);
+
         plot1{sample}=   plot(ax1,a,coul);
         plot2{sample}=   plot(ax2,b,coul);
         plot3{sample}=   plot(ax3,c,coul);
         plot4{sample}=   plot(ax4,d,coul);
-        plot5{sample}=   plot(ax5,e,coul);
         
-        clearvars a b c d
+        plot1_curv{sample}=   plot(ax1_curv,a_curv,coul);
+        plot2_curv{sample}=   plot(ax2_curv,b_curv,coul);
+        plot3_curv{sample}=   plot(ax3_curv,c_curv,coul);
+        plot4_curv{sample}=   plot(ax4_curv,d_curv,coul);
+        plot5_curv{sample}=   plot(ax5_curv,e_curv,coul);
+        
+        clearvars a b c d a_curv b_curv c_curv d_curv e_curv
         
         hold(ax1,'on');
         hold(ax2,'on');
         hold(ax3,'on');
         hold(ax4,'on');
-        hold(ax5,'on');
+        
+        hold(ax1_curv,'on');
+        hold(ax2_curv,'on');
+        hold(ax3_curv,'on');
+        hold(ax4_curv,'on');
+        hold(ax5_curv,'on');
         
     end
     
 end
 
 set(ax1, 'YScale', 'log');
-title(ax1,'map curvelet from 2dcurv plus curv');
+title(ax1,'radon of the original map ');
 set(ax2, 'YScale', 'log');
-title(ax2,'ridgelet from sum 2dcurv curv');
+title(ax2,'radon of the 2dcurv-filtered map');
 set(ax3, 'YScale', 'log');
-title(ax3,'ridgelet normalized from 2dcurv plus curv');
+title(ax3,'1dwavel over radon of the 2dcurv-filtered map');
 set(ax4, 'YScale', 'log');
-title(ax4,'ridgelet normalized with wavelet from 2dcurv plus curv');
-set(ax5, 'YScale', 'log');
-title(ax5,'ridgelet normalized with 2dwavelet from 2dcurv plus curv');
+title(ax4,'ridgelet normalized of the 2dcurv-filtered map');
 
+set(ax1_curv, 'YScale', 'log');
+title(ax1_curv,'average normalised curvelet abs coef fast');
+set(ax2_curv, 'YScale', 'log');
+title(ax2_curv,'std normalised curvelet abs coef fast');
+set(ax3_curv, 'YScale', 'log');
+title(ax3_curv,'skewness normalised curvelet abs coef fast');
+set(ax4_curv, 'YScale', 'log');
+title(ax4_curv,'kurtosis normalised curvelet abs coef fast');
+set(ax5_curv, 'YScale', 'log');
+title(ax5_curv,'4th moment normalised curvelet abs coef fast');
 
 nowake=reshape(permute(anali(1,1:length(sample_list_nowake),:,4,1),[1,3,2,4,5]),[1,numel(anali(1,1:length(sample_list_nowake),:,2,1))])
 wake=reshape(permute(anali(2,1:length(sample_list_wake),:,4,1),[1,3,2,4,5]),[1,numel(anali(1,1:length(sample_list_wake),:,2,1))])
@@ -173,6 +214,7 @@ max_wake_slices=max_wake_slices_(end,:)
 max_nowake_slices=max_nowake_slices_(end,:)
 mean_wake=mean(max_wake_slices)
 mean_nowake=mean(max_nowake_slices)
+std_wake=std(max_wake_slices,1)
 std_nowake=std(max_nowake_slices,1)
 stn_nowake=(max_nowake_slices-mean_nowake)/std_nowake
 stn_wake=(max_wake_slices-mean_nowake)/std_nowake

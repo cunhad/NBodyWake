@@ -23,10 +23,12 @@ anal_lev=2;
 size_mpc=4;
 step_of_degree=1;
 wavel_removal_factor=1/2;
-sample_id_range_nw=[1:10];
-sample_id_range_w=[1:10];
+% sample_id_range_nw=[1:10];
+% sample_id_range_w=[1:10];
 % sample_id_range_nw=[4,7];
 % sample_id_range_w=[3,7];
+sample_id_range_nw=[3,7];
+sample_id_range_w=[3,7];
 
 display_slice_nw = cell(1,length(sample_id_range_nw));
 display_slice_w = cell(1,length(sample_id_range_w));
