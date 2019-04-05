@@ -29,7 +29,7 @@ function [  ] = curve_2d_data_anali_out_from_2d_slices_out( root,root_data_2d_in
 % visual_type=[1:2]; %if 1, shows the 2d proj; if 2 shows the ridgelet transformation
 % visual_in_or_out=[1,2]; %if 1 do visualization of the input, if 2 of the output
 % %  sum_depth=1;
-% sum_depth=1;
+% sum_depth=4;
 
 
 % filename_read_path=_2dproj_z3_data_sl;
@@ -70,10 +70,10 @@ mkdir(char(strcat(root_anali_2d_out,spec,aux_path)),char(strcat('anali/',aux_pat
 
 if ~ismember(1,sum_depth)
     
-    path_anali_depth_out=string(strcat(strcat(root_anali_2d_out,spec,aux_path),'anali_depth_',num2str(sum_depth),'/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2d/dm/'));
+    path_anali_depth_out=string(strcat(strcat(root_anali_2d_out,spec,aux_path),'anali_depth_',num2str(sum_depth),'/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/'));
     % string(strcat(root_data_2d_anali,spec,aux_path))
     % string(strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'))
-    mkdir(char(strcat(root_anali_2d_out,spec,aux_path)),char(strcat('anali_depth_',num2str(sum_depth),'/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2d/dm/')));
+    mkdir(char(strcat(root_anali_2d_out,spec,aux_path)),char(strcat('anali_depth_',num2str(sum_depth),'/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/')));
     
 end
 
@@ -697,8 +697,8 @@ for slice_id=1:slices
 end
 
 if ~ismember(1,sum_depth)
-    dlmwrite(strcat(path_anali_depth_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv_z',num2str(z_glob),'_anali_depth.txt'),anali_depth,'delimiter','\t');
-    dlmwrite(strcat(path_anali_depth_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv_z',num2str(z_glob),'_anali_curv_depth.txt'),anali_curv_depth,'delimiter','\t');
+    dlmwrite(strcat(path_anali_depth_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali_depth.txt'),anali_depth,'delimiter','\t');
+    dlmwrite(strcat(path_anali_depth_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali_curv_depth.txt'),anali_curv_depth,'delimiter','\t');
 end
 
 dlmwrite(strcat(path_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali.txt'),anali,'delimiter','\t');

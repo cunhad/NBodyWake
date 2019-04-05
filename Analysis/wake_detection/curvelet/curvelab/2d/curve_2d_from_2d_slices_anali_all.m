@@ -11,7 +11,7 @@ resol_factor=1;
 pivot=[0,0,0];
 rot_angle=[1.5708,0,0];
 slices=32;
-sum_depth=1;
+sum_depth=4;
 % lev=2;
 % sigma=5;
 % step_of_degree=1;
@@ -87,7 +87,35 @@ ax3_curv=axes(fig3_curv);
 ax4_curv=axes(fig4_curv);
 ax5_curv=axes(fig5_curv);
 
-
+if ~ismember(1,sum_depth)
+    
+    fig1_depth=figure;
+    fig2_depth=figure;
+    fig3_depth=figure;
+    fig4_depth=figure;
+    % fig5=figure;
+    
+    fig1_curv_depth=figure;
+    fig2_curv_depth=figure;
+    fig3_curv_depth=figure;
+    fig4_curv_depth=figure;
+    fig5_curv_depth=figure;
+    
+    
+    ax1_depth=axes(fig1_depth);
+    ax2_depth=axes(fig2_depth);
+    ax3_depth=axes(fig3_depth);
+    ax4_depth=axes(fig4_depth);
+    % ax5=axes(fig5);
+    
+    
+    ax1_curv_depth=axes(fig1_curv_depth);
+    ax2_curv_depth=axes(fig2_curv_depth);
+    ax3_curv_depth=axes(fig3_curv_depth);
+    ax4_curv_depth=axes(fig4_curv_depth);
+    ax5_curv_depth=axes(fig5_curv_depth);
+    
+end
 
 cd('../../../../preprocessing')
 % [xv_files_list,redshift_list,nodes_list,size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw] = preprocessing_info(root,spec,sample_list_wake{1} );
@@ -172,6 +200,58 @@ for w_nw=1:2
         hold(ax4_curv,'on');
         hold(ax5_curv,'on');
         
+        if ~ismember(1,sum_depth)
+            
+            path_in_depth=strcat(strcat(root_anali_2d_in,spec,char(sample_list(sample))),'anali_depth_',num2str(sum_depth),'/',num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/')
+            
+            filename_depth=strcat(path_in_depth,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali_depth.txt')
+            filename_curv_depth=strcat(path_in_depth,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali_curv_depth.txt')
+            
+            info_depth = dlmread(filename_depth);
+            info_curv_depth = dlmread(filename_curv_depth);
+            lv_sz_depth=prod(size(info_curv_depth))*sum_depth/(slices*5);
+            
+            anali_depth(w_nw,sample,:,:,:)=reshape(info_depth,slices/sum_depth,4,5);
+            anali_curv_depth(w_nw,sample,:,:,:)=reshape(info_curv_depth,slices/sum_depth,5,lv_sz_depth);
+            
+            a_depth(:)=max(anali_depth(w_nw,sample,:,1,:),[],3);
+            b_depth(:)=max(anali_depth(w_nw,sample,:,2,:),[],3);
+            c_depth(:)=max(anali_depth(w_nw,sample,:,3,:),[],3);
+            d_depth(:)=max(anali_depth(w_nw,sample,:,4,:),[],3);
+            
+            a_curv_depth(:)=max(anali_curv_depth(w_nw,sample,:,1,:),[],3);
+            b_curv_depth(:)=max(anali_curv_depth(w_nw,sample,:,2,:),[],3);
+            c_curv_depth(:)=max(anali_curv_depth(w_nw,sample,:,3,:),[],3);
+            d_curv_depth(:)=max(anali_curv_depth(w_nw,sample,:,4,:),[],3);
+            e_curv_depth(:)=max(anali_curv_depth(w_nw,sample,:,5,:),[],3);
+            
+            plot1_depth{sample}=   plot(ax1_depth,a_depth,coul);
+            plot2_depth{sample}=   plot(ax2_depth,b_depth,coul);
+            plot3_depth{sample}=   plot(ax3_depth,c_depth,coul);
+            plot4_depth{sample}=   plot(ax4_depth,d_depth,coul);
+            
+            plot1_curv_depth{sample}=   plot(ax1_curv_depth,a_curv_depth,coul);
+            plot2_curv_depth{sample}=   plot(ax2_curv_depth,b_curv_depth,coul);
+            plot3_curv_depth{sample}=   plot(ax3_curv_depth,c_curv_depth,coul);
+            plot4_curv_depth{sample}=   plot(ax4_curv_depth,d_curv_depth,coul);
+            plot5_curv_depth{sample}=   plot(ax5_curv_depth,e_curv_depth,coul);
+            
+            clearvars a_depth b_depth c_depth d_depth a_curv_depth b_curv_depth c_curv_depth d_curv_depth e_curv_depth
+            
+            hold(ax1_depth,'on');
+            hold(ax2_depth,'on');
+            hold(ax3_depth,'on');
+            hold(ax4_depth,'on');
+            
+            hold(ax1_curv_depth,'on');
+            hold(ax2_curv_depth,'on');
+            hold(ax3_curv_depth,'on');
+            hold(ax4_curv_depth,'on');
+            hold(ax5_curv_depth,'on');
+            
+            
+        end
+        
     end
     
 end
@@ -195,6 +275,30 @@ set(ax4_curv, 'YScale', 'log');
 title(ax4_curv,'kurtosis normalised curvelet abs coef fast');
 set(ax5_curv, 'YScale', 'log');
 title(ax5_curv,'4th moment normalised curvelet abs coef fast');
+
+if ~ismember(1,sum_depth)
+    
+    set(ax1_depth, 'YScale', 'log');
+    title(ax1_depth,strcat('radon of the original map, slice= ',num2str(sum_depth)));
+    set(ax2_depth, 'YScale', 'log');
+    title(ax2_depth,strcat('radon of the 2dcurv-filtered map, slice= ',num2str(sum_depth)));
+    set(ax3_depth, 'YScale', 'log');
+    title(ax3_depth,strcat('1dwavel over radon of the 2dcurv-filtered map, slice= ',num2str(sum_depth)));
+    set(ax4_depth, 'YScale', 'log');
+    title(ax4_depth,strcat('ridgelet normalized of the 2dcurv-filtered map, slice= ',num2str(sum_depth)));
+    
+    set(ax1_curv_depth, 'YScale', 'log');
+    title(ax1_curv_depth,strcat('average normalised curvelet abs coef fast, slice= ',num2str(sum_depth)));
+    set(ax2_curv_depth, 'YScale', 'log');
+    title(ax2_curv_depth,strcat('std normalised curvelet abs coef fast, slice= ',num2str(sum_depth)));
+    set(ax3_curv_depth, 'YScale', 'log');
+    title(ax3_curv_depth,strcat('skewness normalised curvelet abs coef fast, slice= ',num2str(sum_depth)));
+    set(ax4_curv_depth, 'YScale', 'log');
+    title(ax4_curv_depth,strcat('kurtosis normalised curvelet abs coef fast, slice= ',num2str(sum_depth)));
+    set(ax5_curv_depth, 'YScale', 'log');
+    title(ax5_curv_depth,strcat('4th moment normalised curvelet abs coef fast, slice= ',num2str(sum_depth)));
+    
+end
 
 nowake=reshape(permute(anali(1,1:length(sample_list_nowake),:,4,1),[1,3,2,4,5]),[1,numel(anali(1,1:length(sample_list_nowake),:,2,1))])
 wake=reshape(permute(anali(2,1:length(sample_list_wake),:,4,1),[1,3,2,4,5]),[1,numel(anali(1,1:length(sample_list_wake),:,2,1))])
