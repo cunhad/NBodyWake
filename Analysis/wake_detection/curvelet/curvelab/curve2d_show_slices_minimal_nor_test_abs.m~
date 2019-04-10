@@ -1,4 +1,4 @@
-function [ anali,sample_id_range_nw,sample_id_range_w ] = curve2d_show_slices_minimal_nor_test(  )
+function [ anali,sample_id_range_nw,sample_id_range_w ] = curve2d_show_slices_minimal_nor_test_abs(  )
 
 
 %example:
@@ -420,9 +420,9 @@ for w_nw=1:2
             
             
             
-            BW2 = real(ifdct_wrapping(Ct,0));
+            BW2 = abs(ifdct_wrapping(Ct,0));
             
-            map_3d_slices_filt2d(:,:,slice_id) =real(ifdct_wrapping(Ct,0));
+            map_3d_slices_filt2d(:,:,slice_id) =abs(ifdct_wrapping(Ct,0));
             
             BW3 = imresize(BW2,new_nc/nc,'triangle');
 
@@ -478,6 +478,24 @@ for w_nw=1:2
             
 
             if ismember(slice_id,display_slice{find(sample_id_range==sample)})
+                
+                figure; imagesc(0:step_of_degree:180,(size_mpc/new_nc)*[1:new_nc],R);colorbar;
+                xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
+                ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+                set(gca,'FontName','FixedWidth');
+                set(gca,'FontSize',16);
+                set(gca,'linewidth',2);
+                title(strcat('wfilt ridg filt2a3 for sample ',num2str(sample),' slice ',num2str(slice_id)));
+                
+                figure; imagesc(0:step_of_degree:180,(size_mpc/new_nc)*[1:new_nc],R_nor);colorbar;
+                xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
+                ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+                set(gca,'FontName','FixedWidth');
+                set(gca,'FontSize',16);
+                set(gca,'linewidth',2);
+                title(strcat('wfilt ridg filt2a3 for sample ',num2str(sample),' slice ',num2str(slice_id)));
+                
+                
                 
                 %                 figure; imagesc((size_mpc/nc)*[1:nc],(size_mpc/1024)*[1:nc],map_3d_slices_filt2a3d(:,:,slice_id)); colorbar; axis('image');
                 figure; imagesc(0:step_of_degree:180,(size_mpc/new_nc)*[1:new_nc],R_nor_filt);colorbar;
@@ -1007,34 +1025,34 @@ end
 
 
 % 
-% [ anali,sample_id_range_nw,sample_id_range_w ] = curve3d_show_slices_minimal(  )
+% [ anali,sample_id_range_nw,sample_id_range_w ] = curve2d_show_slices_minimal_nor_test_abs(  )
 % 
-
-nowake=reshape(permute(anali(1,sample_id_range_nw,:,4,1),[1,3,2,4,5]),[1,numel(anali(1,sample_id_range_nw,:,2,1))])
-wake=reshape(permute(anali(2,sample_id_range_w,:,4,1),[1,3,2,4,5]),[1,numel(anali(1,sample_id_range_w,:,2,1))])
-mean_wake=mean(wake)
-mean_nowake=mean(nowake)
-std_nowake=std(nowake,1)
-stn_nowake=(nowake-mean_nowake)/std_nowake
-stn_wake=(wake-mean_nowake)/std_nowake
-mean_stn=mean(stn_wake)
-std_stn=std(stn_wake,1)
-mean_stn-std_stn
-wake_slices = reshape(wake,[slices,length(sample_id_range_w)])'
-nowake_slices = reshape(nowake,[slices,length(sample_id_range_nw)])'
-max_wake_slices_=sort(wake_slices')
-max_nowake_slices_=sort(nowake_slices')
-max_wake_slices=max_wake_slices_(end,:)
-max_nowake_slices=max_nowake_slices_(end,:)
-mean_wake=mean(max_wake_slices)
-mean_nowake=mean(max_nowake_slices)
-std_wake=std(max_wake_slices,1)
-std_nowake=std(max_nowake_slices,1)
-stn_nowake=(max_nowake_slices-mean_nowake)/std_nowake
-stn_wake=(max_wake_slices-mean_nowake)/std_nowake
-mean_stn=mean(stn_wake)
-std_stn=std(stn_wake,1)
-mean_stn-std_stn
+% 
+% nowake=reshape(permute(anali(1,sample_id_range_nw,:,4,1),[1,3,2,4,5]),[1,numel(anali(1,sample_id_range_nw,:,2,1))])
+% wake=reshape(permute(anali(2,sample_id_range_w,:,4,1),[1,3,2,4,5]),[1,numel(anali(1,sample_id_range_w,:,2,1))])
+% mean_wake=mean(wake)
+% mean_nowake=mean(nowake)
+% std_nowake=std(nowake,1)
+% stn_nowake=(nowake-mean_nowake)/std_nowake
+% stn_wake=(wake-mean_nowake)/std_nowake
+% mean_stn=mean(stn_wake)
+% std_stn=std(stn_wake,1)
+% mean_stn-std_stn
+% wake_slices = reshape(wake,[slices,length(sample_id_range_w)])'
+% nowake_slices = reshape(nowake,[slices,length(sample_id_range_nw)])'
+% max_wake_slices_=sort(wake_slices')
+% max_nowake_slices_=sort(nowake_slices')
+% max_wake_slices=max_wake_slices_(end,:)
+% max_nowake_slices=max_nowake_slices_(end,:)
+% mean_wake=mean(max_wake_slices)
+% mean_nowake=mean(max_nowake_slices)
+% std_wake=std(max_wake_slices,1)
+% std_nowake=std(max_nowake_slices,1)
+% stn_nowake=(max_nowake_slices-mean_nowake)/std_nowake
+% stn_wake=(max_wake_slices-mean_nowake)/std_nowake
+% mean_stn=mean(stn_wake)
+% std_stn=std(stn_wake,1)
+% mean_stn-std_stn
 
 % nowake=reshape(permute(anali_sum2(1,sample_id_range_nw,:,4,1),[1,3,2,4,5]),[1,numel(anali_sum2(1,sample_id_range_nw,:,2,1))])
 % wake=reshape(permute(anali_sum2(2,sample_id_range_w,:,4,1),[1,3,2,4,5]),[1,numel(anali_sum2(1,sample_id_range_w,:,2,1))])

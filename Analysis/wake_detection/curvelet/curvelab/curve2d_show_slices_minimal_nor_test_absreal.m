@@ -1,4 +1,4 @@
-function [ anali_sum2,sample_id_range_nw,sample_id_range_w ] = curve2d_show_slices_minimal_nor_test(  )
+function [ anali,sample_id_range_nw,sample_id_range_w ] = curve2d_show_slices_minimal_nor_test_absreal(  )
 
 
 %example:
@@ -16,19 +16,24 @@ nc=1024;
 new_nc=1024;
 trsh=20;
 cut=1;
-lev=2;
-Sigma = 1;
+lev=3;
+lev_rid=1;
+Sigma = 5;  %this does not matter for now
 slices=32;
 anal_lev=2;
 size_mpc=4;
-step_of_degree=1;
+step_of_degree=1/2;
 wavel_removal_factor=1/2;
-% sample_id_range_nw=[1:10];
-% sample_id_range_w=[1:10];
+sample_id_range_nw=[1:10];
+sample_id_range_w=[1:10];
 % sample_id_range_nw=[4,7];
 % sample_id_range_w=[3,7];
-sample_id_range_nw=[3,7];
-sample_id_range_w=[3,7];
+% sample_id_range_nw=[4,7];
+% sample_id_range_w=[4,7];
+
+% sample_id_range_nw=[2,4,7];
+% sample_id_range_w=[2,4,7];
+
 
 display_slice_nw = cell(1,length(sample_id_range_nw));
 display_slice_w = cell(1,length(sample_id_range_w));
@@ -38,10 +43,22 @@ display_slice_w = cell(1,length(sample_id_range_w));
 % display_slice_w{find(sample_id_range_w==3)}=[29];
 % display_slice_w{find(sample_id_range_w==7)}=[28];
 
-% display_slice_nw{find(sample_id_range_nw==3)}=[29];
-% display_slice_nw{find(sample_id_range_nw==7)}=[13,28];
-% display_slice_w{find(sample_id_range_w==3)}=[29];
-% display_slice_w{find(sample_id_range_w==7)}=[28];
+% display_slice_nw{find(sample_id_range_nw==3)}=[22];
+% display_slice_nw{find(sample_id_range_nw==4)}=[16];
+% display_slice_w{find(sample_id_range_w==3)}=[22];
+% display_slice_w{find(sample_id_range_w==4)}=[16];
+% display_slice_nw{find(sample_id_range_nw==10)}=[5];
+% display_slice_w{find(sample_id_range_w==10)}=[5];
+
+% display_slice_nw{find(sample_id_range_nw==3)}=[22];
+display_slice_nw{find(sample_id_range_nw==4)}=[24];
+% display_slice_w{find(sample_id_range_w==3)}=[22];
+display_slice_w{find(sample_id_range_w==4)}=[24];
+% display_slice_nw{find(sample_id_range_nw==10)}=[5];
+% display_slice_w{find(sample_id_range_w==10)}=[5];
+
+
+
 
 % display_slice_nw={[],[]};
 % display_slice_w={[],[]};
@@ -65,7 +82,7 @@ sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw');
 %
 % F=zeros(nc);
 % C_zero = fdct_wrapping(F,0);
-F = ones(new_nc);
+F = ones(nc);
 X = fftshift(ifft2(F)) * sqrt(prod(size(F)));
 %X = F * sqrt(prod(size(F)));
 %C = fdct_wrapping(X,0);
@@ -81,7 +98,7 @@ for s=1:length(C)
 end
 
 
-F=zeros(new_nc);
+F=zeros(nc);
 C_zero = fdct_wrapping(F,0);
 
 
@@ -200,8 +217,8 @@ for w_nw=1:2
 %     for sample = 1:length(sample_id_range)
 %     for sample = 1:2
         
-        map_3d_slices=zeros(new_nc,new_nc,slices);
-        map_3d_slices_filt2d=zeros(new_nc,new_nc,slices);
+        map_3d_slices=zeros(nc,nc,slices);
+        map_3d_slices_filt2d=zeros(nc,nc,slices);
         
         for slice_id=1:slices
             
@@ -247,16 +264,18 @@ for w_nw=1:2
             %             map=map+1;
             %             test=log(log(map));
 %             
-% map(map<=1)=1;%to remove problem with holes
-%             map_3d_slices(:,:,slice_id)=log(map);            
+            map(map<=1)=1;%to remove problem with holes
+            map_3d_slices(:,:,slice_id)=log(map);            
             
-            dc=(map-mean(map(:)))/mean(map(:));
-            map_3d_slices(:,:,slice_id)=atan(dc)/(pi/2);
+%             dc=(map-mean(map(:)))/mean(map(:));
+%             map_3d_slices(:,:,slice_id)=atan(dc)/(pi/2);
             
+
+
 %             if false
             if ismember(slice_id,display_slice{find(sample_id_range==sample)})
                 
-                figure; imagesc((size_mpc/new_nc)*[1:new_nc],(size_mpc/new_nc)*[1:new_nc],map_3d_slices(:,:,slice_id)); colorbar; axis('image');
+                figure; imagesc((size_mpc/nc)*[1:nc],(size_mpc/nc)*[1:nc],map_3d_slices(:,:,slice_id)); colorbar; axis('image');
                 xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
                 ylabel('$Y(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
                 set(gca,'FontName','FixedWidth');
@@ -348,10 +367,10 @@ for w_nw=1:2
                 
                 for w = 1:length(C_{s})
 %                                         Ct{s}{w} = C_{s}{w};
-                                        Ct{s}{w} = C_{s}{w}.* ((C_{s}{w}) > thresh*E{s}{w});
-                    %                    Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > 0*E{s}{w});
+%                                         Ct{s}{w} = C_{s}{w}.* ((C_{s}{w}) > thresh*E{s}{w});
+%                                        Ct{s}{w} = C_{s}{w}.* ((C_{s}{w}) > 0*E{s}{w});
 %                     Ct{s}{w} = C_{s}{w}.* ((C_{s}{w}) > -thresh*E{s}{w}&(C_{s}{w}) < thresh*E{s}{w});
-                    %                 Ct{s}{w} = C{s}{w};
+                                    Ct{s}{w} = C_{s}{w};
 %                     curv(w_nw,sample,slice_id,w,aux_count)=kurtosis(abs(C{s}{w}(:)));
                     collect=[ collect ;abs(Ct{s}{w}(:))];
                     collect_=[ collect_ ;abs(Ct{s}{w}(:))/E{s}{w}];
@@ -417,15 +436,17 @@ for w_nw=1:2
             
             
             
-            BW2 = real(ifdct_wrapping(Ct,0));
+            BW2 = abs(ifdct_wrapping(Ct,0));
             
-            map_3d_slices_filt2d(:,:,slice_id) =real(ifdct_wrapping(Ct,0));
+            map_3d_slices_filt2d(:,:,slice_id) =abs(ifdct_wrapping(Ct,0));
             
+            BW3 = imresize(BW2,new_nc/nc,'triangle');
+
             
             %             if false
             if ismember(slice_id,display_slice{find(sample_id_range==sample)})
                 
-                figure; imagesc((size_mpc/new_nc)*[1:new_nc],(size_mpc/new_nc)*[1:new_nc],map_3d_slices_filt2d(:,:,slice_id)); colorbar; axis('image');
+                figure; imagesc((size_mpc/new_nc)*[1:new_nc],(size_mpc/new_nc)*[1:new_nc],BW3); colorbar; axis('image');
                 xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
                 ylabel('$Y(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
                 set(gca,'FontName','FixedWidth');
@@ -441,7 +462,7 @@ for w_nw=1:2
             
             % theta = 0:180/nc:180;
             theta = 0:step_of_degree:180;
-            [R,xp] = radon(BW2,theta);
+            [R,xp] = radon(BW3,theta);
             
             unit=ones(new_nc);
             [R_u,xp] = radon(unit,theta);
@@ -458,7 +479,7 @@ for w_nw=1:2
             for i=1:length(R_nor(1,:))
                 %                 [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
                 [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
-                D = wrcoef('d',dc_dwt,levels,'db1',lev);
+                D = wrcoef('d',dc_dwt,levels,'db1',lev_rid);
                 %                 D(floor((2465-200)/boudary_removal_factor):end)=0;
                 %                 D(1:floor((448+200)/boudary_removal_factor))=0;
                 D(length(xp)-new_nc*wavel_removal_factor:end)=0;
@@ -470,6 +491,45 @@ for w_nw=1:2
             %             R_nor_filt(1:floor((448+200)/boudary_removal_factor),:)=[];
             R_nor_filt(length(xp)-new_nc*wavel_removal_factor:end,:)=[];
             R_nor_filt(1:new_nc*wavel_removal_factor,:)=[];
+            
+
+            if ismember(slice_id,display_slice{find(sample_id_range==sample)})
+                
+                figure; imagesc(0:step_of_degree:180,(size_mpc/new_nc)*[1:new_nc],R);colorbar;
+                xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
+                ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+                set(gca,'FontName','FixedWidth');
+                set(gca,'FontSize',16);
+                set(gca,'linewidth',2);
+                title(strcat('wfilt ridg filt2a3 for sample ',num2str(sample),' slice ',num2str(slice_id)));
+                
+                figure; imagesc(0:step_of_degree:180,(size_mpc/new_nc)*[1:new_nc],R_nor);colorbar;
+                xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
+                ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+                set(gca,'FontName','FixedWidth');
+                set(gca,'FontSize',16);
+                set(gca,'linewidth',2);
+                title(strcat('wfilt ridg filt2a3 for sample ',num2str(sample),' slice ',num2str(slice_id)));
+                
+                
+                
+                %                 figure; imagesc((size_mpc/nc)*[1:nc],(size_mpc/1024)*[1:nc],map_3d_slices_filt2a3d(:,:,slice_id)); colorbar; axis('image');
+                figure; imagesc(0:step_of_degree:180,(size_mpc/new_nc)*[1:new_nc],R_nor_filt);colorbar;
+                xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
+                ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+                set(gca,'FontName','FixedWidth');
+                set(gca,'FontSize',16);
+                set(gca,'linewidth',2);
+                title(strcat('wfilt ridg filt2a3 for sample ',num2str(sample),' slice ',num2str(slice_id)));
+                %
+                %                 figure; imagesc(0:step_of_degree:180,(size_mpc/new_nc)*[1:new_nc],R_2dwav_filt);colorbar;
+                %                 xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
+                %                 ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+                %                 set(gca,'FontName','FixedWidth');
+                %                 set(gca,'FontSize',16);
+                %                 set(gca,'linewidth',2);
+                %                 title(strcat('wfilt ridg filt2a3 for sample ',num2str(sample),' slice ',num2str(slice_id)));
+            end
             
             
 %             anali(w_nw,sample,slice_id,1,:)=curv;
@@ -981,7 +1041,7 @@ end
 
 
 % 
-% [ anali_sum2,sample_id_range_nw,sample_id_range_w ] = curve3d_show_slices_minimal(  )
+% [ anali,sample_id_range_nw,sample_id_range_w ] = curve2d_show_slices_minimal_nor_test_absreal(  )
 % 
 % 
 % nowake=reshape(permute(anali(1,sample_id_range_nw,:,4,1),[1,3,2,4,5]),[1,numel(anali(1,sample_id_range_nw,:,2,1))])
@@ -1008,7 +1068,8 @@ end
 % stn_wake=(max_wake_slices-mean_nowake)/std_nowake
 % mean_stn=mean(stn_wake)
 % std_stn=std(stn_wake,1)
-% mean_stn-std_stn
+% stn=mean_stn-std_stn
+% significance=abs(mean_wake-mean_nowake)/(std_wake+std_nowake)
 
 % nowake=reshape(permute(anali_sum2(1,sample_id_range_nw,:,4,1),[1,3,2,4,5]),[1,numel(anali_sum2(1,sample_id_range_nw,:,2,1))])
 % wake=reshape(permute(anali_sum2(2,sample_id_range_w,:,4,1),[1,3,2,4,5]),[1,numel(anali_sum2(1,sample_id_range_w,:,2,1))])
