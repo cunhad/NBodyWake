@@ -1,4 +1,4 @@
-function [  ] = curve_2d_data_anali_out_from_2d_slices_out_abs( root,root_data_2d_in,root_data_2d_out,root_anali_2d_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,slices,lev,sigma,step_of_degree,wavel_removal_factor,snapshot,visual_type,visual_in_or_out,sum_depth)
+function [  ] = curve_2d_data_anali_out_from_2d_slices_out_abs( root,root_data_2d_in,root_data_2d_out,root_anali_2d_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,slices,lev,lev_rid,sigma,step_of_degree,wavel_removal_factor,snapshot,visual_type,visual_in_or_out,sum_depth)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -19,7 +19,8 @@ function [  ] = curve_2d_data_anali_out_from_2d_slices_out_abs( root,root_data_2
 % pivot=[0,0,0];
 % rot_angle=[1.5708,0,0];
 % slices=32;
-% lev=2;
+% lev=3;
+% lev_rid=1;
 % sigma=5;
 % step_of_degree=1;
 % wavel_removal_factor=1/2;
@@ -437,7 +438,7 @@ for slice_id=1:slices
     for i=1:length(R_nor(1,:))
         %                 [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
         [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
-        D = wrcoef('d',dc_dwt,levels,'db1',lev);
+        D = wrcoef('d',dc_dwt,levels,'db1',lev_rid);
         %                 D(floor((2465-200)/boudary_removal_factor):end)=0;
         %                 D(1:floor((448+200)/boudary_removal_factor))=0;
         D(length(xp)-nb*wavel_removal_factor:end)=0;
