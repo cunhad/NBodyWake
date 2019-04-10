@@ -464,7 +464,7 @@ for slice_id=1:slices
         title(strcat('ridg filt2 for ',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
         
         saveas(fig,char(strcat(path_visual_rid','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurv&rid_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
-        close(fig);
+        
     end
     
     anali(slice_id,1,:)=[max(map_3d_slices_filt2d(:)),std(map_3d_slices_filt2d(:)),max(map_3d_slices_filt2d(:))/std(map_3d_slices_filt2d(:)),kurtosis(kurtosis(map_3d_slices_filt2d)),kurtosis(map_3d_slices_filt2d(:))];
@@ -532,7 +532,7 @@ for slice_id=1:slices
                     title(strcat('filt2 info:',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
                     
                     saveas(fig,char(strcat(path_visual_depth','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id*sum_depth),'.png')));
-                    close(fig);
+                    
                 end
                 
             end
@@ -666,7 +666,7 @@ for slice_id=1:slices
                 title(strcat('ridg filt2 for ',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
                 
                 saveas(fig,char(strcat(path_visual_rid_depth','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurv&rid_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id*sum_depth),'.png')));
-                close(fig);
+                
             end
             
             anali_depth(slice_depth_id,1,:)=[max(this(:)),std(this(:)),max(this(:))/std(this(:)),kurtosis(kurtosis(this)),kurtosis(this(:))];
