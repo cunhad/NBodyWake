@@ -2,46 +2,46 @@ function [  ] = curve_2d_data_anali_out_from_2d_slices_out_locang( root,root_dat
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 % 
-root='/home/asus/Dropbox/extras/storage/graham/ht/';
-root_data_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024/';
-% root_data_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_1024_2dcla_s5lv3_data/';
-root_data_2d_out='';
-root_anali_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dlocang_s5l3lr1_anali/';
-root_visual_2d='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dlocang_s5l3lr1_visual/';
-% spec='4Mpc_2048c_1024p_zi63_nowakem';
-spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
-% aux_path='/sample3007/';
-aux_path='/sample3007/half_lin_cutoff_half_tot_pert_nvpw/';
-aux_path_out='';
-filename='3.000xv0.dat';
-lenght_factor=1;
-resol_factor=1;
-pivot=[0,0,0];
-rot_angle=[1.5708,0,0];
-slices=32;
-lev=3;
-lev_rid=1;
-sigma=2;
-step_of_degree=1;
-wavel_removal_factor=1/2;
-% snapshot=[];
-% snapshot=[13,28]*(128/32);
-snapshot=[28]*(slices/32);
-visual_type=[1:2]; %if 1, shows the 2d proj; if 2 shows the ridgelet transformation
-visual_in_or_out=[1,2]; %if 1 do visualization of the input, if 2 of the output
-%  sum_depth=1;
-sum_depth=4;
+% root='/home/asus/Dropbox/extras/storage/graham/ht/';
+% root_data_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024/';
+% % root_data_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_1024_2dcla_s5lv3_data/';
+% root_data_2d_out='';
+% root_anali_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dlocang_s5l3lr1_anali/';
+% root_visual_2d='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dlocang_s5l3lr1_visual/';
+% % spec='4Mpc_2048c_1024p_zi63_nowakem';
+% spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
+% % aux_path='/sample3007/';
+% aux_path='/sample3007/half_lin_cutoff_half_tot_pert_nvpw/';
+% aux_path_out='';
+% filename='3.000xv0.dat';
+% lenght_factor=1;
+% resol_factor=1;
+% pivot=[0,0,0];
+% rot_angle=[1.5708,0,0];
+% slices=32;
+% lev=3;
+% lev_rid=1;
+% sigma=2;
+% step_of_degree=1;
+% wavel_removal_factor=1/2;
+% % snapshot=[];
+% % snapshot=[13,28]*(128/32);
+% snapshot=[28]*(slices/32);
+% visual_type=[1:2]; %if 1, shows the 2d proj; if 2 shows the ridgelet transformation
+% visual_in_or_out=[1,2]; %if 1 do visualization of the input, if 2 of the output
+% %  sum_depth=1;
+% sum_depth=4;
 
 
 % filename_read_path=_2dproj_z3_data_sl;
 % 
-% addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_cpp/mex/'));
-% addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_matlab'));
-% % addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct3d'));
+addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_cpp/mex/'));
+addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_matlab'));
+% addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct3d'));
 
-addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_cpp/mex/'));
-addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_matlab'));
-% % addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct3d'));
+% addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_cpp/mex/'));
+% addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_matlab'));
+% % % addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct3d'));
 
 % record the path to data in
 
