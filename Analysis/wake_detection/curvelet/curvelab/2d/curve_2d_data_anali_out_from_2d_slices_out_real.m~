@@ -1,13 +1,13 @@
-function [  ] = curve_2d_data_anali_out_from_2d_slices_out_locang( root,root_data_2d_in,root_data_2d_out,root_anali_2d_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,slices,lev,lev_rid,sigma,step_of_degree,wavel_removal_factor,snapshot,visual_type,visual_in_or_out,sum_depth)
+function [  ] = curve_2d_data_anali_out_from_2d_slices_out_real( root,root_data_2d_in,root_data_2d_out,root_anali_2d_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,slices,lev,lev_rid,sigma,step_of_degree,wavel_removal_factor,snapshot,visual_type,visual_in_or_out,sum_depth)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
-% 
+
 % root='/home/asus/Dropbox/extras/storage/graham/ht/';
 % root_data_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024/';
-% % root_data_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_1024_2dcla_s5lv3_data/';
+% % root_data_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_1024_2dcabs_s5lv3_data/';
 % root_data_2d_out='';
-% root_anali_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dlocang_s5l3lr1_anali/';
-% root_visual_2d='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dlocang_s5l3lr1_visual/';
+% root_anali_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcabs_s5lv2_anali/';
+% root_visual_2d='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcabs_s5lv2_visual/';
 % % spec='4Mpc_2048c_1024p_zi63_nowakem';
 % spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
 % % aux_path='/sample3007/';
@@ -21,12 +21,12 @@ function [  ] = curve_2d_data_anali_out_from_2d_slices_out_locang( root,root_dat
 % slices=32;
 % lev=3;
 % lev_rid=1;
-% sigma=2;
+% sigma=5;
 % step_of_degree=1;
 % wavel_removal_factor=1/2;
 % % snapshot=[];
 % % snapshot=[13,28]*(128/32);
-% snapshot=[28]*(slices/32);
+% snapshot=[9,29]*(slices/32);
 % visual_type=[1:2]; %if 1, shows the 2d proj; if 2 shows the ridgelet transformation
 % visual_in_or_out=[1,2]; %if 1 do visualization of the input, if 2 of the output
 % %  sum_depth=1;
@@ -288,7 +288,7 @@ for slice_id=1:slices
     
     C = fdct_wrapping(map_3d_slices,0);
     Ct = C;
-    for s = 1:length(C)-lev-1
+    for s = 1:length(C)
         for w = 1:length(C{s})
             Ct{s}{w} = C_zero{s}{w};
         end
@@ -308,101 +308,19 @@ for slice_id=1:slices
         
         %                 thresh=0;
         thresh = sigma + sigma*(s == length(C));
-        
-        sz=cell(length(C{s}),1);
-    for w = 1:length(C{s})/4
-        sz{w}=size(C{s}{w});
-    end
-    for  i=1:sz{1}(1)
-        for j=1:sz{1}(2)
-            for w = 1:length(C{s})/4                
-                a(w)=abs(C{s}{w}(ceil(i*sz{w}(1)/sz{1}(1)),ceil(j*sz{w}(2)/sz{1}(2))))/E{s}{w};
-            end
-            std_a=std(a);
-            avr_a=mean(a);
-            treash_logic=double(a>=avr_a+sigma*std_a);        
-            for w = 1:length(C{s})/4                
-                Ct{s}{w}(ceil(i*sz{w}(1)/sz{1}(1)),ceil(j*sz{w}(2)/sz{1}(2)))=treash_logic(w)*C{s}{w}(ceil(i*sz{w}(1)/sz{1}(1)),ceil(j*sz{w}(2)/sz{1}(2)))*double(Ct{s}{w}(ceil(i*sz{w}(1)/sz{1}(1)),ceil(j*sz{w}(2)/sz{1}(2)))~=0);
-            end                        
-        end
-    end
-    
-    %right2 part
-    for w = 1+length(C{s})/4:2*length(C{s})/4
-        sz{w}=size(C{s}{w});
-    end
-    for  i=1:sz{1+length(C{s})/4}(1)
-        for j=1:sz{1+length(C{s})/4}(2)
-            for w = 1+length(C{s})/4:2*length(C{s})/4  
-                i_c=ceil(i*sz{w}(1)/sz{1+length(C{s})/4}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1+length(C{s})/4}(2));
-                a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
-            end
-            std_a=std(a);
-            avr_a=mean(a);
-            treash_logic=double(a>=avr_a+sigma*std_a)   ;         
-            for w = 1+length(C{s})/4:2*length(C{s})/4    
-                i_c=ceil(i*sz{w}(1)/sz{1+length(C{s})/4}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1+length(C{s})/4}(2));
-                Ct{s}{w}(i_c,j_c)=treash_logic(w)*C{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-            end                        
-        end
-    end
-    
-    %right3 part
-    for w = 1+2*length(C{s})/4:3*length(C{s})/4
-        sz{w}=size(C{s}{w});
-    end
-    for  i=1:sz{1+2*length(C{s})/4}(1)
-        for j=1:sz{1+2*length(C{s})/4}(2)
-            for w = 1+2*length(C{s})/4:3*length(C{s})/4  
-                i_c=ceil(i*sz{w}(1)/sz{1+2*length(C{s})/4}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1+2*length(C{s})/4}(2));
-                a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
-            end
-            std_a=std(a);
-            avr_a=mean(a);
-            treash_logic=double(a>=avr_a+sigma*std_a)   ;         
-            for w = 1+2*length(C{s})/4:3*length(C{s})/4    
-                i_c=ceil(i*sz{w}(1)/sz{1+2*length(C{s})/4}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1+2*length(C{s})/4}(2));
-                Ct{s}{w}(i_c,j_c)=treash_logic(w)*C{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-            end                        
-        end
-    end
-    
-    
-    %right4 part
-    for w = 1+3*length(C{s})/4:4*length(C{s})/4
-        sz{w}=size(C{s}{w});
-    end
-    for  i=1:sz{1+3*length(C{s})/4}(1)
-        for j=1:sz{1+3*length(C{s})/4}(2)
-            for w = 1+3*length(C{s})/4:4*length(C{s})/4  
-                i_c=ceil(i*sz{w}(1)/sz{1+3*length(C{s})/4}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1+3*length(C{s})/4}(2));
-                a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
-            end
-            std_a=std(a);
-            avr_a=mean(a);
-            treash_logic=double(a>=avr_a+sigma*std_a)   ;         
-            for w = 1+3*length(C{s})/4:4*length(C{s})/4    
-                i_c=ceil(i*sz{w}(1)/sz{1+3*length(C{s})/4}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1+3*length(C{s})/4}(2));
-                Ct{s}{w}(i_c,j_c)=treash_logic(w)*C{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-            end                        
-        end
-    end
-    
-        
-        
         for w = 1:length(C{s})
             %                     Ct{s}{w} = C{s}{w};
             %                     Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > thresh*E{s}{w});
             %                    Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > 0*E{s}{w});
 %             Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > -thresh*E{s}{w}&(C{s}{w}) < thresh*E{s}{w});
             %                 Ct{s}{w} = C{s}{w};
+            
+            Ct{s}{w} = C{s}{w};
+            
+            
             %              curv(slice_id,w,aux_count)=kurtosis(abs(C{s}{w}(:)));
+            
+            
             
 %             ave=mean(abs(Ct{s}{w}(:)));
 %             sig=std(abs(Ct{s}{w}(:)))^2;
@@ -457,7 +375,7 @@ for slice_id=1:slices
     
     
     
-    map_3d_slices_filt2d = abs(ifdct_wrapping(Ct,0));
+    map_3d_slices_filt2d = real(ifdct_wrapping(Ct,0));
     
     
     %     strcat(root_data_2d_in,'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/',filename_read,num2str(slice_id),'.bin')
@@ -621,7 +539,7 @@ for slice_id=1:slices
             
             C = fdct_wrapping(map_2d_slices_filt2d_depth,0);
     Ct = C;
-    for s = 1:length(C)-lev-1
+    for s = 1:length(C)
         for w = 1:length(C{s})
             Ct{s}{w} = C_zero{s}{w};
         end
@@ -637,91 +555,6 @@ for slice_id=1:slices
         
         size_nt=0;
         
-        sz=cell(length(C{s}),1);
-    for w = 1:length(C{s})/4
-        sz{w}=size(C{s}{w});
-    end
-    for  i=1:sz{1}(1)
-        for j=1:sz{1}(2)
-            for w = 1:length(C{s})/4                
-                a(w)=abs(C{s}{w}(ceil(i*sz{w}(1)/sz{1}(1)),ceil(j*sz{w}(2)/sz{1}(2))))/E{s}{w};
-            end
-            std_a=std(a);
-            avr_a=mean(a);
-            treash_logic=double(a>=avr_a+sigma*std_a);        
-            for w = 1:length(C{s})/4                
-                Ct{s}{w}(ceil(i*sz{w}(1)/sz{1}(1)),ceil(j*sz{w}(2)/sz{1}(2)))=treash_logic(w)*C{s}{w}(ceil(i*sz{w}(1)/sz{1}(1)),ceil(j*sz{w}(2)/sz{1}(2)))*double(Ct{s}{w}(ceil(i*sz{w}(1)/sz{1}(1)),ceil(j*sz{w}(2)/sz{1}(2)))~=0);
-            end                        
-        end
-    end
-    
-    %right2 part
-    for w = 1+length(C{s})/4:2*length(C{s})/4
-        sz{w}=size(C{s}{w});
-    end
-    for  i=1:sz{1+length(C{s})/4}(1)
-        for j=1:sz{1+length(C{s})/4}(2)
-            for w = 1+length(C{s})/4:2*length(C{s})/4  
-                i_c=ceil(i*sz{w}(1)/sz{1+length(C{s})/4}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1+length(C{s})/4}(2));
-                a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
-            end
-            std_a=std(a);
-            avr_a=mean(a);
-            treash_logic=double(a>=avr_a+sigma*std_a)   ;         
-            for w = 1+length(C{s})/4:2*length(C{s})/4    
-                i_c=ceil(i*sz{w}(1)/sz{1+length(C{s})/4}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1+length(C{s})/4}(2));
-                Ct{s}{w}(i_c,j_c)=treash_logic(w)*C{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-            end                        
-        end
-    end
-    
-    %right3 part
-    for w = 1+2*length(C{s})/4:3*length(C{s})/4
-        sz{w}=size(C{s}{w});
-    end
-    for  i=1:sz{1+2*length(C{s})/4}(1)
-        for j=1:sz{1+2*length(C{s})/4}(2)
-            for w = 1+2*length(C{s})/4:3*length(C{s})/4  
-                i_c=ceil(i*sz{w}(1)/sz{1+2*length(C{s})/4}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1+2*length(C{s})/4}(2));
-                a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
-            end
-            std_a=std(a);
-            avr_a=mean(a);
-            treash_logic=double(a>=avr_a+sigma*std_a)   ;         
-            for w = 1+2*length(C{s})/4:3*length(C{s})/4    
-                i_c=ceil(i*sz{w}(1)/sz{1+2*length(C{s})/4}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1+2*length(C{s})/4}(2));
-                Ct{s}{w}(i_c,j_c)=treash_logic(w)*C{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-            end                        
-        end
-    end
-    
-    
-    %right4 part
-    for w = 1+3*length(C{s})/4:4*length(C{s})/4
-        sz{w}=size(C{s}{w});
-    end
-    for  i=1:sz{1+3*length(C{s})/4}(1)
-        for j=1:sz{1+3*length(C{s})/4}(2)
-            for w = 1+3*length(C{s})/4:4*length(C{s})/4  
-                i_c=ceil(i*sz{w}(1)/sz{1+3*length(C{s})/4}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1+3*length(C{s})/4}(2));
-                a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
-            end
-            std_a=std(a);
-            avr_a=mean(a);
-            treash_logic=double(a>=avr_a+sigma*std_a)   ;         
-            for w = 1+3*length(C{s})/4:4*length(C{s})/4    
-                i_c=ceil(i*sz{w}(1)/sz{1+3*length(C{s})/4}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1+3*length(C{s})/4}(2));
-                Ct{s}{w}(i_c,j_c)=treash_logic(w)*C{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-            end                        
-        end
-    end
-        
         
         
         %                 thresh=0;
@@ -729,7 +562,7 @@ for slice_id=1:slices
             %                     Ct{s}{w} = C{s}{w};
             %                     Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > thresh*E{s}{w});
             %                    Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > 0*E{s}{w});
-%             Ct{s}{w} = C{s}{w};
+            Ct{s}{w} = C{s}{w};
             %                 Ct{s}{w} = C{s}{w};
             %              curv(slice_id,w,aux_count)=kurtosis(abs(C{s}{w}(:)));
             

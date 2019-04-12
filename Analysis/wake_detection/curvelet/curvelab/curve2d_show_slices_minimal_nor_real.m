@@ -1,4 +1,4 @@
-function [ anali,sample_id_range_nw,sample_id_range_w ] = curve2d_show_slices_minimal_nor_test_locang(  )
+function [ anali,sample_id_range_nw,sample_id_range_w ] = curve2d_show_slices_minimal_nor_real(  )
 
 
 %example:
@@ -13,16 +13,16 @@ addpath(genpath('/home/asus/Programs/CurveLab_matlab-2.1.3/fdct_wrapping_matlab'
 
 filename='_2dproj_z3_data_sl';
 nc=1024;
-new_nc=1024;
+new_nc=512;
 trsh=20;
 cut=1;
 lev=3;
 lev_rid=1;
-Sigma = 2;  %this does not matter for now
+Sigma = 5;  %this does not matter for now
 slices=32;
 anal_lev=2;
 size_mpc=4;
-step_of_degree=1/2;
+step_of_degree=(1)*(180/512);
 wavel_removal_factor=1/2;
 % sample_id_range_nw=[1:10];
 % sample_id_range_w=[1:10];
@@ -30,12 +30,10 @@ wavel_removal_factor=1/2;
 % sample_id_range_w=[3,7];
 % sample_id_range_nw=[4,7];
 % sample_id_range_w=[4,7];
-
-sample_id_range_nw=[2,4,7];
-sample_id_range_w=[2,4,7];
-% 
-% sample_id_range_nw=[7];
-% sample_id_range_w=[7];
+% sample_id_range_nw=[2,4,7];
+% sample_id_range_w=[2,4,7];
+sample_id_range_nw=[7];
+sample_id_range_w=[7];
 
 display_slice_nw = cell(1,length(sample_id_range_nw));
 display_slice_w = cell(1,length(sample_id_range_w));
@@ -59,7 +57,8 @@ display_slice_w = cell(1,length(sample_id_range_w));
 % display_slice_nw{find(sample_id_range_nw==10)}=[5];
 % display_slice_w{find(sample_id_range_w==10)}=[5];
 
-
+display_slice_nw{find(sample_id_range_nw==7)}=[19];
+display_slice_w{find(sample_id_range_w==7)}=[19];
 
 
 % display_slice_nw={[],[]};
@@ -147,9 +146,9 @@ fig_test4=figure;
 % fig_test4_max2=figure;
 % fig_test5_max2=figure;
 
-fig_test1_curv=figure;
-fig_test2_curv=figure;
-fig_test3_curv=figure;
+% fig_test1_curv=figure;
+% fig_test2_curv=figure;
+% fig_test3_curv=figure;
 
 
 fig_test1_curv_mom=figure;
@@ -181,9 +180,9 @@ ax_test4=axes(fig_test4);
 % ax_test4_max2=axes(fig_test4_max2);
 % ax_test5_max2=axes(fig_test5_max2);
 
-ax_test1_curv=axes(fig_test1_curv);
-ax_test2_curv=axes(fig_test2_curv);
-ax_test3_curv=axes(fig_test3_curv);
+% ax_test1_curv=axes(fig_test1_curv);
+% ax_test2_curv=axes(fig_test2_curv);
+% ax_test3_curv=axes(fig_test3_curv);
 
 
 ax_test1_curv_mom=axes(fig_test1_curv_mom);
@@ -315,7 +314,7 @@ for w_nw=1:2
 
             C_ = fdct_wrapping(map_3d_slices(:,:,slice_id),0);
             Ct = C_;
-            for s = 1:length(C_)-1-lev
+            for s = 1:length(C_)
                 for w = 1:length(C_{s})
                     Ct{s}{w} = C_zero{s}{w};
                 end
@@ -327,99 +326,9 @@ for w_nw=1:2
             for s = length(C_)-lev:length(C_)-1
                 %                 thresh=0;
                 thresh = Sigma + Sigma*(s == length(C_));
+%                 collect=[];
+%                 collect_=[];
                 
-                
-                sz=cell(length(C_{s}),1);
-    for w = 1:length(C_{s})/4
-        sz{w}=size(C_{s}{w});
-    end
-    for  i=1:sz{1}(1)
-        for j=1:sz{1}(2)
-            for w = 1:length(C_{s})/4                
-                a(w)=abs(C_{s}{w}(ceil(i*sz{w}(1)/sz{1}(1)),ceil(j*sz{w}(2)/sz{1}(2))))/E{s}{w};
-            end
-            std_a=std(a);
-            avr_a=mean(a);
-            treash_logic=double(a>=avr_a+Sigma*std_a);        
-            for w = 1:length(C_{s})/4                
-                Ct{s}{w}(ceil(i*sz{w}(1)/sz{1}(1)),ceil(j*sz{w}(2)/sz{1}(2)))=treash_logic(w)*C_{s}{w}(ceil(i*sz{w}(1)/sz{1}(1)),ceil(j*sz{w}(2)/sz{1}(2)))*double(Ct{s}{w}(ceil(i*sz{w}(1)/sz{1}(1)),ceil(j*sz{w}(2)/sz{1}(2)))~=0);
-            end                        
-        end
-    end
-    
-    %right2 part
-    for w = 1+length(C_{s})/4:2*length(C_{s})/4
-        sz{w}=size(C_{s}{w});
-    end
-    for  i=1:sz{1+length(C_{s})/4}(1)
-        for j=1:sz{1+length(C_{s})/4}(2)
-            for w = 1+length(C_{s})/4:2*length(C_{s})/4  
-                i_c=ceil(i*sz{w}(1)/sz{1+length(C_{s})/4}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1+length(C_{s})/4}(2));
-                a(w)=abs(C_{s}{w}(i_c,j_c))/E{s}{w};
-            end
-            std_a=std(a);
-            avr_a=mean(a);
-            treash_logic=double(a>=avr_a+Sigma*std_a)   ;         
-            for w = 1+length(C_{s})/4:2*length(C_{s})/4    
-                i_c=ceil(i*sz{w}(1)/sz{1+length(C_{s})/4}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1+length(C_{s})/4}(2));
-                Ct{s}{w}(i_c,j_c)=treash_logic(w)*C_{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-            end                        
-        end
-    end
-    
-    %right3 part
-    for w = 1+2*length(C_{s})/4:3*length(C_{s})/4
-        sz{w}=size(C_{s}{w});
-    end
-    for  i=1:sz{1+2*length(C_{s})/4}(1)
-        for j=1:sz{1+2*length(C_{s})/4}(2)
-            for w = 1+2*length(C_{s})/4:3*length(C_{s})/4  
-                i_c=ceil(i*sz{w}(1)/sz{1+2*length(C_{s})/4}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1+2*length(C_{s})/4}(2));
-                a(w)=abs(C_{s}{w}(i_c,j_c))/E{s}{w};
-            end
-            std_a=std(a);
-            avr_a=mean(a);
-            treash_logic=double(a>=avr_a+Sigma*std_a)   ;         
-            for w = 1+2*length(C_{s})/4:3*length(C_{s})/4    
-                i_c=ceil(i*sz{w}(1)/sz{1+2*length(C_{s})/4}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1+2*length(C_{s})/4}(2));
-                Ct{s}{w}(i_c,j_c)=treash_logic(w)*C_{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-            end                        
-        end
-    end
-    
-    
-    %right4 part
-    for w = 1+3*length(C_{s})/4:4*length(C_{s})/4
-        sz{w}=size(C_{s}{w});
-    end
-    for  i=1:sz{1+3*length(C_{s})/4}(1)
-        for j=1:sz{1+3*length(C_{s})/4}(2)
-            for w = 1+3*length(C_{s})/4:4*length(C_{s})/4  
-                i_c=ceil(i*sz{w}(1)/sz{1+3*length(C_{s})/4}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1+3*length(C_{s})/4}(2));
-                a(w)=abs(C_{s}{w}(i_c,j_c))/E{s}{w};
-            end
-            std_a=std(a);
-            avr_a=mean(a);
-            treash_logic=double(a>=avr_a+Sigma*std_a)   ;         
-            for w = 1+3*length(C_{s})/4:4*length(C_{s})/4    
-                i_c=ceil(i*sz{w}(1)/sz{1+3*length(C_{s})/4}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1+3*length(C_{s})/4}(2));
-                Ct{s}{w}(i_c,j_c)=treash_logic(w)*C_{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-            end                        
-        end
-    end
-    
-    
-   
-    
-                collect=[ ];
-                collect_=[ ];
-                    
                 var=[];
                 kurt=[];
                 skew=[];
@@ -462,13 +371,11 @@ for w_nw=1:2
 %                                         Ct{s}{w} = C_{s}{w}.* ((C_{s}{w}) > thresh*E{s}{w});
 %                                        Ct{s}{w} = C_{s}{w}.* ((C_{s}{w}) > 0*E{s}{w});
 %                     Ct{s}{w} = C_{s}{w}.* ((C_{s}{w}) > -thresh*E{s}{w}&(C_{s}{w}) < thresh*E{s}{w});
-%                                     Ct{s}{w} = C_{s}{w};
-% %                     curv(w_nw,sample,slice_id,w,aux_count)=kurtosis(abs(C{s}{w}(:)));
-                    collect=[ collect ;abs(Ct{s}{w}(:))];
-                    collect_=[ collect_ ;abs(Ct{s}{w}(:))/E{s}{w}];
+                                    Ct{s}{w} = C_{s}{w};
+%                     curv(w_nw,sample,slice_id,w,aux_count)=kurtosis(abs(C{s}{w}(:)));
+%                     collect=[ collect ;abs(Ct{s}{w}(:))];
+%                     collect_=[ collect_ ;abs(Ct{s}{w}(:))/E{s}{w}];
                     
-%                     Ct{s}{w} = C_{s}{w};
-
                     aver=mean(abs(Ct{s}{w}(:)));
                     sigma=std(abs(Ct{s}{w}(:)))^2;
                     delta=skewness(abs(Ct{s}{w}(:)))*(sigma^(3/2));
@@ -491,10 +398,10 @@ for w_nw=1:2
                     
                 end
 %                 curv(w_nw,sample,slice_id,aux_count)=kurtosis(collect);
-                  
-                  curv(aux_count)=kurtosis(collect);
-                  curv_(aux_count)=kurtosis(collect_);
-                  curv_m4(aux_count)=kurtosis(collect)*std(collect)^4;
+%                   
+%                   curv(aux_count)=kurtosis(collect);
+%                   curv_(aux_count)=kurtosis(collect_);
+%                   curv_m4(aux_count)=kurtosis(collect)*std(collect)^4;
 %                 curv2(w_nw,sample,slice_id,aux_count)=kurtosis(curv(w_nw,sample,slice_id,:,aux_count));
 %                 curv(w_nw,sample,slice_id,w,aux_count)=kurtosis(abs(C{s}(:)));
 
@@ -530,9 +437,9 @@ for w_nw=1:2
             
             
             
-            BW2 = abs(ifdct_wrapping(Ct,0));
+            BW2 = real(ifdct_wrapping(Ct,0));
             
-            map_3d_slices_filt2d(:,:,slice_id) =abs(ifdct_wrapping(Ct,0));
+            map_3d_slices_filt2d(:,:,slice_id) =real(ifdct_wrapping(Ct,0));
             
             BW3 = imresize(BW2,new_nc/nc,'triangle');
 
@@ -632,9 +539,9 @@ for w_nw=1:2
             anali(w_nw,sample,slice_id,4,:)=[max(R_nor_filt(:)),std(R_nor_filt(:)),max(R_nor_filt(:))/std(R_nor_filt(:)),kurtosis(kurtosis(R_nor_filt)),kurtosis(R_nor_filt(:))];
 %             anali(w_nw,sample,slice_id,5,:)=curv_;
   
-            anali_curv(w_nw,sample,slice_id,1,:)=curv;
-            anali_curv(w_nw,sample,slice_id,2,:)=curv_;
-            anali_curv(w_nw,sample,slice_id,3,:)=curv_m4;
+%             anali_curv(w_nw,sample,slice_id,1,:)=curv;
+%             anali_curv(w_nw,sample,slice_id,2,:)=curv_;
+%             anali_curv(w_nw,sample,slice_id,3,:)=curv_m4;
 
             
             anali_curv_mom(w_nw,sample,slice_id,1,:)=curv_mom1;
@@ -693,9 +600,9 @@ for w_nw=1:2
             c(:)=max(anali(w_nw,sample,:,3,:),[],3);
             d(:)=max(anali(w_nw,sample,:,4,:),[],3);
             
-            a_curv(:)=max(anali_curv(w_nw,sample,:,1,:),[],3);
-            b_curv(:)=max(anali_curv(w_nw,sample,:,2,:),[],3);
-            c_curv(:)=max(anali_curv(w_nw,sample,:,3,:),[],3);
+%             a_curv(:)=max(anali_curv(w_nw,sample,:,1,:),[],3);
+%             b_curv(:)=max(anali_curv(w_nw,sample,:,2,:),[],3);
+%             c_curv(:)=max(anali_curv(w_nw,sample,:,3,:),[],3);
             
             a_curv_mom(:)=max(anali_curv_mom(w_nw,sample,:,1,:),[],3);
             b_curv_mom(:)=max(anali_curv_mom(w_nw,sample,:,2,:),[],3);
@@ -716,9 +623,9 @@ for w_nw=1:2
             test3_lv{sample_id}=   plot(ax_test3,c,coul);
             test4_lv{sample_id}=   plot(ax_test4,d,coul);
             
-            test1_curv{sample_id}=   plot(ax_test1_curv,a_curv,coul);
-            test2_curv{sample_id}=   plot(ax_test2_curv,b_curv,coul);
-            test3_curv{sample_id}=   plot(ax_test3_curv,c_curv,coul);
+%             test1_curv{sample_id}=   plot(ax_test1_curv,a_curv,coul);
+%             test2_curv{sample_id}=   plot(ax_test2_curv,b_curv,coul);
+%             test3_curv{sample_id}=   plot(ax_test3_curv,c_curv,coul);
             
             
             test1_curv_mom{sample_id}=   plot(ax_test1_curv_mom,a_curv_mom,coul);
@@ -737,10 +644,10 @@ for w_nw=1:2
             hold(ax_test3,'on');
             hold(ax_test4,'on');
 
-            hold(ax_test1_curv,'on');
-            hold(ax_test2_curv,'on');
-            hold(ax_test3_curv,'on');
-            
+%             hold(ax_test1_curv,'on');
+%             hold(ax_test2_curv,'on');
+%             hold(ax_test3_curv,'on');
+%             
             hold(ax_test1_curv_mom,'on');
             hold(ax_test2_curv_mom,'on');
             hold(ax_test3_curv_mom,'on');
@@ -1112,12 +1019,12 @@ title(ax_test4,'ridgelet normalized with wavelet');
 % set(ax_test5_max2, 'YScale', 'log');
 % title(ax_test5_max2,'ridgelet normalized with 2dwavelet from 2dcurv plus curv');
 
-set(ax_test1_curv, 'YScale', 'log');
-title(ax_test1_curv,'kurtosis normalised');
-set(ax_test2_curv, 'YScale', 'log');
-title(ax_test2_curv,'kurtosis curvelet');
-set(ax_test3_curv, 'YScale', 'log');
-title(ax_test3_curv,'4th moment curvelet');
+% set(ax_test1_curv, 'YScale', 'log');
+% title(ax_test1_curv,'kurtosis normalised');
+% set(ax_test2_curv, 'YScale', 'log');
+% title(ax_test2_curv,'kurtosis curvelet');
+% set(ax_test3_curv, 'YScale', 'log');
+% title(ax_test3_curv,'4th moment curvelet');
 
 set(ax_test1_curv_mom, 'YScale', 'log');
 title(ax_test1_curv_mom,'average normalised fast');
@@ -1133,9 +1040,9 @@ title(ax_test5_curv_mom,'4th moment curvelet fast');
 end
 
 
-
 % 
-% [ anali,sample_id_range_nw,sample_id_range_w ] = curve2d_show_slices_minimal_nor_test_absreal(  )
+% 
+% [ anali,sample_id_range_nw,sample_id_range_w ] = curve2d_show_slices_minimal_nor_real(  )
 % 
 % 
 % nowake=reshape(permute(anali(1,sample_id_range_nw,:,4,1),[1,3,2,4,5]),[1,numel(anali(1,sample_id_range_nw,:,2,1))])

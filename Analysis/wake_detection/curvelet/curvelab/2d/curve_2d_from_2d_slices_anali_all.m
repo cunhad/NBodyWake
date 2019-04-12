@@ -7,7 +7,7 @@ function [  ] = curve_2d_from_2d_slices_anali_all(  )
 % 
 
 root='/home/asus/Dropbox/extras/storage/graham/ht/';
-root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcabs_l3lr1_anali/';
+root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcla_s2l3lr1_anali/';
 %root_anali_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurv_s5lv2_anali_all/';
 %root_visual_2d='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurv_s5lv2_visual_all/';
 
@@ -17,7 +17,7 @@ resol_factor=1;
 pivot=[0,0,0];
 rot_angle=[1.5708,0,0];
 slices=32;
-sum_depth=2;
+sum_depth=4;
 % lev=2;
 % sigma=5;
 % step_of_degree=1;
@@ -330,8 +330,8 @@ stn_nowake=(max_nowake_slices-mean_nowake)/std_nowake
 stn_wake=(max_wake_slices-mean_nowake)/std_nowake
 mean_stn=mean(stn_wake)
 std_stn=std(stn_wake,1)
-mean_stn-std_stn
-
+stn=mean_stn-std_stn
+significance=abs(mean_wake-mean_nowake)/(std_wake+std_nowake)
 
 cd('../wake_detection/curvelet/curvelab/2d/')
 
