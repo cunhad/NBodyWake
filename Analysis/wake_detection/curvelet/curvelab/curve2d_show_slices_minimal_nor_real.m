@@ -18,7 +18,7 @@ trsh=20;
 cut=1;
 lev=3;
 lev_rid=1;
-Sigma = 5;  %this does not matter for now
+Sigma = 3;  %this does not matter for now
 slices=32;
 anal_lev=2;
 size_mpc=4;
@@ -57,8 +57,8 @@ display_slice_w = cell(1,length(sample_id_range_w));
 % display_slice_nw{find(sample_id_range_nw==10)}=[5];
 % display_slice_w{find(sample_id_range_w==10)}=[5];
 
-display_slice_nw{find(sample_id_range_nw==7)}=[19];
-display_slice_w{find(sample_id_range_w==7)}=[19];
+display_slice_nw{find(sample_id_range_nw==7)}=[29];
+display_slice_w{find(sample_id_range_w==7)}=[29];
 
 
 % display_slice_nw={[],[]};

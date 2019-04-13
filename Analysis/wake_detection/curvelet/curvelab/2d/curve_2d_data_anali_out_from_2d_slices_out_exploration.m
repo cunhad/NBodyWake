@@ -1039,82 +1039,82 @@ cd('../wake_detection/curvelet/curvelab/2d/');
 % figure; imagesc(BW2);colorbar; axis('image');
 % 
 
-
-
-file='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m/sample3007/half_lin_cutoff_half_tot_pert_nvpw/data/1lf_1rf_0-0-0pv_1.5708-0-0ra/2dproj/dm/_4_2dproj_z3_data_sl28.bin'
-fid = fopen(file);
-% G=fread(fid,[1024 1024], 'float32','l') ;
-map=fread(fid,[1024 1024], 'float32','l') ;
-map(map<=1)=1;%to remove problem with holes
-G=log(map);
-fclose(fid);
-% figure; imagesc(map);colorbar;
-% figure; imagesc(G);colorbar;
-% map=fread(fid,[1024 1024], 'float32','l') ;
-% figure; imagesc(map);colorbar;
-% fclose(fid);
+% 
+% 
+% file='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m/sample3007/half_lin_cutoff_half_tot_pert_nvpw/data/1lf_1rf_0-0-0pv_1.5708-0-0ra/2dproj/dm/_4_2dproj_z3_data_sl28.bin'
 % fid = fopen(file);
+% % G=fread(fid,[1024 1024], 'float32','l') ;
 % map=fread(fid,[1024 1024], 'float32','l') ;
-% figure; imagesc(map);colorbar;
 % map(map<=1)=1;%to remove problem with holes
 % G=log(map);
-% figure; imagesc(G);colorbar;
+% fclose(fid);
+% % figure; imagesc(map);colorbar;
+% % figure; imagesc(G);colorbar;
+% % map=fread(fid,[1024 1024], 'float32','l') ;
+% % figure; imagesc(map);colorbar;
+% % fclose(fid);
+% % fid = fopen(file);
+% % map=fread(fid,[1024 1024], 'float32','l') ;
+% % figure; imagesc(map);colorbar;
+% % map(map<=1)=1;%to remove problem with holes
+% % G=log(map);
+% % figure; imagesc(G);colorbar;
+% % 
+% lev_ang=2;
+% new_nc=1024;
+% sigma=3;
 % 
-lev_ang=2;
-new_nc=1024;
-sigma=3;
-
-F = ones(1024);
-X = fftshift(ifft2(F)) * sqrt(prod(size(F)));
-C = fdct_wrapping(X,0);
-E = cell(size(C));
-for s=1:length(C)
-    E{s} = cell(size(C{s}));
-    for w=1:length(C{s})
-        A = C{s}{w};
-        E{s}{w} = sqrt(sum(sum(A.*conj(A))) / prod(size(A)));
-    end
-end
-
-F=zeros(new_nc);
-C_zero = fdct_wrapping(F,0);
-
-
-
-
+% F = ones(1024);
+% X = fftshift(ifft2(F)) * sqrt(prod(size(F)));
+% C = fdct_wrapping(X,0);
+% E = cell(size(C));
+% for s=1:length(C)
+%     E{s} = cell(size(C{s}));
+%     for w=1:length(C{s})
+%         A = C{s}{w};
+%         E{s}{w} = sqrt(sum(sum(A.*conj(A))) / prod(size(A)));
+%     end
+% end
+% 
 % F=zeros(new_nc);
-% F(1:32,1)=1;
-% G = F + 1*rand(1024);
-% figure; imagesc(G);colorbar;
-C = fdct_wrapping(G);
-% C = fdct_wrapping(map);
-Ct = C;
-
-for s = [1:3,7]
-        for w = 1:length(C{s})
-            Ct{s}{w} = C_zero{s}{w};
-        end
-end
-
+% C_zero = fdct_wrapping(F,0);
 % 
-% for s = [4,5,6]
+% 
+% 
+% 
+% % F=zeros(new_nc);
+% % F(1:32,1)=1;
+% % G = F + 1*rand(1024);
+% % figure; imagesc(G);colorbar;
+% C = fdct_wrapping(G);
+% % C = fdct_wrapping(map);
+% Ct = C;
+% 
+% for s = [1:3,7]
 %         for w = 1:length(C{s})
-%             Ct{s}{w} = C{s}{w};
-% %                         Ct{s}{w} = C{s}{w}.* (real(C{s}{w}) > 0);
-% 
+%             Ct{s}{w} = C_zero{s}{w};
 %         end
 % end
+% 
+% % 
+% % for s = [4,5,6]
+% %         for w = 1:length(C{s})
+% %             Ct{s}{w} = C{s}{w};
+% % %                         Ct{s}{w} = C{s}{w}.* (real(C{s}{w}) > 0);
+% % 
+% %         end
+% % end
+% 
+% BW2 = (ifdct_wrapping(Ct));
+% 
+% figure; imagesc(real(BW2));colorbar; axis('image');
+% 
+% 
+% 
 
-BW2 = (ifdct_wrapping(Ct));
-
-figure; imagesc(real(BW2));colorbar; axis('image');
 
 
-
-
-
-
-
+% 
 % 
 % 
 % file='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m/sample3007/half_lin_cutoff_half_tot_pert_nvpw/data/1lf_1rf_0-0-0pv_1.5708-0-0ra/2dproj/dm/_4_2dproj_z3_data_sl28.bin'
@@ -1278,7 +1278,7 @@ figure; imagesc(real(BW2));colorbar; axis('image');
 % BW2 = abs(ifdct_wrapping(Ct));
 % 
 % figure; imagesc(BW2);colorbar; axis('image');
-
+% 
 
 end
 

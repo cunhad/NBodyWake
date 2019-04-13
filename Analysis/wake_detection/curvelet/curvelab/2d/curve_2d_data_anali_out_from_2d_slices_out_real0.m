@@ -1,4 +1,4 @@
-function [  ] = curve_2d_data_anali_out_from_2d_slices_out_real( root,root_data_2d_in,root_data_2d_out,root_anali_2d_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,slices,lev,lev_rid,sigma,step_of_degree,wavel_removal_factor,snapshot,visual_type,visual_in_or_out,sum_depth)
+function [  ] = curve_2d_data_anali_out_from_2d_slices_out_real0( root,root_data_2d_in,root_data_2d_out,root_anali_2d_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,slices,lev,lev_rid,sigma,step_of_degree,wavel_removal_factor,snapshot,visual_type,visual_in_or_out,sum_depth)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -311,11 +311,11 @@ for slice_id=1:slices
         for w = 1:length(C{s})
             %                     Ct{s}{w} = C{s}{w};
             %                     Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > thresh*E{s}{w});
-            %                    Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > 0*E{s}{w});
+                               Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > 0*E{s}{w});
 %             Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > -thresh*E{s}{w}&(C{s}{w}) < thresh*E{s}{w});
             %                 Ct{s}{w} = C{s}{w};
             
-            Ct{s}{w} = C{s}{w};
+%             Ct{s}{w} = C{s}{w};
             
             
             %              curv(slice_id,w,aux_count)=kurtosis(abs(C{s}{w}(:)));
@@ -561,8 +561,8 @@ for slice_id=1:slices
         for w = 1:length(C{s})
             %                     Ct{s}{w} = C{s}{w};
             %                     Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > thresh*E{s}{w});
-            %                    Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > 0*E{s}{w});
-            Ct{s}{w} = C{s}{w};
+                               Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > 0*E{s}{w});
+%             Ct{s}{w} = C{s}{w};
             %                 Ct{s}{w} = C{s}{w};
             %              curv(slice_id,w,aux_count)=kurtosis(abs(C{s}{w}(:)));
             
