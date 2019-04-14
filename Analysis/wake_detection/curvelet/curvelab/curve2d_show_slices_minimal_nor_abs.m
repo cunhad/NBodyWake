@@ -1,4 +1,4 @@
-function [ anali,anali_curv_mom,anali3,anali3_curv_mom,sample_id_range_nw,sample_id_range_w ] = curve3d_show_slices_minimal_nor_test_real(  )
+function [ anali,sample_id_range_nw,sample_id_range_w ] = curve2d_show_slices_minimal_nor_abs(  )
 
 
 %example:
@@ -13,28 +13,27 @@ addpath(genpath('/home/asus/Programs/CurveLab_matlab-2.1.3/fdct_wrapping_matlab'
 
 filename='_2dproj_z3_data_sl';
 nc=1024;
-new_nc=1024;
+new_nc=512;
 trsh=20;
 cut=1;
-lev=2;
-lev_3d=1;
-lev_rid=2;
-Sigma = 5;  %this does not matter for now
+lev=3;
+lev_rid=1;
+Sigma = 3;  %this does not matter for now
 slices=32;
 anal_lev=2;
 size_mpc=4;
-step_of_degree=1;
+step_of_degree=(1)*(180/256);
 wavel_removal_factor=1/2;
-sample_id_range_nw=[1:10];
-sample_id_range_w=[1:10];
+% sample_id_range_nw=[1:10];
+% sample_id_range_w=[1:10];
 % sample_id_range_nw=[4,7];
 % sample_id_range_w=[3,7];
 % sample_id_range_nw=[4,7];
 % sample_id_range_w=[4,7];
-% 
-% sample_id_range_nw=[4];
-% sample_id_range_w=[4];
-
+% sample_id_range_nw=[2,4,7];
+% sample_id_range_w=[2,4,7];
+sample_id_range_nw=[7];
+sample_id_range_w=[7];
 
 display_slice_nw = cell(1,length(sample_id_range_nw));
 display_slice_w = cell(1,length(sample_id_range_w));
@@ -58,7 +57,8 @@ display_slice_w = cell(1,length(sample_id_range_w));
 % display_slice_nw{find(sample_id_range_nw==10)}=[5];
 % display_slice_w{find(sample_id_range_w==10)}=[5];
 
-
+display_slice_nw{find(sample_id_range_nw==7)}=[29];
+display_slice_w{find(sample_id_range_w==7)}=[29];
 
 
 % display_slice_nw={[],[]};
@@ -103,24 +103,24 @@ F=zeros(nc);
 C_zero = fdct_wrapping(F,0);
 
 
-F2 = ones(new_nc,new_nc,slices/2);
-% F2 = ones(new_nc,new_nc,slices);
-X2 = fftshift(ifft2(F2)) * sqrt(prod(size(F2)));
-C2 = fdct3d_forward(X2);
-E2 = cell(size(C2));
-for s=1:length(C2)
-    E{s} = cell(size(C2{s}));
-    for w=1:length(C2{s})
-        A2 = C2{s}{w};
-        E2{s}{w} = sqrt(sum(sum(A2.*conj(A2))) / prod(size(A2)));
-    end
-end
+% F2 = ones(new_nc,new_nc,slices/2);
+% % F2 = ones(new_nc,new_nc,slices);
+% X2 = fftshift(ifft2(F2)) * sqrt(prod(size(F2)));
+% C2 = fdct3d_forward(X2);
+% E2 = cell(size(C2));
+% for s=1:length(C2)
+%     E{s} = cell(size(C2{s}));
+%     for w=1:length(C2{s})
+%         A2 = C2{s}{w};
+%         E2{s}{w} = sqrt(sum(sum(A2.*conj(A2))) / prod(size(A2)));
+%     end
+% end
 
-
-
-F2=zeros(new_nc,new_nc,slices/2);
-% F2=zeros(new_nc,new_nc,slices);
-C_zero2 = fdct3d_forward(F2);
+% 
+% 
+% F2=zeros(new_nc,new_nc,slices/2);
+% % F2=zeros(new_nc,new_nc,slices);
+% C_zero2 = fdct3d_forward(F2);
 
 
 % 
@@ -157,17 +157,6 @@ fig_test3_curv_mom=figure;
 fig_test4_curv_mom=figure;
 fig_test5_curv_mom=figure;
 
-fig3_test1=figure;
-fig3_test2=figure;
-fig3_test3=figure;
-fig3_test4=figure;
-
-fig3_test1_curv_mom=figure;
-fig3_test2_curv_mom=figure;
-fig3_test3_curv_mom=figure;
-fig3_test4_curv_mom=figure;
-fig3_test5_curv_mom=figure;
-
 
 % ax_curv=axes(fig_curv);
 % ax_test1=axes(fig_test1);
@@ -201,17 +190,6 @@ ax_test2_curv_mom=axes(fig_test2_curv_mom);
 ax_test3_curv_mom=axes(fig_test3_curv_mom);
 ax_test4_curv_mom=axes(fig_test4_curv_mom);
 ax_test5_curv_mom=axes(fig_test5_curv_mom);
-
-ax3_test1=axes(fig3_test1);
-ax3_test2=axes(fig3_test2);
-ax3_test3=axes(fig3_test3);
-ax3_test4=axes(fig3_test4);
-
-ax3_test1_curv_mom=axes(fig3_test1_curv_mom);
-ax3_test2_curv_mom=axes(fig3_test2_curv_mom);
-ax3_test3_curv_mom=axes(fig3_test3_curv_mom);
-ax3_test4_curv_mom=axes(fig3_test4_curv_mom);
-ax3_test5_curv_mom=axes(fig3_test5_curv_mom);
 
 
 % sample_id_range=[1 : length(sample_list_nowake)];
@@ -304,7 +282,7 @@ for w_nw=1:2
                 set(gca,'FontName','FixedWidth');
                 set(gca,'FontSize',16);
                 set(gca,'linewidth',2);
-                title(strcat('log for sample ',num2str(sample),' slice ',num2str(slice_id)));                
+                title(strcat('log for sample ',num2str(sample),' slice ',num2str(slice_id)));
             end
             
 %             C = fdct_wrapping(log(map),0);
@@ -420,12 +398,12 @@ for w_nw=1:2
                     
                 end
 %                 curv(w_nw,sample,slice_id,aux_count)=kurtosis(collect);
-                  
+%                   
 %                   curv(aux_count)=kurtosis(collect);
 %                   curv_(aux_count)=kurtosis(collect_);
 %                   curv_m4(aux_count)=kurtosis(collect)*std(collect)^4;
-% %                 curv2(w_nw,sample,slice_id,aux_count)=kurtosis(curv(w_nw,sample,slice_id,:,aux_count));
-% %                 curv(w_nw,sample,slice_id,w,aux_count)=kurtosis(abs(C{s}(:)));
+%                 curv2(w_nw,sample,slice_id,aux_count)=kurtosis(curv(w_nw,sample,slice_id,:,aux_count));
+%                 curv(w_nw,sample,slice_id,w,aux_count)=kurtosis(abs(C{s}(:)));
 
 
                   AT=As/size_nt;
@@ -459,12 +437,12 @@ for w_nw=1:2
             
             
             
-            BW2 = real(ifdct_wrapping(Ct,0));
+            BW2 = abs(ifdct_wrapping(Ct,0));
             
-            map_3d_slices_filt2d(:,:,slice_id) =real(ifdct_wrapping(Ct,0));
+            map_3d_slices_filt2d(:,:,slice_id) =abs(ifdct_wrapping(Ct,0));
             
-            BW3 = imresize(BW2,new_nc/nc,'triangle');
-
+%             BW3 = imresize(BW2,new_nc/nc,'triangle');
+             BW3 = BW2;
             
             %             if false
             if ismember(slice_id,display_slice{find(sample_id_range==sample)})
@@ -515,44 +493,44 @@ for w_nw=1:2
             R_nor_filt(length(xp)-new_nc*wavel_removal_factor:end,:)=[];
             R_nor_filt(1:new_nc*wavel_removal_factor,:)=[];
             
-% 
-%             if ismember(slice_id,display_slice{find(sample_id_range==sample)})
-%                 
-%                 figure; imagesc(0:step_of_degree:180,(size_mpc/new_nc)*[1:new_nc],R);colorbar;
-%                 xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
-%                 ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
-%                 set(gca,'FontName','FixedWidth');
-%                 set(gca,'FontSize',16);
-%                 set(gca,'linewidth',2);
-%                 title(strcat('wfilt ridg filt2a3 for sample ',num2str(sample),' slice ',num2str(slice_id)));
-%                 
-%                 figure; imagesc(0:step_of_degree:180,(size_mpc/new_nc)*[1:new_nc],R_nor);colorbar;
-%                 xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
-%                 ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
-%                 set(gca,'FontName','FixedWidth');
-%                 set(gca,'FontSize',16);
-%                 set(gca,'linewidth',2);
-%                 title(strcat('wfilt norm filt2 for sample ',num2str(sample),' slice ',num2str(slice_id)));
-%                 
-%                 
-%                 
-%                 %                 figure; imagesc((size_mpc/nc)*[1:nc],(size_mpc/1024)*[1:nc],map_3d_slices_filt2a3d(:,:,slice_id)); colorbar; axis('image');
-%                 figure; imagesc(0:step_of_degree:180,(size_mpc/new_nc)*[1:new_nc],R_nor_filt);colorbar;
-%                 xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
-%                 ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
-%                 set(gca,'FontName','FixedWidth');
-%                 set(gca,'FontSize',16);
-%                 set(gca,'linewidth',2);
-%                 title(strcat('wfilt ridg filt2 for sample ',num2str(sample),' slice ',num2str(slice_id)));
-%                 %
-%                 %                 figure; imagesc(0:step_of_degree:180,(size_mpc/new_nc)*[1:new_nc],R_2dwav_filt);colorbar;
-%                 %                 xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
-%                 %                 ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
-%                 %                 set(gca,'FontName','FixedWidth');
-%                 %                 set(gca,'FontSize',16);
-%                 %                 set(gca,'linewidth',2);
-%                 %                 title(strcat('wfilt ridg filt2a3 for sample ',num2str(sample),' slice ',num2str(slice_id)));
-%             end
+
+            if ismember(slice_id,display_slice{find(sample_id_range==sample)})
+                
+                figure; imagesc(0:step_of_degree:180,(size_mpc/new_nc)*[1:new_nc],R);colorbar;
+                xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
+                ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+                set(gca,'FontName','FixedWidth');
+                set(gca,'FontSize',16);
+                set(gca,'linewidth',2);
+                title(strcat('wfilt ridg filt2a3 for sample ',num2str(sample),' slice ',num2str(slice_id)));
+                
+                figure; imagesc(0:step_of_degree:180,(size_mpc/new_nc)*[1:new_nc],R_nor);colorbar;
+                xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
+                ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+                set(gca,'FontName','FixedWidth');
+                set(gca,'FontSize',16);
+                set(gca,'linewidth',2);
+                title(strcat('wfilt ridg filt2a3 for sample ',num2str(sample),' slice ',num2str(slice_id)));
+                
+                
+                
+                %                 figure; imagesc((size_mpc/nc)*[1:nc],(size_mpc/1024)*[1:nc],map_3d_slices_filt2a3d(:,:,slice_id)); colorbar; axis('image');
+                figure; imagesc(0:step_of_degree:180,(size_mpc/new_nc)*[1:new_nc],R_nor_filt);colorbar;
+                xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
+                ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+                set(gca,'FontName','FixedWidth');
+                set(gca,'FontSize',16);
+                set(gca,'linewidth',2);
+                title(strcat('wfilt ridg filt2a3 for sample ',num2str(sample),' slice ',num2str(slice_id)));
+                %
+                %                 figure; imagesc(0:step_of_degree:180,(size_mpc/new_nc)*[1:new_nc],R_2dwav_filt);colorbar;
+                %                 xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
+                %                 ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+                %                 set(gca,'FontName','FixedWidth');
+                %                 set(gca,'FontSize',16);
+                %                 set(gca,'linewidth',2);
+                %                 title(strcat('wfilt ridg filt2a3 for sample ',num2str(sample),' slice ',num2str(slice_id)));
+            end
             
             
 %             anali(w_nw,sample,slice_id,1,:)=curv;
@@ -665,7 +643,7 @@ for w_nw=1:2
             hold(ax_test2,'on');
             hold(ax_test3,'on');
             hold(ax_test4,'on');
-% 
+
 %             hold(ax_test1_curv,'on');
 %             hold(ax_test2_curv,'on');
 %             hold(ax_test3_curv,'on');
@@ -676,7 +654,7 @@ for w_nw=1:2
             hold(ax_test4_curv_mom,'on');            
             hold(ax_test5_curv_mom,'on');            
         
-        
+%         
 %         for partition=0:1
 %             
 %             C_aux=map_3d_slices(:,:,(partition)*slices/2+1:(partition)*slices/2+slices/2);
@@ -777,226 +755,119 @@ for w_nw=1:2
 %         test4max_lv{sample_id}=   plot(ax_test4_max,d_max,coul);
 %         
         
-        
-        
-        for partition=0:1
-%         for partition=0
-            
-            C_aux=map_3d_slices_filt2d(:,:,(partition)*slices/2+1:(partition)*slices/2+slices/2);
-%             C_aux=map_3d_slices_filt2d(:,:,:);
-            
-            C_ = fdct3d_forward(C_aux);
-            
-            Ct = C_;
-            for s = 1:length(C_)
-                for w = 1:length(C_{s})
-                    Ct{s}{w} = C_zero2{s}{w};
-                end
-            end
-            
-            aux_count=1;
-            for s = length(C_)-lev_3d:length(C_)-1
-                %                 thresh=0;
-                thresh = Sigma + Sigma*(s == length(C_));
-                var=[];
-                kurt=[];
-                skew=[];
-                
-                sigma=[];
-                rho=[];
-                aver=[];
-                delta=[];
-                
-                sigma_t=[];
-                rho_t=[];
-                aver_t=[];
-                delta_t=[];
-                
-                A=[];
-                B=[];
-                C=[];
-                D=[];
-                
-                As=0;
-                Bs=0;
-                Cs=0;
-                Ds=0;
-                
-                AT=[];
-                BT=[];
-                CT=[];
-                DT=[];
-                
-                var_t=[];
-                kurt_t=[];
-                skew_t=[];
-                
-                size_n=[];
-                size_nt=0;
-                
-                
-                for w = 1:length(C_{s})
-%                                         Ct{s}{w} = C_{s}{w};
-%                                         Ct{s}{w} = C_{s}{w}.* ((C_{s}{w}) > thresh*E2{s}{w});
-                                       Ct{s}{w} = C_{s}{w}.* ((C_{s}{w}) > 0*E2{s}{w});
-%                     Ct{s}{w} = C_{s}{w}.* ((C_{s}{w}) > -thresh*E2{s}{w}&(C_{s}{w}) < thresh*E{2s}{w});
-%                                     Ct{s}{w} = C_{s}{w};
-%                     curv(w_nw,sample,slice_id,w,aux_count)=kurtosis(abs(C{s}{w}(:)));
-%                     collect=[ collect ;abs(Ct{s}{w}(:))];
-%                     collect_=[ collect_ ;abs(Ct{s}{w}(:))/E{s}{w}];
-                    
-                    aver=mean(abs(Ct{s}{w}(:)));
-                    sigma=std(abs(Ct{s}{w}(:)))^2;
-                    delta=skewness(abs(Ct{s}{w}(:)))*(sigma^(3/2));
-                    rho=kurtosis(abs(Ct{s}{w}(:)))*(sigma^(2));
-                    
-                    A=aver;
-                    B=sigma+A^2;
-                    C=delta+3*B*A-2*A^3;
-                    D=rho+4*C*A-6*B*A^2+3*A^4;
-                    
-                    size_n=prod(size(Ct{s}{w}(:)));                    
-                    size_nt=size_nt+size_n;
-                    
-                    As=A*size_n+As;
-                    Bs=B*size_n+Bs;
-                    Cs=C*size_n+Cs;
-                    Ds=D*size_n+Ds;
-                    
-                    
-                    
-                end
-%                 curv(w_nw,sample,slice_id,aux_count)=kurtosis(collect);
-                  
-%                   curv(aux_count)=kurtosis(collect);
-%                   curv_(aux_count)=kurtosis(collect_);
-%                   curv_m4(aux_count)=kurtosis(collect)*std(collect)^4;
-% %                 curv2(w_nw,sample,slice_id,aux_count)=kurtosis(curv(w_nw,sample,slice_id,:,aux_count));
-% %                 curv(w_nw,sample,slice_id,w,aux_count)=kurtosis(abs(C{s}(:)));
-
-
-                  AT=As/size_nt;
-                  BT=Bs/size_nt;
-                  CT=Cs/size_nt;
-                  DT=Ds/size_nt;
-                  
-                  
-                  sigma_t=BT-AT^2;
-                  delta_t=CT-3*BT*AT+2*AT^3;
-                  rho_t=DT-4*CT*AT+6*BT*AT^2-3*AT^4;
-%                   aver_t=;
-                  
-                  
-                var_t=sigma_t;
-                skew_t=delta_t/var_t^(3/2);
-                kurt_t=rho_t/var_t^2;
-                
-                curv3_mom1(aux_count)=AT;
-                curv3_mom2(aux_count)=var_t;
-                curv3_mom3(aux_count)=skew_t;
-                curv3_mom4(aux_count)=kurt_t;
-                curv3_mom5(aux_count)=rho_t;
-
-                aux_count=aux_count+1;
-                
-                
-                
-            end
-            
-            map_3d_slices_filt2a3d(:,:,(partition)*slices/2+1:(partition)*slices/2+slices/2) = real(fdct3d_inverse(Ct));
-%             map_3d_slices_filt2a3d(:,:,:) = real(fdct3d_inverse(Ct));            
-
-            anali3_curv_mom(w_nw,sample,partition+1,1,:)=curv3_mom1;
-            anali3_curv_mom(w_nw,sample,partition+1,2,:)=curv3_mom2;
-            anali3_curv_mom(w_nw,sample,partition+1,3,:)=curv3_mom3;
-            anali3_curv_mom(w_nw,sample,partition+1,4,:)=curv3_mom4;
-            anali3_curv_mom(w_nw,sample,partition+1,5,:)=curv3_mom5;
-
-        end
-        
-%          anali3_curv_mom(w_nw,sample,slice_id,1,:)=curv3_mom1;
-%             anali3_curv_mom(w_nw,sample,slice_id,2,:)=curv3_mom2;
-%             anali3_curv_mom(w_nw,sample,slice_id,3,:)=curv3_mom3;
-%             anali3_curv_mom(w_nw,sample,slice_id,4,:)=curv3_mom4;
-%             anali3_curv_mom(w_nw,sample,slice_id,5,:)=curv3_mom5;
-            
-        
-        for slice_id=1:slices
-            
-            
-            this=map_3d_slices_filt2a3d(:,:,slice_id);
-
-            
-%             if false            
-            if ismember(slice_id,display_slice{find(sample_id_range==sample)})
-                
-                figure; imagesc((size_mpc/new_nc)*[1:new_nc],(size_mpc/new_nc)*[1:new_nc],map_3d_slices_filt2a3d(:,:,slice_id)); colorbar; axis('image');
-                xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
-                ylabel('$Y(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
-                set(gca,'FontName','FixedWidth');
-                set(gca,'FontSize',16);
-                set(gca,'linewidth',2);
-                title(strcat('filt2a3 for sample ',num2str(sample),' slice ',num2str(slice_id)));
-            end
-            
-            theta = 0:step_of_degree:180;
-            [R,xp] = radon(map_3d_slices_filt2a3d(:,:,slice_id),theta);
-            
-            unit=ones(new_nc);
-            [R_u,xp] = radon(unit,theta);
-            
-            frac_cut=0.5;
-            R_nor=R;
-            R_nor(R_u>new_nc*frac_cut)=R_nor(R_u>new_nc*frac_cut)./R_u(R_u>new_nc*frac_cut);
-            R_nor(R_u<=new_nc*frac_cut)=0;
-            
-            boudary_removal_factor=2048/new_nc;
-            
-            n_levels=floor(log2(length(R_nor(:,1))));
-            R_nor_filt=zeros(size(R_nor));
-            for i=1:length(R_nor(1,:))
-                [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
-                 D = wrcoef('d',dc_dwt,levels,'db1',lev_rid);
-%                A = wrcoef('a',dc_dwt,levels,'db1',3);
-                %                 D(floor((2465-200)/boudary_removal_factor):end)=0;
-                %                 D(1:floor((448+200)/boudary_removal_factor))=0;
-%                 D(1237-256:end)=0;
-%                 D(1:217+256)=0;
-%                 A(length(xp)-new_nc*wavel_removal_factor:end)=0;
-%                 A(1:new_nc*wavel_removal_factor)=0;
-%                ridg_coeff=[];
- %               ridg_coeff=R(:,i)-A;
-  %              ridg_coeff=diff(ridg_coeff);
-   %             ridg_coeff(end+1,:)=0;
-    %            ridg_coeff=(abs(ridg_coeff));
-% 
-%                 R_nor_filt(:,i)=ridg_coeff;
-                 R_nor_filt(:,i)=D;
-            end
-            %             R_nor_filt(floor((2465-200)/boudary_removal_factor):end,:)=[];
-            %             R_nor_filt(1:floor((448+200)/boudary_removal_factor),:)=[];
-%             R_nor_filt(1237-256:end,:)=[];
-%             R_nor_filt(1:217+256,:)=[];
-
-            
-            
-            R_nor_filt(length(xp)-new_nc*wavel_removal_factor:end,:)=[];
-            R_nor_filt(1:new_nc*wavel_removal_factor,:)=[];
-            
-%             n_levels2=floor(log2(length(R_nor_filt(1,:))));
-%             R_nor_filt2=zeros(size(R_nor_filt));
-%             for i=1:length(R_nor_filt(:,1))
-%                 %                 [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
-%                 [dc_dwt,levels] = wavedec(R_nor_filt(i,:),n_levels2,'db1');
-%                 D = wrcoef('d',dc_dwt,levels,'db1',lev);
-%                 %                 D(floor((2465-200)/boudary_removal_factor):end)=0;
-%                 %                 D(1:floor((448+200)/boudary_removal_factor))=0;
-% %                 D(length(xp)-new_nc*wavel_removal_factor:end)=0;
-% %                 D(1:new_nc*wavel_removal_factor)=0;
-%                 
-%                 R_nor_filt2(i,:)=D;
+%         
+%         
+%         for partition=0:1
+% %         for partition=0
+%             
+%             C_aux=map_3d_slices_filt2d(:,:,(partition)*slices/2+1:(partition)*slices/2+slices/2);
+% %             C_aux=map_3d_slices_filt2d(:,:,:);
+%             
+%             C = fdct3d_forward(C_aux);
+%             
+%             Ct = C;
+%             for s = 1:length(C)
+%                 for w = 1:length(C{s})
+%                     Ct{s}{w} = C_zero2{s}{w};
+%                 end
 %             end
 %             
+%             aux_count=1;
+%             for s = 1:1
+%                 %                 thresh=0;
+%                 thresh = Sigma + Sigma*(s == length(C));
+%                 for w = 1:length(C{s})
+%                     Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > 0*E2{s}{w})
+%                     %                                   Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > thresh*E{s}{w});
+%                     %                   Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > -thresh*E{s}{w}&(C{s}{w}) < thresh*E{s}{w});
+%                     %                   Ct{s}{w} = C{s}{w};
+%                     %                   curv(w_nw,sample,slice_id,w,aux_count)=kurtosis(abs(C{s}{w}(:)));
+%                 end
+%                 %                 curv2(w_nw,sample,slice_id,aux_count)=kurtosis(curv(w_nw,sample,slice_id,:,aux_count));
+%                 aux_count=aux_count+1;
+%             end
+%             
+%             map_3d_slices_filt2a3d(:,:,(partition)*slices/2+1:(partition)*slices/2+slices/2) = real(fdct3d_inverse(Ct));
+% %             map_3d_slices_filt2a3d(:,:,:) = real(fdct3d_inverse(Ct));            
+% 
+%         end
+%         
+%         for slice_id=1:slices
+%             
+%             
+%             this=map_3d_slices_filt2a3d(:,:,slice_id);
+% 
+%             
+% %             if false            
+%             if ismember(slice_id,display_slice{find(sample_id_range==sample)})
+%                 
+%                 figure; imagesc((size_mpc/new_nc)*[1:new_nc],(size_mpc/new_nc)*[1:new_nc],map_3d_slices_filt2a3d(:,:,slice_id)); colorbar; axis('image');
+%                 xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+%                 ylabel('$Y(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+%                 set(gca,'FontName','FixedWidth');
+%                 set(gca,'FontSize',16);
+%                 set(gca,'linewidth',2);
+%                 title(strcat('filt2a3 for sample ',num2str(sample),' slice ',num2str(slice_id)));
+%             end
+%             
+%             theta = 0:step_of_degree:180;
+%             [R,xp] = radon(map_3d_slices_filt2a3d(:,:,slice_id),theta);
+%             
+%             unit=ones(new_nc);
+%             [R_u,xp] = radon(unit,theta);
+%             
+%             frac_cut=0.5;
+%             R_nor=R;
+%             R_nor(R_u>new_nc*frac_cut)=R_nor(R_u>new_nc*frac_cut)./R_u(R_u>new_nc*frac_cut);
+%             R_nor(R_u<=new_nc*frac_cut)=0;
+%             
+%             boudary_removal_factor=2048/new_nc;
+%             
+%             n_levels=floor(log2(length(R_nor(:,1))));
+%             R_nor_filt=zeros(size(R_nor));
+%             for i=1:length(R_nor(1,:))
+%                 [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
+%                  D = wrcoef('d',dc_dwt,levels,'db1',lev);
+% %                A = wrcoef('a',dc_dwt,levels,'db1',3);
+%                 %                 D(floor((2465-200)/boudary_removal_factor):end)=0;
+%                 %                 D(1:floor((448+200)/boudary_removal_factor))=0;
+% %                 D(1237-256:end)=0;
+% %                 D(1:217+256)=0;
+% %                 A(length(xp)-new_nc*wavel_removal_factor:end)=0;
+% %                 A(1:new_nc*wavel_removal_factor)=0;
+% %                ridg_coeff=[];
+%  %               ridg_coeff=R(:,i)-A;
+%   %              ridg_coeff=diff(ridg_coeff);
+%    %             ridg_coeff(end+1,:)=0;
+%     %            ridg_coeff=(abs(ridg_coeff));
+% % 
+% %                 R_nor_filt(:,i)=ridg_coeff;
+%                  R_nor_filt(:,i)=D;
+%             end
+%             %             R_nor_filt(floor((2465-200)/boudary_removal_factor):end,:)=[];
+%             %             R_nor_filt(1:floor((448+200)/boudary_removal_factor),:)=[];
+% %             R_nor_filt(1237-256:end,:)=[];
+% %             R_nor_filt(1:217+256,:)=[];
+% 
+%             
+%             
+%             R_nor_filt(length(xp)-new_nc*wavel_removal_factor:end,:)=[];
+%             R_nor_filt(1:new_nc*wavel_removal_factor,:)=[];
+%             
+% %             n_levels2=floor(log2(length(R_nor_filt(1,:))));
+% %             R_nor_filt2=zeros(size(R_nor_filt));
+% %             for i=1:length(R_nor_filt(:,1))
+% %                 %                 [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
+% %                 [dc_dwt,levels] = wavedec(R_nor_filt(i,:),n_levels2,'db1');
+% %                 D = wrcoef('d',dc_dwt,levels,'db1',lev);
+% %                 %                 D(floor((2465-200)/boudary_removal_factor):end)=0;
+% %                 %                 D(1:floor((448+200)/boudary_removal_factor))=0;
+% % %                 D(length(xp)-new_nc*wavel_removal_factor:end)=0;
+% % %                 D(1:new_nc*wavel_removal_factor)=0;
+% %                 
+% %                 R_nor_filt2(i,:)=D;
+% %             end
+% %             
 %             %2d wavelet filt
 %             
 %             
@@ -1024,20 +895,20 @@ for w_nw=1:2
 %             cA2(:)=0;
 %             cA1=idwt2(cA2,cH2,cV2,cD2,'haar',size(cA1));
 %             R_2dwav_filt=idwt2(cA1,cH1,cV1,cD1,'haar',size(R_nor_filt));
-            
-            
-%             if false            
-            if ismember(slice_id,display_slice{find(sample_id_range==sample)})
-                
-%                 figure; imagesc((size_mpc/nc)*[1:nc],(size_mpc/1024)*[1:nc],map_3d_slices_filt2a3d(:,:,slice_id)); colorbar; axis('image');
-                figure; imagesc(0:step_of_degree:180,(size_mpc/new_nc)*[1:new_nc],R_nor_filt);colorbar;
-                xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
-                ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
-                set(gca,'FontName','FixedWidth');
-                set(gca,'FontSize',16);
-                set(gca,'linewidth',2);
-                title(strcat('wfilt ridg filt2a3 for sample ',num2str(sample),' slice ',num2str(slice_id)));
-                
+%             
+%             
+% %             if false            
+%             if ismember(slice_id,display_slice{find(sample_id_range==sample)})
+%                 
+% %                 figure; imagesc((size_mpc/nc)*[1:nc],(size_mpc/1024)*[1:nc],map_3d_slices_filt2a3d(:,:,slice_id)); colorbar; axis('image');
+%                 figure; imagesc(0:step_of_degree:180,(size_mpc/new_nc)*[1:new_nc],R_nor_filt);colorbar;
+%                 xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
+%                 ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+%                 set(gca,'FontName','FixedWidth');
+%                 set(gca,'FontSize',16);
+%                 set(gca,'linewidth',2);
+%                 title(strcat('wfilt ridg filt2a3 for sample ',num2str(sample),' slice ',num2str(slice_id)));
+%                 
 %                 figure; imagesc(0:step_of_degree:180,(size_mpc/new_nc)*[1:new_nc],R_2dwav_filt);colorbar;
 %                 xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
 %                 ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
@@ -1045,61 +916,38 @@ for w_nw=1:2
 %                 set(gca,'FontSize',16);
 %                 set(gca,'linewidth',2);
 %                 title(strcat('wfilt ridg filt2a3 for sample ',num2str(sample),' slice ',num2str(slice_id)));
-            end
-            
-            anali3(w_nw,sample,slice_id,1,:)=[max(this(:)),std(this(:)),max(this(:))/std(this(:)),kurtosis(kurtosis(this)),kurtosis(this(:))];
-            anali3(w_nw,sample,slice_id,2,:)=[max(R(:)),std(R(:)),max(R(:))/std(R(:)),kurtosis(kurtosis(R)),kurtosis(R(:))];
-            anali3(w_nw,sample,slice_id,3,:)=[max(R_nor(:)),std(R_nor(:)),max(R_nor(:))/std(R_nor(:)),kurtosis(kurtosis(R_nor)),kurtosis(R_nor(:))];
-%             anali_sum2(w_nw,sample,slice_id,4,:)=[max(R_nor_filt2(:)),std(R_nor_filt2(:)),max(R_nor_filt2(:))/std(R_nor_filt2(:)),kurtosis(kurtosis(R_nor_filt2)),kurtosis(R_nor_filt2(:))];
-            anali3(w_nw,sample,slice_id,4,:)=[max(R_nor_filt(:)),std(R_nor_filt(:)),max(R_nor_filt(:))/std(R_nor_filt(:)),kurtosis(kurtosis(R_nor_filt)),kurtosis(R_nor_filt(:))];
+%             end
+%             
+%             anali_sum2(w_nw,sample,slice_id,1,:)=[max(this(:)),std(this(:)),max(this(:))/std(this(:)),kurtosis(kurtosis(this)),kurtosis(this(:))];
+%             anali_sum2(w_nw,sample,slice_id,2,:)=[max(R(:)),std(R(:)),max(R(:))/std(R(:)),kurtosis(kurtosis(R)),kurtosis(R(:))];
+%             anali_sum2(w_nw,sample,slice_id,3,:)=[max(R_nor(:)),std(R_nor(:)),max(R_nor(:))/std(R_nor(:)),kurtosis(kurtosis(R_nor)),kurtosis(R_nor(:))];
+% %             anali_sum2(w_nw,sample,slice_id,4,:)=[max(R_nor_filt2(:)),std(R_nor_filt2(:)),max(R_nor_filt2(:))/std(R_nor_filt2(:)),kurtosis(kurtosis(R_nor_filt2)),kurtosis(R_nor_filt2(:))];
+%             anali_sum2(w_nw,sample,slice_id,4,:)=[max(R_nor_filt(:)),std(R_nor_filt(:)),max(R_nor_filt(:))/std(R_nor_filt(:)),kurtosis(kurtosis(R_nor_filt)),kurtosis(R_nor_filt(:))];
 %             anali_sum2(w_nw,sample,slice_id,5,:)=[max(R_2dwav_filt(:)),std(R_2dwav_filt(:)),max(R_2dwav_filt(:))/std(R_2dwav_filt(:)),kurtosis(kurtosis(R_2dwav_filt)),kurtosis(R_2dwav_filt(:))];
-%             a_max2(:)=anali_sum2(w_nw,sample,slice_id,1,:);
-%             b_max2(:)=anali_sum2(w_nw,sample,slice_id,2,:);
-%             c_max2(:)=anali_sum2(w_nw,sample,slice_id,3,:);
-%             d_max2(:)=anali_sum2(w_nw,sample,slice_id,4,:);
+% %             a_max2(:)=anali_sum2(w_nw,sample,slice_id,1,:);
+% %             b_max2(:)=anali_sum2(w_nw,sample,slice_id,2,:);
+% %             c_max2(:)=anali_sum2(w_nw,sample,slice_id,3,:);
+% %             d_max2(:)=anali_sum2(w_nw,sample,slice_id,4,:);
+% %             
+% %             test1max2_lv{sample_id}=   plot(ax_test1_max2,a_max2,coul);
+% %             test2max2_lv{sample_id}=   plot(ax_test2_max2,b_max2,coul);
+% %             test3max2_lv{sample_id}=   plot(ax_test3_max2,c_max2,coul);
+% %             test4max2_lv{sample_id}=   plot(ax_test4_max2,d_max2,coul);
+%         end
+%         
+%         a_max2(:)=max(anali_sum2(w_nw,sample,:,1,:),[],3);
+%             b_max2(:)=max(anali_sum2(w_nw,sample,:,2,:),[],3);
+%             c_max2(:)=max(anali_sum2(w_nw,sample,:,3,:),[],3);
+%             d_max2(:)=max(anali_sum2(w_nw,sample,:,4,:),[],3);
+%             e_max2(:)=max(anali_sum2(w_nw,sample,:,5,:),[],3);
 %             
 %             test1max2_lv{sample_id}=   plot(ax_test1_max2,a_max2,coul);
 %             test2max2_lv{sample_id}=   plot(ax_test2_max2,b_max2,coul);
 %             test3max2_lv{sample_id}=   plot(ax_test3_max2,c_max2,coul);
 %             test4max2_lv{sample_id}=   plot(ax_test4_max2,d_max2,coul);
-
-
-%             anali3_curv_mom(w_nw,sample,slice_id,1,:)=curv3_mom1;
-%             anali3_curv_mom(w_nw,sample,slice_id,2,:)=curv3_mom2;
-%             anali3_curv_mom(w_nw,sample,slice_id,3,:)=curv3_mom3;
-%             anali3_curv_mom(w_nw,sample,slice_id,4,:)=curv3_mom4;
-%             anali3_curv_mom(w_nw,sample,slice_id,5,:)=curv3_mom5;
-%             
-            
-        end
-        
-            a3(:)=max(anali3(w_nw,sample,:,1,:),[],3);
-            b3(:)=max(anali3(w_nw,sample,:,2,:),[],3);
-            c3(:)=max(anali3(w_nw,sample,:,3,:),[],3);
-            d3(:)=max(anali3(w_nw,sample,:,4,:),[],3);
-%             e_max2(:)=max(anali_sum2(w_nw,sample,:,5,:),[],3);
-
-            a3_curv_mom(:)=max(anali3_curv_mom(w_nw,sample,:,1,:),[],3);
-            b3_curv_mom(:)=max(anali3_curv_mom(w_nw,sample,:,2,:),[],3);
-            c3_curv_mom(:)=max(anali3_curv_mom(w_nw,sample,:,3,:),[],3);
-            d3_curv_mom(:)=max(anali3_curv_mom(w_nw,sample,:,4,:),[],3);
-            e3_curv_mom(:)=max(anali3_curv_mom(w_nw,sample,:,5,:),[],3);
-
-
-            
-            test1max3_lv{sample_id}=   plot(ax3_test1,a3,coul);
-            test2max3_lv{sample_id}=   plot(ax3_test2,b3,coul);
-            test3max3_lv{sample_id}=   plot(ax3_test3,c3,coul);
-            test4max3_lv{sample_id}=   plot(ax3_test4,d3,coul);
 %             test5max2_lv{sample_id}=   plot(ax_test5_max2,e_max2,coul);
-
-            test1_curv3_mom{sample_id}=   plot(ax3_test1_curv_mom,a3_curv_mom,coul);
-            test2_curv3_mom{sample_id}=   plot(ax3_test2_curv_mom,b3_curv_mom,coul);
-            test3_curv3_mom{sample_id}=   plot(ax3_test3_curv_mom,c3_curv_mom,coul);
-            test4_curv3_mom{sample_id}=   plot(ax3_test4_curv_mom,d3_curv_mom,coul);
-            test5_curv3_mom{sample_id}=   plot(ax3_test5_curv_mom,e3_curv_mom,coul);
         
-         clearvars a3 b3 c3 d3 a3_curv_mom b3_curv_mom c3_curv_mom d3_curv_mom e3_curv_mom
+%         clearvars a b c d aa a_max b_max c_max d_max2 a_max2 b_max2 c_max2 d_max2 e_max2
 %             clearvars a b c d aa a_max b_max c_max
         
         %         clearvars R R_nor R_nor_filt kurt2;
@@ -1114,21 +962,14 @@ for w_nw=1:2
 %         hold(ax_test3_max,'on');
 %         hold(ax_test4_max,'on');
 %         
-        hold(ax3_test1,'on');
-        hold(ax3_test2,'on');
-        hold(ax3_test3,'on');
-        hold(ax3_test4,'on');
-%         hold(ax_test5_max2,'on');
+%         hold(ax_test1_max2,'on');
+%         hold(ax_test2_max2,'on');
+%         hold(ax_test3_max2,'on');
+%         hold(ax_test4_max2,'on');
+% %         hold(ax_test5_max2,'on');
 %         
 %         hold(ax_test1_max2,'on');
 %         hold(ax_test2_max2,'on');
-
-            hold(ax3_test1_curv_mom,'on');
-            hold(ax3_test2_curv_mom,'on');
-            hold(ax3_test3_curv_mom,'on');
-            hold(ax3_test4_curv_mom,'on');            
-            hold(ax3_test5_curv_mom,'on');           
-
 
     end
     
@@ -1196,32 +1037,12 @@ title(ax_test4_curv_mom,'kurtosis curvelet fast');
 set(ax_test5_curv_mom, 'YScale', 'log');
 title(ax_test5_curv_mom,'4th moment curvelet fast');
 
-set(ax3_test1, 'YScale', 'log');
-title(ax3_test1,'radon from 2 and 3d filtered');
-set(ax3_test2, 'YScale', 'log');
-title(ax3_test2,'ridgelet from 2 and 3');
-set(ax3_test3, 'YScale', 'log');
-title(ax3_test3,'ridgelet normalized from 2 and 3');
-set(ax3_test4, 'YScale', 'log');
-title(ax3_test4,'ridgelet normalized with wavelet from 2 and 3');
-
-set(ax3_test1_curv_mom, 'YScale', 'log');
-title(ax3_test1_curv_mom,'average normalised fast from 2 and 3d filtered');
-set(ax3_test2_curv_mom, 'YScale', 'log');
-title(ax3_test2_curv_mom,'std curvelet fast from 2 and 3d filtered');
-set(ax3_test3_curv_mom, 'YScale', 'log');
-title(ax3_test3_curv_mom,'skewness curvelet fast from 2 and 3d filtered');
-set(ax3_test4_curv_mom, 'YScale', 'log');
-title(ax3_test4_curv_mom,'kurtosis curvelet fast from 2 and 3d filtered');
-set(ax3_test5_curv_mom, 'YScale', 'log');
-title(ax3_test5_curv_mom,'4th moment curvelet fast from 2 and 3d filtered');
-
 end
 
 
-
 % 
-% [ anali,sample_id_range_nw,sample_id_range_w ] = curve2d_show_slices_minimal_nor_test_absreal(  )
+% 
+% [ anali,sample_id_range_nw,sample_id_range_w ] = curve2d_show_slices_minimal_nor_real(  )
 % 
 % 
 % nowake=reshape(permute(anali(1,sample_id_range_nw,:,4,1),[1,3,2,4,5]),[1,numel(anali(1,sample_id_range_nw,:,2,1))])

@@ -1,16 +1,13 @@
-function [  ] = curve_2d_data_anali_out_from_2d_slices_out_exploration( root,root_data_2d_in,root_data_2d_out,root_anali_2d_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,slices,lev,sigma,step_of_degree,wavel_removal_factor,snapshot,visual_type,visual_in_or_out,sum_depth)
-
-
-
-%UNTITLEin angleD Summary of this function goes here
+function [  ] = curve_2d_data_anali_out_from_2d_slices_out_abs0( root,root_data_2d_in,root_data_2d_out,root_anali_2d_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,slices,lev,lev_rid,sigma,step_of_degree,wavel_removal_factor,snapshot,visual_type,visual_in_or_out,sum_depth)
+%UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
 % root='/home/asus/Dropbox/extras/storage/graham/ht/';
 % root_data_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024/';
-% % root_data_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_1024_2dcurv_s5lv3_data/';
+% % root_data_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_1024_2dcabs_s5lv3_data/';
 % root_data_2d_out='';
-% root_anali_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurv_s5lv2_anali/';
-% root_visual_2d='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurv_s5lv2_visual/';
+% root_anali_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcabs_s5lv2_anali/';
+% root_visual_2d='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcabs_s5lv2_visual/';
 % % spec='4Mpc_2048c_1024p_zi63_nowakem';
 % spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
 % % aux_path='/sample3007/';
@@ -22,7 +19,8 @@ function [  ] = curve_2d_data_anali_out_from_2d_slices_out_exploration( root,roo
 % pivot=[0,0,0];
 % rot_angle=[1.5708,0,0];
 % slices=32;
-% lev=2;
+% lev=3;
+% lev_rid=1;
 % sigma=5;
 % step_of_degree=1;
 % wavel_removal_factor=1/2;
@@ -314,9 +312,15 @@ for slice_id=1:slices
             %                     Ct{s}{w} = C{s}{w};
             %                     Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > thresh*E{s}{w});
             %                    Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > 0*E{s}{w});
-            Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > -thresh*E{s}{w}&(C{s}{w}) < thresh*E{s}{w});
+%             Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > -thresh*E{s}{w}&(C{s}{w}) < thresh*E{s}{w});
             %                 Ct{s}{w} = C{s}{w};
+            
+            Ct{s}{w} = C{s}{w};
+            
+            
             %              curv(slice_id,w,aux_count)=kurtosis(abs(C{s}{w}(:)));
+            
+            
             
 %             ave=mean(abs(Ct{s}{w}(:)));
 %             sig=std(abs(Ct{s}{w}(:)))^2;
@@ -371,7 +375,7 @@ for slice_id=1:slices
     
     
     
-    map_3d_slices_filt2d = real(ifdct_wrapping(Ct,0));
+    map_3d_slices_filt2d = abs(ifdct_wrapping(Ct,0));
     
     
     %     strcat(root_data_2d_in,'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/',filename_read,num2str(slice_id),'.bin')
@@ -390,7 +394,7 @@ for slice_id=1:slices
             title(strcat('filt2 info:',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
             
             saveas(fig,char(strcat(path_visual_in','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
-            
+            close(fig);
         end
         
         if ismember(2,visual_in_or_out)
@@ -404,7 +408,7 @@ for slice_id=1:slices
             title(strcat('filt2 info:',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
             
             saveas(fig,char(strcat(path_visual','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
-            
+            close(fig);
         end
     end
     
@@ -434,7 +438,7 @@ for slice_id=1:slices
     for i=1:length(R_nor(1,:))
         %                 [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
         [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
-        D = wrcoef('d',dc_dwt,levels,'db1',lev);
+        D = wrcoef('d',dc_dwt,levels,'db1',lev_rid);
         %                 D(floor((2465-200)/boudary_removal_factor):end)=0;
         %                 D(1:floor((448+200)/boudary_removal_factor))=0;
         D(length(xp)-nb*wavel_removal_factor:end)=0;
@@ -460,7 +464,7 @@ for slice_id=1:slices
         title(strcat('ridg filt2 for ',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
         
         saveas(fig,char(strcat(path_visual_rid','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurv&rid_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
-        
+        close(fig);
     end
     
     anali(slice_id,1,:)=[max(map_3d_slices_filt2d(:)),std(map_3d_slices_filt2d(:)),max(map_3d_slices_filt2d(:))/std(map_3d_slices_filt2d(:)),kurtosis(kurtosis(map_3d_slices_filt2d)),kurtosis(map_3d_slices_filt2d(:))];
@@ -514,7 +518,7 @@ for slice_id=1:slices
                     title(strcat('filt2 info:',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
                     
                     saveas(fig,char(strcat(path_visual_depth_in','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id*sum_depth),'.png')));
-                    
+                    close(fig);
                 end
                 
                 if ismember(2,visual_in_or_out)
@@ -528,7 +532,7 @@ for slice_id=1:slices
                     title(strcat('filt2 info:',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
                     
                     saveas(fig,char(strcat(path_visual_depth','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id*sum_depth),'.png')));
-                    
+                    close(fig);
                 end
                 
             end
@@ -637,7 +641,7 @@ for slice_id=1:slices
             for i=1:length(R_nor(1,:))
                 %                 [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
                 [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
-                D = wrcoef('d',dc_dwt,levels,'db1',lev);
+                D = wrcoef('d',dc_dwt,levels,'db1',lev_rid);
                 %                 D(floor((2465-200)/boudary_removal_factor):end)=0;
                 %                 D(1:floor((448+200)/boudary_removal_factor))=0;
                 D(length(xp)-nb*wavel_removal_factor:end)=0;
@@ -662,7 +666,7 @@ for slice_id=1:slices
                 title(strcat('ridg filt2 for ',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
                 
                 saveas(fig,char(strcat(path_visual_rid_depth','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurv&rid_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id*sum_depth),'.png')));
-                
+                close(fig);
             end
             
             anali_depth(slice_depth_id,1,:)=[max(this(:)),std(this(:)),max(this(:))/std(this(:)),kurtosis(kurtosis(this)),kurtosis(this(:))];
@@ -710,779 +714,5 @@ dlmwrite(strcat(path_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_
 
 cd('../wake_detection/curvelet/curvelab/2d/');
 
-
-%exploration of local filter
-% 
-% file='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m/sample3007/half_lin_cutoff_half_tot_pert_nvpw/data/1lf_1rf_0-0-0pv_1.5708-0-0ra/2dproj/dm/_4_2dproj_z3_data_sl28.bin'
-% fid = fopen(file);
-% % G=fread(fid,[1024 1024], 'float32','l') ;
-% map=fread(fid,[1024 1024], 'float32','l') ;
-% map(map<=1)=1;%to remove problem with holes
-% G=log(map);
-% % figure; imagesc(map);colorbar;
-% % figure; imagesc(G);colorbar;
-% % map=fread(fid,[1024 1024], 'float32','l') ;
-% % figure; imagesc(map);colorbar;
-% % fclose(fid);
-% % fid = fopen(file);
-% % map=fread(fid,[1024 1024], 'float32','l') ;
-% % figure; imagesc(map);colorbar;
-% % map(map<=1)=1;%to remove problem with holes
-% % G=log(map);
-% % figure; imagesc(G);colorbar;
-% 
-% lev_ang=2;
-% new_nc=1024;
-% sigma=5;
-% 
-% F = ones(1024);
-% X = fftshift(ifft2(F)) * sqrt(prod(size(F)));
-% C = fdct_wrapping(X,0);
-% E = cell(size(C));
-% for s=1:length(C)
-%     E{s} = cell(size(C{s}));
-%     for w=1:length(C{s})
-%         A = C{s}{w};
-%         E{s}{w} = sqrt(sum(sum(A.*conj(A))) / prod(size(A)));
-%     end
-% end
-% 
-% F=zeros(new_nc);
-% C_zero = fdct_wrapping(F,0);
-% 
-% 
-% 
-% 
-% % F=zeros(new_nc);
-% % F(1:32,1)=1;
-% % G = F + 1*rand(1024);
-% % figure; imagesc(G);colorbar;
-% C = fdct_wrapping(G);
-% % C = fdct_wrapping(map);
-% Ct = C;
-% 
-% 
-% for s = 1:4
-%         for w = 1:length(C{s})
-%             Ct{s}{w} = C_zero{s}{w};
-%         end
-% end
-% 
-% 
-% for s = 5:6
-%     %right part
-%     sz=cell(length(C{s}),1);
-%     for w = 1:length(C{s})/4
-%         sz{w}=size(C{s}{w});
-%     end
-%     for  i=1:sz{1}(1)
-%         for j=1:sz{1}(2)
-%             for w = 1:length(C{s})/4                
-%                 b(w)=abs(C{s}{w}(ceil(i*sz{w}(1)/sz{1}(1)),ceil(j*sz{w}(2)/sz{1}(2))))/E{s}{w};
-%             end
-%             n_levels=floor(log2(length(b)));
-%             [c,levels] = wavedec(b,n_levels,'db1');
-%             d = wrcoef('a',c,levels,'db1',lev_ang);
-%             a=b-d;
-%             std_a=std(a);
-%             avr_a=mean(a);
-%             treash_logic=double(a>=avr_a+sigma*std_a);        
-%             for w = 1:length(C{s})/4                
-%                 Ct{s}{w}(ceil(i*sz{w}(1)/sz{1}(1)),ceil(j*sz{w}(2)/sz{1}(2)))=treash_logic(w)*C{s}{w}(ceil(i*sz{w}(1)/sz{1}(1)),ceil(j*sz{w}(2)/sz{1}(2)))*double(Ct{s}{w}(ceil(i*sz{w}(1)/sz{1}(1)),ceil(j*sz{w}(2)/sz{1}(2)))~=0);
-%             end                        
-%         end
-%     end
-%     
-%     %right2 part
-%     for w = 1+length(C{s})/4:2*length(C{s})/4
-%         sz{w}=size(C{s}{w});
-%     end
-%     for  i=1:sz{1+length(C{s})/4}(1)
-%         for j=1:sz{1+length(C{s})/4}(2)
-%             for w = 1+length(C{s})/4:2*length(C{s})/4  
-%                 i_c=ceil(i*sz{w}(1)/sz{1+length(C{s})/4}(1));
-%                 j_c=ceil(j*sz{w}(2)/sz{1+length(C{s})/4}(2));
-%                 b(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
-%             end
-%             n_levels=floor(log2(length(b)));
-%             [c,levels] = wavedec(b,n_levels,'db1');
-%             d = wrcoef('a',c,levels,'db1',lev_ang);
-%             a=b-d;
-%             std_a=std(a);
-%             avr_a=mean(a);
-%             treash_logic=double(a>=avr_a+sigma*std_a)   ;         
-%             for w = 1+length(C{s})/4:2*length(C{s})/4    
-%                 i_c=ceil(i*sz{w}(1)/sz{1+length(C{s})/4}(1));
-%                 j_c=ceil(j*sz{w}(2)/sz{1+length(C{s})/4}(2));
-%                 Ct{s}{w}(i_c,j_c)=treash_logic(w)*C{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-%             end                        
-%         end
-%     end
-%     
-%     %right3 part
-%     for w = 1+2*length(C{s})/4:3*length(C{s})/4
-%         sz{w}=size(C{s}{w});
-%     end
-%     for  i=1:sz{1+2*length(C{s})/4}(1)
-%         for j=1:sz{1+2*length(C{s})/4}(2)
-%             for w = 1+2*length(C{s})/4:3*length(C{s})/4  
-%                 i_c=ceil(i*sz{w}(1)/sz{1+2*length(C{s})/4}(1));
-%                 j_c=ceil(j*sz{w}(2)/sz{1+2*length(C{s})/4}(2));
-%                 b(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
-%             end
-%             n_levels=floor(log2(length(b)));
-%             [c,levels] = wavedec(b,n_levels,'db1');
-%             d = wrcoef('a',c,levels,'db1',lev_ang);
-%             a=b-d;
-%             std_a=std(a);
-%             avr_a=mean(a);
-%             treash_logic=double(a>=avr_a+sigma*std_a)   ;         
-%             for w = 1+2*length(C{s})/4:3*length(C{s})/4    
-%                 i_c=ceil(i*sz{w}(1)/sz{1+2*length(C{s})/4}(1));
-%                 j_c=ceil(j*sz{w}(2)/sz{1+2*length(C{s})/4}(2));
-%                 Ct{s}{w}(i_c,j_c)=treash_logic(w)*C{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-%             end                        
-%         end
-%     end
-%     
-%     
-%     %right4 part
-%     for w = 1+3*length(C{s})/4:4*length(C{s})/4
-%         sz{w}=size(C{s}{w});
-%     end
-%     for  i=1:sz{1+3*length(C{s})/4}(1)
-%         for j=1:sz{1+3*length(C{s})/4}(2)
-%             for w = 1+3*length(C{s})/4:4*length(C{s})/4  
-%                 i_c=ceil(i*sz{w}(1)/sz{1+3*length(C{s})/4}(1));
-%                 j_c=ceil(j*sz{w}(2)/sz{1+3*length(C{s})/4}(2));
-%                 b(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
-%             end
-%             n_levels=floor(log2(length(b)));
-%             [c,levels] = wavedec(b,n_levels,'db1');
-%             d = wrcoef('a',c,levels,'db1',lev_ang);
-%             a=b-d;
-%             std_a=std(a);
-%             avr_a=mean(a);
-%             treash_logic=double(a>=avr_a+sigma*std_a)   ;         
-%             for w = 1+3*length(C{s})/4:4*length(C{s})/4    
-%                 i_c=ceil(i*sz{w}(1)/sz{1+3*length(C{s})/4}(1));
-%                 j_c=ceil(j*sz{w}(2)/sz{1+3*length(C{s})/4}(2));
-%                 Ct{s}{w}(i_c,j_c)=treash_logic(w)*C{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-%             end                        
-%         end
-%     end
-%     
-%     
-%    
-%     
-% end
-% 
-% BW2 = abs(ifdct_wrapping(Ct));
-% 
-% figure; imagesc(BW2);colorbar; axis('image');
-% 
-% 
-% 
-% 
-% 
-% 
-% file='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m/sample3007/half_lin_cutoff_half_tot_pert_nvpw/data/1lf_1rf_0-0-0pv_1.5708-0-0ra/2dproj/dm/_4_2dproj_z3_data_sl28.bin'
-% fid = fopen(file);
-% % G=fread(fid,[1024 1024], 'float32','l') ;
-% map=fread(fid,[1024 1024], 'float32','l') ;
-% map(map<=1)=1;%to remove problem with holes
-% G=log(map);
-% % figure; imagesc(map);colorbar;
-% % figure; imagesc(G);colorbar;
-% % map=fread(fid,[1024 1024], 'float32','l') ;
-% % figure; imagesc(map);colorbar;
-% % fclose(fid);
-% % fid = fopen(file);
-% % map=fread(fid,[1024 1024], 'float32','l') ;
-% % figure; imagesc(map);colorbar;
-% % map(map<=1)=1;%to remove problem with holes
-% % G=log(map);
-% % figure; imagesc(G);colorbar;
-% 
-% lev_ang=2;
-% new_nc=1024;
-% sigma=3;
-% 
-% F = ones(1024);
-% X = fftshift(ifft2(F)) * sqrt(prod(size(F)));
-% C = fdct_wrapping(X,0);
-% E = cell(size(C));
-% for s=1:length(C)
-%     E{s} = cell(size(C{s}));
-%     for w=1:length(C{s})
-%         A = C{s}{w};
-%         E{s}{w} = sqrt(sum(sum(A.*conj(A))) / prod(size(A)));
-%     end
-% end
-% 
-% F=zeros(new_nc);
-% C_zero = fdct_wrapping(F,0);
-% 
-% 
-% 
-% 
-% % F=zeros(new_nc);
-% % F(1:32,1)=1;
-% % G = F + 1*rand(1024);
-% % figure; imagesc(G);colorbar;
-% C = fdct_wrapping(G);
-% % C = fdct_wrapping(map);
-% Ct = C;
-% 
-% 
-% for s = 1:3
-%         for w = 1:length(C{s})
-%             Ct{s}{w} = C_zero{s}{w};
-%         end
-% end
-% 
-% 
-% for s = 4:6
-%     %right part
-%     sz=cell(length(C{s}),1);
-%     for w = 1:length(C{s})/4
-%         sz{w}=size(C{s}{w});
-%     end
-%     for  i=1:sz{1}(1)
-%         for j=1:sz{1}(2)
-%             for w = 1:length(C{s})/4                
-%                 a(w)=abs(C{s}{w}(ceil(i*sz{w}(1)/sz{1}(1)),ceil(j*sz{w}(2)/sz{1}(2))))/E{s}{w};
-%             end
-%             std_a=std(a);
-%             avr_a=mean(a);
-%             treash_logic=double(a>=avr_a+sigma*std_a);        
-%             for w = 1:length(C{s})/4                
-%                 Ct{s}{w}(ceil(i*sz{w}(1)/sz{1}(1)),ceil(j*sz{w}(2)/sz{1}(2)))=treash_logic(w)*C{s}{w}(ceil(i*sz{w}(1)/sz{1}(1)),ceil(j*sz{w}(2)/sz{1}(2)))*double(Ct{s}{w}(ceil(i*sz{w}(1)/sz{1}(1)),ceil(j*sz{w}(2)/sz{1}(2)))~=0);
-%             end                        
-%         end
-%     end
-%     
-%     %right2 part
-%     for w = 1+length(C{s})/4:2*length(C{s})/4
-%         sz{w}=size(C{s}{w});
-%     end
-%     for  i=1:sz{1+length(C{s})/4}(1)
-%         for j=1:sz{1+length(C{s})/4}(2)
-%             for w = 1+length(C{s})/4:2*length(C{s})/4  
-%                 i_c=ceil(i*sz{w}(1)/sz{1+length(C{s})/4}(1));
-%                 j_c=ceil(j*sz{w}(2)/sz{1+length(C{s})/4}(2));
-%                 a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
-%             end
-%             std_a=std(a);
-%             avr_a=mean(a);
-%             treash_logic=double(a>=avr_a+sigma*std_a)   ;         
-%             for w = 1+length(C{s})/4:2*length(C{s})/4    
-%                 i_c=ceil(i*sz{w}(1)/sz{1+length(C{s})/4}(1));
-%                 j_c=ceil(j*sz{w}(2)/sz{1+length(C{s})/4}(2));
-%                 Ct{s}{w}(i_c,j_c)=treash_logic(w)*C{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-%             end                        
-%         end
-%     end
-%     
-%     %right3 part
-%     for w = 1+2*length(C{s})/4:3*length(C{s})/4
-%         sz{w}=size(C{s}{w});
-%     end
-%     for  i=1:sz{1+2*length(C{s})/4}(1)
-%         for j=1:sz{1+2*length(C{s})/4}(2)
-%             for w = 1+2*length(C{s})/4:3*length(C{s})/4  
-%                 i_c=ceil(i*sz{w}(1)/sz{1+2*length(C{s})/4}(1));
-%                 j_c=ceil(j*sz{w}(2)/sz{1+2*length(C{s})/4}(2));
-%                 a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
-%             end
-%             std_a=std(a);
-%             avr_a=mean(a);
-%             treash_logic=double(a>=avr_a+sigma*std_a)   ;         
-%             for w = 1+2*length(C{s})/4:3*length(C{s})/4    
-%                 i_c=ceil(i*sz{w}(1)/sz{1+2*length(C{s})/4}(1));
-%                 j_c=ceil(j*sz{w}(2)/sz{1+2*length(C{s})/4}(2));
-%                 Ct{s}{w}(i_c,j_c)=treash_logic(w)*C{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-%             end                        
-%         end
-%     end
-%     
-%     
-%     %right4 part
-%     for w = 1+3*length(C{s})/4:4*length(C{s})/4
-%         sz{w}=size(C{s}{w});
-%     end
-%     for  i=1:sz{1+3*length(C{s})/4}(1)
-%         for j=1:sz{1+3*length(C{s})/4}(2)
-%             for w = 1+3*length(C{s})/4:4*length(C{s})/4  
-%                 i_c=ceil(i*sz{w}(1)/sz{1+3*length(C{s})/4}(1));
-%                 j_c=ceil(j*sz{w}(2)/sz{1+3*length(C{s})/4}(2));
-%                 a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
-%             end
-%             std_a=std(a);
-%             avr_a=mean(a);
-%             treash_logic=double(a>=avr_a+sigma*std_a)   ;         
-%             for w = 1+3*length(C{s})/4:4*length(C{s})/4    
-%                 i_c=ceil(i*sz{w}(1)/sz{1+3*length(C{s})/4}(1));
-%                 j_c=ceil(j*sz{w}(2)/sz{1+3*length(C{s})/4}(2));
-%                 Ct{s}{w}(i_c,j_c)=treash_logic(w)*C{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-%             end                        
-%         end
-%     end
-%     
-%     
-%    
-%     
-% end
-% 
-% BW2 = abs(ifdct_wrapping(Ct));
-% 
-% figure; imagesc(BW2);colorbar; axis('image');
-% 
-
-% 
-% 
-% file='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m/sample3007/half_lin_cutoff_half_tot_pert_nvpw/data/1lf_1rf_0-0-0pv_1.5708-0-0ra/2dproj/dm/_4_2dproj_z3_data_sl28.bin'
-% fid = fopen(file);
-% % G=fread(fid,[1024 1024], 'float32','l') ;
-% map=fread(fid,[1024 1024], 'float32','l') ;
-% map(map<=1)=1;%to remove problem with holes
-% G=log(map);
-% fclose(fid);
-% % figure; imagesc(map);colorbar;
-% % figure; imagesc(G);colorbar;
-% % map=fread(fid,[1024 1024], 'float32','l') ;
-% % figure; imagesc(map);colorbar;
-% % fclose(fid);
-% % fid = fopen(file);
-% % map=fread(fid,[1024 1024], 'float32','l') ;
-% % figure; imagesc(map);colorbar;
-% % map(map<=1)=1;%to remove problem with holes
-% % G=log(map);
-% % figure; imagesc(G);colorbar;
-% % 
-% lev_ang=2;
-% new_nc=1024;
-% sigma=3;
-% 
-% F = ones(1024);
-% X = fftshift(ifft2(F)) * sqrt(prod(size(F)));
-% C = fdct_wrapping(X,0);
-% E = cell(size(C));
-% for s=1:length(C)
-%     E{s} = cell(size(C{s}));
-%     for w=1:length(C{s})
-%         A = C{s}{w};
-%         E{s}{w} = sqrt(sum(sum(A.*conj(A))) / prod(size(A)));
-%     end
-% end
-% 
-% F=zeros(new_nc);
-% C_zero = fdct_wrapping(F,0);
-% 
-% 
-% 
-% 
-% % F=zeros(new_nc);
-% % F(1:32,1)=1;
-% % G = F + 1*rand(1024);
-% % figure; imagesc(G);colorbar;
-% C = fdct_wrapping(G);
-% % C = fdct_wrapping(map);
-% Ct = C;
-% 
-% for s = [1:7]
-%         for w = 1:length(C{s})
-%             Ct{s}{w} = C_zero{s}{w};
-%         end
-% end
-% 
-% % 
-% for s = [4,5,6]
-%         for w = 1:length(C{s})
-%             Ct{s}{w} = C{s}{w};
-% %                         Ct{s}{w} = C{s}{w}.* (real(C{s}{w}) > 0);
-% 
-%         end
-% end
-% 
-% BW2 = (ifdct_wrapping(Ct));
-% 
-% figure; imagesc(real(BW2));colorbar; axis('image');
-% 
-
-
-
-
-
-% 
-% 
-% 
-% file='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m/sample3007/half_lin_cutoff_half_tot_pert_nvpw/data/1lf_1rf_0-0-0pv_1.5708-0-0ra/2dproj/dm/_4_2dproj_z3_data_sl28.bin'
-% fid = fopen(file);
-% % G=fread(fid,[1024 1024], 'float32','l') ;
-% map=fread(fid,[1024 1024], 'float32','l') ;
-% map(map<=1)=1;%to remove problem with holes
-% G=log(map);
-% fclose(fid);
-% % figure; imagesc(map);colorbar;
-% % figure; imagesc(G);colorbar;
-% % map=fread(fid,[1024 1024], 'float32','l') ;
-% % figure; imagesc(map);colorbar;
-% % fclose(fid);
-% % fid = fopen(file);
-% % map=fread(fid,[1024 1024], 'float32','l') ;
-% % figure; imagesc(map);colorbar;
-% % map(map<=1)=1;%to remove problem with holes
-% % G=log(map);
-% % figure; imagesc(G);colorbar;
-% 
-% lev_ang=2;
-% new_nc=1024;
-% sigma=3;
-% 
-% F = ones(1024);
-% X = fftshift(ifft2(F)) * sqrt(prod(size(F)));
-% C = fdct_wrapping(X,0);
-% E = cell(size(C));
-% for s=1:length(C)
-%     E{s} = cell(size(C{s}));
-%     for w=1:length(C{s})
-%         A = C{s}{w};
-%         E{s}{w} = sqrt(sum(sum(A.*conj(A))) / prod(size(A)));
-%     end
-% end
-% 
-% F=zeros(new_nc);
-% C_zero = fdct_wrapping(F,0);
-% 
-% 
-% 
-% 
-% % F=zeros(new_nc);
-% % F(1:32,1)=1;
-% % G = F + 1*rand(1024);
-% % figure; imagesc(G);colorbar;
-% C = fdct_wrapping(G);
-% % C = fdct_wrapping(map);
-% Ct = C;
-% 
-% 
-% for s = [1:3]
-%         for w = 1:length(C{s})
-%             Ct{s}{w} = C_zero{s}{w};
-%         end
-% end
-% 
-% 
-% for s = 4:6
-%     %right part
-%     sz=cell(length(C{s}),1);
-%     for w = 1:length(C{s})/4
-%         sz{w}=size(C{s}{w});
-%     end
-%     for  i=1:sz{1}(1)
-%         for j=1:sz{1}(2)
-%             for w = 1:length(C{s})/4          
-%                 i_c=ceil(i*sz{w}(1)/sz{1}(1));
-%                 j_c=ceil(j*sz{w}(2)/sz{1}(2));
-%                 a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
-%             end
-%             std_a=std(a);
-%             avr_a=mean(a);
-% %             treash_logic=double(a>=avr_a+sigma*std_a);    
-%             treash_logic=double(a==max(a));
-%             for w = 1:length(C{s})/4     
-%                 i_c=ceil(i*sz{w}(1)/sz{1}(1));
-%                 j_c=ceil(j*sz{w}(2)/sz{1}(2));
-%                 Ct{s}{w}(i_c,j_c)=treash_logic(w)*(C{s}{w}(i_c,j_c))*double(Ct{s}{w}(i_c,j_c)~=0);
-%             end                        
-%         end
-%     end
-%     
-%     %right2 part
-%     for w = 1+length(C{s})/4:2*length(C{s})/4
-%         sz{w}=size(C{s}{w});
-%     end
-%     for  i=1:sz{1+length(C{s})/4}(1)
-%         for j=1:sz{1+length(C{s})/4}(2)
-%             for w = 1+length(C{s})/4:2*length(C{s})/4  
-%                 i_c=ceil(i*sz{w}(1)/sz{1+length(C{s})/4}(1));
-%                 j_c=ceil(j*sz{w}(2)/sz{1+length(C{s})/4}(2));
-%                 a(w-length(C{s})/4)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
-%             end
-%             std_a=std(a);
-%             avr_a=mean(a);
-% %             treash_logic=double(a>=avr_a+sigma*std_a)   ;  
-%             treash_logic=double(a==max(a));
-%             for w = 1+length(C{s})/4:2*length(C{s})/4    
-%                 i_c=ceil(i*sz{w}(1)/sz{1+length(C{s})/4}(1));
-%                 j_c=ceil(j*sz{w}(2)/sz{1+length(C{s})/4}(2));
-%                 Ct{s}{w}(i_c,j_c)=treash_logic(w-length(C{s})/4)*C{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-%             end                        
-%         end
-%     end
-%     
-%     %right3 part
-%     for w = 1+2*length(C{s})/4:3*length(C{s})/4
-%         sz{w}=size(C{s}{w});
-%     end
-%     for  i=1:sz{1+2*length(C{s})/4}(1)
-%         for j=1:sz{1+2*length(C{s})/4}(2)
-%             for w = 1+2*length(C{s})/4:3*length(C{s})/4  
-%                 i_c=ceil(i*sz{w}(1)/sz{1+2*length(C{s})/4}(1));
-%                 j_c=ceil(j*sz{w}(2)/sz{1+2*length(C{s})/4}(2));
-%                 a(w-2*length(C{s})/4)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
-%             end
-%             std_a=std(a);
-%             avr_a=mean(a);
-% %             treash_logic=double(a>=avr_a+sigma*std_a)   ;         
-%             treash_logic=double(a==max(a));            
-%             for w = 1+2*length(C{s})/4:3*length(C{s})/4    
-%                 i_c=ceil(i*sz{w}(1)/sz{1+2*length(C{s})/4}(1));
-%                 j_c=ceil(j*sz{w}(2)/sz{1+2*length(C{s})/4}(2));
-%                 Ct{s}{w}(i_c,j_c)=treash_logic(w-2*length(C{s})/4)*C{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-%             end                        
-%         end
-%     end
-%     
-%     
-%     %right4 part
-%     for w = 1+3*length(C{s})/4:4*length(C{s})/4
-%         sz{w}=size(C{s}{w});
-%     end
-%     for  i=1:sz{1+3*length(C{s})/4}(1)
-%         for j=1:sz{1+3*length(C{s})/4}(2)
-%             for w = 1+3*length(C{s})/4:4*length(C{s})/4  
-%                 i_c=ceil(i*sz{w}(1)/sz{1+3*length(C{s})/4}(1));
-%                 j_c=ceil(j*sz{w}(2)/sz{1+3*length(C{s})/4}(2));
-%                 a(w-3*length(C{s})/4)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
-%             end
-%             std_a=std(a);
-%             avr_a=mean(a);
-% %             treash_logic=double(a>=avr_a+sigma*std_a)   ;     
-%             treash_logic=double(a==max(a));
-%             for w = 1+3*length(C{s})/4:4*length(C{s})/4    
-%                 i_c=ceil(i*sz{w}(1)/sz{1+3*length(C{s})/4}(1));
-%                 j_c=ceil(j*sz{w}(2)/sz{1+3*length(C{s})/4}(2));
-%                 Ct{s}{w}(i_c,j_c)=treash_logic(w-3*length(C{s})/4)*C{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-%             end                        
-%         end
-%     end
-%     
-%     
-%    a=[];
-%    treash_logic=[];
-%     
-% end
-% 
-% BW2 = abs(ifdct_wrapping(Ct));
-% 
-% figure; imagesc(BW2);colorbar; axis('image');
-% 
-
-
-
-
-
-
-file='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m/sample3007/half_lin_cutoff_half_tot_pert_nvpw/data/1lf_1rf_0-0-0pv_1.5708-0-0ra/2dproj/dm/_4_2dproj_z3_data_sl28.bin'
-fid = fopen(file);
-% G=fread(fid,[1024 1024], 'float32','l') ;
-map=fread(fid,[1024 1024], 'float32','l') ;
-map(map<=1)=1;%to remove problem with holes
-G=log(map);
-fclose(fid);
-% figure; imagesc(map);colorbar;
-% figure; imagesc(G);colorbar;
-% map=fread(fid,[1024 1024], 'float32','l') ;
-% figure; imagesc(map);colorbar;
-% fclose(fid);
-% fid = fopen(file);
-% map=fread(fid,[1024 1024], 'float32','l') ;
-% figure; imagesc(map);colorbar;
-% map(map<=1)=1;%to remove problem with holes
-% G=log(map);
-% figure; imagesc(G);colorbar;
-
-lev_ang=2;
-new_nc=1024;
-sigma=1;
-
-F = ones(1024);
-X = fftshift(ifft2(F)) * sqrt(prod(size(F)));
-C = fdct_wrapping(X,0);
-E = cell(size(C));
-for s=1:length(C)
-    E{s} = cell(size(C{s}));
-    for w=1:length(C{s})
-        A = C{s}{w};
-        E{s}{w} = sqrt(sum(sum(A.*conj(A))) / prod(size(A)));
-    end
 end
-
-F=zeros(new_nc);
-C_zero = fdct_wrapping(F,0);
-
-
-
-
-% F=zeros(new_nc);
-% F(1:32,1)=1;
-% G = F + 1*rand(1024);
-% figure; imagesc(G);colorbar;
-C = fdct_wrapping(G);
-% C = fdct_wrapping(map);
-Ct = C;
-Ct2= C;
-
-for s = [1:7]
-        for w = 1:length(C{s})
-            Ct{s}{w} = C_zero{s}{w};
-            Ct2{s}{w} = C_zero{s}{w};
-        end
-end
-
-
-for s = 4:6
-    %right part
-    sz=cell(length(C{s}),1);
-    for w = 1:length(C{s})/4
-        sz{w}=size(C{s}{w});
-    end
-    for  i=1:sz{1}(1)
-        for j=1:sz{1}(2)
-            for w = 1:length(C{s})/4          
-                i_c=ceil(i*sz{w}(1)/sz{1}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1}(2));
-                a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
-            end
-            std_a=std(a);
-            avr_a=mean(a);
-%             treash_logic=double(a>=avr_a+sigma*std_a);    
-            treash_logic=double(a==max(a));
-%             normalization=(a-mean(a)/std_a);
-            normalization=(a-avr_a)/avr_a;
-            for w = 1:length(C{s})/4     
-                i_c=ceil(i*sz{w}(1)/sz{1}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1}(2));
-%                 Ct{s}{w}(i_c,j_c)=treash_logic(w)*(C{s}{w}(i_c,j_c))*double(Ct{s}{w}(i_c,j_c)~=0);
-                Ct{s}{w}(i_c,j_c)=max(normalization(w),Ct{s}{w}(i_c,j_c));
-            end                        
-        end
-    end
-    
-    for w = 1:length(C{s})/4           
-            Ct2{s}{w} = Ct{s}{w}.*C{s}{w};
-    end
-    
-    
-    
-    %right2 part
-    for w = 1+length(C{s})/4:2*length(C{s})/4
-        sz{w}=size(C{s}{w});
-    end
-    for  i=1:sz{1+length(C{s})/4}(1)
-        for j=1:sz{1+length(C{s})/4}(2)
-            for w = 1+length(C{s})/4:2*length(C{s})/4  
-                i_c=ceil(i*sz{w}(1)/sz{1+length(C{s})/4}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1+length(C{s})/4}(2));
-                a(w-length(C{s})/4)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
-            end
-            std_a=std(a);
-            avr_a=mean(a);
-%             treash_logic=double(a>=avr_a+sigma*std_a)   ;  
-%             treash_logic=double(a==max(a));
-%             normalization=(a-mean(a)/std_a);
-            normalization=(a-avr_a)/avr_a;
-            for w = 1+length(C{s})/4:2*length(C{s})/4    
-                i_c=ceil(i*sz{w}(1)/sz{1+length(C{s})/4}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1+length(C{s})/4}(2));
-%                 Ct{s}{w}(i_c,j_c)=treash_logic(w-length(C{s})/4)*C{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-                 Ct{s}{w}(i_c,j_c)=max(normalization(w-length(C{s})/4),Ct{s}{w}(i_c,j_c));
-            end                        
-        end
-    end
-    
-    for w = 1+length(C{s})/4:2*length(C{s})/4   
-         Ct2{s}{w} = Ct{s}{w}.*C{s}{w};
-    end
-
-    
-    %right3 part
-    for w = 1+2*length(C{s})/4:3*length(C{s})/4
-        sz{w}=size(C{s}{w});
-    end
-    for  i=1:sz{1+2*length(C{s})/4}(1)
-        for j=1:sz{1+2*length(C{s})/4}(2)
-            for w = 1+2*length(C{s})/4:3*length(C{s})/4  
-                i_c=ceil(i*sz{w}(1)/sz{1+2*length(C{s})/4}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1+2*length(C{s})/4}(2));
-                a(w-2*length(C{s})/4)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
-            end
-            std_a=std(a);
-            avr_a=mean(a);
-%             treash_logic=double(a>=avr_a+sigma*std_a)   ;         
-%             treash_logic=double(a==max(a));  
-%             normalization=(a-mean(a)/std_a);
-            normalization=(a-avr_a)/avr_a;
-            for w = 1+2*length(C{s})/4:3*length(C{s})/4    
-                i_c=ceil(i*sz{w}(1)/sz{1+2*length(C{s})/4}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1+2*length(C{s})/4}(2));
-%                 Ct{s}{w}(i_c,j_c)=treash_logic(w-2*length(C{s})/4)*C{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-                Ct{s}{w}(i_c,j_c)=max(normalization(w-2*length(C{s})/4),Ct{s}{w}(i_c,j_c));
-            end                        
-        end
-    end
-    
-    for w = 1+2*length(C{s})/4:3*length(C{s})/4
-        Ct2{s}{w} = Ct{s}{w}.*C{s}{w};
-    end
-    
-    
-    %right4 part
-    for w = 1+3*length(C{s})/4:4*length(C{s})/4
-        sz{w}=size(C{s}{w});
-    end
-    for  i=1:sz{1+3*length(C{s})/4}(1)
-        for j=1:sz{1+3*length(C{s})/4}(2)
-            for w = 1+3*length(C{s})/4:4*length(C{s})/4  
-                i_c=ceil(i*sz{w}(1)/sz{1+3*length(C{s})/4}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1+3*length(C{s})/4}(2));
-                a(w-3*length(C{s})/4)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
-            end
-            std_a=std(a);
-            avr_a=mean(a);
-%             treash_logic=double(a>=avr_a+sigma*std_a)   ;     
-%             treash_logic=double(a==max(a));
-%             normalization=(a-mean(a)/std_a);
-            normalization=(a-avr_a)/avr_a;
-            for w = 1+3*length(C{s})/4:4*length(C{s})/4    
-                i_c=ceil(i*sz{w}(1)/sz{1+3*length(C{s})/4}(1));
-                j_c=ceil(j*sz{w}(2)/sz{1+3*length(C{s})/4}(2));
-%                 Ct{s}{w}(i_c,j_c)=treash_logic(w-3*length(C{s})/4)*C{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-                Ct{s}{w}(i_c,j_c)=max(normalization(w-3*length(C{s})/4),Ct{s}{w}(i_c,j_c));
-
-            end                                    
-        end
-    end
-    
-    for w = 1+3*length(C{s})/4:4*length(C{s})/4
-        Ct2{s}{w} = Ct{s}{w}.*C{s}{w};
-    end
-    
-    
-   a=[];
-   treash_logic=[];
-   normalization=[];
-    
-end
-
-BW2 = abs(ifdct_wrapping(Ct2));
-
-figure; imagesc(BW2);colorbar; axis('image');
-
-
-end
-
-
 

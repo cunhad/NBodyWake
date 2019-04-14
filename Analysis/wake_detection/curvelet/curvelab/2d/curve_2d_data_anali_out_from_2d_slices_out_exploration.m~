@@ -1090,27 +1090,27 @@ cd('../wake_detection/curvelet/curvelab/2d/');
 % % C = fdct_wrapping(map);
 % Ct = C;
 % 
-% for s = [1:7]
+% for s = [1:3,7]
 %         for w = 1:length(C{s})
 %             Ct{s}{w} = C_zero{s}{w};
 %         end
 % end
 % 
 % % 
-% for s = [4,5,6]
-%         for w = 1:length(C{s})
-%             Ct{s}{w} = C{s}{w};
-% %                         Ct{s}{w} = C{s}{w}.* (real(C{s}{w}) > 0);
-% 
-%         end
-% end
+% % for s = [4,5,6]
+% %         for w = 1:length(C{s})
+% %             Ct{s}{w} = C{s}{w};
+% % %                         Ct{s}{w} = C{s}{w}.* (real(C{s}{w}) > 0);
+% % 
+% %         end
+% % end
 % 
 % BW2 = (ifdct_wrapping(Ct));
 % 
 % figure; imagesc(real(BW2));colorbar; axis('image');
 % 
-
-
+% 
+% 
 
 
 
@@ -1360,8 +1360,7 @@ for s = 4:6
             avr_a=mean(a);
 %             treash_logic=double(a>=avr_a+sigma*std_a);    
             treash_logic=double(a==max(a));
-%             normalization=(a-mean(a)/std_a);
-            normalization=(a-avr_a)/avr_a;
+            normalization=(a-mean(a)/std_a);
             for w = 1:length(C{s})/4     
                 i_c=ceil(i*sz{w}(1)/sz{1}(1));
                 j_c=ceil(j*sz{w}(2)/sz{1}(2));
@@ -1372,7 +1371,7 @@ for s = 4:6
     end
     
     for w = 1:length(C{s})/4           
-            Ct2{s}{w} = Ct{s}{w}.*C{s}{w};
+            Ct2{s}{w} = Ct{s}{w}*C{s}{w};
     end
     
     
@@ -1392,8 +1391,7 @@ for s = 4:6
             avr_a=mean(a);
 %             treash_logic=double(a>=avr_a+sigma*std_a)   ;  
 %             treash_logic=double(a==max(a));
-%             normalization=(a-mean(a)/std_a);
-            normalization=(a-avr_a)/avr_a;
+            normalization=(a-mean(a)/std_a);
             for w = 1+length(C{s})/4:2*length(C{s})/4    
                 i_c=ceil(i*sz{w}(1)/sz{1+length(C{s})/4}(1));
                 j_c=ceil(j*sz{w}(2)/sz{1+length(C{s})/4}(2));
@@ -1404,7 +1402,8 @@ for s = 4:6
     end
     
     for w = 1+length(C{s})/4:2*length(C{s})/4   
-         Ct2{s}{w} = Ct{s}{w}.*C{s}{w};
+        sz{w}=size(C{s}{w});
+         Ct2{s}{w} = Ct{s}{w}*C{s}{w};
     end
 
     
@@ -1423,19 +1422,14 @@ for s = 4:6
             avr_a=mean(a);
 %             treash_logic=double(a>=avr_a+sigma*std_a)   ;         
 %             treash_logic=double(a==max(a));  
-%             normalization=(a-mean(a)/std_a);
-            normalization=(a-avr_a)/avr_a;
+            normalization=(a-mean(a)/std_a);
             for w = 1+2*length(C{s})/4:3*length(C{s})/4    
                 i_c=ceil(i*sz{w}(1)/sz{1+2*length(C{s})/4}(1));
                 j_c=ceil(j*sz{w}(2)/sz{1+2*length(C{s})/4}(2));
 %                 Ct{s}{w}(i_c,j_c)=treash_logic(w-2*length(C{s})/4)*C{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-                Ct{s}{w}(i_c,j_c)=max(normalization(w-2*length(C{s})/4),Ct{s}{w}(i_c,j_c));
+                Ct{s}{w}(i_c,j_c)=max(normalization(w-2*length(C{s})/4),C{s}{w}(i_c,j_c));
             end                        
         end
-    end
-    
-    for w = 1+2*length(C{s})/4:3*length(C{s})/4
-        Ct2{s}{w} = Ct{s}{w}.*C{s}{w};
     end
     
     
@@ -1453,31 +1447,22 @@ for s = 4:6
             std_a=std(a);
             avr_a=mean(a);
 %             treash_logic=double(a>=avr_a+sigma*std_a)   ;     
-%             treash_logic=double(a==max(a));
-%             normalization=(a-mean(a)/std_a);
-            normalization=(a-avr_a)/avr_a;
+            treash_logic=double(a==max(a));
             for w = 1+3*length(C{s})/4:4*length(C{s})/4    
                 i_c=ceil(i*sz{w}(1)/sz{1+3*length(C{s})/4}(1));
                 j_c=ceil(j*sz{w}(2)/sz{1+3*length(C{s})/4}(2));
-%                 Ct{s}{w}(i_c,j_c)=treash_logic(w-3*length(C{s})/4)*C{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-                Ct{s}{w}(i_c,j_c)=max(normalization(w-3*length(C{s})/4),Ct{s}{w}(i_c,j_c));
-
-            end                                    
+                Ct{s}{w}(i_c,j_c)=treash_logic(w-3*length(C{s})/4)*C{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
+            end                        
         end
-    end
-    
-    for w = 1+3*length(C{s})/4:4*length(C{s})/4
-        Ct2{s}{w} = Ct{s}{w}.*C{s}{w};
     end
     
     
    a=[];
    treash_logic=[];
-   normalization=[];
     
 end
 
-BW2 = abs(ifdct_wrapping(Ct2));
+BW2 = abs(ifdct_wrapping(Ct));
 
 figure; imagesc(BW2);colorbar; axis('image');
 
