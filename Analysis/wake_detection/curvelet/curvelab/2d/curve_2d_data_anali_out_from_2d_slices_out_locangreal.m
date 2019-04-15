@@ -464,7 +464,7 @@ for slice_id=1:slices
             C_=del+3*B_*A_-2*A_^3;
             D_=rho+4*C_*A_-6*B_*A_^2+3*A_^4;
             
-            size_n=prod(size(Ct{s}{w}(:)));
+            size_n=prod(size(Ct2{s}{w}(:)));
             size_nt=size_nt+size_n;
             
             As=A_*size_n+As;
