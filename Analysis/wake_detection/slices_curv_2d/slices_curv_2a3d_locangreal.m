@@ -1,4 +1,4 @@
-function [ map,anali ] = slices_curv_2a3d_locangreal( root,root_data_2d_in,root_data_2d_anali_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,numb_rand,slices,lev,lev_rid,lev_3d,lev_3drig,step_of_degree,wavel_removal_factor,NSIDE,partition2d,partition3rd,sum_depth)
+function [ map,anali ] = slices_curv_2a3d_locangreal( root,root_data_2d_in,root_data_2d_out,root_data_2d_anali_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,numb_rand,slices,lev,lev_rid,lev_3d,lev_3drig,step_of_degree,wavel_removal_factor,NSIDE,partition2d,partition3rd,sum_depth)
 
 % (example) [ map ] = slices_curv_2d('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data_test2/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,8,4,8,2,5 );
 
