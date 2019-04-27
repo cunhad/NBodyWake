@@ -29,7 +29,30 @@ function [ map,anali ] = slices_curv_2a3d_locangreal( root,root_data_2d_in,root_
 % partition2d=1;
 % partition3rd=2;
 % sum_depth=4;
-
+% 
+% 
+% root='/home/asus/Dropbox/extras/storage/graham/ht/';
+% root_data_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_hpx_2d/';
+% root_data_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_tst/';
+% root_data_2d_anali_out='/home/asus/Dropbox/extras/storage/graham/ht/data_tst_anali/';
+% spec='4Mpc_2048c_1024p_zi63_nowakem';
+% aux_path='/sample3004/';
+% aux_path_out='';
+% filename='3.000xv0.dat';
+% lenght_factor=1;
+% resol_factor=1;
+% numb_rand=95;
+% slices=32;
+% lev=2;
+% lev_rid=1;
+% lev_3d=1;
+% lev_3drig=1;
+% step_of_degree=(180/256);
+% wavel_removal_factor=1/2;
+% NSIDE=8;
+% partition2d=1;
+% partition3rd=2;
+% sum_depth=4;
 
 
 %%%%Problems
@@ -37,7 +60,7 @@ function [ map,anali ] = slices_curv_2a3d_locangreal( root,root_data_2d_in,root_
 %%%%    anali3_curv definition
 
 % 
-% 
+
 % addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_cpp/mex/'));
 % addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_matlab'));
 % addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct3d'));

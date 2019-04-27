@@ -558,19 +558,19 @@ for w_nw=1:2
             c_max2(:)=max(anali_sum2(w_nw,sample,:,3,:),[],3);
             d_max2(:)=max(anali_sum2(w_nw,sample,:,4,:),[],3);
             
-            test1max2_lv{sample_id}=   plot(ax_test1_max2,a_max2,coul);
-            test2max2_lv{sample_id}=   plot(ax_test2_max2,b_max2,coul);
-            test3max2_lv{sample_id}=   plot(ax_test3_max2,c_max2,coul);
-            test4max2_lv{sample_id}=   plot(ax_test4_max2,d_max2,coul);
+%             test1max2_lv{sample_id}=   plot(ax_test1_max2,a_max2,coul);
+%             test2max2_lv{sample_id}=   plot(ax_test2_max2,b_max2,coul);
+%             test3max2_lv{sample_id}=   plot(ax_test3_max2,c_max2,coul);
+%             test4max2_lv{sample_id}=   plot(ax_test4_max2,d_max2,coul);
         
         clearvars a b c d aa a_max b_max c_max d_max2 a_max2 b_max2 c_max2 d_max2
         
         %         clearvars R R_nor R_nor_filt kurt2;
         
-        hold(ax_test1_m,'on');
-        hold(ax_test2_m,'on');
-        hold(ax_test3_m,'on');
-        hold(ax_test4_m,'on');
+%         hold(ax_test1_m,'on');
+%         hold(ax_test2_m,'on');
+%         hold(ax_test3_m,'on');
+%         hold(ax_test4_m,'on');
         
         hold(ax_test1_max,'on');
         hold(ax_test2_max,'on');

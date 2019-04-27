@@ -1,9 +1,26 @@
-function [ count_sum] = proj2d_cic_dm_data_out_part_rand_hpx_slices( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,data_stream,particl_part,numb_rand,slice,NSIDE)
+function [ count_sum] = proj2d_cic_dm_data_out_part_rand_hpx_slices( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,data_stream,particl_part,numb_angl,slice,NSIDE)
 %Computes the 2d projections aconding to the input specifications and stores (and returns) the resulting data
 
 %   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_cic_dm_data_out_part_rand_nowake('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_96c_48p_zi255_nowakem','/sample1001/','','0.000xv0.dat',1,1,[0,0,0],[0,0],[1,2],64);
-%   (example) [ count_sum] = proj2d_cic_dm_data_out_part_rand_hpx_slices('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data_test2/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,1,1,1,4,8);
+%   (example) [ count_sum] = proj2d_cic_dm_data_out_part_rand_hpx_slices('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data_test2_/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,1,1,1,4,8);
 %   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_cic_dm_data_out_part_rand_nowake('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/data/','64Mpc_1024c_512p_zi63_wakeGmu5t10m6zi63m','/sample0001/','','10.000xv0.dat',1,1,[0,0,0],[0,0],[1,2],64);
+
+
+
+% root='/home/asus/Dropbox/extras/storage/graham/small_res/';
+% root_out='/home/asus/Dropbox/extras/storage/graham/small_res/data_test2_/';
+% spec='64Mpc_256c_128p_zi63_nowakem';
+% aux_path='/sample2001/';
+% aux_path_out='';
+% filename='10.000xv0.dat';
+% lenght_factor=1;
+% resol_factor=1;
+% data_stream=[1,2,3,4,5];
+% particl_part=1;
+% numb_angl=1;
+% slice=4;
+% NSIDE=8;
+
 
 % rng('shuffle')
 % rng(2);
@@ -89,10 +106,10 @@ rand_amplitude_X=nb/2;
 % rand_amplitude_X=nb/2;
 % 
 % angl_amplitude=pi;
-if numb_rand==0
+if numb_angl==0
 rng('shuffle')
 else
- rng(numb_rand,'twister');
+ rng(numb_angl,'twister');
 end
 
 prx=randi([-rand_amplitude_X rand_amplitude_X]);
@@ -106,8 +123,8 @@ angles_hpx(2,:) = dlmread(strcat('../../python/angles',num2str(NSIDE),'_p.cvs'))
 % ra_along_wake=-pi/2+rand()*pi;
 % ra_perp_wake=-pi/2+rand()*pi;
 
-ra=angles_hpx(1,numb_rand);
-ra_along_wake=angles_hpx(2,numb_rand);
+ra=angles_hpx(1,numb_angl);
+ra_along_wake=angles_hpx(2,numb_angl);
 ra_perp_wake=-pi/2+rand()*pi;
 
 % pivot=[0,0,30]
@@ -335,13 +352,40 @@ if ~ismember(0,data_stream)
     mkdir(root_out);
     mkdir(root_out,strcat(spec,aux_path));
     
-    path_out=strcat(strcat(root_out,spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/');
-    mkdir(strcat(root_out,spec,aux_path),strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/'));
+    path_out=strcat(strcat(root_out,spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_angl),'/',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/');
+    mkdir(strcat(root_out,spec,aux_path),strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_angl),'/',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/'));
     
+    if ismember(5,data_stream)
+        path_out_fig=strcat(strcat(root_out(1:end-1),'_fig/',spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_angl),'/',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/');
+        mkdir(strcat(root_out(1:end-1),'_fig/',spec,aux_path),strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_angl),'/',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/'));
+    end
+    
+
     
     %     mkdir(path_out,'dc/');
     
     for count_slice=1:slice
+        
+        this=count_sum(:,:,count_slice);        
+        this(this<1)=1;
+        this=log(this);
+        this=this/(max(this(:)));
+        
+        thisp=count_sum(:,:,mod(count_slice+1-1,slice)+1);        
+        thisp(thisp<1)=1;
+        thisp=log(thisp);
+        thisp=thisp/(max(thisp(:)));
+        
+        thism=count_sum(:,:,mod(count_slice-1-1,slice)+1);        
+        thism(thism<1)=1;
+        thism=log(thism);
+        thism=thism/(max(thism(:)));
+        
+        
+        
+        colorfigure(:,:,1)=thism;
+        colorfigure(:,:,2)=this;
+        colorfigure(:,:,3)=thisp;
         
         if ismember(1,data_stream)
             fileID = fopen(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'.bin'),'w');
@@ -350,7 +394,37 @@ if ~ismember(0,data_stream)
         end
         
         if ismember(2,data_stream)
+            fileID = fopen(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'_log.bin'),'w');
+            fwrite(fileID,this, 'float32','l');
+            fclose(fileID);
+        end
+        
+        if ismember(3,data_stream)
             dlmwrite(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'.txt'),count_sum(:,:,count_slice),'delimiter','\t');
+        end
+        
+        if ismember(4,data_stream)
+            dlmwrite(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'.txt'),this,'delimiter','\t');
+        end
+        
+        if ismember(5,data_stream)
+            fig=figure('Visible', 'off');
+            set(gcf, 'Position', [0 0 nb-1 nb-1]);
+            hold on;
+            axes('Position',[0 0 1 1],'Visible','off');
+            imagesc([0 nb-1],[0 nb-1],repmat(this,[1 1 3]));
+            saveas(fig,char(strcat(path_out_fig,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'_log_fig','.png')));
+            close(fig);
+        end
+        
+        if ismember(5,data_stream)
+            fig=figure('Visible', 'off');
+            set(gcf, 'Position', [0 0 nb-1 nb-1]);
+            hold on;
+            axes('Position',[0 0 1 1],'Visible','off');
+            imagesc([0 nb-1],[0 nb-1],colorfigure);
+            saveas(fig,char(strcat(path_out_fig,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_col_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'_log_fig','.png')));
+            close(fig);
         end
         
     end

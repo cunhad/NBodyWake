@@ -7,18 +7,18 @@ function [  ] = curve_2d_from_2d_slices_anali_all(  )
 % 
 
 root='/home/asus/Dropbox/extras/storage/graham/ht/';
-root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dclar-l2lr1na256_to_3dparcurv-l1lr1_anali/';
+root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps16_512_2dclar_l2lr1na256_anali/';
 % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcr0_l2lr1ap256_anali/';
 %root_anali_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurv_s5lv2_anali_all/';
 %root_visual_2d='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurv_s5lv2_visual_all/';
 
 filename='3.000xv0.dat';
 lenght_factor=1;
-resol_factor=1;
+resol_factor=0.5;
 pivot=[0,0,0];
 rot_angle=[1.5708,0,0];
-slices=32;
-sum_depth=4;
+slices=16;
+sum_depth=2;
 % lev=2;
 % sigma=5;
 % step_of_degree=1;
@@ -333,7 +333,7 @@ mean_stn=mean(stn_wake)
 std_stn=std(stn_wake,1)
 stn=mean_stn-std_stn
 significance=abs(mean_wake-mean_nowake)/(std_wake+std_nowake)
-
+% 
 % nowake=reshape(permute(anali_depth(1,1:length(sample_list_nowake),:,4,1),[1,3,2,4,5]),[1,numel(anali_depth(1,1:length(sample_list_nowake),:,2,1))])
 % wake=reshape(permute(anali_depth(2,1:length(sample_list_wake),:,4,1),[1,3,2,4,5]),[1,numel(anali_depth(1,1:length(sample_list_wake),:,2,1))])
 % mean_wake=mean(wake)

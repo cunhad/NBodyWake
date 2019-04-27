@@ -7,7 +7,8 @@ function [  ] = curve_3d_from_2d_slices_anali_all(  )
 % 
 
 root='/home/asus/Dropbox/extras/storage/graham/ht/';
-root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dclar-l3lr1na256_to_3dparcurv-l1lr1_anali/';
+% root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps16_512_2dclar-l2lr1na128_to_3dparcurv-l1lr1_anali/';
+root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dclar-l2lr1na256_to_3dparcurv-l1lr1_anali/';
 % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcr0_l2lr1ap256_anali/';
 %root_anali_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurv_s5lv2_anali_all/';
 %root_visual_2d='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurv_s5lv2_visual_all/';

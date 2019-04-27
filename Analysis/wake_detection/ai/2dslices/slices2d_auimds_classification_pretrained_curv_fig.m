@@ -1,4 +1,4 @@
-function [  ] = slices2d_auimds_classification_pretrained_curv_fig()
+                                                                                                                                                                                                function [  ] = slices2d_auimds_classification_pretrained_curv_fig()
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 

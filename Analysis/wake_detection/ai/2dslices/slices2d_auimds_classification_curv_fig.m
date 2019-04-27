@@ -286,7 +286,7 @@ auimdsValidation = augmentedImageDatastore([1024 1024],imdsValidation,'DataAugme
 
 % figure; imshow(readimage(imds,1));
 
- layers = [
+layers = [
 imageInputLayer([1024 1024 3])
 convolution2dLayer(2,1,'Padding','same')
 batchNormalizationLayer
