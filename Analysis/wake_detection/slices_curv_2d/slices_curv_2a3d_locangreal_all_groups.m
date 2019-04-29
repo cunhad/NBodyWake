@@ -111,6 +111,8 @@ x=mean(signal_sample_nw,2);
 cd('../wake_detection/slices_curv_2d/');
 
 
+
+
 % a=max(signal_sample_nw')'
 % b=max(signal_sample_w')'
 % s=std(a)
@@ -167,6 +169,21 @@ cd('../wake_detection/slices_curv_2d/');
 % std_stn=std(stn_wake,1)
 % stn=mean_stn-std_stn
 % significance=abs(mean_wake-mean_nowake)/(std_wake+std_nowake)
+
+
+% signal_sample_sorted_nw=sort(signal_sample_nw,2);
+% signal_sample_sorted_w=sort(signal_sample_w,2);
+% 
+% find(signal_sample_w(4,:)==582.62)   %=95,sigma=4.9050499
+% find(signal_sample_w(6,:)==696.74)   %=338,sigma=8.0051
+% find(signal_sample_w(6,:)==623.64)   %=362,sigma=6.0174
+% find(signal_sample_w(9,:)==875.8000)   %=338,sigma=12.8738
+
+
+% find(signal_sample_nw(4,:)==592.39)   %=95,sigma=5.1677
+% find(signal_sample_nw(6,:)==557.0900)   %=28,sigma=4.2079
+% find(signal_sample_nw(3,:)==546.9300)   %=169,sigma=3.9
+% find(signal_sample_nw(5,:)==552.5200)   %=170,sigma=4.0836
 
 
 
