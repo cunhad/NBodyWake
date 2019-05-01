@@ -13,21 +13,24 @@ cd('../../preprocessing');
 % cut=1;
 % lev=2;
 % sigma = 5;
-% slices=32;
+slices=32;
 % anal_lev=2;
 NSIDE=8;
 z_glob=str2num('3.000')
 z='3.000';
+analy_type=3;
+
+
 
 N_angles=12*NSIDE*NSIDE/2;
 
 
-specs_path_list_nowake=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dclarhpxNSIDE',num2str(NSIDE),'l2lr1na256_to_3dparcurv-2dclarhpxNSIDE',num2str(NSIDE),'l1lr1_anali3_hpx/4Mpc_2048c_1024p_zi63_nowakem')
+specs_path_list_nowake=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE8_2dclarl2lr1na256_and_3dparclarl1lr1_anali_opt/4Mpc_2048c_1024p_zi63_nowakem')
 sample_list_nowake=dir(strcat(specs_path_list_nowake,'/sample*'));
 sample_list_nowake={sample_list_nowake.name};
 % sample_list_nowake=sort_nat(sample_list_nowake)
 
-specs_path_list_wake=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dclarhpxNSIDE',num2str(NSIDE),'l2lr1na256_to_3dparcurv-2dclarhpxNSIDE',num2str(NSIDE),'l1lr1_anali3_hpx/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m')
+specs_path_list_wake=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE8_2dclarl2lr1na256_and_3dparclarl1lr1_anali_opt/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m')
 sample_list_wake=dir(strcat(specs_path_list_wake,'/sample*'));
 sample_list_wake={sample_list_wake.name};
 sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw');
@@ -48,32 +51,80 @@ for w_nw=1:2
         sample_list=sample_list_wake;
         ch='_4';
         coul='r';
-    end
+    end        
     
     if w_nw==1
              signal_nw=[];
+             signal_nw_aux=[];
+             nw_name_anglid=[];
     else            
             signal_w=[];
+            signal_w_aux=[];
+            w_name_anglid=[];
     end
         
     
     
     for sample = 1:length(sample_list)
         
-        path_in=strcat(specs_path_list,'/',string(sample_list(sample)),'/data_anali/1lf_1rf/NSIDE_',num2str(NSIDE),'/slices_curv_2a3d/hpx/molvd/')
+        list_of_angle_paths=dir(char(strcat(specs_path_list,'/',string(sample_list(sample)),'/data_2d_filt_slices/1lf_1rf','/NSIDE_',num2str(NSIDE),'/anglid_*')));
+        list_of_angle_paths={list_of_angle_paths.name};
         
-        filename=strcat(path_in,'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2a3d_z',z,'_data.txt')
-        
-        info = dlmread(filename);
-        
-        if w_nw==1
-            signal_nw=[signal_nw info(1:N_angles,3)'];
-            signal_sample_nw(sample,:)=info(1:N_angles,3)';
-        else
-            signal_w=[signal_w info(1:N_angles,3)'];
-            signal_sample_w(sample,:)=info(1:N_angles,3)';
+        for angle_id=1:length(list_of_angle_paths)
+            
+            
+            path1=strcat(specs_path_list,'/',string(sample_list(sample)),'/data_2d_filt_slices/1lf_1rf','/NSIDE_',num2str(NSIDE),'/',list_of_angle_paths(angle_id),'/');
+            
+            path2=dir(char(strcat(path1,"*pv*")));
+            path2={path2.name};
+            path2=path2(1);
+            
+            path3='/2dproj/dm/';
+            
+            filename=strcat(specs_path_list,'/',string(sample_list(sample)),'/data_2d_filt_slices/1lf_1rf','/NSIDE_',num2str(NSIDE),'/',list_of_angle_paths(angle_id),'/',string(path2),'/2dproj/dm/',ch,'_2dproj_curv_z3_anali2a3.txt');                        
+            
+            info = dlmread(filename);
+            
+            anali(angle_id,:,:,:)=reshape(info,slices,4,5);
+            
+            signal=anali(:,:,4,analy_type);
+            
+            signal=sum(signal,2);
+            signal=signal';
+            
+            
+            
+            
+            if w_nw==1
+                signal_nw=[signal_nw signal];
+                signal_nw_aux=[signal_nw_aux signal];
+%                 signal_sample_nw(sample,:)=info(1:N_angles,3)';
+                nw_name_anglid=[nw_name_anglid list_of_angle_paths(angle_id) ];
+            else
+                signal_w=[signal_w signal];
+%                 signal_sample_w(sample,:)=info(1:N_angles,3)';
+                signal_w_aux=[signal_w_aux signal];
+                w_name_anglid=[w_name_anglid list_of_angle_paths(angle_id) ];
+            end
+            
         end
         
+        if w_nw==1
+            signal_nw_cell{sample}=[signal_nw_aux];
+            signal_name_nw_cell{sample}=[nw_name_anglid];
+            
+        else
+            signal_w_cell{sample}=[signal_w_aux];
+            signal_name_w_cell{sample}=[w_name_anglid];
+            
+        end
+        
+        
+        
+        signal_nw_aux=[];
+        signal_w_aux=[];
+        nw_name_anglid=[];
+        w_name_anglid=[];
     end
     
     
@@ -81,14 +132,14 @@ for w_nw=1:2
     
 end
 
-mean_nw=mean(signal_sample_nw(:))
-std_nw=std(signal_sample_nw(:))
+mean_nw=mean(signal_nw(:))
+std_nw=std(signal_nw(:))
 
-mean_w=mean(signal_sample_w(:))
-std_w=std(signal_sample_w(:))
+mean_w=mean(signal_w(:))
+std_w=std(signal_w(:))
 
-stn_nw=sort((signal_sample_nw-mean_nw)/std_nw,2);
-stn_w=sort((signal_sample_w-mean_nw)/std_nw,2);
+stn_nw=sort((signal_nw-mean_nw)/std_nw,2);
+stn_w=sort((signal_w-mean_nw)/std_nw,2);
 
 stn_nw_count=sum(stn_nw>4,2);
 stn_w_count=sum(stn_w>4,2);
@@ -97,15 +148,15 @@ stn_w_count=sum(stn_w>4,2);
 
 stn_w_self=sort((signal_sample_w-mean_w)/std_w,2);
 
-[h,p,ksstat,cv]  =  kstest(stn_nw(:),'Alpha',0.01)
-
-[h,p] = lillietest((signal_sample_nw(6,:)))
-
-x=signal_sample_nw([4,5],:);
-[h,p] = lillietest(x(:))
-
-x=mean(signal_sample_nw,2);
-[h,p] = lillietest(x(:))
+% [h,p,ksstat,cv]  =  kstest(stn_nw(:),'Alpha',0.01)
+% 
+% [h,p] = lillietest((signal_sample_nw(6,:)))
+% 
+% x=signal_sample_nw([4,5],:);
+% [h,p] = lillietest(x(:))
+% 
+% x=mean(signal_sample_nw,2);
+% [h,p] = lillietest(x(:))
 
 
 cd('../wake_detection/slices_curv_2d/');

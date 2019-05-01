@@ -1,4 +1,4 @@
-function [ map,anali ] = slices_curv_2a3d_locangreal_inf( root,root_data_2d_in,root_data_2d_out,root_data_2d_anali_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,numb_rand,slices,lev,lev_2drid,lev_3d,lev_3drid,step_of_degree,wavel_removal_factor,NSIDE,partition2d,partition3rd,sum_depth,snapshot,visual_type,visual_in_or_out,stage)
+function [ map,anali ] = slices_curv_2a3d_locangreal_inf_dev2( root,root_data_2d_in,root_data_2d_out,root_data_2d_anali_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,numb_rand,slices,lev,lev_2drid,lev_3d,lev_3drid,step_of_degree,wavel_removal_factor,NSIDE,partition2d,partition3rd,sum_depth,snapshot,visual_type,visual_in_or_out,stage)
 
 % (example) [ map ] = slices_curv_2d('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data_test2/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,8,4,8,2,5 );
 
@@ -365,8 +365,10 @@ for slice_id=1:slices
     fclose(fid);
     
 %     map2=map;
-    map(map<=1)=1;%to remove problem with holes
-    map_3d_slices(:,:,slice_id)=log(map);
+%     map(map<=1)=1;%to remove problem with holes
+
+    map_dc=(map-mean(map(:)))/mean(map(:));
+    map_3d_slices(:,:,slice_id)=log(map_dc+2);
     
     if ismember(slice_id,snapshot)&(ismember(1,visual_type))&ismember(1,visual_in_or_out)
         

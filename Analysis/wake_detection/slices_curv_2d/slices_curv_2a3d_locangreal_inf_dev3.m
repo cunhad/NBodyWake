@@ -1,4 +1,4 @@
-function [ map,anali ] = slices_curv_2a3d_locangreal_inf( root,root_data_2d_in,root_data_2d_out,root_data_2d_anali_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,numb_rand,slices,lev,lev_2drid,lev_3d,lev_3drid,step_of_degree,wavel_removal_factor,NSIDE,partition2d,partition3rd,sum_depth,snapshot,visual_type,visual_in_or_out,stage)
+function [ map,anali ] = slices_curv_2a3d_locangreal_inf_dev3( root,root_data_2d_in,root_data_2d_out,root_data_2d_anali_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,numb_rand,slices,lev,lev_2drid,lev_3d,lev_3drid,step_of_degree,wavel_removal_factor,NSIDE,partition2d,partition3rd,sum_depth,snapshot,visual_type,visual_in_or_out,stage)
 
 % (example) [ map ] = slices_curv_2d('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data_test2/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,8,4,8,2,5 );
 
@@ -45,43 +45,43 @@ function [ map,anali ] = slices_curv_2a3d_locangreal_inf( root,root_data_2d_in,r
 % %                             %2 wthi some information
 % %                             %3for maximal information
 %   
-root='/home/asus/Dropbox/extras/storage/graham/ht/';
-root_data_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_hpx_2d/';
-root_data_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_tst1/';
-root_data_2d_anali_out='/home/asus/Dropbox/extras/storage/graham/ht/data_tst_anali1/';
-root_visual_2d='/home/asus/Dropbox/extras/storage/graham/ht/data_tst_anali_visual1/';
-spec='4Mpc_2048c_1024p_zi63_nowakem';
-aux_path='/sample3004/';
-% spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
-% aux_path='/sample3004/half_lin_cutoff_half_tot_pert_nvpw/';
-aux_path_out='';
-filename='3.000xv0.dat';
-lenght_factor=1;
-resol_factor=1;
-numb_rand=95;
-slices=32;
-lev=2;
-lev_2drid=1;
-lev_3d=1;
-lev_3drid=1;
-step_of_degree=(180/256);
-wavel_removal_factor=1/2;
-NSIDE=8;
-partition2d=1;
-partition3rd=2;
-sum_depth=4;
-% snapshot=[];
-snapshot=[23];
-% snapshot=[13,28]*(256/32);
-% snapshot=[9,29]*(128/32);
-visual_type=[1:4];        %if 1, shows the 2d proj; %if 2 shows the ridgelet transformation    %if 3 does everything above also for the depth % %if 4 produce figures to be used in nn analysis
-visual_in_or_out=[1:3]; %if 1 do visualization of the input,%  if 2 of the 2d_filtered    %  if 3 of the 3d filtered                            
-%  visual_in_or_out=[2];
-stage=[3];              % for doing the 3d
-%  info=[0,1,2]             %0,for just simplest visualisation
-                            %1 with minimal information
-                            %2 wthi some information
-                            %3for maximal information
+% root='/home/asus/Dropbox/extras/storage/graham/ht/';
+% root_data_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_hpx_2d/';
+% root_data_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_tst1/';
+% root_data_2d_anali_out='/home/asus/Dropbox/extras/storage/graham/ht/data_tst_anali1/';
+% root_visual_2d='/home/asus/Dropbox/extras/storage/graham/ht/data_tst_anali_visual1/';
+% spec='4Mpc_2048c_1024p_zi63_nowakem';
+% aux_path='/sample3004/';
+% % spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
+% % aux_path='/sample3004/half_lin_cutoff_half_tot_pert_nvpw/';
+% aux_path_out='';
+% filename='3.000xv0.dat';
+% lenght_factor=1;
+% resol_factor=1;
+% numb_rand=95;
+% slices=32;
+% lev=2;
+% lev_2drid=1;
+% lev_3d=1;
+% lev_3drid=1;
+% step_of_degree=(180/256);
+% wavel_removal_factor=1/2;
+% NSIDE=8;
+% partition2d=1;
+% partition3rd=2;
+% sum_depth=4;
+% % snapshot=[];
+% snapshot=[23];
+% % snapshot=[13,28]*(256/32);
+% % snapshot=[9,29]*(128/32);
+% visual_type=[1:4];        %if 1, shows the 2d proj; %if 2 shows the ridgelet transformation    %if 3 does everything above also for the depth % %if 4 produce figures to be used in nn analysis
+% visual_in_or_out=[1:3]; %if 1 do visualization of the input,%  if 2 of the 2d_filtered    %  if 3 of the 3d filtered                            
+% %  visual_in_or_out=[2];
+% stage=[3];              % for doing the 3d
+% %  info=[0,1,2]             %0,for just simplest visualisation
+%                             %1 with minimal information
+%                             %2 wthi some information
+%                             %3for maximal information
                            
 
 %%%%Problems
@@ -90,14 +90,14 @@ stage=[3];              % for doing the 3d
 
 % 
 
-addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_cpp/mex/'));
-addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_matlab'));
-addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct3d'));
+% addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_cpp/mex/'));
+% addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_matlab'));
+% addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct3d'));
 
 
-%  addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_cpp/mex/'));
-%  addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_matlab'));
-%  addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct3d'));
+ addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_cpp/mex/'));
+ addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_matlab'));
+ addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct3d'));
 
 
 cd('../../preprocessing');
@@ -366,7 +366,10 @@ for slice_id=1:slices
     
 %     map2=map;
     map(map<=1)=1;%to remove problem with holes
-    map_3d_slices(:,:,slice_id)=log(map);
+
+%     map_dc=(map-mean(map(:)))/mean(map(:));
+    map_log=log(map);
+    map_3d_slices(:,:,slice_id)=map_log/max(map_log);
     
     if ismember(slice_id,snapshot)&(ismember(1,visual_type))&ismember(1,visual_in_or_out)
         
@@ -701,7 +704,7 @@ for slice_id=1:slices
 end
 
 dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali.txt'),anali,'delimiter','\t');
-dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali_curt.txt'),anali_curv,'delimiter','\t');
+dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali_kurt.txt'),anali_curv,'delimiter','\t');
 
 
 
@@ -848,7 +851,7 @@ if ~ismember(1,sum_depth)
         R_nor_filt(length(xp)-nb*wavel_removal_factor:end,:)=[];
         R_nor_filt(1:nb*wavel_removal_factor,:)=[];
                       
-        if ismember(slice_id,floor(snapshot/sum_depth))&(ismember(3,visual_type))&ismember(2,visual_in_or_out)
+        if ismember(slice_depth_id,floor(snapshot/sum_depth))&(ismember(3,visual_type))&ismember(2,visual_in_or_out)
             
             %                 figure; imagesc((size_mpc/nc)*[1:nc],(size_mpc/1024)*[1:nc],map_3d_slices_filt2a3d(:,:,slice_id)); colorbar; axis('image');
             fig=figure('Visible', 'off'); imagesc(0:step_of_degree:180,(size_box/nb)*[1:nb],R_nor_filt);colorbar;
@@ -879,7 +882,7 @@ if ~ismember(1,sum_depth)
     end
 
     dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali_depth',num2str(sum_depth),'.txt'),anali_depth,'delimiter','\t');
-    dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali_curt_depth',num2str(sum_depth),'.txt'),anali_curv_depth,'delimiter','\t');
+    dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali_kurt_depth',num2str(sum_depth),'.txt'),anali_curv_depth,'delimiter','\t');
     
 end
 
@@ -1003,7 +1006,7 @@ if ismember(3,stage)
     anali3_curv(5,:)=anali3_curv5;
     
     
-    dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv_z',num2str(z_glob),'_anali3_curv.txt'),anali3_curv,'delimiter','\t');
+    dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali3_kurt.txt'),anali3_curv,'delimiter','\t');
     
     
     %now the analysis of the 3d filtered slices
@@ -1170,8 +1173,8 @@ if ismember(3,stage)
         
     end
     
-    dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_anali2a3.txt'),anali2a3,'delimiter','\t');
-    dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_anali2a3_curv.txt'),anali2a3_curv,'delimiter','\t');
+    dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3.txt'),anali2a3,'delimiter','\t');
+    dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3_kurt.txt'),anali2a3_curv,'delimiter','\t');
     
     
     % now we do the depth analysis
@@ -1316,7 +1319,7 @@ if ismember(3,stage)
             R_nor_filt(length(xp)-nb*wavel_removal_factor:end,:)=[];
             R_nor_filt(1:nb*wavel_removal_factor,:)=[];
             
-            if ismember(slice_id,floor(snapshot/sum_depth))&(ismember(3,visual_type))&ismember(3,visual_in_or_out)
+            if ismember(slice_depth_id,floor(snapshot/sum_depth))&(ismember(3,visual_type))&ismember(3,visual_in_or_out)
                 
                 %                 figure; imagesc((size_mpc/nc)*[1:nc],(size_mpc/1024)*[1:nc],map_3d_slices_filt2a3d(:,:,slice_id)); colorbar; axis('image');
                 fig=figure('Visible', 'off'); imagesc(0:step_of_degree:180,(size_box/nb)*[1:nb],R_nor_filt);colorbar;
@@ -1346,8 +1349,8 @@ if ismember(3,stage)
             anali2a3_curv_depth(slice_id,5,:)=curv2a3_5_depth;
         end
         
-        dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_anali2a3_depth',num2str(sum_depth),'.txt'),anali2a3_depth,'delimiter','\t');
-        dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_anali2a3_curv_depth',num2str(sum_depth),'.txt'),anali2a3_curv_depth,'delimiter','\t');
+        dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3_depth',num2str(sum_depth),'.txt'),anali2a3_depth,'delimiter','\t');
+        dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3_kurt_depth',num2str(sum_depth),'.txt'),anali2a3_curv_depth,'delimiter','\t');
     end
 end
 
