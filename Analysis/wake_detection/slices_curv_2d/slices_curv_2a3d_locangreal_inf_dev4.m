@@ -369,7 +369,7 @@ for slice_id=1:slices
 
 %     map_dc=(map-mean(map(:)))/mean(map(:));
     map_log=log(map+1);
-    map_3d_slices(:,:,slice_id)=map_log/max(map_log);
+    map_3d_slices(:,:,slice_id)=map_log/max(map_log(:));
     
     if ismember(slice_id,snapshot)&(ismember(1,visual_type))&ismember(1,visual_in_or_out)
         
