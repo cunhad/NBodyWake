@@ -83,16 +83,16 @@ for w_nw=1:2
             
             % sum analysis
             
-%             filename=strcat(specs_path_list,'/',string(sample_list(sample)),'/data_2d_filt_slices/1lf_1rf','/NSIDE_',num2str(NSIDE),'/',list_of_angle_paths(angle_id),'/',string(path2),'/2dproj/dm/',ch,'_2dproj_curv_z3_anali2a3.txt');                        
-%             
-%             info = dlmread(filename);
-%             
-%             anali(angle_id,:,:,:)=reshape(info,slices,4,5);
-%             
-%             signal=anali(:,:,4,analy_type);
-%             
-%             signal=sum(signal,2);
-%             signal=signal';
+            filename=strcat(specs_path_list,'/',string(sample_list(sample)),'/data_2d_filt_slices/1lf_1rf','/NSIDE_',num2str(NSIDE),'/',list_of_angle_paths(angle_id),'/',string(path2),'/2dproj/dm/',ch,'_2dproj_curv_z3_anali2a3.txt');                        
+            
+            info = dlmread(filename);
+            
+            anali(angle_id,:,:,:)=reshape(info,slices,4,5);
+            
+            signal=anali(:,:,4,analy_type);
+            
+            signal=sum(signal,2);
+            signal=signal';
             
             %depth analysis
 % 
@@ -108,21 +108,21 @@ for w_nw=1:2
 %             signal=signal';
 %             
 
-            %kurtosis analysis
-            
-            
-            filename=strcat(specs_path_list,'/',string(sample_list(sample)),'/data_2d_filt_slices/1lf_1rf','/NSIDE_',num2str(NSIDE),'/',list_of_angle_paths(angle_id),'/',string(path2),'/2dproj/dm/',ch,'_2dproj_curv_z3_anali2a3_kurt.txt');                        
-            
-            info = dlmread(filename);
-            
-            number_lv=prod(size(info))/(slices*5);
-            
-            anali(angle_id,:,:,:)=reshape(info,slices,5,number_lv);
-            
-            signal=anali(:,:,5,1);
-            
-            signal=sum(signal,2);
-            signal=signal';
+%             %kurtosis analysis
+%             
+%             
+%             filename=strcat(specs_path_list,'/',string(sample_list(sample)),'/data_2d_filt_slices/1lf_1rf','/NSIDE_',num2str(NSIDE),'/',list_of_angle_paths(angle_id),'/',string(path2),'/2dproj/dm/',ch,'_2dproj_curv_z3_anali2a3_kurt.txt');                        
+%             
+%             info = dlmread(filename);
+%             
+%             number_lv=prod(size(info))/(slices*5);
+%             
+%             anali(angle_id,:,:,:)=reshape(info,slices,5,number_lv);
+%             
+%             signal=anali(:,:,5,1);
+%             
+%             signal=sum(signal,2);
+%             signal=signal';
           
             
 
