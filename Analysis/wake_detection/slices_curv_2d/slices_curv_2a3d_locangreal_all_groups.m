@@ -110,6 +110,9 @@ x=signal_sample_nw([4,5],:);
 x=mean(signal_sample_nw,2);
 [h,p] = lillietest(x(:))
 
+sorted_signal_sample_nw_tot=sort((signal_sample_nw(:)));
+sorted_signal_sample_w_tot=sort((signal_sample_w(:)));
+
 
 cd('../wake_detection/slices_curv_2d/');
 
@@ -122,6 +125,48 @@ cd('../wake_detection/slices_curv_2d/');
 % m=mean(a)
 % (a-m)/s
 % (b-m)/s
+
+
+% thresh=590;
+thresh=532;
+outlier_w_count=sum(signal_sample_w>thresh,2);
+sum_w=sum(outlier_w_count)
+sum_w_=floor(sum(outlier_w_count)/24)
+prob_w=sum(outlier_w_count)/(3840*24)
+outlier_nw_count=sum(signal_sample_nw>thresh,2);
+sum_nw=sum(outlier_nw_count)
+prob_nw=sum(outlier_nw_count)/3840
+sum(outlier_w_count)/(24*sum(outlier_nw_count))
+
+
+% N=10000;
+N=10000;
+number_nowake=round(N*prob_nw)
+number_wake=round(N*prob_w)
+
+s_value=0;
+% for i=0:number_wake
+for i=0:20
+times=i;
+value(i+1)=((1-prob_nw)^(N-times))*((prob_nw)^times)*nchoosek(N,times);
+s_value=s_value+value(i+1);
+sum_value(i+1)=s_value;
+end
+sum_value_notrange_nw=1-sum_value;
+
+s_value=0;
+% for i=0:number_wake
+for i=0:20
+times=i;
+value(i+1)=((1-prob_w)^(N-times))*((prob_w)^times)*nchoosek(N,times);
+s_value=s_value+value(i+1);
+sum_value(i+1)=s_value;
+end
+sum_value_notrange_w=1-sum_value;
+
+sum_value_notrange_nw(14)
+sum_value_notrange_w(14)
+
 % 
 % thresh=4.5;
 % stn_w_count=sum(stn_w>thresh,2);
@@ -134,12 +179,16 @@ cd('../wake_detection/slices_curv_2d/');
 % sum(stn_w_count)/(32*sum(stn_nw_count))
 % 
 
+
+
 % times=3;
 % ((1-2.6*10^-4)^(10^4-times))*((2.6*10^-4)^times)*nchoosek(10^4,times)
 
+
+
 % s_value=0;
 % for i=0:20
-% times=3;
+% times=i;
 % value(i+1)=((1-2.6*10^-4)^(10^4-times))*((2.6*10^-4)^times)*nchoosek(10^4,times);
 % s_value=s_value+value(i+1);
 % sum_value(i+1)=s_value;
@@ -153,6 +202,17 @@ cd('../wake_detection/slices_curv_2d/');
 % rel_frac=ceil(length(all_signal_sample_nw_sorted)/8)
 % relevand_fraction_signal_sample_nw=all_signal_sample_nw_sorted(1:rel_frac);
 % 
+
+
+% figure;
+% h1 = histogram(signal_sample_nw(:),'BinWidth',10);
+% hold on
+% h2 = histogram(signal_sample_w(:),'BinWidth',10);
+% xlabel('$S$ value', 'interpreter', 'latex', 'fontsize', 20);
+% ylabel('histogram', 'interpreter', 'latex', 'fontsize', 20);
+% legend('G\mu=0','G\mu=1 \times 10^{-7}','location','northeast')
+% set(gca, 'YScale', 'log')
+
 % 
 % all_signal_sample_w=signal_sample_w(:);
 % all_signal_sample_w_sorted=sort(all_signal_sample_w,'descend');

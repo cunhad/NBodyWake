@@ -3,7 +3,7 @@ function [  ] = curve_3dpartition_data_anali_out_from_2d_clocangreal_out( root,r
 %   Detailed explanation goes here
 % 
 
-
+% 
 % 
 % root='/home/asus/Dropbox/extras/storage/graham/ht/';
 % root_data_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dclar_l2lr1na256_data/';
@@ -423,7 +423,8 @@ for slice_id=1:slices
             title(strcat('filt2 info:',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
             
             saveas(fig,char(strcat(path_visual_in','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
-            
+                                close(fig);
+
         end
         
         if ismember(2,visual_in_or_out)
@@ -437,7 +438,8 @@ for slice_id=1:slices
             title(strcat('filt2 info:',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
             
             saveas(fig,char(strcat(path_visual','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
-            
+                                close(fig);
+
         end
     end
     
@@ -493,7 +495,8 @@ for slice_id=1:slices
         title(strcat('ridg filt2 for ',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
         
         saveas(fig,char(strcat(path_visual_rid','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv&rid_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
-        
+                            close(fig);
+
     end
     
         this=map_3d_slices_filt3d(:,:,slice_id);
@@ -564,7 +567,8 @@ if ~ismember(1,sum_depth)
                 title(strcat('filt2 info:',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
                 
                 saveas(fig,char(strcat(path_visual_depth_in','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id*sum_depth),'.png')));
-                
+                                    close(fig);
+
             end
             
             if ismember(2,visual_in_or_out)
@@ -578,7 +582,8 @@ if ~ismember(1,sum_depth)
                 title(strcat('filt2 info:',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
                 
                 saveas(fig,char(strcat(path_visual_depth','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id*sum_depth),'.png')));
-                
+                                    close(fig);
+
             end
         end
 %         
@@ -622,7 +627,7 @@ if ~ismember(1,sum_depth)
         R_nor_filt(1:nb*wavel_removal_factor,:)=[];
         
         
-        if ismember(slice_id,floor(snapshot/sum_depth))&(ismember(2,visual_type))&ismember(2,visual_in_or_out)
+        if ismember(slice_depth_id,floor(snapshot/sum_depth))&(ismember(2,visual_type))&ismember(2,visual_in_or_out)
             
             %                 figure; imagesc((size_mpc/nc)*[1:nc],(size_mpc/1024)*[1:nc],map_3d_slices_filt2a3d(:,:,slice_id)); colorbar; axis('image');
             fig=figure('Visible', 'off'); imagesc(0:step_of_degree:180,(size_box/nb)*[1:nb],R_nor_filt);colorbar;
@@ -634,7 +639,8 @@ if ~ismember(1,sum_depth)
             title(strcat('ridg filt2 for ',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
             
             saveas(fig,char(strcat(path_visual_rid_depth','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv&rid_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id*sum_depth),'.png')));
-            
+                                close(fig);
+
         end
         
          

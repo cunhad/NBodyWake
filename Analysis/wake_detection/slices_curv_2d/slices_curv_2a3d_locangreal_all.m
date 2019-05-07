@@ -16,18 +16,18 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangreal_all( root,ro
 % analy_type=3;
 % 
 % root='/home/asus/Dropbox/extras/storage/graham/ht/';
-% root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps16_1024_2dclarhpxNSIDE4l2lr1na256_to_3dparcurv-2dclarhpxNSIDE4l1lr1_anali/';
-% root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps16_1024_2dclarhpxNSIDE4l2lr1na256_to_3dparcurv-2dclarhpxNSIDE4l1lr1_anali3_hpx/';
+% root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dclarhpxNSIDE8l2lr1na256_to_3dparcurv-2dclarhpxNSIDE8l1lr1_anali/';
+% root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dclarhpxNSIDE8l2lr1na256_to_3dparcurv-2dclarhpxNSIDE8l1lr1_anali3_hpx/';
 % spec='4Mpc_2048c_1024p_zi63_nowakem';
-% aux_path='/sample3001/';
+% aux_path='/sample3010/';
 % %spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
 % %aux_path='/sample3001/half_lin_cutoff_half_tot_pert_nvpw/';
 % aux_path_out='';
 % filename='3.000xv0.dat';
 % lenght_factor=1;
 % resol_factor=1;
-% slice=16;
-% NSIDE=4;
+% slice=32;
+% NSIDE=8;
 % analy_type=3;
 
 
