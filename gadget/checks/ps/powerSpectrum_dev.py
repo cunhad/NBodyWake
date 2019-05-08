@@ -127,7 +127,7 @@ def plot_ps_gadget(path_in,file_in,path_out,bin_x_,bin_k):
     plt.savefig(path_out+'gadget/ps_'+file_in+'.png', bbox_inches = "tight",dpi=300)
     plt.close()
     
-    return
+    return k,P_k
 
 def plot_ps_picola(path_in,file_in,path_out,bin_x_,bin_k):
     
@@ -242,7 +242,7 @@ def plot_ps_gadget_CAMB(path_in,file_in_gadget,path_out,bin_x_,bin_k):
     
     plt.plot(k1,P_k1,label="Gadget")
     plt.plot(k2,P_k2,label="CAMB")
-    plt.xlim(xmax = min(k1), xmin = max(k1))
+    plt.xlim(xmax = max(k1), xmin = min(k1))
     plt.legend(loc=1)
     plt.xlabel('k [$Mpc^{-1}$]')
     plt.ylabel('P(k) [$Mpc^3$]')
@@ -262,12 +262,14 @@ def plot_ps_gadget_CAMB(path_in,file_in_gadget,path_out,bin_x_,bin_k):
     plt.ylabel(r'$P_{gadget}(k)/P_{CAMB}(k)$ [$Mpc^3$]')
     plt.title('Frac of Gadget and CAMB P(k), z=%2.f' %z)
     plt.xscale('log')
-#    plt.yscale('log')
+    plt.yscale('log')
 #    plt.show()
     if not os.path.exists(os.path.dirname(path_out+'gad_CAMB_comp_ferr/')):
         os.makedirs(path_out+'gad_CAMB_comp_ferr/')
     plt.savefig(path_out+'gad_CAMB_comp_ferr/ps_ferr_'+file_in_gadget+'.png', bbox_inches = "tight",dpi=300)
     plt.close()
+    
+    return k1,P_k1,k2,P_k2,P_k2_
     
 def plot_ps_picola_CAMB(path_in,file_in_picola,file_in_gadget,path_out,bin_x_,bin_k):
     
@@ -290,12 +292,12 @@ def plot_ps_picola_CAMB(path_in,file_in_picola,file_in_gadget,path_out,bin_x_,bi
     
     plt.plot(k1,P_k1,label="MG_picola")
     plt.plot(k2,P_k2,label="CAMB")
-    plt.xlim(xmax = min(k1), xmin = max(k1))
+    plt.xlim(xmax = max(k1), xmin = min(k1))
     plt.legend(loc=1)
     plt.xlabel('k [$Mpc^{-1}$]')
     plt.ylabel('P(k) [$Mpc^3$]')
     plt.title('MG_picola and CAMB P(k), z=%2.f' %z)
-#    plt.xscale('log')
+    plt.xscale('log')
     plt.yscale('log')
 #    plt.show()
     if not os.path.exists(os.path.dirname(path_out+'pic_CAMB_comp/')):
@@ -324,16 +326,16 @@ def plot_ps_picola_CAMB(path_in,file_in_picola,file_in_gadget,path_out,bin_x_,bi
 
 
 file_in_picola,just_files_picola=pps.list_files_picola(sys.argv[1])    
-#for x in (just_files_picola):
-#    print(x)
-##    plot_ps_picola('/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/32Mpc_64c_64p_zi63_nowakem/sample0001/',x,'/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/plot/32Mpc_64c_64p_zi63_nowakem/sample0001/ps5/',32,16)
-#    plot_ps_picola(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
-##
+for x in (just_files_picola):
+    print(x)
+#    plot_ps_picola('/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/32Mpc_64c_64p_zi63_nowakem/sample0001/',x,'/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/plot/32Mpc_64c_64p_zi63_nowakem/sample0001/ps5/',32,16)
+    plot_ps_picola(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+#
 file_in_gadget,just_files_gadget=pps.list_files_gadget(sys.argv[1])
 #for x in (just_files_gadget):
 #    print(x)    
 ##    plot_ps_gadget('/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/32Mpc_64c_64p_zi63_nowakem/sample0001/',x,'/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/plot/32Mpc_64c_64p_zi63_nowakem/sample0001/ps5/',32,16)    
-#    plot_ps_gadget(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+#    k,P_k=plot_ps_gadget(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
 #    
 ##print(len(just_files_gadget),len(just_files_picola))    
 #for x, y in zip(just_files_gadget, just_files_picola):
@@ -343,7 +345,7 @@ file_in_gadget,just_files_gadget=pps.list_files_gadget(sys.argv[1])
 
 #for x in (just_files_gadget[1:-1]):
 #    print(x)
-#    plot_ps_gadget_CAMB(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+#    k1,P_k1,k2,P_k2,P_k2_=plot_ps_gadget_CAMB(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
 
 for x,y in zip(just_files_picola[1:-1],just_files_gadget[1:-1]):
     print(x,y)

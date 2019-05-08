@@ -240,7 +240,7 @@ def plot_ps_gadget_CAMB(path_in,file_in_gadget,path_out,bin_x_,bin_k):
     
     plt.plot(k1,P_k1,label="Gadget")
     plt.plot(k2,P_k2,label="CAMB")
-    plt.xlim(xmax = min(k1), xmin = max(k1))
+    plt.xlim(xmax = max(k1), xmin = min(k1))
     plt.legend(loc=1)
     plt.xlabel('k [$Mpc^{-1}$]')
     plt.ylabel('P(k) [$Mpc^3$]')
@@ -290,12 +290,12 @@ def plot_ps_picola_CAMB(path_in,file_in_picola,file_in_gadget,path_out,bin_x_,bi
     
     plt.plot(k1,P_k1,label="MG_picola")
     plt.plot(k2,P_k2,label="CAMB")
-    plt.xlim(xmax = min(k1), xmin = max(k1))
+    plt.xlim(xmax = max(k1), xmin = min(k1))
     plt.legend(loc=1)
     plt.xlabel('k [$Mpc^{-1}$]')
     plt.ylabel('P(k) [$Mpc^3$]')
     plt.title('MG_picola and CAMB P(k), z=%2.f' %z)
-#    plt.xscale('log')
+    plt.xscale('log')
     plt.yscale('log')
 #    plt.show()
     if not os.path.exists(os.path.dirname(path_out+'pic_CAMB_comp/')):
