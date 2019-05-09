@@ -12,7 +12,7 @@ OmegaL=0.7095;
 clight=9.6E-15;  %speed of light in Mpc per second units
 zi=1000;   %redshift close to the time of recombination
 t_0=4.2E+17; %age of the universe today
-Hzero=3.2411E-18; %hubble constant
+Hzero=(3.2411E-18)*h; %hubble constant
 
 OmegaBM=0.0445;
 OmegaM=OmegaCDM+OmegaBM;
