@@ -14,6 +14,7 @@ import os
 import glob
 import matplotlib.pyplot as plt
 from scipy import interpolate as intp
+#from cosmicpy import *
 
 print(os.path.join(os.path.dirname(__file__), "../../../../Analysis/preprocessing"))
 
@@ -325,13 +326,13 @@ def plot_ps_picola_CAMB(path_in,file_in_picola,file_in_gadget,path_out,bin_x_,bi
     return
 
 
-file_in_picola,just_files_picola=pps.list_files_picola(sys.argv[1])    
-for x in (just_files_picola):
-    print(x)
-#    plot_ps_picola('/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/32Mpc_64c_64p_zi63_nowakem/sample0001/',x,'/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/plot/32Mpc_64c_64p_zi63_nowakem/sample0001/ps5/',32,16)
-    plot_ps_picola(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
-#
-file_in_gadget,just_files_gadget=pps.list_files_gadget(sys.argv[1])
+#file_in_picola,just_files_picola=pps.list_files_picola(sys.argv[1])    
+#for x in (just_files_picola):
+#    print(x)
+##    plot_ps_picola('/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/32Mpc_64c_64p_zi63_nowakem/sample0001/',x,'/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/plot/32Mpc_64c_64p_zi63_nowakem/sample0001/ps5/',32,16)
+#    plot_ps_picola(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+##
+#file_in_gadget,just_files_gadget=pps.list_files_gadget(sys.argv[1])
 #for x in (just_files_gadget):
 #    print(x)    
 ##    plot_ps_gadget('/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/32Mpc_64c_64p_zi63_nowakem/sample0001/',x,'/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/plot/32Mpc_64c_64p_zi63_nowakem/sample0001/ps5/',32,16)    
@@ -342,13 +343,27 @@ file_in_gadget,just_files_gadget=pps.list_files_gadget(sys.argv[1])
 #    print(x, y)
 #    print(readheader(sys.argv[1]+'gadget_out/'+x,'redshift'),readheader(sys.argv[1]+'picola_out/'+y,'redshift'))
 ##    plot_ps_comp(sys.argv[1],x,y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
-
+#
 #for x in (just_files_gadget[1:-1]):
 #    print(x)
 #    k1,P_k1,k2,P_k2,P_k2_=plot_ps_gadget_CAMB(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+#
+#for x,y in zip(just_files_picola[1:-1],just_files_gadget[1:-1]):
+#    print(x,y)
+#    plot_ps_picola_CAMB(sys.argv[1],x,y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+    
 
-for x,y in zip(just_files_picola[1:-1],just_files_gadget[1:-1]):
-    print(x,y)
-    plot_ps_picola_CAMB(sys.argv[1],x,y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
     
+#cosmo = cosmology()
+#print cosmo    
     
+from nbodykit.lab import cosmology
+
+cosmo = cosmology.Cosmology()
+print("original sigma8 = %.4f" % cosmo.sigma8)
+cosmo = cosmo.clone(h=0.7, nonlinear=True,T0_cmb= 2.7255,Omega0_b=0.0445,Omega0_cdm=0.246,n_s=0.96,sigma8=0.8628)
+
+
+#new_cosmo = cosmo.match(sigma8=0.82)
+print("new sigma8 = %.4f" % cosmo.sigma8)
+#print(cosmo.P_z_max)
