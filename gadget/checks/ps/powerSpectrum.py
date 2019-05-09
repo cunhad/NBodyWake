@@ -327,7 +327,7 @@ file_in_picola,just_files_picola=pps.list_files_picola(sys.argv[1])
 for x in (just_files_picola):
     print(x)
 #    plot_ps_picola('/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/32Mpc_64c_64p_zi63_nowakem/sample0001/',x,'/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/plot/32Mpc_64c_64p_zi63_nowakem/sample0001/ps5/',32,16)
-#    plot_ps_picola(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+    plot_ps_picola(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
 
 file_in_gadget,just_files_gadget=pps.list_files_gadget(sys.argv[1])
 for x in (just_files_gadget):
