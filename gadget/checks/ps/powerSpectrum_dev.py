@@ -363,6 +363,14 @@ cosmo = cosmology.Cosmology()
 print("original sigma8 = %.4f" % cosmo.sigma8)
 cosmo = cosmo.clone(h=0.7, nonlinear=True,T0_cmb= 2.7255,Omega0_b=0.0445,Omega0_cdm=0.246,n_s=0.96,sigma8=0.8628)
 
+Plin = cosmology.LinearPower(cosmo, redshift=0., transfer='EisensteinHu')
+
+k = np.logspace(-3, 0, 100)
+plt.loglog(k, Plin(k), c='k')
+
+plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
+plt.ylabel(r"$P$ $[h^{-3} \mathrm{Mpc}^{3}]$")
+plt.show()
 
 #new_cosmo = cosmo.match(sigma8=0.82)
 print("new sigma8 = %.4f" % cosmo.sigma8)
