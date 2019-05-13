@@ -350,6 +350,3 @@ for x in (just_files_gadget):
 for x,y in zip(just_files_picola,just_files_gadget):
     print(x,y)
     plot_ps_picola_CAMB(sys.argv[1],x,y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
-        
-    
-    

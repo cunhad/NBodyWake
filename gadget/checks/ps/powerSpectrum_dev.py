@@ -357,6 +357,11 @@ def plot_ps_picola_CAMB(path_in,file_in_picola,file_in_gadget,path_out,bin_x_,bi
 #cosmo = cosmology()
 #print cosmo    
     
+
+
+
+
+
 from nbodykit.lab import cosmology
 
 cosmo = cosmology.Cosmology()

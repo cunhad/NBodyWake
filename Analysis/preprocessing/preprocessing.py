@@ -44,6 +44,21 @@ def list_files_gadget(path_files):
         just_files=[x.split('/')[-1] for x in file_in]
     return file_in,just_files
 
+def list_files_ic(path_files):
+#    file_in=glob.glob(path_files+'gadget_out/snapshot*')
+    file_in=glob.glob(path_files+'ic/ics_gadget.*at.0')
+    if not file_in:
+#        print "Empty String!"
+        file_in=glob.glob(path_files+'ic/ics_gadget.dat*')
+        file_in=sorted_nicely( file_in )
+        just_files=[x.split('/')[-1] for x in file_in]
+    else:
+        file_in=[x[:-2] for x in file_in]
+        file_in=sorted_nicely( file_in )
+        file_in=file_in[::-1]
+        just_files=[x.split('/')[-1] for x in file_in]
+    return file_in,just_files
+
 def list_files_picola(path_files):
     file_in=glob.glob(path_files+'picola_out/out*.0')
     file_in=[x[:-2] for x in file_in]
@@ -56,5 +71,6 @@ def list_files_picola(path_files):
 #file_in,just_files=list_files_gadget('/home/asus/Dropbox/extras/storage/graham/gadget/small/64Mpc_128c_128p_zi31_nowakem/sample0001/')
 #file_in,just_files=list_files_picola('/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/32Mpc_64c_64p_zi63_nowakem/sample0001/')
 #file_in,just_files=list_files_picola('/home/asus/Dropbox/extras/storage/graham/gadget/small/64Mpc_128c_128p_zi31_nowakem/sample0001/')
+#file_in,just_files=list_files_ic('/home/asus/Dropbox/extras/storage/graham/gadget/small/64Mpc_128c_128p_zi31_nowakem/sample0001/')
 #for x in (just_files):
 #    print(x)
