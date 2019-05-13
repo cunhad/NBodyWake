@@ -689,7 +689,9 @@ for x in just_files_ic:
     plot_ps_ic_CAMB(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_ic,P_ic)
     P_k2=plot_ps_ic_EH(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_ic,P_ic)
 
-for x, y in zip(just_files_gadget[::-1], just_files_picola):
+#for x, y in zip(just_files_gadget[::-1], just_files_picola):
+for x, y in zip(just_files_gadget, just_files_picola):    
+    
     print(x, y)
 
 #    print(x)    
