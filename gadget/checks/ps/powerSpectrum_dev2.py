@@ -479,14 +479,22 @@ def plot_ps_gadget_EH(path_in,file_in_gadget,path_out,bin_x_,bin_k,k1,P_k1):
         
     return
 
-def plot_ps_picola_CAMB(path_in,file_in_picola,file_in_gadget,path_out,bin_x_,bin_k,k1,P_k1):
+def plot_ps_picola_CAMB(path_in,file_in_picola,path_out,bin_x_,bin_k,k1,P_k1):
     
         
 #    print(path_in+'picola_out/')
 #    pos1=ReadPos(path_in+'picola_out/',file_in_picola)
-    z=readheader(path_in+'gadget_out/'+file_in_gadget,'redshift')
+#    z=readheader(path_in+'gadget_out/'+file_in_gadget,'redshift')
+    
+    z=readheader(path_in+'picola_out/'+file_in_picola,'redshift')
+#    print(z)
+#    str(round(z))
     L=readheader(path_in+'picola_out/'+file_in_picola,'boxsize') 
+    
+#    z_pic=readheader(path_in+'picola_out/'+file_in_picola,'redshift')
         
+#    print(z_pic)
+#    str(round(z_pic))
 #    density1=part2dens3d(pos1,box_l=L, bin_x=bin_x_)
 #    delta1 = dens2overdens(density1, np.mean(density1))
 #    P_k1 = power_spectrum(delta1, np.float64(L), bin_k)[0]
@@ -532,12 +540,13 @@ def plot_ps_picola_CAMB(path_in,file_in_picola,file_in_gadget,path_out,bin_x_,bi
     
     return
 
-def plot_ps_picola_EH(path_in,file_in_picola,file_in_gadget,path_out,bin_x_,bin_k,k1,P_k1):
+def plot_ps_picola_EH(path_in,file_in_picola,path_out,bin_x_,bin_k,k1,P_k1):
     
         
 #    print(path_in+'picola_out/')
 #    pos1=ReadPos(path_in+'picola_out/',file_in_picola)
-    z=readheader(path_in+'gadget_out/'+file_in_gadget,'redshift')
+#    z=readheader(path_in+'gadget_out/'+file_in_gadget,'redshift')
+    z=readheader(path_in+'picola_out/'+file_in_picola,'redshift')
     L=readheader(path_in+'picola_out/'+file_in_picola,'boxsize') 
         
 #    density1=part2dens3d(pos1,box_l=L, bin_x=bin_x_)
@@ -683,39 +692,55 @@ file_in_ic,just_files_ic=pps.list_files_ic(sys.argv[1])
 #    k_gad,P_k_gad=plot_ps_gadget(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
 
 
-print(just_files_ic)
-for x in just_files_ic:
-    k_ic,P_ic=plot_ps_ic(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
-    plot_ps_ic_CAMB(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_ic,P_ic)
-    P_k2=plot_ps_ic_EH(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_ic,P_ic)
-
-#for x, y in zip(just_files_gadget[::-1], just_files_picola):
-for x, y in zip(just_files_gadget, just_files_picola):    
-    
-    print(x, y)
-
-#    print(x)    
-    k_gad,P_k_gad=plot_ps_gadget(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
-    
-#    print(y)
-    k_pic,P_k_pic=plot_ps_picola(sys.argv[1],y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
-  
-#    print(readheader(sys.argv[1]+'gadget_out/'+x,'redshift'),readheader(sys.argv[1]+'picola_out/'+y,'redshift'))
-    plot_ps_comp(sys.argv[1],x,y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_gad,P_k_gad,k_pic,P_k_pic)
+#print(just_files_ic)
+#for x in just_files_ic:
+#    k_ic,P_ic=plot_ps_ic(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+#    plot_ps_ic_CAMB(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_ic,P_ic)
+#    P_k2=plot_ps_ic_EH(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_ic,P_ic)
+#
+##for x, y in zip(just_files_gadget[::-1], just_files_picola):
+#for x, y in zip(just_files_gadget, just_files_picola):    
+#    
+#    print(x, y)
+#
+##    print(x)    
+#    k_gad,P_k_gad=plot_ps_gadget(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+#    
+##    print(y)
+#    k_pic,P_k_pic=plot_ps_picola(sys.argv[1],y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+#  
+##    print(readheader(sys.argv[1]+'gadget_out/'+x,'redshift'),readheader(sys.argv[1]+'picola_out/'+y,'redshift'))
+#    plot_ps_comp(sys.argv[1],x,y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_gad,P_k_gad,k_pic,P_k_pic)
+##    
+##   
+##    print(x)
+#    plot_ps_gadget_CAMB(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_gad,P_k_gad)
+#    
+##    print(x)
+#    plot_ps_gadget_EH(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_gad,P_k_gad)
 #    
 #   
-#    print(x)
-    plot_ps_gadget_CAMB(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_gad,P_k_gad)
-    
-#    print(x)
-    plot_ps_gadget_EH(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_gad,P_k_gad)
-    
-   
-#    print(x,y)
-    plot_ps_picola_CAMB(sys.argv[1],y,x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_pic,P_k_pic)
-    
-#    print(x,y)
-    plot_ps_picola_EH(sys.argv[1],y,x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_pic,P_k_pic)
+##    print(x,y)
+#    plot_ps_picola_CAMB(sys.argv[1],y,x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_pic,P_k_pic)
+#    
+##    print(x,y)
+#    plot_ps_picola_EH(sys.argv[1],y,x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_pic,P_k_pic)
+#
+##    print(x,y)
+#    plot_ps_comp_all(sys.argv[1],x,y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_gad,P_k_gad,k_pic,P_k_pic)
 
+
+for x in (just_files_picola):
+    print(x)
+    k_pic,P_k_pic=plot_ps_picola(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+    plot_ps_picola_CAMB(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_pic,P_k_pic)
+    plot_ps_picola_EH(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_pic,P_k_pic)
+    
+#for x, y in zip(just_files_picola,just_files_gadget[::-1]):
 #    print(x,y)
-    plot_ps_comp_all(sys.argv[1],x,y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_gad,P_k_gad,k_pic,P_k_pic)
+#    k_pic,P_k_pic=plot_ps_picola(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+#    plot_ps_picola_CAMB(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_pic,P_k_pic)
+#    
+    
+    
+    

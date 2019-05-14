@@ -29,6 +29,17 @@ import preprocessing as pps
 import numpy as np
 from pygadgetreader import *
 
+
+from nbodykit.lab import cosmology
+
+cosmo = cosmology.Cosmology()
+cosmo = cosmo.clone(h=0.7, nonlinear=True,T0_cmb= 2.7255,Omega0_b=0.0445,Omega0_cdm=0.246,n_s=0.96,sigma8=0.8628)
+print("new sigma8 = %.4f" % cosmo.sigma8)
+
+
+
+
+
 def ReadPos(dir,file):
     pos=readsnap(dir+file,'pos','dm')
     
@@ -98,12 +109,40 @@ def power_spectrum(field_x, box_l, bin_k):
 
     return power_k, k
 
+def plot_ps_CAMB(redshift):
+    
+    print('../../../CAMB/transfer_functions/camb_matterpower_z'+str(redshift)+'00.dat')
+    P_k=np.loadtxt('../../../CAMB/transfer_functions/camb_matterpower_z'+str(redshift)+'00.dat')
+    plt.plot(P_k[:,0],P_k[:,1])
+    plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
+    plt.ylabel(r"$P$ $[h^{-3} \mathrm{Mpc}^{3}]$")
+    plt.xscale('log')
+    plt.yscale('log')
+    plt.show()
+    
+    return P_k
+
+def plot_ps_EH(redshift_):
+    
+    Plin = cosmology.LinearPower(cosmo, redshift=redshift_, transfer='EisensteinHu')
+
+    k = np.logspace(-3, 0, 100)
+    plt.loglog(k, Plin(k), c='k')
+    plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
+    plt.ylabel(r"$P$ $[h^{-3} \mathrm{Mpc}^{3}]$")
+    plt.show()
+
+    
+    return
+
 
 def plot_ps_gadget(path_in,file_in,path_out,bin_x_,bin_k):
     
-    print(path_in+'gadget_out/')
+#    print(path_in+'gadget_out/')
     pos=ReadPos(path_in+'gadget_out/',file_in)
+    print(file_in)
     z=readheader(path_in+'gadget_out/'+file_in,'redshift')
+    print(z)
     L=readheader(path_in+'gadget_out/'+file_in,'boxsize')    
     
 #    pos=ReadPos('/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/32Mpc_64c_64p_zi63_nowakem/sample0001/picola_out/','out_z31p000')
@@ -115,8 +154,8 @@ def plot_ps_gadget(path_in,file_in,path_out,bin_x_,bin_k):
     k = power_spectrum(delta,  np.float64(L), bin_k)[1]
             
     plt.plot(k,P_k)
-    plt.xlabel('k [$Mpc^{-1}$]')
-    plt.ylabel('P(k) [$Mpc^3$]')
+    plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
+    plt.ylabel(r"$P$ $[h^{-3} \mathrm{Mpc}^{3}]$")
     plt.title('Gadget P(k), z=%2.f' %z)
     plt.xscale('log')
     plt.yscale('log')
@@ -126,13 +165,145 @@ def plot_ps_gadget(path_in,file_in,path_out,bin_x_,bin_k):
     plt.savefig(path_out+'gadget/ps_'+file_in+'.png', bbox_inches = "tight",dpi=300)
     plt.close()
     
+    return k,P_k
+
+def plot_ps_ic(path_in,file_in,path_out,bin_x_,bin_k):
+    
+    print(path_in+'ic/')
+    pos=ReadPos(path_in+'ic/',file_in)
+    z=readheader(path_in+'ic/'+file_in,'redshift')
+    print(z)
+    L=readheader(path_in+'ic/'+file_in,'boxsize')    
+    
+#    pos=ReadPos('/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/32Mpc_64c_64p_zi63_nowakem/sample0001/picola_out/','out_z31p000')
+#    z=readheader('/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/32Mpc_64c_64p_zi63_nowakem/sample0001/picola_out/out_z31p000','redshift')
+    
+    density=part2dens3d(pos, box_l=L, bin_x=bin_x_)
+    delta = dens2overdens(density, np.mean(density))
+    P_k = power_spectrum(delta, np.float64(L), bin_k)[0]
+    k = power_spectrum(delta,  np.float64(L), bin_k)[1]
+            
+    plt.plot(k,P_k)
+    plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
+    plt.ylabel(r"$P$ $[h^{-3} \mathrm{Mpc}^{3}]$")
+    plt.title('IC P(k), z=%2.f' %z)
+    plt.xscale('log')
+    plt.yscale('log')
+    #plt.show()
+    if not os.path.exists(os.path.dirname(path_out+'ic/')):
+        os.makedirs(path_out+'ic/')
+    plt.savefig(path_out+'ic/ic_ps_'+file_in+'.png', bbox_inches = "tight",dpi=300)
+    plt.close()
+    
+    return k,P_k
+
+def plot_ps_ic_CAMB(path_in,file_in,path_out,bin_x_,bin_k,k1,P_k1):
+    
+#    print(path_in+'gadget_out/')
+#    pos1=ReadPos(path_in+'gadget_out/',file_in_gadget)
+    z=readheader(path_in+'ic/'+file_in,'redshift')
+    L=readheader(path_in+'ic/'+file_in,'boxsize')
+    
+#    density1=part2dens3d(pos1, box_l=L, bin_x=bin_x_)
+#    delta1 = dens2overdens(density1, np.mean(density1))
+#    P_k1 = power_spectrum(delta1, np.float64(L), bin_k)[0]
+#    k1 = power_spectrum(delta1,  np.float64(L), bin_k)[1]
+    
+#    redshift=round((readheader(sys.argv[1]+'gadget_out/'+file_in_gadget,'redshift')))
+    k2=np.loadtxt('../../../CAMB/transfer_functions/camb_matterpower_z'+str(round(z))+'00.dat')[:,0]    
+    P_k2=np.loadtxt('../../../CAMB/transfer_functions/camb_matterpower_z'+str(round(z))+'00.dat')[:,1]
+    
+    
+    plt.plot(k1,P_k1,label="IC")
+    plt.plot(k2,P_k2,label="CAMB")
+    plt.xlim(xmax = max(k1), xmin = min(k1))
+    plt.legend(loc=1)
+    plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
+    plt.ylabel(r"$P$ $[h^{-3} \mathrm{Mpc}^{3}]$")
+
+    plt.title('IC and CAMB P(k), z=%2.f' %z)
+    plt.xscale('log')
+    plt.yscale('log')
+#    plt.show()
+    if not os.path.exists(os.path.dirname(path_out+'ic_CAMB_comp/')):
+        os.makedirs(path_out+'ic_CAMB_comp/')
+    plt.savefig(path_out+'ic_CAMB_comp/ps_'+file_in+'.png', bbox_inches = "tight",dpi=300)
+    plt.close()
+    
+    f2 = intp.interp1d(k2, P_k2, kind='nearest')
+    P_k2_=f2(k1)    
+    plt.plot(k1,P_k1/P_k2_)
+    plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
+    plt.ylabel(r'$P_{ic}(k)/P_{CAMB}(k)$ $[h^{-3} \mathrm{Mpc}^{3}]$')
+    plt.title('Frac of IC and CAMB P(k), z=%2.f' %z)
+    plt.xscale('log')
+#    plt.yscale('log')
+#    plt.show()
+    if not os.path.exists(os.path.dirname(path_out+'ic_CAMB_comp_ferr/')):
+        os.makedirs(path_out+'ic_CAMB_comp_ferr/')
+    plt.savefig(path_out+'ic_CAMB_comp_ferr/ps_ferr_'+file_in+'.png', bbox_inches = "tight",dpi=300)
+    plt.close()
+        
     return
+
+def plot_ps_ic_EH(path_in,file_in,path_out,bin_x_,bin_k,k1,P_k1):
+    
+#    print(path_in+'gadget_out/')
+#    pos1=ReadPos(path_in+'gadget_out/',file_in_gadget)
+    z=readheader(path_in+'ic/'+file_in,'redshift')
+    L=readheader(path_in+'ic/'+file_in,'boxsize')
+    
+#    density1=part2dens3d(pos1, box_l=L, bin_x=bin_x_)
+#    delta1 = dens2overdens(density1, np.mean(density1))
+#    P_k1 = power_spectrum(delta1, np.float64(L), bin_k)[0]
+#    k1 = power_spectrum(delta1,  np.float64(L), bin_k)[1]
+    
+##    redshift=round((readheader(sys.argv[1]+'gadget_out/'+file_in_gadget,'redshift')))
+#    k2=np.loadtxt('../../../CAMB/transfer_functions/camb_matterpower_z'+str(round(z))+'00.dat')[:,0]    
+#    P_k2=np.loadtxt('../../../CAMB/transfer_functions/camb_matterpower_z'+str(round(z))+'00.dat')[:,1]
+    
+    Plin= cosmology.LinearPower(cosmo, redshift=z, transfer='EisensteinHu')
+    k2 = k1
+    P_k2 = Plin(k2)
+    
+    plt.plot(k1,P_k1,label="IC")
+    plt.plot(k2,P_k2,label="EH")
+    plt.xlim(xmax = max(k1), xmin = min(k1))
+    plt.legend(loc=1)
+    plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
+    plt.ylabel(r"$P$ $[h^{-3} \mathrm{Mpc}^{3}]$")
+    plt.title('IC and EH P(k), z=%2.f' %z)
+    plt.xscale('log')
+    plt.yscale('log')
+#    plt.show()
+    if not os.path.exists(os.path.dirname(path_out+'ic_EH_comp/')):
+        os.makedirs(path_out+'ic_EH_comp/')
+    plt.savefig(path_out+'ic_EH_comp/ps_'+file_in+'.png', bbox_inches = "tight",dpi=300)
+    plt.close()
+    
+    f2 = intp.interp1d(k2, P_k2, kind='nearest')
+    P_k2_=f2(k1)    
+    plt.plot(k1,P_k1/P_k2_)
+    plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
+    plt.ylabel(r'$P_{ic}(k)/P_{EH}(k)$ $[h^{-3} \mathrm{Mpc}^{3}]$')
+    plt.title('Frac of IC and EH P(k), z=%2.f' %z)
+    plt.xscale('log')
+#    plt.yscale('log')
+#    plt.show()
+    if not os.path.exists(os.path.dirname(path_out+'ic_EH_comp_ferr/')):
+        os.makedirs(path_out+'ic_EH_comp_ferr/')
+    plt.savefig(path_out+'ic_EH_comp_ferr/ps_ferr_'+file_in+'.png', bbox_inches = "tight",dpi=300)
+    plt.close()
+        
+    return P_k2
 
 def plot_ps_picola(path_in,file_in,path_out,bin_x_,bin_k):
     
-    print(path_in+'picola_out/')
+#    print(path_in+'picola_out/')
     pos=ReadPos(path_in+'picola_out/',file_in)
+    print(file_in)
     z=readheader(path_in+'picola_out/'+file_in,'redshift')
+    print(z)
     L=readheader(path_in+'picola_out/'+file_in,'boxsize')    
     
 #    pos=ReadPos('/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/32Mpc_64c_64p_zi63_nowakem/sample0001/picola_out/','out_z31p000')
@@ -144,8 +315,8 @@ def plot_ps_picola(path_in,file_in,path_out,bin_x_,bin_k):
     k = power_spectrum(delta,  np.float64(L), bin_k)[1]
             
     plt.plot(k,P_k)
-    plt.xlabel('k [$Mpc^{-1}$]')
-    plt.ylabel('P(k) [$Mpc^3$]')
+    plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
+    plt.ylabel(r"$P$ $[h^{-3} \mathrm{Mpc}^{3}]$")
     plt.title('Picola P(k), z=%2.f' %z)
     plt.xscale('log')
     plt.yscale('log')
@@ -155,39 +326,39 @@ def plot_ps_picola(path_in,file_in,path_out,bin_x_,bin_k):
     plt.savefig(path_out+'picola/ps_'+file_in+'.png', bbox_inches = "tight",dpi=300)
     plt.close()
     
-    return
+    return k,P_k
 
-def plot_ps_comp(path_in,file_in_gadget,file_in_picola,path_out,bin_x_,bin_k):
+def plot_ps_comp(path_in,file_in_gadget,file_in_picola,path_out,bin_x_,bin_k,k1,P_k1,k2,P_k2):
     
-    print(path_in+'gadget_out/')
-    pos1=ReadPos(path_in+'gadget_out/',file_in_gadget)
+#    print(path_in+'gadget_out/')
+#    pos1=ReadPos(path_in+'gadget_out/',file_in_gadget)
     z=readheader(path_in+'gadget_out/'+file_in_gadget,'redshift')
-    L=readheader(path_in+'gadget_out/'+file_in_gadget,'boxsize')  
+#    L=readheader(path_in+'gadget_out/'+file_in_gadget,'boxsize')  
 
         
-    print(path_in+'picola_out/')
-    pos2=ReadPos(path_in+'picola_out/',file_in_picola)
+#    print(path_in+'picola_out/')
+#    pos2=ReadPos(path_in+'picola_out/',file_in_picola)
 #    z=readheader(path_in+'picola_out/'+file_in_picola,'redshift')
 #    L=readheader(path_in+'picola_out/'+file_in_picola,'boxsize') 
     
-    density1=part2dens3d(pos1, box_l=L, bin_x=bin_x_)
-    delta1 = dens2overdens(density1, np.mean(density1))
-    P_k1 = power_spectrum(delta1, np.float64(L), bin_k)[0]
-    k1 = power_spectrum(delta1,  np.float64(L), bin_k)[1]
-    
-    density2=part2dens3d(pos2,box_l=L, bin_x=bin_x_)
-    delta2 = dens2overdens(density2, np.mean(density2))
-    P_k2 = power_spectrum(delta2, np.float64(L), bin_k)[0]
-    k2 = power_spectrum(delta2,  np.float64(L), bin_k)[1]
+#    density1=part2dens3d(pos1, box_l=L, bin_x=bin_x_)
+#    delta1 = dens2overdens(density1, np.mean(density1))
+#    P_k1 = power_spectrum(delta1, np.float64(L), bin_k)[0]
+#    k1 = power_spectrum(delta1,  np.float64(L), bin_k)[1]
+#    
+#    density2=part2dens3d(pos2,box_l=L, bin_x=bin_x_)
+#    delta2 = dens2overdens(density2, np.mean(density2))
+#    P_k2 = power_spectrum(delta2, np.float64(L), bin_k)[0]
+#    k2 = power_spectrum(delta2,  np.float64(L), bin_k)[1]
     
     
     
     plt.plot(k1,P_k1,label="Gadget")
     plt.plot(k2,P_k2,label="MG-Picola")
     plt.legend(loc=1)
-    plt.xlabel('k [$Mpc^{-1}$]')
-    plt.ylabel('P(k) [$Mpc^3$]')
-    plt.title('Gadget P(k), z=%2.f' %z)
+    plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
+    plt.ylabel(r"$P$ $[h^{-3} \mathrm{Mpc}^{3}]$")
+    plt.title('Gadget and Picola P(k), z=%2.f' %z)
     plt.xscale('log')
     plt.yscale('log')
     #plt.show()
@@ -197,8 +368,8 @@ def plot_ps_comp(path_in,file_in_gadget,file_in_picola,path_out,bin_x_,bin_k):
     plt.close()
     
     plt.plot(k1,P_k1/P_k2)
-    plt.xlabel('k [$Mpc^{-1}$]')
-    plt.ylabel(r'$P_{gadget}(k)/P_{picola}(k)$ [$Mpc^3$]')
+    plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
+    plt.ylabel(r'$P_{gadget}(k)/P_{picola}(k)$ $[h^{-3} \mathrm{Mpc}^{3}]$')
     plt.title('Frac err of Gadget and Picola P(k), z=%2.f' %z)
     plt.xscale('log')
 #    plt.yscale('log')
@@ -210,28 +381,17 @@ def plot_ps_comp(path_in,file_in_gadget,file_in_picola,path_out,bin_x_,bin_k):
     
     return
 
-def plot_ps_CAMB(redshift):
+def plot_ps_gadget_CAMB(path_in,file_in_gadget,path_out,bin_x_,bin_k,k1,P_k1):
     
-    print('../../../CAMB/transfer_functions/camb_matterpower_z'+str(redshift)+'00.dat')
-    P_k=np.loadtxt('../../../CAMB/transfer_functions/camb_matterpower_z'+str(redshift)+'00.dat')
-    plt.plot(P_k[:,0],P_k[:,1])
-    plt.xscale('log')
-    plt.yscale('log')
-    plt.show()
-    
-    return P_k
-
-def plot_ps_gadget_CAMB(path_in,file_in_gadget,path_out,bin_x_,bin_k):
-    
-    print(path_in+'gadget_out/')
-    pos1=ReadPos(path_in+'gadget_out/',file_in_gadget)
+#    print(path_in+'gadget_out/')
+#    pos1=ReadPos(path_in+'gadget_out/',file_in_gadget)
     z=readheader(path_in+'gadget_out/'+file_in_gadget,'redshift')
     L=readheader(path_in+'gadget_out/'+file_in_gadget,'boxsize')
     
-    density1=part2dens3d(pos1, box_l=L, bin_x=bin_x_)
-    delta1 = dens2overdens(density1, np.mean(density1))
-    P_k1 = power_spectrum(delta1, np.float64(L), bin_k)[0]
-    k1 = power_spectrum(delta1,  np.float64(L), bin_k)[1]
+#    density1=part2dens3d(pos1, box_l=L, bin_x=bin_x_)
+#    delta1 = dens2overdens(density1, np.mean(density1))
+#    P_k1 = power_spectrum(delta1, np.float64(L), bin_k)[0]
+#    k1 = power_spectrum(delta1,  np.float64(L), bin_k)[1]
     
 #    redshift=round((readheader(sys.argv[1]+'gadget_out/'+file_in_gadget,'redshift')))
     k2=np.loadtxt('../../../CAMB/transfer_functions/camb_matterpower_z'+str(round(z))+'00.dat')[:,0]    
@@ -242,8 +402,8 @@ def plot_ps_gadget_CAMB(path_in,file_in_gadget,path_out,bin_x_,bin_k):
     plt.plot(k2,P_k2,label="CAMB")
     plt.xlim(xmax = max(k1), xmin = min(k1))
     plt.legend(loc=1)
-    plt.xlabel('k [$Mpc^{-1}$]')
-    plt.ylabel('P(k) [$Mpc^3$]')
+    plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
+    plt.ylabel(r"$P$ $[h^{-3} \mathrm{Mpc}^{3}]$")
     plt.title('Gadget and CAMB P(k), z=%2.f' %z)
     plt.xscale('log')
     plt.yscale('log')
@@ -256,8 +416,8 @@ def plot_ps_gadget_CAMB(path_in,file_in_gadget,path_out,bin_x_,bin_k):
     f2 = intp.interp1d(k2, P_k2, kind='nearest')
     P_k2_=f2(k1)    
     plt.plot(k1,P_k1/P_k2_)
-    plt.xlabel('k [$Mpc^{-1}$]')
-    plt.ylabel(r'$P_{gadget}(k)/P_{CAMB}(k)$ [$Mpc^3$]')
+    plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
+    plt.ylabel(r'$P_{gadget}(k)/P_{CAMB}(k)$ $[h^{-3} \mathrm{Mpc}^{3}]$')
     plt.title('Frac of Gadget and CAMB P(k), z=%2.f' %z)
     plt.xscale('log')
 #    plt.yscale('log')
@@ -269,18 +429,68 @@ def plot_ps_gadget_CAMB(path_in,file_in_gadget,path_out,bin_x_,bin_k):
         
     return
 
-def plot_ps_picola_CAMB(path_in,file_in_picola,file_in_gadget,path_out,bin_x_,bin_k):
+def plot_ps_gadget_EH(path_in,file_in_gadget,path_out,bin_x_,bin_k,k1,P_k1):
+    
+#    print(path_in+'gadget_out/')
+#    pos1=ReadPos(path_in+'gadget_out/',file_in_gadget)
+    z=readheader(path_in+'gadget_out/'+file_in_gadget,'redshift')
+    L=readheader(path_in+'gadget_out/'+file_in_gadget,'boxsize')
+    
+#    density1=part2dens3d(pos1, box_l=L, bin_x=bin_x_)
+#    delta1 = dens2overdens(density1, np.mean(density1))
+#    P_k1 = power_spectrum(delta1, np.float64(L), bin_k)[0]
+#    k1 = power_spectrum(delta1,  np.float64(L), bin_k)[1]
+    
+#    redshift=round((readheader(sys.argv[1]+'gadget_out/'+file_in_gadget,'redshift')))
+    Plin= cosmology.LinearPower(cosmo, redshift=z, transfer='EisensteinHu')
+    k2 = k1
+    P_k2 = Plin(k2)
+
+    
+    
+    plt.plot(k1,P_k1,label="Gadget")
+    plt.plot(k2,P_k2,label="EH")
+    plt.xlim(xmax = max(k1), xmin = min(k1))
+    plt.legend(loc=1)
+    plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
+    plt.ylabel(r"$P$ $[h^{-3} \mathrm{Mpc}^{3}]$")
+    plt.title('Gadget and EH P(k), z=%2.f' %z)
+    plt.xscale('log')
+    plt.yscale('log')
+#    plt.show()
+    if not os.path.exists(os.path.dirname(path_out+'gad_EH_comp/')):
+        os.makedirs(path_out+'gad_EH_comp/')
+    plt.savefig(path_out+'gad_EH_comp/ps_'+file_in_gadget+'.png', bbox_inches = "tight",dpi=300)
+    plt.close()
+    
+    f2 = intp.interp1d(k2, P_k2, kind='nearest')
+    P_k2_=f2(k1)    
+    plt.plot(k1,P_k1/P_k2_)
+    plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
+    plt.ylabel(r'$P_{gadget}(k)/P_{EH}(k)$ $[h^{-3} \mathrm{Mpc}^{3}]$')
+    plt.title('Frac of Gadget and EH P(k), z=%2.f' %z)
+    plt.xscale('log')
+#    plt.yscale('log')
+#    plt.show()
+    if not os.path.exists(os.path.dirname(path_out+'gad_EH_comp_ferr/')):
+        os.makedirs(path_out+'gad_EH_comp_ferr/')
+    plt.savefig(path_out+'gad_EH_comp_ferr/ps_ferr_'+file_in_gadget+'.png', bbox_inches = "tight",dpi=300)
+    plt.close()
+        
+    return
+
+def plot_ps_picola_CAMB(path_in,file_in_picola,file_in_gadget,path_out,bin_x_,bin_k,k1,P_k1):
     
         
-    print(path_in+'picola_out/')
-    pos1=ReadPos(path_in+'picola_out/',file_in_picola)
+#    print(path_in+'picola_out/')
+#    pos1=ReadPos(path_in+'picola_out/',file_in_picola)
     z=readheader(path_in+'gadget_out/'+file_in_gadget,'redshift')
     L=readheader(path_in+'picola_out/'+file_in_picola,'boxsize') 
         
-    density1=part2dens3d(pos1,box_l=L, bin_x=bin_x_)
-    delta1 = dens2overdens(density1, np.mean(density1))
-    P_k1 = power_spectrum(delta1, np.float64(L), bin_k)[0]
-    k1 = power_spectrum(delta1,  np.float64(L), bin_k)[1]
+#    density1=part2dens3d(pos1,box_l=L, bin_x=bin_x_)
+#    delta1 = dens2overdens(density1, np.mean(density1))
+#    P_k1 = power_spectrum(delta1, np.float64(L), bin_k)[0]
+#    k1 = power_spectrum(delta1,  np.float64(L), bin_k)[1]
     
     
     
@@ -292,8 +502,8 @@ def plot_ps_picola_CAMB(path_in,file_in_picola,file_in_gadget,path_out,bin_x_,bi
     plt.plot(k2,P_k2,label="CAMB")
     plt.xlim(xmax = max(k1), xmin = min(k1))
     plt.legend(loc=1)
-    plt.xlabel('k [$Mpc^{-1}$]')
-    plt.ylabel('P(k) [$Mpc^3$]')
+    plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
+    plt.ylabel(r"$P$ $[h^{-3} \mathrm{Mpc}^{3}]$")
     plt.title('MG_picola and CAMB P(k), z=%2.f' %z)
     plt.xscale('log')
     plt.yscale('log')
@@ -306,8 +516,8 @@ def plot_ps_picola_CAMB(path_in,file_in_picola,file_in_gadget,path_out,bin_x_,bi
     f2 = intp.interp1d(k2, P_k2, kind='nearest')
     P_k2_=f2(k1)    
     plt.plot(k1,P_k1/P_k2_)
-    plt.xlabel('k [$Mpc^{-1}$]')
-    plt.ylabel(r'$P_{picola}(k)/P_{CAMB}(k)$ [$Mpc^3$]')
+    plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
+    plt.ylabel(r'$P_{picola}(k)/P_{CAMB}(k)$ $[h^{-3} \mathrm{Mpc}^{3}]$')
     plt.title('Frac of Picola and CAMB P(k), z=%2.f' %z)
     plt.xscale('log')
 #    plt.yscale('log')
@@ -322,31 +532,190 @@ def plot_ps_picola_CAMB(path_in,file_in_picola,file_in_gadget,path_out,bin_x_,bi
     
     return
 
+def plot_ps_picola_EH(path_in,file_in_picola,file_in_gadget,path_out,bin_x_,bin_k,k1,P_k1):
+    
+        
+#    print(path_in+'picola_out/')
+#    pos1=ReadPos(path_in+'picola_out/',file_in_picola)
+    z=readheader(path_in+'gadget_out/'+file_in_gadget,'redshift')
+    L=readheader(path_in+'picola_out/'+file_in_picola,'boxsize') 
+        
+#    density1=part2dens3d(pos1,box_l=L, bin_x=bin_x_)
+#    delta1 = dens2overdens(density1, np.mean(density1))
+#    P_k1 = power_spectrum(delta1, np.float64(L), bin_k)[0]
+#    k1 = power_spectrum(delta1,  np.float64(L), bin_k)[1]
+    
+    
+    
+    Plin= cosmology.LinearPower(cosmo, redshift=z, transfer='EisensteinHu')
+    k2 = k1
+    P_k2 = Plin(k2)
+    
+    
+    plt.plot(k1,P_k1,label="MG_picola")
+    plt.plot(k2,P_k2,label="EH")
+    plt.xlim(xmax = max(k1), xmin = min(k1))
+    plt.legend(loc=1)
+    plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
+    plt.ylabel(r"$P$ $[h^{-3} \mathrm{Mpc}^{3}]$")
+    plt.title('MG_picola and EH P(k), z=%2.f' %z)
+    plt.xscale('log')
+    plt.yscale('log')
+#    plt.show()
+    if not os.path.exists(os.path.dirname(path_out+'pic_EH_comp/')):
+        os.makedirs(path_out+'pic_EH_comp/')
+    plt.savefig(path_out+'pic_EH_comp/ps_'+file_in_picola+'.png', bbox_inches = "tight",dpi=300)
+    plt.close()
+    
+    f2 = intp.interp1d(k2, P_k2, kind='nearest')
+    P_k2_=f2(k1)    
+    plt.plot(k1,P_k1/P_k2_)
+    plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
+    plt.ylabel(r'$P_{picola}(k)/P_{EH}(k)$ $[h^{-3} \mathrm{Mpc}^{3}]$')
+    plt.title('Frac of Picola and EH P(k), z=%2.f' %z)
+    plt.xscale('log')
+#    plt.yscale('log')
+#    plt.show()
+    if not os.path.exists(os.path.dirname(path_out+'pic_EH_comp_ferr/')):
+        os.makedirs(path_out+'pic_EH_comp_ferr/')
+    plt.savefig(path_out+'pic_EH_comp_ferr/ps_ferr_'+file_in_picola+'.png', bbox_inches = "tight",dpi=300)
+    plt.close()
+#    
+    
+    
+    
+    return
 
-file_in_picola,just_files_picola=pps.list_files_picola(sys.argv[1])    
-for x in (just_files_picola):
-    print(x)
-#    plot_ps_picola('/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/32Mpc_64c_64p_zi63_nowakem/sample0001/',x,'/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/plot/32Mpc_64c_64p_zi63_nowakem/sample0001/ps5/',32,16)
-    plot_ps_picola(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
 
+def plot_ps_comp_all(path_in,file_in_gadget,file_in_picola,path_out,bin_x_,bin_k,k1,P_k1,k2,P_k2):
+    
+#    print(path_in+'gadget_out/')
+#    pos1=ReadPos(path_in+'gadget_out/',file_in_gadget)
+    z=readheader(path_in+'gadget_out/'+file_in_gadget,'redshift')
+#    L=readheader(path_in+'gadget_out/'+file_in_gadget,'boxsize')  
+
+        
+#    print(path_in+'picola_out/')
+#    pos2=ReadPos(path_in+'picola_out/',file_in_picola)
+#    z=readheader(path_in+'picola_out/'+file_in_picola,'redshift')
+#    L=readheader(path_in+'picola_out/'+file_in_picola,'boxsize') 
+    
+#    density1=part2dens3d(pos1, box_l=L, bin_x=bin_x_)
+#    delta1 = dens2overdens(density1, np.mean(density1))
+#    P_k1 = power_spectrum(delta1, np.float64(L), bin_k)[0]
+#    k1 = power_spectrum(delta1,  np.float64(L), bin_k)[1]
+#    
+#    density2=part2dens3d(pos2,box_l=L, bin_x=bin_x_)
+#    delta2 = dens2overdens(density2, np.mean(density2))
+#    P_k2 = power_spectrum(delta2, np.float64(L), bin_k)[0]
+#    k2 = power_spectrum(delta2,  np.float64(L), bin_k)[1]
+    
+    
+    
+    k3=np.loadtxt('../../../CAMB/transfer_functions/camb_matterpower_z'+str(round(z))+'00.dat')[:,0]    
+    P_k3=np.loadtxt('../../../CAMB/transfer_functions/camb_matterpower_z'+str(round(z))+'00.dat')[:,1]
+    
+    Plin= cosmology.LinearPower(cosmo, redshift=z, transfer='EisensteinHu')
+    k4 = k1
+    P_k4 = Plin(k4)
+    
+    plt.plot(k1,P_k1,label="Gadget")
+    plt.plot(k2,P_k2,label="MG-Picola")
+    plt.plot(k3,P_k3,label="CAMB")
+    plt.plot(k4,P_k4,label="EH")
+    plt.xlim(xmax = max(k1), xmin = min(k1))
+    plt.legend(loc=1)
+    plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
+    plt.ylabel(r"$P$ $[h^{-3} \mathrm{Mpc}^{3}]$")
+    plt.title('Gadget, Picola, CAMB and EH P(k), z=%2.f' %z)
+    plt.xscale('log')
+    plt.yscale('log')
+    #plt.show()
+    if not os.path.exists(os.path.dirname(path_out+'comp_all/')):
+        os.makedirs(path_out+'comp_all/')
+    plt.savefig(path_out+'comp_all/ps_'+file_in_picola+'.png', bbox_inches = "tight",dpi=300)
+    plt.close()
+    
+    
+    
+    return
+
+#
+#file_in_picola,just_files_picola=pps.list_files_picola(sys.argv[1])    
+#for x in (just_files_picola):
+#    print(x)
+##    plot_ps_picola('/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/32Mpc_64c_64p_zi63_nowakem/sample0001/',x,'/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/plot/32Mpc_64c_64p_zi63_nowakem/sample0001/ps5/',32,16)
+#    plot_ps_picola(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+#
+#file_in_gadget,just_files_gadget=pps.list_files_gadget(sys.argv[1])
+#for x in (just_files_gadget):
+#    print(x)    
+##    plot_ps_gadget('/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/32Mpc_64c_64p_zi63_nowakem/sample0001/',x,'/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/plot/32Mpc_64c_64p_zi63_nowakem/sample0001/ps5/',32,16)    
+#    plot_ps_gadget(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+#    
+##print(len(just_files_gadget),len(just_files_picola))    
+#for x, y in zip(just_files_gadget, just_files_picola):
+#    print(x, y)
+#    print(readheader(sys.argv[1]+'gadget_out/'+x,'redshift'),readheader(sys.argv[1]+'picola_out/'+y,'redshift'))
+#    plot_ps_comp(sys.argv[1],x,y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+#    
+#
+##for x in (just_files_gadget[1:-1]):
+#for x in (just_files_gadget):
+#    print(x)
+#    plot_ps_gadget_CAMB(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+#   
+#for x,y in zip(just_files_picola,just_files_gadget):
+#    print(x,y)
+#    plot_ps_picola_CAMB(sys.argv[1],x,y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+    
+file_in_picola,just_files_picola=pps.list_files_picola(sys.argv[1])   
 file_in_gadget,just_files_gadget=pps.list_files_gadget(sys.argv[1])
-for x in (just_files_gadget):
-    print(x)    
-#    plot_ps_gadget('/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/32Mpc_64c_64p_zi63_nowakem/sample0001/',x,'/home/asus/Dropbox/extras/storage/laptop/simulations_gadget/plot/32Mpc_64c_64p_zi63_nowakem/sample0001/ps5/',32,16)    
-    plot_ps_gadget(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
-    
-#print(len(just_files_gadget),len(just_files_picola))    
-for x, y in zip(just_files_gadget, just_files_picola):
-    print(x, y)
-    print(readheader(sys.argv[1]+'gadget_out/'+x,'redshift'),readheader(sys.argv[1]+'picola_out/'+y,'redshift'))
-    plot_ps_comp(sys.argv[1],x,y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
-    
+file_in_ic,just_files_ic=pps.list_files_ic(sys.argv[1])
 
-#for x in (just_files_gadget[1:-1]):
-for x in (just_files_gadget):
-    print(x)
-    plot_ps_gadget_CAMB(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+#
+#for x in (just_files_picola):
+#    print(x)
+#    k_pic,P_k_pic=plot_ps_picola(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+#    
+#for x in (just_files_gadget):
+#    print(x)    
+#    k_gad,P_k_gad=plot_ps_gadget(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+
+
+print(just_files_ic)
+for x in just_files_ic:
+    k_ic,P_ic=plot_ps_ic(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+    plot_ps_ic_CAMB(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_ic,P_ic)
+    P_k2=plot_ps_ic_EH(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_ic,P_ic)
+
+#for x, y in zip(just_files_gadget[::-1], just_files_picola):
+for x, y in zip(just_files_gadget, just_files_picola):    
+    
+    print(x, y)
+
+#    print(x)    
+    k_gad,P_k_gad=plot_ps_gadget(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+    
+#    print(y)
+    k_pic,P_k_pic=plot_ps_picola(sys.argv[1],y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+  
+#    print(readheader(sys.argv[1]+'gadget_out/'+x,'redshift'),readheader(sys.argv[1]+'picola_out/'+y,'redshift'))
+    plot_ps_comp(sys.argv[1],x,y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_gad,P_k_gad,k_pic,P_k_pic)
+#    
+#   
+#    print(x)
+    plot_ps_gadget_CAMB(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_gad,P_k_gad)
+    
+#    print(x)
+    plot_ps_gadget_EH(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_gad,P_k_gad)
+    
    
-for x,y in zip(just_files_picola,just_files_gadget):
-    print(x,y)
-    plot_ps_picola_CAMB(sys.argv[1],x,y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+#    print(x,y)
+    plot_ps_picola_CAMB(sys.argv[1],y,x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_pic,P_k_pic)
+    
+#    print(x,y)
+    plot_ps_picola_EH(sys.argv[1],y,x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_pic,P_k_pic)
+
+#    print(x,y)
+    plot_ps_comp_all(sys.argv[1],x,y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_gad,P_k_gad,k_pic,P_k_pic)
