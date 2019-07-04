@@ -44,7 +44,7 @@ plt.style.use(style.notebook)
 
 
 #import matplotlib
-matplotlib.use('agg')
+#matplotlib.use('agg')
 import sys
 import os
 import glob
