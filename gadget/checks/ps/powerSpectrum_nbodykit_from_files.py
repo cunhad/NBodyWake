@@ -8,6 +8,13 @@ Created on Fri May 24 21:01:44 2019
 
 
 import matplotlib
+matplotlib.use('agg')
+import sys
+import os
+import glob
+
+import matplotlib.pyplot as plt
+
 #matplotlib inline
 #config InlineBackend.figure_format = 'retina'
 
@@ -19,7 +26,6 @@ import matplotlib
 from nbodykit.lab import *
 from nbodykit import setup_logging, style
 
-import matplotlib.pyplot as plt
 plt.style.use(style.notebook)
 
 #setup_logging()
@@ -44,10 +50,7 @@ plt.style.use(style.notebook)
 
 
 #import matplotlib
-#matplotlib.use('agg')
-import sys
-import os
-import glob
+
 #import matplotlib.pyplot as plt
 from scipy import interpolate as intp
 
