@@ -465,6 +465,62 @@ def plot_ps_picola_CAMB(path_in,file_in_picola,path_out,bin_x_,bin_k,k1,P_k1):
     return
 
 
+
+def plot_ps_comp_all(path_in,file_in_gadget,file_in_picola,path_out,bin_x_,bin_k,k1,P_k1,k2,P_k2):
+    
+#    print(path_in+'gadget_out/')
+#    pos1=ReadPos(path_in+'gadget_out/',file_in_gadget)
+    z=readheader(path_in+'gadget_out/'+file_in_gadget,'redshift')
+#    L=readheader(path_in+'gadget_out/'+file_in_gadget,'boxsize')  
+
+        
+#    print(path_in+'picola_out/')
+#    pos2=ReadPos(path_in+'picola_out/',file_in_picola)
+#    z=readheader(path_in+'picola_out/'+file_in_picola,'redshift')
+#    L=readheader(path_in+'picola_out/'+file_in_picola,'boxsize') 
+    
+#    density1=part2dens3d(pos1, box_l=L, bin_x=bin_x_)
+#    delta1 = dens2overdens(density1, np.mean(density1))
+#    P_k1 = power_spectrum(delta1, np.float64(L), bin_k)[0]
+#    k1 = power_spectrum(delta1,  np.float64(L), bin_k)[1]
+#    
+#    density2=part2dens3d(pos2,box_l=L, bin_x=bin_x_)
+#    delta2 = dens2overdens(density2, np.mean(density2))
+#    P_k2 = power_spectrum(delta2, np.float64(L), bin_k)[0]
+#    k2 = power_spectrum(delta2,  np.float64(L), bin_k)[1]
+    
+    
+    
+    k3=np.loadtxt('../../../CAMB/transfer_functions/camb_matterpower_z'+str(round(z))+'00.dat')[:,0]    
+    P_k3=np.loadtxt('../../../CAMB/transfer_functions/camb_matterpower_z'+str(round(z))+'00.dat')[:,1]
+    
+    Plin= cosmology.LinearPower(cosmo, redshift=z, transfer='EisensteinHu')
+    k4 = k1
+    P_k4 = Plin(k4)
+    
+    plt.plot(k1,P_k1,label="Gadget")
+    plt.plot(k2,P_k2,label="MG-Picola")
+    plt.plot(k3,P_k3,label="CAMB")
+    plt.plot(k4,P_k4,label="EH")
+    plt.xlim(xmax = max(k1), xmin = min(k1))
+    plt.legend(loc=1)
+    plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
+    plt.ylabel(r"$P$ $[h^{-3} \mathrm{Mpc}^{3}]$")
+    plt.title('Gadget, Picola, CAMB and EH P(k), z=%2.f' %z)
+    plt.xscale('log')
+    plt.yscale('log')
+    #plt.show()
+    if not os.path.exists(os.path.dirname(path_out+'comp_all2/')):
+        os.makedirs(path_out+'comp_all2/')
+    plt.savefig(path_out+'comp_all2/ps_'+file_in_picola+'.png', bbox_inches = "tight",dpi=300)
+    plt.close()
+    
+    
+    
+    return      
+
+
+
 #
 #def ReadPos(dir,file):
 #    pos=readsnap(dir+file,'pos','dm')
@@ -554,24 +610,60 @@ file_in_gadget,just_files_gadget=pps.list_files_gadget(sys.argv[1])
 file_in_ic,just_files_ic=pps.list_files_ic(sys.argv[1])
 
 
-#    to see the mesh insertion, see https://nbodykit.readthedocs.io/en/latest/mesh/creating.html#creating-mesh
-#print(just_files_gadget)
+##    to see the mesh insertion, see https://nbodykit.readthedocs.io/en/latest/mesh/creating.html#creating-mesh
+##print(just_files_gadget)
+#
+#for x in (just_files_gadget):
+#    print(x)
+#        
+#    pos,vel,L=phase_gadget(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+#    mesh=mesh_gadget(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),pos,vel,L)
+#    k_gad,P_k_gad=plot_ps_gadget(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),mesh,L)
+#    plot_ps_gadget_CAMB(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_gad,P_k_gad)
+#         
+#for x in (just_files_picola):
+#    print(x)
+#
+#    pos,vel,L=phase_pic(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+#    mesh=mesh_pic(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),pos,vel,L)
+#    k_pic,P_k_pic=plot_ps_pic(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),mesh,L)  
+#    plot_ps_picola_CAMB(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_pic,P_k_pic)
+#    
 
-for x in (just_files_gadget):
-    print(x)
-        
+#def plot_ps_gadget(path_in,file_in,path_out,bin_x_,mesh,L):
+
+#for x, y in zip(just_files_gadget[::-1], just_files_picola):    
+for x, y in zip(just_files_gadget, just_files_picola):      
+#    print(x)
+    print(x, y)
+#
+    print(x)    
     pos,vel,L=phase_gadget(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
     mesh=mesh_gadget(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),pos,vel,L)
     k_gad,P_k_gad=plot_ps_gadget(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),mesh,L)
     plot_ps_gadget_CAMB(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_gad,P_k_gad)
-         
-for x in (just_files_picola):
-    print(x)
+    
 
-    pos,vel,L=phase_pic(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
-    mesh=mesh_pic(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),pos,vel,L)
-    k_pic,P_k_pic=plot_ps_pic(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),mesh,L)  
-    plot_ps_picola_CAMB(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_pic,P_k_pic)
+#    
+    print(y)
+#    k_pic,P_k_pic=plot_ps_picola(sys.argv[1],y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+    
+    pos,vel,L=phase_pic(sys.argv[1],y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
+    mesh=mesh_pic(sys.argv[1],y,sys.argv[2],float(sys.argv[3]),pos,vel,L)
+    k_pic,P_k_pic=plot_ps_pic(sys.argv[1],y,sys.argv[2],float(sys.argv[3]),mesh,L)  
+    plot_ps_picola_CAMB(sys.argv[1],y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_pic,P_k_pic)
+##    
+#    
+##  
+#    print(readheader(sys.argv[1]+'gadget_out/'+x,'redshift'),readheader(sys.argv[1]+'picola_out/'+y,'redshift'))
+#    plot_ps_comp(sys.argv[1],x,y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_gad,P_k_gad,k_pic,P_k_pic)
+#    
+    plot_ps_comp_all(sys.argv[1],x,y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_gad,P_k_gad,k_pic,P_k_pic)
+##  
+
+
+    
+
     
     
 #    ## compute the 2D power
