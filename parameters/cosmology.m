@@ -4,14 +4,14 @@ function [ h OmegaBM OmegaCDM OmegaM OmegaL clight zi t_0 Hzero tensor_tilt spec
 % (example) [ h OmegaBM OmegaCDM OmegaM OmegaL clight zi t_0 Hzero tensor_tilt spectral_indice sigma8 T_cmb_t0 Scalar_amplitude ] = cosmology(  ) 
  
 %   Detailed explanation goes here
-%Mpc, second and solar mass units
+%Mpc/h, second and solar mass units
 
 h=0.7;
 OmegaCDM=0.246;
 OmegaL=0.7095;
-clight=9.6E-15;  %speed of light in Mpc per second units
+clight=(9.6E-15)*h;  %speed of light in Mpc/h per second units
 zi=1000;   %redshift close to the time of recombination
-t_0=4.2E+17; %age of the universe today
+t_0=(4.2E+17)/h; %age of the universe today
 Hzero=(3.2411E-18)*h; %hubble constant
 
 OmegaBM=0.0445;
