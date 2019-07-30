@@ -91,7 +91,7 @@ files_list_pid={files_list_pid.name};
 [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw z path_file_in Pos ] = preprocessing_nodes( path,spec,aux_path,filename);
 
 LinConv=nc/size_box; %spatial linear convertion factor from comoving to simulation
-TimConv=(3*((1+z)^(2))*Hzero*(OmegaM^1/2))/2;  %Convert time in simulation units to seconds
+TimConv=(3*((1+z)^(2))*Hzero*(OmegaM^(1/2)))/2;  %Convert time in simulation units to seconds
 
 
 cd('../processing');

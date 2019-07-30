@@ -136,7 +136,7 @@ for rds=1:length(redshift_list)
     
     number_node_dim=nthroot(numel(nodes_list), 3);
     
-    TimConv=(3*((1+str2double(redshift_list(rds)))^(2))*Hzero*(OmegaM^1/2))/2;  %Convert time in simulation units to seconds
+    TimConv=(3*((1+str2double(redshift_list(rds)))^(2))*Hzero*(OmegaM^(1/2)))/2;  %Convert time in simulation units to seconds
     
     parfor node=1:length(nodes_list)
         
