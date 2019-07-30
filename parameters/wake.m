@@ -13,7 +13,7 @@ vSgammaS=clight*(sqrt(3))/3; %speed of cosmic string times Lorentz factor in Mpc
 
 displacement=((12*3.14)/5)*Gmu*t_0*vSgammaS*(sqrt(1+zi))/(1+z);    %displacement in comoving coordinates Mpc/h
 
-vel_pert=((8.*3.14)/5.)*(Gmu)*vSgammaS*(sqrt(1+zi))*(sqrt(1+(z)));  %velocity perturbation in comoving coordinates (Mpc/h)/s
+vel_pert=0.65*((8.*3.14)/5.)*(Gmu)*vSgammaS*(sqrt(1+zi))*(sqrt(1+(z)));  %velocity perturbation in comoving coordinates (Mpc/h)/s (0.65=((0.0909)^(2/3))/asinh(sqrt(OmegaL/OmegaM)*(0.0909)^(2/3)) corrects for Lambda universe at a=0.0909, )
 
 end
 
