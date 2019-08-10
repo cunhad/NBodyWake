@@ -1,69 +1,69 @@
-function [  ] = wake_insertion_types( path,spec,aux_path ,z_insert,Gmu_insert,type)
+function [  ] = wake_insertion_types( path,spec,aux_path ,z_insert,Gmu_insert,type,type_folder)
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
 
-%(example ) wake_insertion_types('/home/asus/Dropbox/extras/storage/graham/small_res/','64Mpc_96c_48p_zi255_nowakem','/sample1001/',10,6E-6,1);
+%(example ) wake_insertion_types('/home/asus/Dropbox/extras/storage/graham/small_res/','64Mpc_96c_48p_zi255_nowakem','/sample1001/',10,6E-6,1,half_lin_cutoff_half_tot_pert_nvpwh);
 
 
+% 
+% 
+% if type==0
+%    type_folder='' 
+% end
+% 
+% if type==1
+%    type_folder='/test/' 
+% end
+% 
+% if type==2
+%    type_folder='/no_vpert_in_wake_hard/' 
+% end
+% 
+% if type==3
+%     type_folder='/no_vpert_in_wake/'
+% end
+% 
+% if type==4
+%     
+%     type_folder='/half_lin_cutoff_half_tot_pert/'
+%     
+% end
+% 
+% if type==5
+%     
+%     type_folder='/quarter_lin_cutoff_half_tot_pert/'
+%     
+% end
 
-
-if type==0
-   type_folder='' 
-end
-
-if type==1
-   type_folder='/test/' 
-end
-
-if type==2
-   type_folder='/no_vpert_in_wake_hard/' 
-end
-
-if type==3
-    type_folder='/no_vpert_in_wake/'
-end
-
-if type==4
-    
-    type_folder='/half_lin_cutoff_half_tot_pert/'
-    
-end
-
-if type==5
-    
-    type_folder='/quarter_lin_cutoff_half_tot_pert/'
-    
-end
-
-%combination of 3 and 4
-
-if type==6
-    
-    type_folder='/half_lin_cutoff_half_tot_pert_nvpwh/'
-    
-end
-
-%combination of 3 and 5
-
-if type==7
-    
-    type_folder='/quarter_lin_cutoff_half_tot_pert_nvpwh/'
-    
-end
-
-if type==8
-    
-    type_folder='/half_lin_cutoff_half_tot_pert_nvpw/'
-    
-end
-
-%combination of 3 and 5
-
-if type==9
-    
-    type_folder='/quarter_lin_cutoff_half_tot_pert_nvpw/'
-    
-end
+% %combination of 3 and 4
+% 
+% if type==6
+%     
+%     type_folder='/half_lin_cutoff_half_tot_pert_nvpwh/'
+%     
+% end
+% 
+% %combination of 3 and 5
+% 
+% if type==7
+%     
+%     type_folder='/quarter_lin_cutoff_half_tot_pert_nvpwh/'
+%     
+% end
+% 
+% if type==8
+%     
+%     type_folder='/half_lin_cutoff_half_tot_pert_nvpw/'
+%     
+% end
+% 
+% %combination of 3 and 5
+% 
+% if type==9
+%     
+%     type_folder='/quarter_lin_cutoff_half_tot_pert_nvpw/'
+%     
+% end
 
 
 
