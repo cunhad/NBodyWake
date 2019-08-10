@@ -2,9 +2,11 @@ function [  ] = comvel_evol_mem_fast_par( root,root_data_out,root_plot_out,spec,
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
-% (example) []=comvel_evol_mem_fast_par( '/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','64Mpc_96c_48p_zi255_wakeGmu6t10m6zi63m','/sample1001/',0,4)
-% (example) []=comvel_evol_mem_fast_par( '/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','64Mpc_96c_48p_zi255_wakeGmu6t10m6zi10m','/sample1001/',1,4)
+% (example) []=comvel_evol_mem_fast_par( '/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','64Mpc_96c_48p_zi255_wakeGmu6t10m6zi10m','/sample1001/','test/',4)
 
+
+
+type_folder=wake_type;
 
 myCluster = parcluster('local');
 myCluster.NumWorkers=num_cores;
@@ -12,59 +14,59 @@ saveProfile(myCluster);
 
 p = parpool(num_cores);
 
-if wake_type==0
-   type_folder='' 
-end
-
-if wake_type==1
-   type_folder='test/' 
-end
-
-if wake_type==2
-   type_folder='no_vpert_in_wake_hard/' 
-end
-
-if wake_type==3
-    type_folder='no_vpert_in_wake/'
-end
-
-if wake_type==4
-    type_folder='half_lin_cutoff_half_tot_pert/'
-end
-
-if wake_type==5
-    type_folder='quarter_lin_cutoff_half_tot_pert/'
-end
-
-%combination of 3 and 4
-
-if wake_type==6
-    
-    type_folder='half_lin_cutoff_half_tot_pert_nvpwh/'
-    
-end
-
-%combination of 3 and 5
-
-if wake_type==7
-    
-    type_folder='quarter_lin_cutoff_half_tot_pert_nvpwh/'
-    
-end
-
-if wake_type==8
-    
-    type_folder='half_lin_cutoff_half_tot_pert_nvpw/'
-    
-end
-
-%combination of 3 and 5
-
-if wake_type==9
-    
-    type_folder='quarter_lin_cutoff_half_tot_pert_nvpw/'
-    
-end
+% if wake_type==0
+%    type_folder='' 
+% end
+% 
+% if wake_type==1
+%    type_folder='test/' 
+% end
+% 
+% if wake_type==2
+%    type_folder='no_vpert_in_wake_hard/' 
+% end
+% 
+% if wake_type==3
+%     type_folder='no_vpert_in_wake/'
+% end
+% 
+% if wake_type==4
+%     type_folder='half_lin_cutoff_half_tot_pert/'
+% end
+% 
+% if wake_type==5
+%     type_folder='quarter_lin_cutoff_half_tot_pert/'
+% end
+% 
+% %combination of 3 and 4
+% 
+% if wake_type==6
+%     
+%     type_folder='half_lin_cutoff_half_tot_pert_nvpwh/'
+%     
+% end
+% 
+% %combination of 3 and 5
+% 
+% if wake_type==7
+%     
+%     type_folder='quarter_lin_cutoff_half_tot_pert_nvpwh/'
+%     
+% end
+% 
+% if wake_type==8
+%     
+%     type_folder='half_lin_cutoff_half_tot_pert_nvpw/'
+%     
+% end
+% 
+% %combination of 3 and 5
+% 
+% if wake_type==9
+%     
+%     type_folder='quarter_lin_cutoff_half_tot_pert_nvpw/'
+%     
+% end
 
 % mkdir(strcat(root_out))
 mkdir(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/'))
@@ -76,6 +78,8 @@ mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/'))
 cd('../../../preprocessing')
 
 % test_particle_id=10000;
+
+display(spec)
 
 [ size_box nc np zi wake_or_no_wake multiplicity_of_files Gmu ziw ] = preprocessing_from_spec( spec);
 [~,redshift_list,nodes_list,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec,strcat(aux_path,type_folder));
