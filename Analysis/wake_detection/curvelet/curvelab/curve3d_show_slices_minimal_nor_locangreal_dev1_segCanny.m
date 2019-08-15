@@ -1,4 +1,4 @@
-function [ anali,anali_curv_mom,anali3,anali3_curv_mom,sample_id_range_nw,sample_id_range_w ] = curve3d_show_slices_minimal_nor_locangreal(  )
+function [ anali,anali_curv_mom,anali3,anali3_curv_mom,sample_id_range_nw,sample_id_range_w ] = curve3d_show_slices_minimal_nor_locangreal_dev1_segCanny(  )
 
 
 %example:
@@ -25,16 +25,19 @@ anal_lev=2;
 size_mpc=4;
 step_of_degree=1*(180/256);
 wavel_removal_factor=1/2;
-sample_id_range_nw=[1:10];
-sample_id_range_w=[1:10];
+% sample_id_range_nw=[1:10];
+% sample_id_range_w=[1:10];
 % sample_id_range_nw=[4,7];
 % sample_id_range_w=[3,7];
 % sample_id_range_nw=[4,7];
 % sample_id_range_w=[4,7];
-% 
-% sample_id_range_nw=[7];
-% sample_id_range_w=[7];
+% % 
+% sample_id_range_nw=[1:10];
+% sample_id_range_w=[1:10];
 
+
+sample_id_range_nw=[1:2];
+sample_id_range_w=[1:2];
 
 display_slice_nw = cell(1,length(sample_id_range_nw));
 display_slice_w = cell(1,length(sample_id_range_w));
@@ -59,7 +62,8 @@ display_slice_w = cell(1,length(sample_id_range_w));
 % display_slice_w{find(sample_id_range_w==10)}=[5];
 
 
-
+display_slice_nw{find(sample_id_range_nw==1)}=[15];
+display_slice_w{find(sample_id_range_w==1)}=[15];
 
 % display_slice_nw={[],[]};
 % display_slice_w={[],[]};
@@ -76,7 +80,8 @@ sample_list_nowake={sample_list_nowake.name};
 specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m'
 sample_list_wake=dir(strcat(specs_path_list_wake,'/sample*'));
 sample_list_wake={sample_list_wake.name};
-sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw_v');
+sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw_v0p55');
+%sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw_wrong');
 % sample_list_wake=sort_nat(sample_list_wake)
 
 
@@ -997,8 +1002,41 @@ for w_nw=1:2
             
             
             this=map_3d_slices_filt2a3d(:,:,slice_id);
-
             
+%             this=log(this-min(this(:))+1);
+
+%             [Gx,Gy] = imgradientxy(this);
+
+%                 this3=Gx+Gy;
+
+%                 [Gmag,Gdir] = imgradient(Gx,Gy);
+
+%             this4=Gmag;
+
+
+            Y = edge(this);
+
+            H1=[0,0,0;0,1,-1;0,0,0];
+            H2=[0,1,0;1,-4,1;0,1,0];
+            H3=[-1,0,1;-2,1,2;-1,0,1];
+            H4=[3,0,-3;10,0,-10;3,0,-3];
+            
+
+            Y1=filter2(Y,H1,'full');
+            Y2=filter2(Y1,H2,'full');
+            Y3=filter2(Y2,H3,'full');
+            Y4=filter2(Y3,H4,'full');
+            
+            
+
+%             [BW,thresOut] = edge(this,'Canny',0.5);
+            [BW,thresOut] = edge(Y4,'Canny',0.5);
+
+
+%                BW=this;
+%                BW=Y4;
+
+
 %             if false            
             if ismember(slice_id,display_slice{find(sample_id_range==sample)})
                 
@@ -1009,11 +1047,23 @@ for w_nw=1:2
                 set(gca,'FontSize',16);
                 set(gca,'linewidth',2);
                 title(strcat('filt2a3 for sample ',num2str(sample),' slice ',num2str(slice_id)));
+                
+                figure; imagesc((size_mpc/new_nc)*[1:new_nc],(size_mpc/new_nc)*[1:new_nc],BW); colorbar; axis('image');
+                xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+                ylabel('$Y(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+                set(gca,'FontName','FixedWidth');
+                set(gca,'FontSize',16);
+                set(gca,'linewidth',2);
+                title(strcat('filt2a3 for sample ',num2str(sample),' slice ',num2str(slice_id)));
+                
             end
             
             theta = 0:step_of_degree:180;
-            [R,xp] = radon(map_3d_slices_filt2a3d(:,:,slice_id),theta);
+%             [R,xp] = radon(map_3d_slices_filt2a3d(:,:,slice_id),theta);
+            [R,xp] = radon(BW,theta);
+
             
+
             unit=ones(new_nc);
             [R_u,xp] = radon(unit,theta);
             
@@ -1323,6 +1373,38 @@ end
 % stn=mean_stn-std_stn
 % significance=abs(mean_wake-mean_nowake)/(std_wake+std_nowake)
 
+
+
+% %             d3(:)=max(anali3(w_nw,sample,:,4,:),[],3);
+% nowake=reshape(permute(anali3(1,sample_id_range_nw,:,4,1),[1,3,2,4,5]),[1,numel(anali3(1,sample_id_range_nw,:,2,1))])
+% wake=reshape(permute(anali3(2,sample_id_range_w,:,4,1),[1,3,2,4,5]),[1,numel(anali3(1,sample_id_range_w,:,2,1))])
+% mean_wake=mean(wake)
+% mean_nowake=mean(nowake)
+% std_nowake=std(nowake,1)
+% stn_nowake=(nowake-mean_nowake)/std_nowake
+% stn_wake=(wake-mean_nowake)/std_nowake
+% mean_stn=mean(stn_wake)
+% std_stn=std(stn_wake,1)
+% mean_stn-std_stn
+% wake_slices = reshape(wake,[32,length(sample_id_range_w)])'
+% nowake_slices = reshape(nowake,[32,length(sample_id_range_nw)])'
+% max_wake_slices_=sort(wake_slices')
+% max_nowake_slices_=sort(nowake_slices')
+% max_wake_slices=max_wake_slices_(end,:)
+% max_nowake_slices=max_nowake_slices_(end,:)
+% mean_wake=mean(max_wake_slices)
+% mean_nowake=mean(max_nowake_slices)
+% std_nowake=std(max_nowake_slices,1)
+% stn_nowake=(max_nowake_slices-mean_nowake)/std_nowake
+% stn_wake=(max_wake_slices-mean_nowake)/std_nowake
+% mean_stn=mean(stn_wake)
+% std_stn=std(stn_wake,1)
+% mean_stn-std_stn
+% significance=abs(mean_wake-mean_nowake)/(std_wake+std_nowake)
+
+
+
+
 % nowake=reshape(permute(anali_sum2(1,sample_id_range_nw,:,4,1),[1,3,2,4,5]),[1,numel(anali_sum2(1,sample_id_range_nw,:,2,1))])
 % wake=reshape(permute(anali_sum2(2,sample_id_range_w,:,4,1),[1,3,2,4,5]),[1,numel(anali_sum2(1,sample_id_range_w,:,2,1))])
 % mean_wake=mean(wake)
@@ -1347,3 +1429,4 @@ end
 % mean_stn=mean(stn_wake)
 % std_stn=std(stn_wake,1)
 % mean_stn-std_stn
+% significance=abs(mean_wake-mean_nowake)/(std_wake+std_nowake)

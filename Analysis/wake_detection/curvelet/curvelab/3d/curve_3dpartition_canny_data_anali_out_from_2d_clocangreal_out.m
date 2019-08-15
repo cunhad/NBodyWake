@@ -143,7 +143,7 @@ if ~isempty(snapshot)
         
         if ismember(3,visual_in_or_out)
             
-            path_visual_rid=strcat(path_visual_canny,'rid/');
+            path_visual_canny_rid=strcat(path_visual_canny,'rid/');
             mkdir(char(path_visual_canny),'rid/')
             
         end
@@ -652,7 +652,7 @@ for slice_id=1:slices
         set(gca,'linewidth',2);
         title(strcat('ridg filt3 and canny for ',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
         
-        saveas(fig,char(strcat(path_visual_canny_rid','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurvCanny&rid_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
+        saveas(fig,char(strcat(path_visual_canny_rid,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurvCanny&rid_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
                             close(fig);
 
     end
