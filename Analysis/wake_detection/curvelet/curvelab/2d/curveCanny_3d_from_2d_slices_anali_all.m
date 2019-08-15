@@ -1,4 +1,4 @@
-function [  ] = curve_3d_from_2d_slices_anali_all(  )
+function [  ] = curveCanny_3d_from_2d_slices_anali_all(  )
 % 
 % root='/home/asus/Dropbox/extras/storage/graham/ht/';
 % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurv_s5lv2_anali/';

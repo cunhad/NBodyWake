@@ -904,7 +904,7 @@ if ~ismember(1,sum_depth)
         
     end
 
-    dlmwrite(strcat(path_anali_depth_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv_z',num2str(z_glob),'_anali_depth',num2str(sum_depth),'.txt'),anali_depth,'delimiter','\t');
+    dlmwrite(strcat(path_anali_depth_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv_z',num2str(z_glob),'_anali3_depth',num2str(sum_depth),'.txt'),anali_depth,'delimiter','\t');
     dlmwrite(strcat(path_anali_depth_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurvCanny_z',num2str(z_glob),'_anali_depth',num2str(sum_depth),'.txt'),analiCanny_depth,'delimiter','\t');
 
 end
