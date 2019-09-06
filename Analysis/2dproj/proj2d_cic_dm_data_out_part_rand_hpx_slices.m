@@ -417,7 +417,7 @@ if ~ismember(0,data_stream)
             close(fig);
         end
         
-        if ismember(5,data_stream)
+        if ismember(6,data_stream)
             fig=figure('Visible', 'off');
             set(gcf, 'Position', [0 0 nb-1 nb-1]);
             hold on;
