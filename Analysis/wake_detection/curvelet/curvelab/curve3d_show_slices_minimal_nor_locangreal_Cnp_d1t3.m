@@ -1,4 +1,4 @@
-function [ anali,anali_curv_mom,anali3,anali3_curv_mom,sample_id_range_nw,sample_id_range_w ] = curve3d_show_slices_minimal_nor_locangreal_Canny_d1t1(  )
+function [ anali,anali_curv_mom,anali3,anali3_curv_mom,sample_id_range_nw,sample_id_range_w ] = curve3d_show_slices_minimal_nor_locangreal_Cnp_d1t3(  )
 
 
 %example:
@@ -383,6 +383,8 @@ for w_nw=1:2
                     sz{w}=size(C{s}{w});
                 end
                 
+                
+                
 %                 for w = 1:length(C{s})/4
 %                     sz{w}=size(C{s}{w});
 %                 end
@@ -420,7 +422,7 @@ for w_nw=1:2
                         end
                         
                         
-                        interval_j=(ceil((sz{1+length(C{s})/4}(2)/sz{1}(2))/2));
+                        interval_j=(ceil((sz{1+length(C{s})/4}(2)/sz{1}(2))));
                         
                         
                         for interval=-interval_j:interval_j
@@ -492,7 +494,7 @@ for w_nw=1:2
                         end
                         
                         
-                        interval_i=(ceil((sz{1}(1)/sz{1+length(C{s})/4}(1))/2));
+                        interval_i=(ceil((sz{1}(1)/sz{1+length(C{s})/4}(1))));
                         
                         
                         for interval=-interval_i:interval_i
@@ -557,7 +559,7 @@ for w_nw=1:2
                         end
                         
                         
-                        interval_j=(ceil((sz{1+length(C{s})/4}(2)/sz{1}(2))/2));
+                        interval_j=(ceil((sz{1+length(C{s})/4}(2)/sz{1}(2))));
                         
                         
                         for interval=-interval_j:interval_j
@@ -621,7 +623,7 @@ for w_nw=1:2
                         end
                         
                         
-                        interval_i=(ceil((sz{1}(1)/sz{1+3*length(C{s})/4}(1))/2));
+                        interval_i=(ceil((sz{1}(1)/sz{1+3*length(C{s})/4}(1))));
                         
                         
                         for interval=-interval_i:interval_i
