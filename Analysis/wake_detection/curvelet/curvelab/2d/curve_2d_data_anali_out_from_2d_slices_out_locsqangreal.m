@@ -370,25 +370,25 @@ for slice_id=1:slices
                         avr_a=mean(filt_curv_sq(:));
                         normalization=(filt_curv_sq-avr_a)/avr_a;
                         
-                        angular_mean=normalization(:,:,1);
-                        angular_weights=mean(angular_mean(:));
-                        
-                        for w = 1:length(C{s})
-                            
-                            angular_mean=filt_curv_sq(:,:,w);
-                            angular_weights(w)=mean(angular_mean(:));
-                            
-                        end
-                        
-                        
-                        angular_weights=angular_weights/sum(angular_weights);
-                        
-                        
-                        for w = 1:length(C{s})
-                            
-                            normalization(:,:,w)=normalization(:,:,w).*angular_weights(w);
-                            
-                        end
+%                         angular_mean=normalization(:,:,1);
+%                         angular_weights=mean(angular_mean(:));
+%                         
+%                         for w = 1:length(C{s})
+%                             
+%                             angular_mean=filt_curv_sq(:,:,w);
+%                             angular_weights(w)=mean(angular_mean(:));
+%                             
+%                         end
+%                         
+%                         
+%                         angular_weights=angular_weights/sum(angular_weights);
+%                         
+%                         
+%                         for w = 1:length(C{s})
+%                             
+%                             normalization(:,:,w)=normalization(:,:,w).*angular_weights(w);
+%                             
+%                         end
                         
                         
                         

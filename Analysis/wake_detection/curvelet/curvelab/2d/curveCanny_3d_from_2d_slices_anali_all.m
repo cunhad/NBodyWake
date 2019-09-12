@@ -8,7 +8,7 @@ function [  ] = curveCanny_3d_from_2d_slices_anali_all(  )
 
 root='/home/asus/Dropbox/extras/storage/graham/ht/';
 % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps16_512_2dclar-l2lr1na128_to_3dparcurv-l1lr1_anali/';
-root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dclar-l2lr1na256_to_3dparcurv-l1lr1_anali/';
+root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dclar-l2lr1na256_to_3dparcurv-l1lr2_anali_t4/';
 % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcr0_l2lr1ap256_anali/';
 %root_anali_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurv_s5lv2_anali_all/';
 %root_visual_2d='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurv_s5lv2_visual_all/';
@@ -42,12 +42,12 @@ addpath('../../../../processing');
 
 path_specs_in=strcat(root_anali_2d_in);
 
-specs_nowake=dir(strcat(root_anali_2d_in,'/8*nowake*'));
+specs_nowake=dir(strcat(root_anali_2d_in,'/4*nowake*'));
 specs_nowake={specs_nowake.name};
-specs_wake=dir(strcat(root_anali_2d_in,'/8*wakeGmu*'));
+specs_wake=dir(strcat(root_anali_2d_in,'/4*wakeGmu*'));
 specs_wake={specs_wake.name};
 
-specs_list=dir(strcat(path_specs_in,'/8*'));
+specs_list=dir(strcat(path_specs_in,'/4*'));
 specs_list={specs_list.name};
 specs_list=sort_nat(specs_list);
 specs_list=specs_list(1:end);
