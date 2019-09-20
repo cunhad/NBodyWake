@@ -219,6 +219,9 @@ end
 F=zeros(nb*aug);
 C_zero = fdct_wrapping(F,0);
 
+F=zeros(nb);
+C_zero_orig = fdct_wrapping(F,0);
+
 slices_depth=slices/sum_depth;
 slice_depth_count=1;
 map_2d_slices_depth=zeros(nb,nb);
@@ -864,8 +867,8 @@ for slice_id=1:slices
     Ct2=C;    
     for s = 1:length(C)
         for w = 1:length(C{s})
-            Ct{s}{w} = C_zero{s}{w};
-            Ct2{s}{w} = C_zero{s}{w};
+            Ct{s}{w} = C_zero_orig{s}{w};
+            Ct2{s}{w} = C_zero_orig{s}{w};
         end
     end
     
@@ -882,128 +885,293 @@ for slice_id=1:slices
         
         
         %right part
+                size_nt=0;
+                
                 sz=cell(length(C{s}),1);
-                for w = 1:length(C{s})/4
+                
+                for w = 1:length(C{s})
                     sz{w}=size(C{s}{w});
                 end
-                for  i=1:sz{1}(1)
-                    for j=1:sz{1}(2)
+                
+%                 for w = 1:length(C{s})/4
+%                     sz{w}=size(C{s}{w});
+%                 end
+                
+                %right part
+                
+                
+%                 sz=cell(length(C{s}),1);
+%                 for w = 1:length(C{s})/4
+%                     sz{w}=size(C{s}{w});
+%                 end
+
+                %right part
+
+
+                for  i=1:sz{1}(1)/aug
+                    for j=1:sz{1}(2)/aug
+                        
+                        %right part
+                        
+                        
                         for w = 1:length(C{s})/4
                             i_c=ceil(i*sz{w}(1)/sz{1}(1));
                             j_c=ceil(j*sz{w}(2)/sz{1}(2));
                             a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
                         end
-%                         std_a=std(a);
-                        avr_a=mean(a);
-                        %             treash_logic=double(a>=avr_a+sigma*std_a);
-%                         treash_logic=double(a==max(a));
-                        %             normalization=(a-mean(a)/std_a);
-                        normalization=(a-avr_a)/avr_a;
-                        for w = 1:length(C{s})/4
-                            i_c=ceil(i*sz{w}(1)/sz{1}(1));
-                            j_c=ceil(j*sz{w}(2)/sz{1}(2));
-                            %                 Ct{s}{w}(i_c,j_c)=treash_logic(w)*(C{s}{w}(i_c,j_c))*double(Ct{s}{w}(i_c,j_c)~=0);
-                            Ct{s}{w}(i_c,j_c)=max(normalization(w),Ct{s}{w}(i_c,j_c));
+                        
+                        %right3 part
+                        
+                        
+                        for w = 1+2*length(C{s})/4:3*length(C{s})/4
+                            i_c=ceil(i*sz{w}(1)/sz{1+2*length(C{s})/4}(1));
+                            j_c=ceil(j*sz{w}(2)/sz{1+2*length(C{s})/4}(2));
+                            a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
                         end
+                        
+                        
+                        interval_j=(ceil((sz{1+length(C{s})/4}(2)/sz{1}(2))/2));
+                        
+                        
+                        for interval=-interval_j:interval_j
+                            
+                            %right2 part
+                            
+                            for w = 1+length(C{s})/4:2*length(C{s})/4
+                                i_c=ceil(i*sz{w}(1)/sz{1}(1));
+                                %                                 j_c=ceil(j*sz{w}(2)/sz{1}(2));
+                                j_c=min(max(floor(j*sz{w}(2)/sz{1}(2))+interval,1),sz{w}(2));
+                                a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
+                            end
+
+                            %right4 part
+                            
+                            for w = 1+3*length(C{s})/4:4*length(C{s})/4
+                                i_c=ceil(i*sz{w}(1)/sz{1}(1));
+                                %                                j_c=ceil(j*sz{w}(2)/sz{1+3*length(C{s})/4}(2));
+                                j_c=min(max(floor(j*sz{w}(2)/sz{1}(2))+interval,1),sz{w}(2));
+                                a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
+                            end
+                            
+                            avr_a=mean(a);
+                            %             treash_logic=double(a>=avr_a+sigma*std_a);
+                            %                         treash_logic=double(a==max(a));
+                            %             normalization=(a-mean(a)/std_a);
+                            normalization=(a-avr_a)/avr_a;
+                            for w = 1:length(C{s})/4
+                                i_c=ceil(i*sz{w}(1)/sz{1}(1));
+                                j_c=ceil(j*sz{w}(2)/sz{1}(2));
+                                %                 Ct{s}{w}(i_c,j_c)=treash_logic(w)*(C{s}{w}(i_c,j_c))*double(Ct{s}{w}(i_c,j_c)~=0);
+                                Ct{s}{w}(i_c,j_c)=max(normalization(w),Ct{s}{w}(i_c,j_c));
+                            end
+                            
+                            
+                        end
+                        %                         std_a=std(a);
+                        
                     end
                 end
                 
-                for w = 1:length(C{s})/4
-                    Ct2{s}{w} = Ct{s}{w}.*C{s}{w};
-                end
+%                 for w = 1:length(C{s})/4
+%                     Ct2{s}{w} = Ct{s}{w}.*C{s}{w};
+%                 end
                 
                 
                 
                 %right2 part
-                for w = 1+length(C{s})/4:2*length(C{s})/4
-                    sz{w}=size(C{s}{w});
-                end
-                for  i=1:sz{1+length(C{s})/4}(1)
-                    for j=1:sz{1+length(C{s})/4}(2)
+
+
+                for  i=1:sz{1+length(C{s})/4}(1)/aug
+                    for j=1:sz{1+length(C{s})/4}(2)/aug
+                        
+                        %right2 part
+                                                
                         for w = 1+length(C{s})/4:2*length(C{s})/4
                             i_c=ceil(i*sz{w}(1)/sz{1+length(C{s})/4}(1));
                             j_c=ceil(j*sz{w}(2)/sz{1+length(C{s})/4}(2));
-                            a(w-length(C{s})/4)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
+                            a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
                         end
-%                         std_a=std(a);
-                        avr_a=mean(a);
-                        %             treash_logic=double(a>=avr_a+sigma*std_a)   ;
-                        %             treash_logic=double(a==max(a));
-                        %             normalization=(a-mean(a)/std_a);
-                        normalization=(a-avr_a)/avr_a;
-                        for w = 1+length(C{s})/4:2*length(C{s})/4
-                            i_c=ceil(i*sz{w}(1)/sz{1+length(C{s})/4}(1));
-                            j_c=ceil(j*sz{w}(2)/sz{1+length(C{s})/4}(2));
-                            %                 Ct{s}{w}(i_c,j_c)=treash_logic(w-length(C{s})/4)*C{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-                            Ct{s}{w}(i_c,j_c)=max(normalization(w-length(C{s})/4),Ct{s}{w}(i_c,j_c));
+                        
+                        %right4 part
+                        
+                        
+                        for w = 1+3*length(C{s})/4:4*length(C{s})/4
+                            i_c=ceil(i*sz{w}(1)/sz{1+3*length(C{s})/4}(1));
+                            j_c=ceil(j*sz{w}(2)/sz{1+3*length(C{s})/4}(2));
+                            a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
                         end
+                        
+                        
+                        interval_i=(ceil((sz{1}(1)/sz{1+length(C{s})/4}(1))/2));
+                        
+                        
+                        for interval=-interval_i:interval_i
+                            
+                            %right1 part                            
+
+                            for w = 1:length(C{s})/4
+                                j_c=ceil(j*sz{w}(2)/sz{1+length(C{s})/4}(2));
+                                i_c=min(max(floor(j*sz{w}(1)/sz{1+length(C{s})/4}(1))+interval,1),sz{w}(1));
+                                a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
+                            end
+
+                            %right3 part
+                            
+                            for w = 1+2*length(C{s})/4:3*length(C{s})/4
+                                j_c=ceil(i*sz{w}(2)/sz{1+length(C{s})/4}(2));
+                                i_c=min(max(floor(j*sz{w}(1)/sz{1+length(C{s})/4}(1))+interval,1),sz{w}(1));
+                                a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
+                            end
+                            
+                            avr_a=mean(a);
+                            %             treash_logic=double(a>=avr_a+sigma*std_a);
+                            %                         treash_logic=double(a==max(a));
+                            %             normalization=(a-mean(a)/std_a);
+                            normalization=(a-avr_a)/avr_a;
+                            for w = 1+length(C{s})/4:2*length(C{s})/4
+                                i_c=ceil(i*sz{w}(1)/sz{1+length(C{s})/4}(1));
+                                j_c=ceil(j*sz{w}(2)/sz{1+length(C{s})/4}(2));
+                                Ct{s}{w}(i_c,j_c)=max(normalization(w),Ct{s}{w}(i_c,j_c));
+                            end
+                            
+                            
+                        end
+                        %                         std_a=std(a);
+                        
                     end
-                end
-                
-                for w = 1+length(C{s})/4:2*length(C{s})/4
-                    Ct2{s}{w} = Ct{s}{w}.*C{s}{w};
                 end
                 
                 
                 %right3 part
-                for w = 1+2*length(C{s})/4:3*length(C{s})/4
-                    sz{w}=size(C{s}{w});
-                end
-                for  i=1:sz{1+2*length(C{s})/4}(1)
-                    for j=1:sz{1+2*length(C{s})/4}(2)
+
+
+                for  i=1:sz{1+2*length(C{s})/4}(1)/aug
+                    for j=1:sz{1+2*length(C{s})/4}(2)/aug
+                        
+                        %right part
+                        
+                        
+                        for w = 1:length(C{s})/4
+                            i_c=ceil(i*sz{w}(1)/sz{1}(1));
+                            j_c=ceil(j*sz{w}(2)/sz{1}(2));
+                            a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
+                        end
+                        
+                        %right3 part
+                        
+                        
                         for w = 1+2*length(C{s})/4:3*length(C{s})/4
                             i_c=ceil(i*sz{w}(1)/sz{1+2*length(C{s})/4}(1));
                             j_c=ceil(j*sz{w}(2)/sz{1+2*length(C{s})/4}(2));
-                            a(w-2*length(C{s})/4)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
+                            a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
                         end
-%                         std_a=std(a);
-                        avr_a=mean(a);
-                        %             treash_logic=double(a>=avr_a+sigma*std_a)   ;
-                        %             treash_logic=double(a==max(a));
-                        %             normalization=(a-mean(a)/std_a);
-                        normalization=(a-avr_a)/avr_a;
-                        for w = 1+2*length(C{s})/4:3*length(C{s})/4
-                            i_c=ceil(i*sz{w}(1)/sz{1+2*length(C{s})/4}(1));
-                            j_c=ceil(j*sz{w}(2)/sz{1+2*length(C{s})/4}(2));
-                            %                 Ct{s}{w}(i_c,j_c)=treash_logic(w-2*length(C{s})/4)*C{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-                            Ct{s}{w}(i_c,j_c)=max(normalization(w-2*length(C{s})/4),Ct{s}{w}(i_c,j_c));
-                        end
-                    end
-                end
-                
-                for w = 1+2*length(C{s})/4:3*length(C{s})/4
-                    Ct2{s}{w} = Ct{s}{w}.*C{s}{w};
-                end
-                
-                
-                %right4 part
-                for w = 1+3*length(C{s})/4:4*length(C{s})/4
-                    sz{w}=size(C{s}{w});
-                end
-                for  i=1:sz{1+3*length(C{s})/4}(1)
-                    for j=1:sz{1+3*length(C{s})/4}(2)
-                        for w = 1+3*length(C{s})/4:4*length(C{s})/4
-                            i_c=ceil(i*sz{w}(1)/sz{1+3*length(C{s})/4}(1));
-                            j_c=ceil(j*sz{w}(2)/sz{1+3*length(C{s})/4}(2));
-                            a(w-3*length(C{s})/4)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
-                        end
-%                         std_a=std(a);
-                        avr_a=mean(a);
-                        %             treash_logic=double(a>=avr_a+sigma*std_a)   ;
-                        %             treash_logic=double(a==max(a));
-                        %             normalization=(a-mean(a)/std_a);
-                        normalization=(a-avr_a)/avr_a;
-                        for w = 1+3*length(C{s})/4:4*length(C{s})/4
-                            i_c=ceil(i*sz{w}(1)/sz{1+3*length(C{s})/4}(1));
-                            j_c=ceil(j*sz{w}(2)/sz{1+3*length(C{s})/4}(2));
-                            %                 Ct{s}{w}(i_c,j_c)=treash_logic(w-3*length(C{s})/4)*C{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-                            Ct{s}{w}(i_c,j_c)=max(normalization(w-3*length(C{s})/4),Ct{s}{w}(i_c,j_c));
+                        
+                        
+                        interval_j=(ceil((sz{1+length(C{s})/4}(2)/sz{1}(2))/2));
+                        
+                        
+                        for interval=-interval_j:interval_j
+                            
+                            %right2 part
+                            
+                            for w = 1+length(C{s})/4:2*length(C{s})/4
+                                i_c=ceil(i*sz{w}(1)/sz{1+2*length(C{s})/4}(1));
+                                j_c=min(max(floor(j*sz{w}(2)/sz{1+2*length(C{s})/4}(2))+interval,1),sz{w}(2));
+                                a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
+                            end
+
+                            %right4 part
+                            
+                            for w = 1+3*length(C{s})/4:4*length(C{s})/4
+                                i_c=ceil(i*sz{w}(1)/sz{1+2*length(C{s})/4}(1));
+                                j_c=min(max(floor(j*sz{w}(2)/sz{1+2*length(C{s})/4}(2))+interval,1),sz{w}(2));
+                                a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
+                            end
+                            
+                            avr_a=mean(a);
+                            %             treash_logic=double(a>=avr_a+sigma*std_a);
+                            %                         treash_logic=double(a==max(a));
+                            %             normalization=(a-mean(a)/std_a);
+                            normalization=(a-avr_a)/avr_a;
+                            for w = 1+2*length(C{s})/4:3*length(C{s})/4
+                                i_c=ceil(i*sz{w}(1)/sz{1+2*length(C{s})/4}(1));
+                                j_c=ceil(j*sz{w}(2)/sz{1+2*length(C{s})/4}(2));
+                                Ct{s}{w}(i_c,j_c)=max(normalization(w),Ct{s}{w}(i_c,j_c));
+                            end
+                            
                             
                         end
+                        %                         std_a=std(a);
+                        
+                    end
+                end
+
+                
+                                %right4 part
+
+
+                for  i=1:sz{1+3*length(C{s})/4}(1)/aug
+                    for j=1:sz{1+3*length(C{s})/4}(2)/aug
+                        
+                        %right2 part
+                                                
+                        for w = 1+length(C{s})/4:2*length(C{s})/4
+                            i_c=ceil(i*sz{w}(1)/sz{1+3*length(C{s})/4}(1));
+                            j_c=ceil(j*sz{w}(2)/sz{1+3*length(C{s})/4}(2));
+                            a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
+                        end
+                        
+                        %right4 part
+                        
+                        
+                        for w = 1+3*length(C{s})/4:4*length(C{s})/4
+                            i_c=ceil(i*sz{w}(1)/sz{1+3*length(C{s})/4}(1));
+                            j_c=ceil(j*sz{w}(2)/sz{1+3*length(C{s})/4}(2));
+                            a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
+                        end
+                        
+                        
+                        interval_i=(ceil((sz{1}(1)/sz{1+3*length(C{s})/4}(1))/2));
+                        
+                        
+                        for interval=-interval_i:interval_i
+                            
+                            %right1 part                            
+
+                            for w = 1:length(C{s})/4
+                                j_c=ceil(j*sz{w}(2)/sz{1+3*length(C{s})/4}(2));
+                                i_c=min(max(floor(j*sz{w}(1)/sz{1+3*length(C{s})/4}(1))+interval,1),sz{w}(1));
+                                a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
+                            end
+
+                            %right3 part
+                            
+                            for w = 1+2*length(C{s})/4:3*length(C{s})/4
+                                j_c=ceil(i*sz{w}(2)/sz{1+length(C{s})/4}(2));
+                                i_c=min(max(floor(j*sz{w}(1)/sz{1+length(C{s})/4}(1))+interval,1),sz{w}(1));
+                                a(w)=abs(C{s}{w}(i_c,j_c))/E{s}{w};
+                            end
+                            
+                            avr_a=mean(a);
+                            %             treash_logic=double(a>=avr_a+sigma*std_a);
+                            %                         treash_logic=double(a==max(a));
+                            %             normalization=(a-mean(a)/std_a);
+                            normalization=(a-avr_a)/avr_a;
+                            for w = 1+3*length(C{s})/4:4*length(C{s})/4
+                                i_c=ceil(i*sz{w}(1)/sz{1+3*length(C{s})/4}(1));
+                                j_c=ceil(j*sz{w}(2)/sz{1+3*length(C{s})/4}(2));
+                                Ct{s}{w}(i_c,j_c)=max(normalization(w),Ct{s}{w}(i_c,j_c));
+                            end
+                            
+                            
+                        end
+                        %                         std_a=std(a);
+                        
                     end
                 end
                 
-                for w = 1+3*length(C{s})/4:4*length(C{s})/4
+                
+                for w = 1:length(C{s})
                     Ct2{s}{w} = Ct{s}{w}.*C{s}{w};
                 end
                 
