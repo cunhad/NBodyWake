@@ -289,6 +289,8 @@ for slice_id=1:slices
     %         title(strcat('log for sample ',num2str(sample),' slice ',num2str(slice_id)));
     %     end
     
+    clearvars C Ct Ct2
+    
     C = fdct_wrapping(map_3d_slices,0);
     Ct = C;
     Ct2=C;    
@@ -678,7 +680,7 @@ for slice_id=1:slices
     BW2 = real(ifdct_wrapping(Ct2,0));
     map_3d_slices_filt2d = BW2(1:end/(aug),1:end/(aug));
     
-                clearvars C Ct Ct2
+                
                 
                 
     %     strcat(root_data_2d_in,'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/',filename_read,num2str(slice_id),'.bin')
@@ -864,7 +866,7 @@ for slice_id=1:slices
                 
             end
 
-            
+            clearvars C Ct Ct2
             C = fdct_wrapping(map_2d_slices_filt2d_depth,0);
     Ct = C;
     Ct2=C;    
@@ -1242,7 +1244,6 @@ for slice_id=1:slices
         aux_count=aux_count+1;
     end
     
-    clearvars C Ct Ct2
             
             
             this=map_2d_slices_filt2d_depth(:,:);
