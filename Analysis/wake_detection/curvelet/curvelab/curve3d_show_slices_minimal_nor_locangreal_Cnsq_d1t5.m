@@ -257,7 +257,7 @@ for w_nw=1:2
             
             filename_nowake=strcat('',specs_path_list,'/',string(sample_list(sample)),'/data/1lf_1rf_0-0-0pv_1.5708-0-0ra/2dproj/dm/',ch,filename,num2str(slice_id),'.bin')
             fid = fopen(filename_nowake);
-            map = fread(fid,[nc nc], 'float32','l') ;
+            map = fread(fid,[nb nc], 'float32','l') ;
             fclose(fid);            
 %             map = imresize(map,new_nc/nc,'triangle');
 

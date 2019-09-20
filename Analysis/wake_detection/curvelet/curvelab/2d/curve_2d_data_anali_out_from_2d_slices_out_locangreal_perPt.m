@@ -233,7 +233,7 @@ for slice_id=1:slices
     
     filename_read_path=strcat(strcat(root_data_2d_in,spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/',filename_read,num2str(slice_id),'.bin')
     fid = fopen(filename_read_path);
-    map = repmat(fread(fid,[nc nc], 'float32','l') ,aug);
+    map = repmat(fread(fid,[nb nb], 'float32','l') ,aug);
     fclose(fid);
     %             map = imresize(map,new_nc/nc,'triangle');
     
@@ -299,9 +299,9 @@ for slice_id=1:slices
             Ct{s}{w} = C_zero{s}{w};
             Ct2{s}{w} = C_zero{s}{w};
             
-                        display(size(C{s}{w}))
-                    display(size(Ct{s}{w}))
-                    display(size(Ct2{s}{w}))
+%                         display(size(C{s}{w}))
+%                     display(size(Ct{s}{w}))
+%                     display(size(Ct2{s}{w}))
                     
         end
     end
