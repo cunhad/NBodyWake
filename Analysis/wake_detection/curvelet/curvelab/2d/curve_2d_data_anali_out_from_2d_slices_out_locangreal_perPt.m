@@ -291,6 +291,9 @@ for slice_id=1:slices
     Ct2=C;    
     for s = 1:length(C)
         for w = 1:length(C{s})
+            display(size(C{s}{w}))
+                    display(size(Ct{s}{w}))
+                    display(size(Ct2{s}{w}))
             Ct{s}{w} = C_zero{s}{w};
             Ct2{s}{w} = C_zero{s}{w};
         end
@@ -593,9 +596,9 @@ for slice_id=1:slices
                 
                                                 
                 for w = 1:length(C{s})
-                    display(size(C{s}{w}))
-                    display(size(Ct{s}{w}))
-                    display(size(Ct2{s}{w}))
+%                     display(size(C{s}{w}))
+%                     display(size(Ct{s}{w}))
+%                     display(size(Ct2{s}{w}))
                     Ct2{s}{w} = Ct{s}{w}.*C{s}{w};
                 end
                 
