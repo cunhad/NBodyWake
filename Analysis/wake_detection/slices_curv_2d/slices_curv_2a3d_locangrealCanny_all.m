@@ -81,7 +81,7 @@ signal=anali(:,:,2,analy_type);
 %now
 signal = max(signal');
 
-signal_det=anali(:,:,4,analy_type);
+signal_det=anali(:,:,2,analy_type);
 
 for angl=N_angles+1:N_angles_t
     
