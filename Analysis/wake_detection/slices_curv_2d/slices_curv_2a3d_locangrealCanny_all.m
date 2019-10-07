@@ -1,4 +1,4 @@
-function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangreal_all( root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type)
+function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangrealCanny_all( root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type)
 
 %(example)  [ anali] = slices_curv_2a3d_all('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','/home/asus/Dropbox/extras/storage/graham/small_res/anali_hpx/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,2,2 );
 
@@ -15,21 +15,21 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangreal_all( root,ro
 % NSIDE=8;
 % analy_type=3;
 % 
-root='/home/asus/Dropbox/extras/storage/graham/ht/';
-root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE4_2dclarl3lr3na256_and_3dparclarCannyl1lr3_anali/';
-root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE4_2dclarl3lr3na256_and_3dparclarCannyl1lr3_anali_hpx/';
-spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
-% aux_path='/sample3001/';
-%spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
-%aux_path='/sample3001/half_lin_cutoff_half_tot_pert_nvpw/';
-aux_path='/sample3001/half_lin_cutoff_half_tot_pert_nvpw_v0p6/';
-aux_path_out='';
-filename='3.000xv0.dat';
-lenght_factor=1;
-resol_factor=1;
-slice=32;
-NSIDE=4;
-analy_type=1;
+% root='/home/asus/Dropbox/extras/storage/graham/ht/';
+% root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE4_2dclarl3lr3na256_and_3dparclarCannyl1lr3_anali/';
+% root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE4_2dclarl3lr3na256_and_3dparclarCannyl1lr3_anali_hpx/';
+% spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
+% % aux_path='/sample3001/';
+% %spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
+% %aux_path='/sample3001/half_lin_cutoff_half_tot_pert_nvpw/';
+% aux_path='/sample3001/half_lin_cutoff_half_tot_pert_nvpw_v0p6/';
+% aux_path_out='';
+% filename='3.000xv0.dat';
+% lenght_factor=1;
+% resol_factor=1;
+% slice=32;
+% NSIDE=4;
+% analy_type=1;
 
 
 angles_hpx(1,:) = dlmread(strcat('../../../python/angles',num2str(NSIDE),'_t.cvs'));
@@ -62,7 +62,7 @@ for angle_id=1:N_angles
     
     path_in=string(strcat(strcat(root_anali_2d_in,spec,aux_path),'data_2d_filt_slices/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(angle_id),'/',path2,'/2dproj/dm/'))
     
-    aux=dlmread(strcat(path_in,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv_z',num2str(z_glob),'_anali2a3','.txt'));
+    aux=dlmread(strcat(path_in,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3','.txt'));
     
     anali(angle_id,:,:,:)=reshape(aux,slice,4,5);
     
@@ -72,12 +72,14 @@ end
 % signal=reshape(permute(anali(:,:,2,1),[1,3,2,4,5]),[1,numel(anali(:,:,2,1))]);
 % signal = reshape(signal,[N_angles,2])';
 % signal = reshape(signal,[slice,N_angles]);
-signal=anali(:,:,4,analy_type);
+signal=anali(:,:,2,analy_type);
 
-signal=sum(signal,2);
-signal=signal';
+%before
+% signal=sum(signal,2);
+% signal=signal';
 
-% signal = max(signal');
+%now
+signal = max(signal');
 
 signal_det=anali(:,:,4,analy_type);
 

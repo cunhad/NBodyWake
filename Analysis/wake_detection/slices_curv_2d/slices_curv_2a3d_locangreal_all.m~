@@ -22,14 +22,14 @@ spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
 % aux_path='/sample3001/';
 %spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
 %aux_path='/sample3001/half_lin_cutoff_half_tot_pert_nvpw/';
-aux_path='/sample3001/half_lin_cutoff_half_tot_pert_nvpw_v0p6/';
+aux_path='/sample3001/half_lin_cutoff_half_tot_pert_nvpw/';
 aux_path_out='';
 filename='3.000xv0.dat';
 lenght_factor=1;
 resol_factor=1;
 slice=32;
-NSIDE=4;
-analy_type=1;
+NSIDE=8;
+analy_type=3;
 
 
 angles_hpx(1,:) = dlmread(strcat('../../../python/angles',num2str(NSIDE),'_t.cvs'));
