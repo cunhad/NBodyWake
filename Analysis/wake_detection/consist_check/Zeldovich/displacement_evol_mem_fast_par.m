@@ -290,7 +290,8 @@ errorbar((str2num(char(redshift_list))+1).^-1,mn_pos*size_box/nc,std_pos*size_bo
 hold on
 plot((str2num(char(redshift_list))+1).^-1,wake_displacement_zeld)
 
-xlim ([-inf inf]);
+%xlim ([-inf inf]);
+xlim ([-0.08 0.26]);    %for paper
 xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('Displacement (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
@@ -310,7 +311,8 @@ errorbar((str2num(char(redshift_list))+1).^-1,abs(mn_neg)*size_box/nc,std_neg*si
 hold on
 plot((str2num(char(redshift_list))+1).^-1,wake_displacement_zeld)
 
-xlim ([-inf inf]);
+%xlim ([-inf inf]);
+xlim ([-0.08 0.26]);    %for paper
 xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('Displacement (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
@@ -331,7 +333,8 @@ errorbar((str2num(char(redshift_list))+1).^-1,((mn_pos+abs(mn_neg))/2)*size_box/
 hold on
 plot((str2num(char(redshift_list))+1).^-1,wake_displacement_zeld)
 
-xlim ([-inf inf]);
+%xlim ([-inf inf]);
+xlim ([-0.08 0.26]);    %for paper
 xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('Displacement (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
@@ -355,7 +358,8 @@ errorbar((str2num(char(redshift_list))+1).^-1,half_mn_pos*size_box/nc,half_std_p
 hold on
 plot((str2num(char(redshift_list))+1).^-1,wake_displacement_zeld)
 
-xlim ([-inf inf]);
+%xlim ([-inf inf]);
+xlim ([-0.08 0.26]);    %for paper
 xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('Displacement (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
@@ -375,7 +379,8 @@ errorbar((str2num(char(redshift_list))+1).^-1,abs(half_mn_neg)*size_box/nc,half_
 hold on
 plot((str2num(char(redshift_list))+1).^-1,wake_displacement_zeld)
 
-xlim ([-inf inf]);
+%xlim ([-inf inf]);
+xlim ([-0.08 0.26]);    %for paper
 xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('Displacement (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
@@ -396,7 +401,8 @@ errorbar((str2num(char(redshift_list))+1).^-1,((half_mn_pos+abs(half_mn_neg))/2)
 hold on
 plot((str2num(char(redshift_list))+1).^-1,wake_displacement_zeld)
 
-xlim ([-inf inf]);
+%xlim ([-inf inf]);
+xlim ([-0.08 0.26]);    %for paper
 xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('Displacement (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');

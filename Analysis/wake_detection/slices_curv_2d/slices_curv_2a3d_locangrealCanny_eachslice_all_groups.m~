@@ -27,10 +27,10 @@ sample_list_nowake=dir(strcat(specs_path_list_nowake,'/sample*'));
 sample_list_nowake={sample_list_nowake.name};
 % sample_list_nowake=sort_nat(sample_list_nowake)
 
-specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dclarhpxNSIDE4l2lr1na256_to_3dparcurv-2dclarhpxNSIDE4l1lr1_anali3_hpx/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m'
+specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE4_2dclarl3lr3na256_and_3dparclarCannyl1lr3_anali_hpx/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m'
 sample_list_wake=dir(strcat(specs_path_list_wake,'/sample*'));
 sample_list_wake={sample_list_wake.name};
-sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw');
+sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw_v0p6');
 % sample_list_wake=sort_nat(sample_list_wake)
 
 for w_nw=1:2
@@ -195,6 +195,34 @@ cd('../wake_detection/slices_curv_2d/');
     
 
 % cd('../wake_detection/slices_curv_2d/');
+
+
+figure;
+h1 = histogram(signal_sample_nw(:),'BinWidth',10);
+hold on
+h2 = histogram(signal_sample_w(:),'BinWidth',10);
+xlabel('$S$ value', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('histogram', 'interpreter', 'latex', 'fontsize', 20);
+legend('G\mu=0','G\mu=1 \times 10^{-7}','location','northeast')
+set(gca, 'YScale', 'log')
+
+
+thresh=max(signal_sample_nw(:))
+% thresh=532;
+outlier_w_count=sum(signal_sample_w>thresh,2);
+sum_w=sum(outlier_w_count)
+sum_w_=floor(sum(outlier_w_count)/24)
+prob_w=sum(outlier_w_count)/(30720*24)
+outlier_nw_count=sum(signal_sample_nw>=thresh,2);
+sum_nw=sum(outlier_nw_count)
+prob_nw=sum(outlier_nw_count)/30720
+sum(outlier_w_count)/(24*sum(outlier_nw_count))
+
+
+
+
+
+
 
 end
 

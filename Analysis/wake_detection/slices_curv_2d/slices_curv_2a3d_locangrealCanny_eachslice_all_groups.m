@@ -207,6 +207,52 @@ legend('G\mu=0','G\mu=1 \times 10^{-7}','location','northeast')
 set(gca, 'YScale', 'log')
 
 
+N_slices=prod(size(signal_sample_w));
+N_slices_probe=N_slices;
+n_strin_per_hubble=4;
+
+thresh=max(signal_sample_nw(:))
+% thresh=532;
+outlier_w_count=sum(signal_sample_w>thresh,2);
+sum_w=sum(outlier_w_count)
+sum_w_=floor(sum(outlier_w_count)/(24/n_strin_per_hubble))
+prob_w=sum(outlier_w_count)/(N_slices*(24/n_strin_per_hubble))
+outlier_nw_count=sum(signal_sample_nw>=thresh,2);
+sum_nw=sum(outlier_nw_count)
+prob_nw=sum(outlier_nw_count)/N_slices
+sum(outlier_w_count)/((24/n_strin_per_hubble)*sum(outlier_nw_count))
+
+number_nowake=round(N_slices_probe*prob_nw)
+number_wake=round(N_slices_probe*prob_w)
+
+
+
+
+s_value=0;
+% for i=0:number_wake
+for i=0:20
+times=i;
+value(i+1)=((1-prob_nw)^(N_slices_probe-times))*((prob_nw)^times)*nchoosek(N_slices_probe,times);
+s_value=s_value+value(i+1);
+sum_value(i+1)=s_value;
+end
+sum_value_notrange_nw=1-sum_value
+
+
+s_value=0;
+% for i=0:number_wake
+for i=0:20
+times=i;
+value(i+1)=((1-prob_w)^(N_slices_probe-times))*((prob_w)^times)*nchoosek(N_slices_probe,times);
+s_value=s_value+value(i+1);
+sum_value(i+1)=s_value;
+end
+sum_value_notrange_w=1-sum_value;
+
+
+sum_value_notrange_nw(6)
+sum_value_notrange_w(6)
+
 end
 
 
