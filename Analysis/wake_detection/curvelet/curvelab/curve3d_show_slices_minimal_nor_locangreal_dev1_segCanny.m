@@ -16,9 +16,9 @@ nc=1024;
 new_nc=nc;
 trsh=20;
 cut=1;
-lev=2;
+lev=3;
 lev_3d=1;
-lev_rid=1;
+lev_rid=3;
 Sigma = 5;  %this does not matter for now
 slices=32;
 anal_lev=2;
@@ -36,8 +36,8 @@ wavel_removal_factor=1/2;
 % sample_id_range_w=[1:10];
 
 
-sample_id_range_nw=[1:2];
-sample_id_range_w=[1:2];
+sample_id_range_nw=[1];
+sample_id_range_w=[1];
 
 display_slice_nw = cell(1,length(sample_id_range_nw));
 display_slice_w = cell(1,length(sample_id_range_w));
@@ -62,8 +62,8 @@ display_slice_w = cell(1,length(sample_id_range_w));
 % display_slice_w{find(sample_id_range_w==10)}=[5];
 
 
-display_slice_nw{find(sample_id_range_nw==1)}=[15];
-display_slice_w{find(sample_id_range_w==1)}=[15];
+display_slice_nw{find(sample_id_range_nw==1)}=[8];
+display_slice_w{find(sample_id_range_w==1)}=[8];
 
 % display_slice_nw={[],[]};
 % display_slice_w={[],[]};
@@ -80,7 +80,8 @@ sample_list_nowake={sample_list_nowake.name};
 specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m'
 sample_list_wake=dir(strcat(specs_path_list_wake,'/sample*'));
 sample_list_wake={sample_list_wake.name};
-sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw_v0p55');
+% sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw_v0p55');
+sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw_v0p6');
 %sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw_wrong');
 % sample_list_wake=sort_nat(sample_list_wake)
 

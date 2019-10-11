@@ -298,7 +298,7 @@ set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
 set(gca,'linewidth',2);
 title({strcat('Displacement comparizon: positive')},'interpreter', 'latex', 'fontsize', 20);
-legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northeast')
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/','_Check_Zel_pos','.png'));
@@ -319,7 +319,7 @@ set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
 set(gca,'linewidth',2);
 title({strcat('Displacement comparizon: negative')},'interpreter', 'latex', 'fontsize', 20);
-legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/','_Check_Zel_neg','.png'));
@@ -341,7 +341,7 @@ set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
 set(gca,'linewidth',2);
 title({strcat('Displacement comparizon')},'interpreter', 'latex', 'fontsize', 20);
-legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/','_Check_Zel','.png'));
@@ -366,7 +366,7 @@ set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
 set(gca,'linewidth',2);
 title({strcat('Displacement comparizon: positive')},'interpreter', 'latex', 'fontsize', 20);
-legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/','_Check_Zel_pos','.png'));
@@ -387,7 +387,7 @@ set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
 set(gca,'linewidth',2);
 title({strcat('Displacement comparizon: negative')},'interpreter', 'latex', 'fontsize', 20);
-legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/','_Check_Zel_neg','.png'));
@@ -409,7 +409,7 @@ set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
 set(gca,'linewidth',2);
 title({strcat('Displacement comparizon')},'interpreter', 'latex', 'fontsize', 20);
-legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/','_Check_Zel','.png'));

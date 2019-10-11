@@ -314,14 +314,14 @@ hold on
 plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
 
 %xlim ([-inf inf]);
-xlim ([-0.08 0.26]);    %for paper
+xlim ([0.08 0.26]);    %for paper
 xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('Velocity ((Mpc/h)/s)*10^-17', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
 set(gca,'linewidth',2);
 title({strcat('Velocity comparizon: positive')},'interpreter', 'latex', 'fontsize', 20);
-legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/','_Check_vel_Zel_pos','.png'));
@@ -335,14 +335,14 @@ hold on
 plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
 
 %xlim ([-inf inf]);
-xlim ([-0.08 0.26]);    %for paper
+xlim ([0.08 0.26]);    %for paper
 xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('Velocity ((Mpc/h)/s)*10^-17', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
 set(gca,'linewidth',2);
 title({strcat('Velocity comparizon: negative')},'interpreter', 'latex', 'fontsize', 20);
-legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/','_Check_vel_Zel_neg','.png'));
@@ -357,14 +357,14 @@ hold on
 plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
 
 %xlim ([-inf inf]);
-xlim ([-0.08 0.26]);    %for paper
+xlim ([0.08 0.26]);    %for paper
 xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('Velocity ((Mpc/h)/s)*10^-17', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
 set(gca,'linewidth',2);
 title({strcat('Velocity comparizon')},'interpreter', 'latex', 'fontsize', 20);
-legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/','_Check_vel_Zel','.png'));
@@ -381,14 +381,14 @@ hold on
 plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
 
 %xlim ([-inf inf]);
-xlim ([-0.08 0.26]);    %for paper
+xlim ([0.08 0.26]);    %for paper
 xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('Velocity ((Mpc/h)/s)*10^-17', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
 set(gca,'linewidth',2);
 title({strcat('Velocity comparizon: positive')},'interpreter', 'latex', 'fontsize', 20);
-legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/','_Check_vel_Zel_pos','.png'));
@@ -402,14 +402,14 @@ hold on
 plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
 
 %xlim ([-inf inf]);
-xlim ([-0.08 0.26]);    %for paper
+xlim ([0.08 0.26]);    %for paper
 xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('Velocity ((Mpc/h)/s)*10^-17', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
 set(gca,'linewidth',2);
 title({strcat('Velocity comparizon: negative')},'interpreter', 'latex', 'fontsize', 20);
-legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/','_Check_vel_Zel_neg','.png'));
@@ -424,14 +424,14 @@ hold on
 plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
 
 %xlim ([-inf inf]);
-xlim ([-0.08 0.26]);    %for paper
+xlim ([0.08 0.26]);    %for paper
 xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('Velocity ((Mpc/h)/s)*10^-17', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
 set(gca,'linewidth',2);
 title({strcat('Velocity comparizon')},'interpreter', 'latex', 'fontsize', 20);
-legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich")
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/','_Check_vel_Zel','.png'));

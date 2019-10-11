@@ -134,12 +134,12 @@ if ~ismember(1,sum_depth)
     fig2_Canny_depth=figure;
     fig3_Canny_depth=figure;
     fig4_Canny_depth=figure;
-%     
-%     fig1_curv_depth=figure;
-%     fig2_curv_depth=figure;
-%     fig3_curv_depth=figure;
-%     fig4_curv_depth=figure;
-%     fig5_curv_depth=figure;
+    %
+    %     fig1_curv_depth=figure;
+    %     fig2_curv_depth=figure;
+    %     fig3_curv_depth=figure;
+    %     fig4_curv_depth=figure;
+    %     fig5_curv_depth=figure;
     
     
     ax1_depth=axes(fig1_depth);
@@ -151,14 +151,14 @@ if ~ismember(1,sum_depth)
     ax1_Canny_depth=axes(fig1_Canny_depth);
     ax2_Canny_depth=axes(fig2_Canny_depth);
     ax3_Canny_depth=axes(fig3_Canny_depth);
-    ax4_Canny_depth=axes(fig4_Canny_depth);    
+    ax4_Canny_depth=axes(fig4_Canny_depth);
     
-%     
-%     ax1_curv_depth=axes(fig1_curv_depth);
-%     ax2_curv_depth=axes(fig2_curv_depth);
-%     ax3_curv_depth=axes(fig3_curv_depth);
-%     ax4_curv_depth=axes(fig4_curv_depth);
-%     ax5_curv_depth=axes(fig5_curv_depth);
+    %
+    %     ax1_curv_depth=axes(fig1_curv_depth);
+    %     ax2_curv_depth=axes(fig2_curv_depth);
+    %     ax3_curv_depth=axes(fig3_curv_depth);
+    %     ax4_curv_depth=axes(fig4_curv_depth);
+    %     ax5_curv_depth=axes(fig5_curv_depth);
     
 end
 
@@ -203,37 +203,37 @@ for w_nw=1:2
         path_in=strcat(strcat(root_anali_2d_in,spec,char(sample_list(sample))),'anali/',num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','3d/dm/')
         
         filename=strcat(path_in,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv_z',num2str(z_glob),'_anali.txt')
-        filename_Canny=strcat(path_in,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurvCanny_z',num2str(z_glob),'_analiCanny.txt')        
+        filename_Canny=strcat(path_in,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurvCanny_z',num2str(z_glob),'_analiCanny.txt')
         filename_curv=strcat(path_in,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv_z',num2str(z_glob),'_anali3_curv.txt')
         
-%         filename=strcat(path_in,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv_z',num2str(z_glob),'_anali.txt')
+        %         filename=strcat(path_in,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv_z',num2str(z_glob),'_anali.txt')
         
         info = dlmread(filename);
         info_Canny = dlmread(filename_Canny);
         info_curv = dlmread(filename_curv);
-%         lv_sz=prod(size(info_curv))/(slices*5);
+        %         lv_sz=prod(size(info_curv))/(slices*5);
         lv_sz=prod(size(info_curv))/(5);
         
         anali(w_nw,sample,:,:,:)=reshape(info,slices,4,5);
         anali_Canny(w_nw,sample,:,:,:)=reshape(info_Canny,slices,4,5);
         anali_curv(w_nw,sample,:,:)=reshape(info_curv,5,lv_sz);
-
+        
         a(:)=max(anali(w_nw,sample,:,1,:),[],3);
         b(:)=max(anali(w_nw,sample,:,2,:),[],3);
         c(:)=max(anali(w_nw,sample,:,3,:),[],3);
         d(:)=max(anali(w_nw,sample,:,4,:),[],3);
-
+        
         a_Canny(:)=max(anali_Canny(w_nw,sample,:,1,:),[],3);
         b_Canny(:)=max(anali_Canny(w_nw,sample,:,2,:),[],3);
         c_Canny(:)=max(anali_Canny(w_nw,sample,:,3,:),[],3);
-        d_Canny(:)=max(anali_Canny(w_nw,sample,:,4,:),[],3);        
+        d_Canny(:)=max(anali_Canny(w_nw,sample,:,4,:),[],3);
         
         a_curv(:)=(anali_curv(w_nw,sample,1,:));
         b_curv(:)=(anali_curv(w_nw,sample,2,:));
         c_curv(:)=(anali_curv(w_nw,sample,3,:));
         d_curv(:)=(anali_curv(w_nw,sample,4,:));
         e_curv(:)=(anali_curv(w_nw,sample,5,:));
-
+        
         plot1{sample}=   plot(ax1,a,coul);
         plot2{sample}=   plot(ax2,b,coul);
         plot3{sample}=   plot(ax3,c,coul);
@@ -274,19 +274,19 @@ for w_nw=1:2
             
             filename_depth=strcat(path_in_depth,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv_z',num2str(z_glob),'_anali3_depth',num2str(sum_depth),'.txt')
             filename_Canny_depth=strcat(path_in_depth,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurvCanny_z',num2str(z_glob),'_anali_depth',num2str(sum_depth),'.txt')
-
+            
             %             filename_curv_depth=strcat(path_in_depth,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali_curv_depth.txt')
             
             info_depth = dlmread(filename_depth);
             info_Canny_depth = dlmread(filename_Canny_depth);
-
-%             info_curv_depth = dlmread(filename_curv_depth);
-%             lv_sz_depth=prod(size(info_curv_depth))*sum_depth/(slices*5);
-%             
+            
+            %             info_curv_depth = dlmread(filename_curv_depth);
+            %             lv_sz_depth=prod(size(info_curv_depth))*sum_depth/(slices*5);
+            %
             anali_depth(w_nw,sample,:,:,:)=reshape(info_depth,slices/sum_depth,4,5);
             anali_Canny_depth(w_nw,sample,:,:,:)=reshape(info_Canny_depth,slices/sum_depth,4,5);
             
-%             anali_curv_depth(w_nw,sample,:,:,:)=reshape(info_curv_depth,slices/sum_depth,5,lv_sz_depth);
+            %             anali_curv_depth(w_nw,sample,:,:,:)=reshape(info_curv_depth,slices/sum_depth,5,lv_sz_depth);
             
             a_depth(:)=max(anali_depth(w_nw,sample,:,1,:),[],3);
             b_depth(:)=max(anali_depth(w_nw,sample,:,2,:),[],3);
@@ -300,13 +300,13 @@ for w_nw=1:2
             
             
             
-%             
-%             a_curv_depth(:)=max(anali_curv_depth(w_nw,sample,:,1,:),[],3);
-%             b_curv_depth(:)=max(anali_curv_depth(w_nw,sample,:,2,:),[],3);
-%             c_curv_depth(:)=max(anali_curv_depth(w_nw,sample,:,3,:),[],3);
-%             d_curv_depth(:)=max(anali_curv_depth(w_nw,sample,:,4,:),[],3);
-%             e_curv_depth(:)=max(anali_curv_depth(w_nw,sample,:,5,:),[],3);
-%             
+            %
+            %             a_curv_depth(:)=max(anali_curv_depth(w_nw,sample,:,1,:),[],3);
+            %             b_curv_depth(:)=max(anali_curv_depth(w_nw,sample,:,2,:),[],3);
+            %             c_curv_depth(:)=max(anali_curv_depth(w_nw,sample,:,3,:),[],3);
+            %             d_curv_depth(:)=max(anali_curv_depth(w_nw,sample,:,4,:),[],3);
+            %             e_curv_depth(:)=max(anali_curv_depth(w_nw,sample,:,5,:),[],3);
+            %
             plot1_depth{sample}=   plot(ax1_depth,a_depth,coul);
             plot2_depth{sample}=   plot(ax2_depth,b_depth,coul);
             plot3_depth{sample}=   plot(ax3_depth,c_depth,coul);
@@ -317,12 +317,12 @@ for w_nw=1:2
             plot3_Canny_depth{sample}=   plot(ax3_Canny_depth,c_Canny_depth,coul);
             plot4_Canny_depth{sample}=   plot(ax4_Canny_depth,d_Canny_depth,coul);
             
-%             plot1_curv_depth{sample}=   plot(ax1_curv_depth,a_curv_depth,coul);
-%             plot2_curv_depth{sample}=   plot(ax2_curv_depth,b_curv_depth,coul);
-%             plot3_curv_depth{sample}=   plot(ax3_curv_depth,c_curv_depth,coul);
-%             plot4_curv_depth{sample}=   plot(ax4_curv_depth,d_curv_depth,coul);
-%             plot5_curv_depth{sample}=   plot(ax5_curv_depth,e_curv_depth,coul);
-%             
+            %             plot1_curv_depth{sample}=   plot(ax1_curv_depth,a_curv_depth,coul);
+            %             plot2_curv_depth{sample}=   plot(ax2_curv_depth,b_curv_depth,coul);
+            %             plot3_curv_depth{sample}=   plot(ax3_curv_depth,c_curv_depth,coul);
+            %             plot4_curv_depth{sample}=   plot(ax4_curv_depth,d_curv_depth,coul);
+            %             plot5_curv_depth{sample}=   plot(ax5_curv_depth,e_curv_depth,coul);
+            %
             clearvars a_depth b_depth c_depth d_depth a_Canny_depth b_Canny_depth c_Canny_depth d_Canny_depth a_curv_depth b_curv_depth c_curv_depth d_curv_depth e_curv_depth
             
             hold(ax1_depth,'on');
@@ -333,13 +333,13 @@ for w_nw=1:2
             hold(ax1_Canny_depth,'on');
             hold(ax2_Canny_depth,'on');
             hold(ax3_Canny_depth,'on');
-            hold(ax4_Canny_depth,'on');            
+            hold(ax4_Canny_depth,'on');
             
-%             hold(ax1_curv_depth,'on');
-%             hold(ax2_curv_depth,'on');
-%             hold(ax3_curv_depth,'on');
-%             hold(ax4_curv_depth,'on');
-%             hold(ax5_curv_depth,'on');
+            %             hold(ax1_curv_depth,'on');
+            %             hold(ax2_curv_depth,'on');
+            %             hold(ax3_curv_depth,'on');
+            %             hold(ax4_curv_depth,'on');
+            %             hold(ax5_curv_depth,'on');
             
             
         end
@@ -400,22 +400,22 @@ if ~ismember(1,sum_depth)
     set(ax3_Canny_depth, 'YScale', 'log');
     title(ax3_Canny_depth,strcat('1dwavel Canny over radon of the 2dcurv-filtered map, slice= ',num2str(sum_depth)));
     set(ax4_Canny_depth, 'YScale', 'log');
-    title(ax4_Canny_depth,strcat('ridgelet Canny normalized of the 2dcurv-filtered map, slice= ',num2str(sum_depth)));    
+    title(ax4_Canny_depth,strcat('ridgelet Canny normalized of the 2dcurv-filtered map, slice= ',num2str(sum_depth)));
     
-%     
-%     set(ax1_curv_depth, 'YScale', 'log');
-%     title(ax1_curv_depth,strcat('average normalised curvelet abs coef fast, slice= ',num2str(sum_depth)));
-%     set(ax2_curv_depth, 'YScale', 'log');
-%     title(ax2_curv_depth,strcat('std normalised curvelet abs coef fast, slice= ',num2str(sum_depth)));
-%     set(ax3_curv_depth, 'YScale', 'log');
-%     title(ax3_curv_depth,strcat('skewness normalised curvelet abs coef fast, slice= ',num2str(sum_depth)));
-%     set(ax4_curv_depth, 'YScale', 'log');
-%     title(ax4_curv_depth,strcat('kurtosis normalised curvelet abs coef fast, slice= ',num2str(sum_depth)));
-%     set(ax5_curv_depth, 'YScale', 'log');
-%     title(ax5_curv_depth,strcat('4th moment normalised curvelet abs coef fast, slice= ',num2str(sum_depth)));
+    %
+    %     set(ax1_curv_depth, 'YScale', 'log');
+    %     title(ax1_curv_depth,strcat('average normalised curvelet abs coef fast, slice= ',num2str(sum_depth)));
+    %     set(ax2_curv_depth, 'YScale', 'log');
+    %     title(ax2_curv_depth,strcat('std normalised curvelet abs coef fast, slice= ',num2str(sum_depth)));
+    %     set(ax3_curv_depth, 'YScale', 'log');
+    %     title(ax3_curv_depth,strcat('skewness normalised curvelet abs coef fast, slice= ',num2str(sum_depth)));
+    %     set(ax4_curv_depth, 'YScale', 'log');
+    %     title(ax4_curv_depth,strcat('kurtosis normalised curvelet abs coef fast, slice= ',num2str(sum_depth)));
+    %     set(ax5_curv_depth, 'YScale', 'log');
+    %     title(ax5_curv_depth,strcat('4th moment normalised curvelet abs coef fast, slice= ',num2str(sum_depth)));
     
 end
-% 
+%
 % nowake=reshape(permute(anali(1,1:length(sample_list_nowake),:,4,1),[1,3,2,4,5]),[1,numel(anali(1,1:length(sample_list_nowake),:,2,1))])
 % wake=reshape(permute(anali(2,1:length(sample_list_wake),:,4,1),[1,3,2,4,5]),[1,numel(anali(1,1:length(sample_list_wake),:,2,1))])
 % mean_wake=mean(wake)
@@ -497,7 +497,7 @@ significance=abs(mean_wake-mean_nowake)/(std_wake+std_nowake)
 % std_stn=std(stn_wake,1)
 % stn=mean_stn-std_stn
 % significance=abs(mean_wake-mean_nowake)./(std_wake+std_nowake)
-% 
+%
 % nowake=reshape(permute(anali_depth(1,1:length(sample_list_nowake),:,4,1),[1,3,2,4,5]),[1,numel(anali_depth(1,1:length(sample_list_nowake),:,2,1))])
 % wake=reshape(permute(anali_depth(2,1:length(sample_list_wake),:,4,1),[1,3,2,4,5]),[1,numel(anali_depth(1,1:length(sample_list_wake),:,2,1))])
 % mean_wake=mean(wake)
@@ -524,7 +524,7 @@ significance=abs(mean_wake-mean_nowake)/(std_wake+std_nowake)
 % std_stn=std(stn_wake,1)
 % stn=mean_stn-std_stn
 % significance=abs(mean_wake-mean_nowake)/(std_wake+std_nowake)
-% 
+%
 % nowake=reshape(permute(anali_Canny_depth(1,1:length(sample_list_nowake),:,4,1),[1,3,2,4,5]),[1,numel(anali_depth(1,1:length(sample_list_nowake),:,2,1))])
 % wake=reshape(permute(anali_Canny_depth(2,1:length(sample_list_wake),:,4,1),[1,3,2,4,5]),[1,numel(anali_depth(1,1:length(sample_list_wake),:,2,1))])
 % mean_wake=mean(wake)
