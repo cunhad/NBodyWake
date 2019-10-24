@@ -32,7 +32,7 @@ sum_depth=4;
 
 % wake_samples_ids=[1:2,4,7];
 
-wake_samples_ids=[1:10];
+wake_samples_ids=[1,6,8];
 
 
 addpath('../../../../processing');
@@ -66,13 +66,15 @@ sample_list_all=dir(strcat(path_samples_in,'/sample*'));
 sample_list=sample_list_all(wake_samples_ids);
 % sample_list_short=strcat('/',{sample_list.name},'/');
 % sample_list_short=strcat('/',{sample_list.name},'/half_lin_cutoff_half_tot_pert_nvpw_v0p55');
-sample_list_short=strcat('/',{sample_list.name},'/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
+%sample_list_short=strcat('/',{sample_list.name},'/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
 % sample_list_short=strcat('/',{sample_list.name},'/half_lin_cutoff_half_tot_pert_nvpw_wrong/');
+sample_list_short=strcat('/',{sample_list.name},'/half_lin_cutoff_half_tot_pert/');
 
 
 % sample_list=strcat('/',{sample_list.name},'/half_lin_cutoff_half_tot_pert_nvpw/');
 % sample_list=strcat('/',{sample_list.name},'/half_lin_cutoff_half_tot_pert_nvpw_v0p55/');
-sample_list=strcat('/',{sample_list.name},'/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
+% sample_list=strcat('/',{sample_list.name},'/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
+sample_list=strcat('/',{sample_list.name},'/half_lin_cutoff_half_tot_pert/');
 % sample_list=strcat('/',{sample_list.name},'/half_lin_cutoff_half_tot_pert_nvpw_wrong/');
 sample_list_wake=sort_nat(sample_list)
 sample_list_wake_short=sort_nat(sample_list_short);

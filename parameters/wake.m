@@ -11,7 +11,9 @@ function [ vSgammaS displacement vel_pert ] = wake( Gmu,z )
 
 % vSgammaS=clight*(sqrt(3))/3; %speed of cosmic string times Lorentz factor in Mpc/h per second units*/
 
-vSgammaS=clight*0.611; %speed of cosmic string times Lorentz factor in Mpc/h per second units (v=0. before it was 0.5)*/
+% vSgammaS=clight*0.611; %speed of cosmic string times Lorentz factor in Mpc/h per second units (v=0.52 before it was 0.5)*/
+
+vSgammaS=clight*1; %speed of cosmic string times Lorentz factor in Mpc/h per second units (v^2=0.5 )*/
 
 displacement=((12*3.14)/5)*Gmu*t_0*vSgammaS*(sqrt(1+zi))/(1+z);    %displacement in comoving coordinates Mpc/h
 
