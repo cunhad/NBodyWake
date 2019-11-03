@@ -302,7 +302,7 @@ legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest'
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/','_Check_Zel_pos','.png'));
-dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/displ/','_Check_Zel_pos.txt'),[(str2num(char(redshift_list))+1).^-1,mn_pos*size_box/nc,std_pos*size_box/nc],'delimiter','\t')
+dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/displ/','_Check_Zel_pos.txt'),[(str2num(char(redshift_list))+1).^-1,mn_pos'*size_box/nc,std_pos'*size_box/nc],'delimiter','\t')
 
 
 %plot negative values
@@ -325,7 +325,7 @@ legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest'
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/','_Check_Zel_neg','.png'));
-dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/displ/','_Check_Zel_neg.txt'),[(str2num(char(redshift_list))+1).^-1,abs(mn_neg)*size_box/nc,std_neg*size_box/nc],'delimiter','\t')
+dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/displ/','_Check_Zel_neg.txt'),[(str2num(char(redshift_list))+1).^-1,abs(mn_neg')*size_box/nc,std_neg'*size_box/nc],'delimiter','\t')
 
 
 %plot total values
@@ -348,7 +348,7 @@ legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest'
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/','_Check_Zel','.png'));
-dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/displ/','_Check_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,((mn_pos+abs(mn_neg))/2)*size_box/nc,((std_pos+std_neg)/2)*size_box/nc],'delimiter','\t')
+dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/displ/','_Check_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,((mn_pos'+abs(mn_neg'))/2)*size_box/nc,((std_pos'+std_neg')/2)*size_box/nc],'delimiter','\t')
 
 
 
@@ -374,7 +374,7 @@ legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest'
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/','_Check_Zel_pos','.png'));
-dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/displ/half/','_Check_Zel_pos.txt'),[(str2num(char(redshift_list))+1).^-1,half_mn_pos*size_box/nc,half_std_pos*size_box/nc],'delimiter','\t')
+dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/displ/half/','_Check_Zel_pos.txt'),[(str2num(char(redshift_list))+1).^-1,half_mn_pos'*size_box/nc,half_std_pos'*size_box/nc],'delimiter','\t')
 
 %plot negative values
 
@@ -396,7 +396,7 @@ legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest'
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/','_Check_Zel_neg','.png'));
-dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/displ/half/','_Check_Zel_neg.txt'),[(str2num(char(redshift_list))+1).^-1,abs(half_mn_neg)*size_box/nc,half_std_neg*size_box/nc],'delimiter','\t')
+dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/displ/half/','_Check_Zel_neg.txt'),[(str2num(char(redshift_list))+1).^-1,abs(half_mn_neg')*size_box/nc,half_std_neg'*size_box/nc],'delimiter','\t')
 
 
 %plot total values
@@ -419,7 +419,7 @@ legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest'
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/','_Check_Zel','.png'));
-dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/displ/half/','_Check_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,((half_mn_pos+abs(half_mn_neg))/2)*size_box/nc,((half_std_pos+half_std_neg)/2)*size_box/nc],'delimiter','\t')
+dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/displ/half/','_Check_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,((half_mn_pos'+abs(half_mn_neg'))/2)*size_box/nc,((half_std_pos'+half_std_neg')/2)*size_box/nc],'delimiter','\t')
 
 
 
