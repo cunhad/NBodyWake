@@ -99,8 +99,9 @@ files_list_pid={files_list_pid.name};
 LinConv=nc/size_box; %spatial linear convertion factor from comoving to simulation
 % TimConv=(3*((1+z)^(2))*Hzero*(OmegaM^(1/2)))/2;  %Convert time in simulation units to seconds 
 % TimConv=h*(3*((1+z)^(2))*Hzero*(OmegaM^(1/2)))/2;  %Convert time in simulation units to seconds (the "h" factor is to have v in Mpc/h*s units) 
-TimConv=(3*((1+z)^(2))*Hzero*(OmegaM^(1/2)))/(h*2);  %Convert time in simulation units to seconds (the "h" factor is to have v in Mpc/h*s units) 
+% TimConv=(3*((1+z)^(2))*Hzero*(OmegaM^(1/2)))/(h*2);  %Convert time in simulation units to seconds (the "h" factor is to have v in Mpc/h*s units) 
 % TimConv=(3*((1+z)^(3/2))*Hzero*(OmegaM^(1/2)))/2;  %Convert time in simulation units to seconds (with a tentative a dependence fixing) 
+TimConv=(3*((1+z)^(3/2))*Hzero*(OmegaM^(1/2)))/(h*2);  %Convert time in simulation units to seconds (the "h" factor is to have v in Mpc/h*s units,with a tentative "a" dependence fixing) 
 
 
 cd('../processing');
