@@ -140,11 +140,11 @@ for rds=1:length(redshift_list)
     
     number_node_dim=nthroot(numel(nodes_list), 3);
     
-%     TimConv=(3*((1+str2double(redshift_list(rds)))^(2))*Hzero*(OmegaM^(1/2)))/2;  %Convert time in simulation units to seconds
+    TimConv=(3*((1+str2double(redshift_list(rds)))^(2))*Hzero*(OmegaM^(1/2)))/2;  %Convert time in simulation units to seconds
 %     TimConv=h*(3*((1+str2double(redshift_list(rds)))^(2))*Hzero*(OmegaM^(1/2)))/2;  %Convert time in simulation units to seconds (the "h" factor is to have v in Mpc/h*s units) 
 %     TimConv=(3*((1+str2double(redshift_list(rds)))^(2))*Hzero*(OmegaM^(1/2)))/(h*2);  %Convert time in simulation units to seconds (the "h" factor is to have v in Mpc/h*s units) 
 %     TimConv=(3*((1+str2double(redshift_list(rds)))^(3/2))*Hzero*(OmegaM^(1/2)))/2;  %Convert time in simulation units to seconds (with a tentative a dependence fixing) 
-    TimConv=(3*((1+str2double(redshift_list(rds)))^(3/2))*Hzero*(OmegaM^(1/2)))/(h*2);  %Convert time in simulation units to seconds (the "h" factor is to have v in Mpc/h*s units,with a tentative "a" dependence fixing) 
+%     TimConv=(3*((1+str2double(redshift_list(rds)))^(3/2))*Hzero*(OmegaM^(1/2)))/(h*2);  %Convert time in simulation units to seconds (the "h" factor is to have v in Mpc/h*s units,with a tentative "a" dependence fixing) 
 
     
     
