@@ -397,6 +397,7 @@ saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/','_Check_v
 dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/','_Check_vel_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,((mn_pos'+abs(mn_neg'))/2)*10^17,((std_pos'+std_neg')/2)*10^17],'delimiter','\t')
 
 
+
 %same for half plot
 
 %plot total values using mean_position way
