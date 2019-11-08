@@ -404,7 +404,7 @@ dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/','_Check_vel
 
 fig=figure('Visible', 'off');
 % fig=figure;
-errorbar((str2num(char(redshift_list))+1).^-1,(half_mp_mn)*10^17,(half_mp_std)*10^17)
+errorbar((str2num(char(redshift_list))+1).^-1,(half_mp_mn),(half_mp_std))
 hold on
 plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
 
@@ -420,7 +420,7 @@ legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest'
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/mean_pos/','_Check_vel_Zel','.png'));
-dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/half/','_Check_Vel_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,(half_mp_mn')*10^17,(half_mp_std')*10^17],'delimiter','\t')
+dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/half/','_Check_Vel_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,(half_mp_mn'),(half_mp_std')],'delimiter','\t')
 
 
 %plot positive values
