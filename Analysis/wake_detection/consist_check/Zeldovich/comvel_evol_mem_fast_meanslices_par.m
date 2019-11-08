@@ -1,9 +1,9 @@
-function [  ] = comvel_evol_mem_fast_par( root,root_data_out,root_plot_out,spec,aux_path,wake_type,num_cores)
+function [  ] = comvel_evol_mem_fast_meanslices_par( root,root_data_out,root_plot_out,spec,aux_path,wake_type,num_cores)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
 % (example) []=comvel_evol_mem_fast_par( '/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','64Mpc_96c_48p_zi255_wakeGmu6t10m6zi10m','/sample1001/','test/',4)
-% (example) []=comvel_evol_mem_fast_par( '/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','64Mpc_96c_48p_zi255_wakeGmu6t10m6zi10m','/sample1001/','test/',4)
+% (example) []=comvel_evol_mem_fast_meanslices_par( '/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m','/sample1001/','',4)
 
 
 
@@ -282,7 +282,7 @@ for rds=1:length(redshift_list)
     vel_diff=cell2mat(tall(vel_diff_ds));
     
     fig=figure('Visible', 'off');
-    histogram2(mod(vel_diff(:,2),nc)*size_box/nc,vel_diff(:,3)*10^17,nc/2,'DisplayStyle','tile','ShowEmptyBins','on');
+    h2=histogram2(mod(vel_diff(:,2),nc)*size_box/nc,vel_diff(:,3)*10^17,nc/2,'DisplayStyle','tile','ShowEmptyBins','on');
     mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half'));
     saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_vel_z',char(redshift_list(rds)),'_plot.png'));
     
@@ -298,6 +298,22 @@ for rds=1:length(redshift_list)
     half_negat_values=vel_diff(vel_diff(:,3)<0,3);
     half_mn_neg(rds)=gather(mean(half_negat_values));
     half_std_neg(rds)=gather(std(half_negat_values,1));
+    
+
+    Pos_Bin_Centers=mean([h2.XBinEdges(1:end-1);h2.XBinEdges(2:end)]);
+    Vel_Bin_Centers=mean([h2.YBinEdges(1:end-1);h2.YBinEdges(2:end)]);
+    Hist2_val=h2.Values;
+
+    mean_vel_per_slice=(Hist2_val*Vel_Bin_Centers')./sum(Hist2_val')';     
+    mean_vel_per_slice(isinf(mean_vel_per_slice)|isnan(mean_vel_per_slice)) = 0;
+    fig=figure('Visible', 'off');
+    plot(Pos_Bin_Centers,mean_vel_per_slice)
+    mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/mean_pos/'));    
+    saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/mean_pos/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_vel_z',char(redshift_list(rds)),'_plot.png'));
+    
+    half_mp_mn(rds)=(mean(abs(mean_vel_per_slice)));
+    half_mp_std(rds)=(std(abs(mean_vel_per_slice)));    
+    
     
 end
 
@@ -382,6 +398,29 @@ dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/','_Check_vel
 
 
 %same for half plot
+
+%plot total values using mean_position way
+
+fig=figure('Visible', 'off');
+% fig=figure;
+errorbar((str2num(char(redshift_list))+1).^-1,(half_mp_mn)*10^17,(half_mp_std)*10^17)
+hold on
+plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
+
+%xlim ([-inf inf]);
+xlim ([0.08 0.26]);    %for paper
+xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('Velocity ((Mpc/h)/s)*10^-17', 'interpreter', 'latex', 'fontsize', 20);
+set(gca,'FontName','FixedWidth');
+set(gca,'FontSize',16);
+set(gca,'linewidth',2);
+title({strcat('Velocity comparizon')},'interpreter', 'latex', 'fontsize', 20);
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
+hold off;
+
+saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/mean_pos/','_Check_vel_Zel','.png'));
+dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/half/mean_pos/','_Check_vel_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,((half_mn_pos'+abs(half_mn_neg'))/2)*10^17,((half_std_pos'+half_std_neg')/2)*10^17],'delimiter','\t')
+
 
 %plot positive values
 
