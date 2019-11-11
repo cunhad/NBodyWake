@@ -312,8 +312,12 @@ for rds=1:length(redshift_list)
     saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/mean_pos/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_vel_z',char(redshift_list(rds)),'_plot.png'));
     
     half_mp_mn(rds)=(mean(abs(mean_vel_per_slice)));
-    half_mp_std(rds)=(std(abs(mean_vel_per_slice)));    
+    half_mp_std(rds)=(std(abs(mean_vel_per_slice)));
     
+    half_mp_med(rds)=(median(abs(mean_vel_per_slice)));
+    
+    half_mp_mod(rds)=(mode(abs(mean_vel_per_slice)));
+
     
 end
 
@@ -421,6 +425,51 @@ hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/mean_pos/','_Check_vel_Zel','.png'));
 dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/half/','_Check_Vel_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,(half_mp_mn'),(half_mp_std')],'delimiter','\t')
+
+%plot total values using mean_position median way
+
+fig=figure('Visible', 'off');
+% fig=figure;
+errorbar((str2num(char(redshift_list))+1).^-1,(half_mp_med),(half_mp_std))
+hold on
+plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
+
+%xlim ([-inf inf]);
+xlim ([0.08 0.26]);    %for paper
+xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('Velocity ((Mpc/h)/s)*10^-17', 'interpreter', 'latex', 'fontsize', 20);
+set(gca,'FontName','FixedWidth');
+set(gca,'FontSize',16);
+set(gca,'linewidth',2);
+title({strcat('Velocity comparizon')},'interpreter', 'latex', 'fontsize', 20);
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
+hold off;
+
+saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/mean_pos/','_Check_med_vel_Zel','.png'));
+dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/half/','_Check_mn_Vel_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,(half_mp_med'),(half_mp_std')],'delimiter','\t')
+
+
+%plot total values using mean_position, mode way
+
+fig=figure('Visible', 'off');
+% fig=figure;
+errorbar((str2num(char(redshift_list))+1).^-1,(half_mp_mod),(half_mp_std))
+hold on
+plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
+
+%xlim ([-inf inf]);
+xlim ([0.08 0.26]);    %for paper
+xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('Velocity ((Mpc/h)/s)*10^-17', 'interpreter', 'latex', 'fontsize', 20);
+set(gca,'FontName','FixedWidth');
+set(gca,'FontSize',16);
+set(gca,'linewidth',2);
+title({strcat('Velocity comparizon')},'interpreter', 'latex', 'fontsize', 20);
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
+hold off;
+
+saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/mean_pos/','_Check_mod_vel_Zel','.png'));
+dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/half/','_Check_med_Vel_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,(half_mp_mod'),(half_mp_std')],'delimiter','\t')
 
 
 %plot positive values
