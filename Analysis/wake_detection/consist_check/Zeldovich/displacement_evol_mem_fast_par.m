@@ -3,6 +3,7 @@ function [  ] = displacement_evol_mem_fast_par( root,root_data_out,root_plot_out
 %   Detailed explanation goes here
 
 % (example) []=displacement_evol_mem_fast_par( '/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','64Mpc_96c_48p_zi255_wakeGmu6t10m6zi10m','/sample1001/','test/',4)
+% (example) []=displacement_evol_mem_fast_par( '/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','64Mpc_96c_48p_zi255_wakeGmu5t10m7zi63m','/sample1001/','',4)
 
 
 
@@ -71,6 +72,8 @@ p = parpool(num_cores);
 % mkdir(strcat(root_out))
 mkdir(strcat(root_data_out,spec,aux_path,type_folder,'check/displ/'))
 mkdir(strcat(root_data_out,spec,aux_path,type_folder,'check/displ/half/'))
+
+mkdir(strcat(root_data_out,'check/',spec,aux_path,type_folder,'check/displ/half/'))
 
 mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/'))
 mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/'))
@@ -419,7 +422,7 @@ legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest'
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/','_Check_Zel','.png'));
-dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/displ/half/','_Check_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,((half_mn_pos'+abs(half_mn_neg'))/2)*size_box/nc,((half_std_pos'+half_std_neg')/2)*size_box/nc],'delimiter','\t')
+dlmwrite(strcat(root_data_out,'check/',spec,aux_path,type_folder,'check/displ/half/','_Check_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,((half_mn_pos'+abs(half_mn_neg'))/2)*size_box/nc,((half_std_pos'+half_std_neg')/2)*size_box/nc],'delimiter','\t')
 
 
 

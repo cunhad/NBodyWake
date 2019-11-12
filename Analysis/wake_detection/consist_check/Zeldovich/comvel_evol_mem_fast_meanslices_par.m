@@ -73,6 +73,8 @@ p = parpool(num_cores);
 mkdir(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/'))
 mkdir(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/half/'))
 
+mkdir(strcat(root_data_out,'check/',spec,aux_path,type_folder,'check/vel/half/'))
+
 mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/'))
 mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/'))
 
@@ -316,7 +318,9 @@ for rds=1:length(redshift_list)
     
     half_mp_med(rds)=(median(abs(mean_vel_per_slice)));
     
-    half_mp_mod(rds)=(mode(abs(mean_vel_per_slice)));
+    mean_vel_per_slice_=round(mean_vel_per_slice,3);
+    mean_vel_per_slice_(mean_vel_per_slice_==0)=[];
+    half_mp_mod(rds)=(mode(abs(mean_vel_per_slice_)));
 
     
 end
@@ -424,7 +428,7 @@ legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest'
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/mean_pos/','_Check_vel_Zel','.png'));
-dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/half/','_Check_Vel_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,(half_mp_mn'),(half_mp_std')],'delimiter','\t')
+dlmwrite(strcat(root_data_out,'check/',spec,aux_path,type_folder,'check/vel/half/','_Check_mn_Vel_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,(half_mp_mn'),(half_mp_std')],'delimiter','\t')
 
 %plot total values using mean_position median way
 
@@ -446,7 +450,7 @@ legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest'
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/mean_pos/','_Check_med_vel_Zel','.png'));
-dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/half/','_Check_mn_Vel_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,(half_mp_med'),(half_mp_std')],'delimiter','\t')
+dlmwrite(strcat(root_data_out,'check/',spec,aux_path,type_folder,'check/vel/half/','_Check_med_Vel_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,(half_mp_med'),(half_mp_std')],'delimiter','\t')
 
 
 %plot total values using mean_position, mode way
@@ -469,7 +473,7 @@ legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest'
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/mean_pos/','_Check_mod_vel_Zel','.png'));
-dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/half/','_Check_med_Vel_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,(half_mp_mod'),(half_mp_std')],'delimiter','\t')
+dlmwrite(strcat(root_data_out,'check/',spec,aux_path,type_folder,'check/vel/half/','_Check_mod_Vel_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,(half_mp_mod'),(half_mp_std')],'delimiter','\t')
 
 
 %plot positive values
