@@ -291,15 +291,15 @@ end
 
 
 for rds=1:length(redshift_list)
-    
     filename_out=cellstr(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/half/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_node',char(nodes_list),'_Check_Zel_wpid_half_posZ_vel_z',char(redshift_list(rds)),'.dat'));
     vel_diff_ds = fileDatastore(filename_out,'ReadFcn',@read_bin,'FileExtensions','.dat');
     vel_diff=cell2mat(tall(vel_diff_ds));
     
-    fig2=figure('Visible', 'off');
+    fig=figure('Visible', 'off');
     h2=histogram2(mod(vel_diff(:,2),nc)*size_box/nc,vel_diff(:,3)*10^17,nc/2,'DisplayStyle','tile','ShowEmptyBins','on');
     mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half'));
-    saveas(fig2,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_vel_z',char(redshift_list(rds)),'_plot.png'));
+    saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_vel_z',char(redshift_list(rds)),'_plot.png'));
+    close(fig);
     
     fig=figure('Visible', 'off');
     h=histogram(vel_diff(:,3)*10^17);
@@ -319,8 +319,6 @@ for rds=1:length(redshift_list)
     Pos_Bin_Centers=mean([h2.XBinEdges(1:end-1);h2.XBinEdges(2:end)]);
     Vel_Bin_Centers=mean([h2.YBinEdges(1:end-1);h2.YBinEdges(2:end)]);
     Hist2_val=h2.Values;
-    close(fig2);
-        
 
     mean_vel_per_slice=(Hist2_val*Vel_Bin_Centers')./sum(Hist2_val')';     
     mean_vel_per_slice(isinf(mean_vel_per_slice)|isnan(mean_vel_per_slice)) = 0;
@@ -356,7 +354,7 @@ for rds=1:length(redshift_list)
     mean_vel_per_slice_quart_=round(mean_vel_per_slice_quart,3);
     mean_vel_per_slice_quart_(mean_vel_per_slice_quart_==0)=[];
     quart_mp_mod(rds)=(mode(abs(mean_vel_per_slice_quart_)));
-        
+    
     
 end
 
@@ -577,83 +575,6 @@ hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/','_Check_vel_Zel','.png'));
 dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/half/','_Check_vel_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,((half_mn_pos'+abs(half_mn_neg'))/2)*10^17,((half_std_pos'+half_std_neg')/2)*10^17],'delimiter','\t')
-
-
-
-
-
-
-%same for quart plot
-
-%plot total values using mean_position way
-
-fig=figure('Visible', 'off');
-% fig=figure;
-errorbar((str2num(char(redshift_list))+1).^-1,(quart_mp_mn),(quart_mp_std))
-hold on
-plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
-
-%xlim ([-inf inf]);
-xlim ([0.08 0.26]);    %for paper
-xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
-ylabel('Velocity ((Mpc/h)/s)*10^-17', 'interpreter', 'latex', 'fontsize', 20);
-set(gca,'FontName','FixedWidth');
-set(gca,'FontSize',16);
-set(gca,'linewidth',2);
-title({strcat('Velocity comparizon')},'interpreter', 'latex', 'fontsize', 20);
-legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
-hold off;
-
-saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/quart/','_Check_vel_Zel','.png'));
-dlmwrite(strcat(root_data_out,'check/',spec,aux_path,type_folder,'check/vel/half/','_Check_mn_Vel_Zel_quart.txt'),[(str2num(char(redshift_list))+1).^-1,(quart_mp_mn'),(quart_mp_std')],'delimiter','\t')
-
-%plot total values using mean_position median way
-
-fig=figure('Visible', 'off');
-% fig=figure;
-errorbar((str2num(char(redshift_list))+1).^-1,(quart_mp_med),(quart_mp_std))
-hold on
-plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
-
-%xlim ([-inf inf]);
-xlim ([0.08 0.26]);    %for paper
-xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
-ylabel('Velocity ((Mpc/h)/s)*10^-17', 'interpreter', 'latex', 'fontsize', 20);
-set(gca,'FontName','FixedWidth');
-set(gca,'FontSize',16);
-set(gca,'linewidth',2);
-title({strcat('Velocity comparizon')},'interpreter', 'latex', 'fontsize', 20);
-legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
-hold off;
-
-saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/quart/','_Check_med_vel_Zel','.png'));
-dlmwrite(strcat(root_data_out,'check/',spec,aux_path,type_folder,'check/vel/half/','_Check_med_Vel_Zel_quart.txt'),[(str2num(char(redshift_list))+1).^-1,(quart_mp_med'),(quart_mp_std')],'delimiter','\t')
-
-
-%plot total values using mean_position, mode way
-
-fig=figure('Visible', 'off');
-% fig=figure;
-errorbar((str2num(char(redshift_list))+1).^-1,(quart_mp_mod),(quart_mp_std))
-hold on
-plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
-
-%xlim ([-inf inf]);
-xlim ([0.08 0.26]);    %for paper
-xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
-ylabel('Velocity ((Mpc/h)/s)*10^-17', 'interpreter', 'latex', 'fontsize', 20);
-set(gca,'FontName','FixedWidth');
-set(gca,'FontSize',16);
-set(gca,'linewidth',2);
-title({strcat('Velocity comparizon')},'interpreter', 'latex', 'fontsize', 20);
-legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
-hold off;
-
-saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/quart/','_Check_mod_vel_Zel','.png'));
-dlmwrite(strcat(root_data_out,'check/',spec,aux_path,type_folder,'check/vel/half/','_Check_mod_Vel_Zel_quart.txt'),[(str2num(char(redshift_list))+1).^-1,(quart_mp_mod'),(quart_mp_std')],'delimiter','\t')
-
-
-
 
 
 
