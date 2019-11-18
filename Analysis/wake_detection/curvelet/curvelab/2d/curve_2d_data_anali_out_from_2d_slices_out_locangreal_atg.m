@@ -221,7 +221,7 @@ C_zero = fdct_wrapping(F,0);
 
 slices_depth=slices/sum_depth;
 slice_depth_count=1;
-map_3d_slices_pre=zeros(nc,nc,slices);
+map_3d_slices_pre=zeros(nb,nb,slices);
 map_2d_slices_depth=zeros(nb,nb);
 map_2d_slices_filt2d_depth=zeros(nb,nb);
 

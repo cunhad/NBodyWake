@@ -1,4 +1,4 @@
-function [  ] = curve_2d_data_anali_out_from_2d_slices_out_locangreal( root,root_data_2d_in,root_data_2d_out,root_anali_2d_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,slices,lev,lev_rid,sigma,step_of_degree,wavel_removal_factor,snapshot,visual_type,visual_in_or_out,sum_depth)
+function [  ] = curve_2d_data_anali_out_from_2d_slices_out_locangreal_atg( root,root_data_2d_in,root_data_2d_out,root_anali_2d_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,slices,lev,lev_rid,sigma,step_of_degree,wavel_removal_factor,snapshot,visual_type,visual_in_or_out,sum_depth)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 % 
@@ -221,7 +221,7 @@ C_zero = fdct_wrapping(F,0);
 
 slices_depth=slices/sum_depth;
 slice_depth_count=1;
-map_3d_slices_pre=zeros(nc,nc,slices);
+map_3d_slices_pre=zeros(nb,nb,slices);
 map_2d_slices_depth=zeros(nb,nb);
 map_2d_slices_filt2d_depth=zeros(nb,nb);
 
