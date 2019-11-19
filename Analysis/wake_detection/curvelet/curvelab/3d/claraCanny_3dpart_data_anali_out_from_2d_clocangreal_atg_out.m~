@@ -363,27 +363,24 @@ for partition=0:partition3rd-1
                 end
                 
                 for w = 1:length(C{s})
-                    
-                    Ct2{s}{w} = Ct{s}{w}.*C{s}{w};
-                    
-%                     Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > 0*E2{s}{w})
+                    Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > 0*E2{s}{w})
                     %                                   Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > thresh*E{s}{w});
                     %                   Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > -thresh*E{s}{w}&(C{s}{w}) < thresh*E{s}{w});
                     %                   Ct{s}{w} = C{s}{w};
                     %                   curv(w_nw,sample,slice_id,w,aux_count)=kurtosis(abs(C{s}{w}(:)));
                     
                     
-                    ave=mean(abs(Ct2{s}{w}(:))/E2{s}{w});
-                    sig=std(abs(Ct2{s}{w}(:))/E2{s}{w})^2;
-                    del=skewness(abs(Ct2{s}{w}(:))/E2{s}{w})*(sig^(3/2));
-                    rho=kurtosis(abs(Ct2{s}{w}(:))/E2{s}{w})*(sig^(2));
+                    ave=mean(abs(Ct{s}{w}(:))/E2{s}{w});
+                    sig=std(abs(Ct{s}{w}(:))/E2{s}{w})^2;
+                    del=skewness(abs(Ct{s}{w}(:))/E2{s}{w})*(sig^(3/2));
+                    rho=kurtosis(abs(Ct{s}{w}(:))/E2{s}{w})*(sig^(2));
                     
                     A_=ave;
                     B_=sig+A_^2;
                     C_=del+3*B_*A_-2*A_^3;
                     D_=rho+4*C_*A_-6*B_*A_^2+3*A_^4;
                     
-                    size_n=prod(size(Ct2{s}{w}(:)));
+                    size_n=prod(size(Ct{s}{w}(:)));
                     size_nt=size_nt+size_n;
                     
                     As=A_*size_n+As;
@@ -419,7 +416,7 @@ for partition=0:partition3rd-1
             end
             
             %             map_3d_slices_filt2a3d(:,:,(partition)*slices/2+1:(partition)*slices/2+slices/2) = real(fdct3d_inverse(Ct));
-            map_3d_slices_filt3d((partition_x)*nb/partition2d+1:(partition_x)*nb/partition2d+nb/partition2d,(partition_y)*nb/partition2d+1:(partition_y)*nb/partition2d+nb/partition2d,(partition)*slices/partition3rd+1:(partition)*slices/partition3rd+slices/partition3rd) = real(fdct3d_inverse(Ct2));
+            map_3d_slices_filt3d((partition_x)*nb/partition2d+1:(partition_x)*nb/partition2d+nb/partition2d,(partition_y)*nb/partition2d+1:(partition_y)*nb/partition2d+nb/partition2d,(partition)*slices/partition3rd+1:(partition)*slices/partition3rd+slices/partition3rd) = real(fdct3d_inverse(Ct));
             
             anali_curv(1,partition+1,partition_x+1,partition_y+1,:)=curv_1(:);
             anali_curv(2,partition+1,partition_x+1,partition_y+1,:)=curv_2(:);

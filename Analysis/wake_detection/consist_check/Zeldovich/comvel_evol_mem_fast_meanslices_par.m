@@ -340,7 +340,7 @@ for rds=1:length(redshift_list)
     half_mp_mod(rds)=(mode(abs(mean_vel_per_slice_)));
     
 %     indx_quart=[length(Pos_Bin_Centers)/8:3*length(Pos_Bin_Centers)/8,5*length(Pos_Bin_Centers)/8:7*length(Pos_Bin_Centers)/8];
-    indx_quart=[length(Pos_Bin_Centers)/8:2*length(Pos_Bin_Centers)/8,6*length(Pos_Bin_Centers)/8:7*length(Pos_Bin_Centers)/8];
+    indx_quart=[length(Pos_Bin_Centers)/8:2*length(Pos_Bin_Centers)/8,6 *length(Pos_Bin_Centers)/8:7*length(Pos_Bin_Centers)/8];
     Pos_Bin_Centers_quart=Pos_Bin_Centers(indx_quart);
     mean_vel_per_slice_quart=mean_vel_per_slice(indx_quart);
     fig=figure('Visible', 'off');
