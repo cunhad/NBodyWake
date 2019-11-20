@@ -252,10 +252,12 @@ nc_anal3d=nb/partition2d;
 
 F=zeros(nb);
 C_zero = fdct_wrapping(F,0);
-
-F2 = ones(nb,nb,slices/partition3rd);
-% F2 = ones(new_nc,new_nc,slices);
-X2 = fftshift(ifft2(F2)) * sqrt(prod(size(F2)));
+ 
+% F2 = ones(nb,nb,slices/partition3rd);
+% % F2 = ones(new_nc,new_nc,slices);
+X2 = zeros(nc_anal3d,nc_anal3d,slices/partition3rd);
+X2(1+nc_anal3d/2,1+nc_anal3d/2,1+slices/(2*partition3rd))=(nc_anal3d*nc_anal3d*slices/partition3rd)^(1/3);
+% X2 = fftshift(ifft2(F2)) * sqrt(prod(size(F2)));
 C2 = fdct3d_forward(X2);
 E2 = cell(size(C2));
 for s=1:length(C2)
@@ -268,13 +270,13 @@ end
 %
 %
 %
-F2=zeros(nb,nb,slices/partition3rd);
+F2=zeros(nc_anal3d,nc_anal3d,slices/partition3rd);
 C_zero2 = fdct3d_forward(F2);
 
 
 map_3d_slices=zeros(nb,nb,slices);
-map_3d_slices_filt3d=zeros(nc_anal3d,nc_anal3d,slices);
-map_3d_slices_filtCanny3d=zeros(nc_anal3d,nc_anal3d,slices);
+map_3d_slices_filt3d=zeros(nb,nb,slices);
+map_3d_slices_filtCanny3d=zeros(nb,nb,slices);
 
 
 for slice_id=1:slices
@@ -302,7 +304,8 @@ for partition=0:partition3rd-1
         for partition_y=0:partition2d-1
             
             C_aux=map_3d_slices((partition_x)*nb/partition2d+1:(partition_x)*nb/partition2d+nb/partition2d,(partition_y)*nb/partition2d+1:(partition_y)*nb/partition2d+nb/partition2d,(partition)*slices/partition3rd+1:(partition)*slices/partition3rd+slices/partition3rd);
-            
+%       Caux=map_3d_slices_filt2d((partition_x)*nc/partition2d+1:(partition_x)*nc/partition2d+nc/partition2d,(partition_y)*nc/partition2d+1:(partition_y)*nc/partition2d+nc/partition2d,(partition)*slices/partition3rd+1:(partition)*slices/partition3rd+slices/partition3rd);
+
             
             C = fdct3d_forward(C_aux);
             
@@ -420,7 +423,8 @@ for partition=0:partition3rd-1
             
             %             map_3d_slices_filt2a3d(:,:,(partition)*slices/2+1:(partition)*slices/2+slices/2) = real(fdct3d_inverse(Ct));
             map_3d_slices_filt3d((partition_x)*nb/partition2d+1:(partition_x)*nb/partition2d+nb/partition2d,(partition_y)*nb/partition2d+1:(partition_y)*nb/partition2d+nb/partition2d,(partition)*slices/partition3rd+1:(partition)*slices/partition3rd+slices/partition3rd) = real(fdct3d_inverse(Ct2));
-            
+%           map_3d_slices_filt2a3d((partition_x)*nc/partition2d+1:(partition_x)*nc/partition2d+nc/partition2d,(partition_y)*nc/partition2d+1:(partition_y)*nc/partition2d+nc/partition2d,(partition)*slices/partition3rd+1:(partition)*slices/partition3rd+slices/partition3rd) = real(fdct3d_inverse(Ct2));
+
             anali_curv(1,partition+1,partition_x+1,partition_y+1,:)=curv_1(:);
             anali_curv(2,partition+1,partition_x+1,partition_y+1,:)=curv_2(:);
             anali_curv(3,partition+1,partition_x+1,partition_y+1,:)=curv_3(:);

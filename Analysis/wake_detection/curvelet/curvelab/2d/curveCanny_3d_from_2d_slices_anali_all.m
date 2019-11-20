@@ -6,20 +6,29 @@ function [  ] = curveCanny_3d_from_2d_slices_anali_all(  )
 % root_visual_2d='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurv_s5lv2_visual_all/';
 % 
 
+filename='3.000xv0.dat';
+lenght_factor=1;
+resol_factor=0.5;
+pivot=[0,0,0];
+rot_angle=[1.5708,0,0];
+slices=128;
+nc=512;
+sum_depth=16;
+L_box=4;
+
 root='/home/asus/Dropbox/extras/storage/graham/ht/';
 % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps16_512_2dclar-l2lr1na128_to_3dparcurv-l1lr1_anali/';
-root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dclar-l2lr1na256_to_3dparcurv-l1lr2_anali/';
+% root_anali_2d_in=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclar-l2lr1na256_to_3dparcurv-l1lr2_anali/');
+root_anali_2d_in=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclara-l3lr2na256_to_3dparclar-l1lr3_anali/');
 % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcr0_l2lr1ap256_anali/';
 %root_anali_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurv_s5lv2_anali_all/';
 %root_visual_2d='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurv_s5lv2_visual_all/';
 
-filename='3.000xv0.dat';
-lenght_factor=1;
-resol_factor=1;
-pivot=[0,0,0];
-rot_angle=[1.5708,0,0];
-slices=32;
-sum_depth=4;
+
+
+
+
+
 % lev=2;
 % sigma=5;
 % step_of_degree=1;
@@ -32,7 +41,7 @@ sum_depth=4;
 
 % wake_samples_ids=[1:2,4,7];
 
-wake_samples_ids=[1:9];
+wake_samples_ids=[1:10];
 
 
 addpath('../../../../processing');
@@ -42,12 +51,12 @@ addpath('../../../../processing');
 
 path_specs_in=strcat(root_anali_2d_in);
 
-specs_nowake=dir(strcat(root_anali_2d_in,'/2*nowake*'));
+specs_nowake=dir(strcat(root_anali_2d_in,'/',num2str(L_box),'*nowake*'));
 specs_nowake={specs_nowake.name};
-specs_wake=dir(strcat(root_anali_2d_in,'/2*wakeGmu*'));
+specs_wake=dir(strcat(root_anali_2d_in,'/',num2str(L_box),'*wakeGmu*'));
 specs_wake={specs_wake.name};
 
-specs_list=dir(strcat(path_specs_in,'/2*'));
+specs_list=dir(strcat(path_specs_in,'/',num2str(L_box),'*'));
 specs_list={specs_list.name};
 specs_list=sort_nat(specs_list);
 specs_list=specs_list(1:end);
@@ -56,13 +65,13 @@ display(specs_list);
 
 spec_nowake=specs_nowake{1};
 path_samples_in=strcat(root_anali_2d_in,spec_nowake);
-sample_list=dir(strcat(path_samples_in,'/sample4*'));
+sample_list=dir(strcat(path_samples_in,'/sample*'));
 sample_list=strcat('/',{sample_list.name},'/');
 sample_list_nowake=sort_nat(sample_list)
 
 spec_wake=specs_wake{1};
 path_samples_in=strcat(root_anali_2d_in,spec_wake);
-sample_list_all=dir(strcat(path_samples_in,'/sample4*'));
+sample_list_all=dir(strcat(path_samples_in,'/sample*'));
 sample_list=sample_list_all(wake_samples_ids);
 % sample_list_short=strcat('/',{sample_list.name},'/');
 % sample_list_short=strcat('/',{sample_list.name},'/half_lin_cutoff_half_tot_pert_nvpw_v0p55');

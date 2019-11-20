@@ -33,22 +33,22 @@ sample_list_wake={sample_list_wake.name};
 
 for sample = 1:length(sample_list_wake)
     
-%                 filename_wake=strcat('',specs_path_list_nowake,'/',string(sample_list_wake(sample)),type_folder,'/check/vel/half/','_Check_mn_Vel_Zel.txt')
+%                 filename_wake=strcat('',specs_path_list_nowake,'/',string(sample_list_wake(sample)),type_folder,'/check/displ/half/','_Check_mn_Zel.txt')
 %                 info = dlmread(filename_wake);
     
-%                 filename_wake=strcat('',specs_path_list_nowake,'/',string(sample_list_wake(sample)),type_folder,'check/vel/half/','_Check_mn_Vel_Zel.txt')
+%                 filename_wake=strcat('',specs_path_list_nowake,'/',string(sample_list_wake(sample)),type_folder,'check/displ/half/','_Check_mn_Zel.txt')
 %                 info_med = dlmread(filename_wake);
                 
-%                 filename_wake=strcat('',specs_path_list_nowake,'/',string(sample_list_wake(sample)),type_folder,'/check/vel/half/','_Check_mod_Vel_Zel.txt')
+%                 filename_wake=strcat('',specs_path_list_nowake,'/',string(sample_list_wake(sample)),type_folder,'/check/displ/half/','_Check_mod_Zel.txt')
 %                 info_mod = dlmread(filename_wake);
 
-%                 filename_wake=strcat('',specs_path_list_nowake,'/',string(sample_list_wake(sample)),type_folder,'check/vel/half/','_Check_mn_Vel_Zel_quart.txt')
+%                 filename_wake=strcat('',specs_path_list_nowake,'/',string(sample_list_wake(sample)),type_folder,'check/displ/half/','_Check_mn_Zel_quart.txt')
 %                 info_med = dlmread(filename_wake);
 
-%                 filename_wake=strcat('',specs_path_list_nowake,'/',string(sample_list_wake(sample)),type_folder,'check/vel/half/','_Check_mod_Vel_Zel_quart.txt')
+%                 filename_wake=strcat('',specs_path_list_nowake,'/',string(sample_list_wake(sample)),type_folder,'check/displ/half/','_Check_mod_Zel_quart.txt')
 %                 info_med = dlmread(filename_wake);
 
-                filename_wake=strcat('',specs_path_list_nowake,'/',string(sample_list_wake(sample)),type_folder,'check/vel/half/','_Check_med_Vel_Zel_quart.txt')
+                filename_wake=strcat('',specs_path_list_nowake,'/',string(sample_list_wake(sample)),type_folder,'check/displ/half/','_Check_med_Zel_quart.txt')
                 info_med = dlmread(filename_wake);
                 
 %                 mn(sample,:)=info(2,:);
@@ -76,8 +76,8 @@ med_std=std(med);
 cd('../../../../parameters')
     
 for rds=1:length(a_factor)    
-    [ ~, ~, vel_pert ] = wake( Gmu,-1+1/a_factor(rds));
-    wake_vel_pert_zeld(rds,1)=vel_pert;
+    [ ~, displacement, ~ ] = wake( Gmu,-1+1/a_factor(rds));
+    wake_displacement_zeld(rds,1)=displacement;
     
 end
 
@@ -87,16 +87,16 @@ cd('../Analysis/wake_detection/consist_check/Zeldovich/')
 fig=figure;
 errorbar(a_factor,med_mn,2*med_std)
 hold on
-plot(a_factor,wake_vel_pert_zeld*10^17)
+plot(a_factor,wake_displacement_zeld)
 
 %xlim ([-inf inf]);
 xlim ([0.08 0.26]);    %for paper
 xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
-ylabel('Velocity ((Mpc/h)/s)*10^-17', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('Displacement (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
 set(gca,'linewidth',2);
-title({strcat('Velocity comparizon')},'interpreter', 'latex', 'fontsize', 20);
+title({strcat('Displacement comparizon')},'interpreter', 'latex', 'fontsize', 20);
 legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
 hold off;
 
