@@ -386,6 +386,11 @@ for partition=0:partition3rd-1
                     C_=del+3*B_*A_-2*A_^3;
                     D_=rho+4*C_*A_-6*B_*A_^2+3*A_^4;
                     
+                    A_(isnan(A_))=0;
+                    B_(isnan(B_))=0;
+                    C_(isnan(C_))=0;
+                    D_(isnan(D_))=0;
+                    
                     size_n=prod(size(Ct2{s}{w}(:)));
                     size_nt=size_nt+size_n;
                     
