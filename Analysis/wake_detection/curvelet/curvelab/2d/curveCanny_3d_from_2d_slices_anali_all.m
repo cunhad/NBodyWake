@@ -5,7 +5,7 @@ function [  ] = curveCanny_3d_from_2d_slices_anali_all(  )
 % root_anali_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurv_s5lv2_anali_all/';
 % root_visual_2d='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurv_s5lv2_visual_all/';
 % 
-
+%clearvars;
 lenght_factor=1;
 resol_factor=0.25;
 pivot=[0,0,0];
@@ -13,9 +13,9 @@ rot_angle=[1.5708,0,0];
 filename='3.000xv0.dat';
 slices=256;
 nc=256;
-sum_depth=4;
+sum_depth=16;
 L_box=4;
-root_anali_2d_in=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclara-l3lr2na256_to_3dparclar-l3lr3_anali/');
+root_anali_2d_in=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclara-l3lr2na1024_to_3dparclar-l3lr1_anali/');
 root='/home/asus/Dropbox/extras/storage/graham/ht/';
 % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps16_512_2dclar-l2lr1na128_to_3dparcurv-l1lr1_anali/';
 % root_anali_2d_in=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclar-l2lr1na256_to_3dparcurv-l1lr2_anali/');
