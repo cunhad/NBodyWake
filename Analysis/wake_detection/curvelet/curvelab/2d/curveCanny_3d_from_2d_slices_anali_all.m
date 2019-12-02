@@ -10,12 +10,12 @@ lenght_factor=1;
 resol_factor=0.25;
 pivot=[0,0,0];
 rot_angle=[1.5708,0,0];
-filename='3.000xv0.dat';
+filename='3.000xv0.dat'; GMU_pre=4;
 slices=256;
 nc=256;
-sum_depth=16;
+sum_depth=256;
 L_box=4;
-root_anali_2d_in=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclara-l3lr2na1024_to_3dparclar-l3lr1_anali/');
+root_anali_2d_in=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclara-l1lr1na512_to_3dparclar-l3lr1_anali/');
 root='/home/asus/Dropbox/extras/storage/graham/ht/';
 % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps16_512_2dclar-l2lr1na128_to_3dparcurv-l1lr1_anali/';
 % root_anali_2d_in=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclar-l2lr1na256_to_3dparcurv-l1lr2_anali/');
@@ -52,7 +52,7 @@ path_specs_in=strcat(root_anali_2d_in);
 
 specs_nowake=dir(strcat(root_anali_2d_in,'/',num2str(L_box),'*nowake*'));
 specs_nowake={specs_nowake.name};
-specs_wake=dir(strcat(root_anali_2d_in,'/',num2str(L_box),'*wakeGmu*'));
+specs_wake=dir(strcat(root_anali_2d_in,'/',num2str(L_box),'*wakeGmu',num2str(GMU_pre),'*'));
 specs_wake={specs_wake.name};
 
 specs_list=dir(strcat(path_specs_in,'/',num2str(L_box),'*'));
@@ -584,7 +584,36 @@ significance=abs(mean_wake-mean_nowake)/(std_wake+std_nowake)
 % std_stn=std(stn_wake,1)
 % stn=mean_stn-std_stn
 % significance=abs(mean_wake-mean_nowake)/(std_wake+std_nowake)
-
+% 
+% nowake=reshape(permute(anali_Canny(1,1:length(sample_list_nowake),:,4,1),[1,3,2,4,5]),[1,numel(anali(1,1:length(sample_list_nowake),:,2,1))])
+% wake=reshape(permute(anali_Canny(2,1:length(sample_list_wake),:,4,1),[1,3,2,4,5]),[1,numel(anali(1,1:length(sample_list_wake),:,2,1))])
+% mean_wake=mean(wake)
+% mean_nowake=mean(nowake)
+% std_nowake=std(nowake,1)
+% stn_nowake=(nowake-mean_nowake)/std_nowake
+% stn_wake=(wake-mean_nowake)/std_nowake
+% mean_stn=mean(stn_wake)
+% std_stn=std(stn_wake,1)
+% mean_stn-std_stn
+% wake_slices = reshape(wake,[slices,length(sample_list_wake)])'
+% nowake_slices = reshape(nowake,[slices,length(sample_list_nowake)])'
+% max_wake_slices_=sort(wake_slices')
+% max_nowake_slices_=sort(nowake_slices')
+% max_wake_slices=sum(max_wake_slices_(1:end,:))
+% max_nowake_slices=sum(max_nowake_slices_(1:end,:))
+% mean_wake=mean(max_wake_slices)
+% mean_nowake=mean(max_nowake_slices)
+% std_wake=std(max_wake_slices,1)
+% std_nowake=std(max_nowake_slices,1)
+% stn_nowake=(max_nowake_slices-mean_nowake)/std_nowake
+% stn_wake=(max_wake_slices-mean_nowake)/std_nowake
+% mean_stn=mean(stn_wake)
+% std_stn=std(stn_wake,1)
+% stn=mean_stn-std_stn
+% significance=abs(mean_wake-mean_nowake)/(std_wake+std_nowake)
+% sum(max_wake_slices_>max(max_nowake_slices_(:)))
+% sum(max_wake_slices_(:)>max(max_nowake_slices_(:)))
+% 
 cd('../wake_detection/curvelet/curvelab/2d/')
 
 
