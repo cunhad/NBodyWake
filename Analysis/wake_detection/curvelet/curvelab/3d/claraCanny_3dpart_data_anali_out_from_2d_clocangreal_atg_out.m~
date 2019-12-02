@@ -43,7 +43,7 @@ function [  ] = claraCanny_3dpart_data_anali_out_from_2d_clocangreal_atg_out( ro
 %  sum_depth=4;
 
 % filename_read_path=_2dproj_z3_data_sl;
-% % 
+% 
 addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_cpp/mex/'));
 addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_matlab'));
 addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct3d'));
