@@ -41,6 +41,31 @@ function [  ] = claraCanRid_3dpart_data_anali_out_from_2d_clocangreal_atg_out( r
 % partition3rd=2;
 % %  sum_depth=1;
 % %  sum_depth=4;
+% 
+% root='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/'
+% root_data_2d_in='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps128_512_2dclara_l3lr2_data/'
+% root_data_2d_out=''
+% root_anali_2d_out='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps128_512_2dclara-l3lr2na1024_to_3dparclar_p4d2_rid-l1lr3_anali/'
+% root_visual_2d='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps128_512_2dclara-l3lr2na1024_to_3dparclar_p4d2_rid-l1lr3_visual/'
+% spec='4Mpc_2048c_1024p_zi63_nowakem'
+% aux_path='/sample3001/'
+% aux_path_out=''
+% filename='3.000xv0.dat'
+% lenght_factor=1
+% resol_factor=0.5
+% pivot=[0,0,0]
+% rot_angle=[pi/2,0,0]
+% slices=128
+% lev_3d=1
+% lev_3drig=3
+% sigma=5
+% step_of_degree=1*(180/1024)
+% wavel_removal_factor=1/2
+% snapshot=[]
+% visual_type=[1:2]
+% visual_in_or_out=[1:3]
+% partition2d=4
+% partition3rd=1
 
 sum_depth=slices;
 
@@ -279,9 +304,9 @@ C_zero2 = fdct3d_forward(F2);
 
 %radon
 
-% nb_m=max(nb,slices)
-% nb_m=min(nb,slices)
-nb_m=sqrt(nb*slices);
+% nb_m=max(nb,slices);
+nb_m=min(nb,slices);
+% nb_m=sqrt(nb*slices);
 
 Rad_norm = radon3(ones(nb_m,nb_m,nb_m));
 
