@@ -1,10 +1,10 @@
-function [ map,anali ] = slices_curv_2a3d_locangreala_inf( root,root_data_2d_in,root_data_2d_out,root_data_2d_anali_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,numb_rand,slices,lev,lev_2drid,lev_3d,lev_3drid,step_of_degree,wavel_removal_factor,NSIDE,partition2d,partition3rd,sum_depth,snapshot,visual_type,visual_in_or_out,stage)
+function [ map,anali ] = slices_curv_2a3d_locangreal_inf( root,root_data_2d_in,root_data_2d_out,root_data_2d_anali_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,numb_rand,slices,lev,lev_2drid,lev_3d,lev_3drid,step_of_degree,wavel_removal_factor,NSIDE,partition2d,partition3rd,sum_depth,snapshot,visual_type,visual_in_or_out,stage)
 
 % (example) [ map ] = slices_curv_2d('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data_test2/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,8,4,8,2,5 );
 
 %(example) [ map ] = slices_curv_2a3d('/home/asus/Dropbox/extras/storage/graham/ht/','/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024/','/home/asus/Dropbox/extras/storage/graham/ht/analy_cps32_1024/','4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m','/sample3001/','','3.000xv0.dat',1,1,1,32,8,2,5 );
 %(example) for i=1:24; [ count_sum] = proj2d_cic_dm_data_out_part_rand_hpx_slices('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data_test2/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,1,1,i,2,2); end;
-%(example) for i=1:24; [ map ,anali] = slices_curv_2a3d('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data_test2/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,i,2,2,2,5 ); end;
+%(example)  for i=1:24; [ map ,anali] = slices_curv_2a3d('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data_test2/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,i,2,2,2,5 ); end;
 %  
 % 
 % root='/home/asus/Dropbox/extras/storage/graham/small_res/';
@@ -80,8 +80,8 @@ function [ map,anali ] = slices_curv_2a3d_locangreala_inf( root,root_data_2d_in,
 % stage=[3];              % for doing the 3d
 % %  info=[0,1,2]             %0,for just simplest visualisation
 %                             %1 with minimal information
-%                             %2 with some information
-%                             %3 for maximal information
+%                             %2 wthi some information
+%                             %3for maximal information
                            
 
 %%%%Problems
@@ -137,28 +137,26 @@ end
 F=zeros(nb);
 C_zero = fdct_wrapping(F,0);
 
-% F2 = ones(nb,nb,slices/partition3rd);
-% % F2 = ones(new_nc,new_nc,slices);
-% X2 = fftshift(ifft2(F2)) * sqrt(prod(size(F2)));
-
-X2 = zeros(nc_anal3d,nc_anal3d,slices/partition3rd);
-X2(1+nc_anal3d/2,1+nc_anal3d/2,1+slices/(2*partition3rd))=(nc_anal3d*nc_anal3d*slices/partition3rd)^(1/3);
+F2 = ones(nb,nb,slices/partition3rd);
+% F2 = ones(new_nc,new_nc,slices);
+X2 = fftshift(ifft2(F2)) * sqrt(prod(size(F2)));
 
 if ismember(3,stage)
-    
-    C2 = fdct3d_forward(X2);
-    E2 = cell(size(C2));
-    for s=1:length(C2)
-        E2{s} = cell(size(C2{s}));
-        for w=1:length(C2{s})
-            A2 = C2{s}{w};
-            E2{s}{w} = sqrt(sum(sum(sum(A2.*conj(A2)))) / prod(size(A2)));
-        end
+
+C2 = fdct3d_forward(X2);
+E2 = cell(size(C2));
+for s=1:length(C2)
+    E2{s} = cell(size(C2{s}));
+    for w=1:length(C2{s})
+        A2 = C2{s}{w};
+        E2{s}{w} = sqrt(sum(sum(sum(A2.*conj(A2)))) / prod(size(A2)));
     end
-    
-    F2=zeros(nc_anal3d,nc_anal3d,slices/partition3rd);
-    C_zero2 = fdct3d_forward(F2);
-    
+end
+%
+%
+%
+F2=zeros(nb,nb,slices/partition3rd);
+C_zero2 = fdct3d_forward(F2);
 end
 
 anali=zeros(slices,4,5);
@@ -352,9 +350,10 @@ if ~isempty(snapshot)
 end
 
 
-map_3d_slices_pre=zeros(nb,nb,slices);
+
 map_3d_slices=zeros(nb,nb,slices);
 map_3d_slices_filt2d=zeros(nb,nb,slices);
+% map_3d_slices_filt3d=zeros(nc_anal3d,nc_anal3d,slices);
 map_3d_slices_filt3d=zeros(nb,nb,slices);
 
 % for slice_id=1:1
@@ -367,21 +366,11 @@ for slice_id=1:slices
     fclose(fid);
     
 %     map2=map;
-%     map(map<=1)=1;%to remove problem with holes
-%     map_3d_slices(:,:,slice_id)=log(map);
-map_3d_slices_pre(:,:,slice_id)=map;
-
-end
-
-for slice_id=1:slices
-
+    map(map<=1)=1;%to remove problem with holes
+    map_3d_slices(:,:,slice_id)=log(map);
+    
     if ismember(slice_id,snapshot)&(ismember(1,visual_type))&ismember(1,visual_in_or_out)
         
-        map=map_3d_slices_pre(:,:,slice_id);
-        dc=(map-mean(map_3d_slices_pre(:)))/mean(map_3d_slices_pre(:));
-        %             dc=(map-mean(map(:)))/mean(map(:));
-        %             map_3d_slices(:,:,slice_id)=(atan(dc+1));
-        map_3d_slices=(atan((dc+1)*16));
         
         fig=figure('Visible', 'off'); imagesc((size_box/nb)*[1:nb],(size_box/nb)*[1:nb],map_3d_slices(:,:,slice_id)); colorbar; axis('image');
         xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
@@ -904,14 +893,13 @@ if ismember(3,stage)
                 
                 C_aux=map_3d_slices_filt2d((partition_x)*nb/partition2d+1:(partition_x)*nb/partition2d+nb/partition2d,(partition_y)*nb/partition2d+1:(partition_y)*nb/partition2d+nb/partition2d,(partition)*slices/partition3rd+1:(partition)*slices/partition3rd+slices/partition3rd);
                 
+                
                 C = fdct3d_forward(C_aux);
                 
                 Ct = C;
-                Ct2=C;
                 for s = 1:length(C)
                     for w = 1:length(C{s})
                         Ct{s}{w} = C_zero2{s}{w};
-                        Ct2{s}{w} = C_zero2{s}{w};
                     end
                 end
                 
@@ -928,67 +916,25 @@ if ismember(3,stage)
                     
                     size_nt=0;
                     
-                    for part=0:5
-                        
-                        %do for each one of the 6 parts
-                        
-                        for w = 1+part*length(C{s})/6:(part+1)*length(C{s})/6
-                            sz{w}=size(C{s}{w});
-                        end
-                        for  i=1:sz{1+part*length(C{s})/6}(1)
-                            for j=1:sz{1+part*length(C{s})/6}(2)
-                                for k=1:sz{1+part*length(C{s})/6}(3)
-                                    for w = 1+part*length(C{s})/6:(1+part)*length(C{s})/6
-                                        i_c=ceil(i*sz{w}(1)/sz{1+part*length(C{s})/6}(1));
-                                        j_c=ceil(j*sz{w}(2)/sz{1+part*length(C{s})/6}(2));
-                                        k_c=ceil(k*sz{w}(3)/sz{1+part*length(C{s})/6}(3));
-                                        a(w-part*length(C{s})/6)=abs(C{s}{w}(i_c,j_c,k_c))/E2{s}{w};
-                                    end
-                                    %                         std_a=std(a);
-                                    avr_a=mean(a);
-                                    %             treash_logic=double(a>=avr_a+sigma*std_a)   ;
-                                    %             treash_logic=double(a==max(a));
-                                    %             normalization=(a-mean(a)/std_a);
-                                    normalization=(a-avr_a)/avr_a;
-                                    for w = 1+part*length(C{s})/6:(part+1)*length(C{s})/6
-                                        i_c=ceil(i*sz{w}(1)/sz{1+part*length(C{s})/6}(1));
-                                        j_c=ceil(j*sz{w}(2)/sz{1+part*length(C{s})/6}(2));
-                                        k_c=ceil(k*sz{w}(3)/sz{1+part*length(C{s})/6}(3));
-                                        %                 Ct{s}{w}(i_c,j_c)=treash_logic(w-length(C{s})/4)*C{s}{w}(i_c,j_c)*double(Ct{s}{w}(i_c,j_c)~=0);
-                                        Ct{s}{w}(i_c,j_c,k_c)=max(normalization(w-part*length(C{s})/6),Ct{s}{w}(i_c,j_c,k_c));
-                                    end
-                                end
-                            end
-                        end
-                    end
-                    
                     for w = 1:length(C{s})
-                        
-                        Ct2{s}{w} = Ct{s}{w}.*C{s}{w};
-                        
-                        %                     Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > 0*E2{s}{w})
+                        Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > 0*E2{s}{w})
                         %                                   Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > thresh*E{s}{w});
                         %                   Ct{s}{w} = C{s}{w}.* ((C{s}{w}) > -thresh*E{s}{w}&(C{s}{w}) < thresh*E{s}{w});
                         %                   Ct{s}{w} = C{s}{w};
                         %                   curv(w_nw,sample,slice_id,w,aux_count)=kurtosis(abs(C{s}{w}(:)));
                         
                         
-                        ave=mean(abs(Ct2{s}{w}(:))/E2{s}{w});
-                        sig=std(abs(Ct2{s}{w}(:))/E2{s}{w})^2;
-                        del=skewness(abs(Ct2{s}{w}(:))/E2{s}{w})*(sig^(3/2));
-                        rho=kurtosis(abs(Ct2{s}{w}(:))/E2{s}{w})*(sig^(2));
+                        ave=mean(abs(Ct{s}{w}(:))/E2{s}{w});
+                        sig=std(abs(Ct{s}{w}(:))/E2{s}{w})^2;
+                        del=skewness(abs(Ct{s}{w}(:))/E2{s}{w})*(sig^(3/2));
+                        rho=kurtosis(abs(Ct{s}{w}(:))/E2{s}{w})*(sig^(2));
                         
                         A_=ave;
                         B_=sig+A_^2;
                         C_=del+3*B_*A_-2*A_^3;
                         D_=rho+4*C_*A_-6*B_*A_^2+3*A_^4;
                         
-                        A_(isnan(A_))=0;
-                        B_(isnan(B_))=0;
-                        C_(isnan(C_))=0;
-                        D_(isnan(D_))=0;
-                        
-                        size_n=prod(size(Ct2{s}{w}(:)));
+                        size_n=prod(size(Ct{s}{w}(:)));
                         size_nt=size_nt+size_n;
                         
                         As=A_*size_n+As;
@@ -998,7 +944,6 @@ if ismember(3,stage)
                         
                         
                     end
-                    
                     %                 curv2(w_nw,sample,slice_id,aux_count)=kurtosis(curv(w_nw,sample,slice_id,:,aux_count));
                     
                     AT=As/size_nt;
@@ -1025,9 +970,8 @@ if ismember(3,stage)
                 end
                 
                 %             map_3d_slices_filt2a3d(:,:,(partition)*slices/2+1:(partition)*slices/2+slices/2) = real(fdct3d_inverse(Ct));
-%                 map_3d_slices_filt3d((partition_x)*nb/partition2d+1:(partition_x)*nb/partition2d+nb/partition2d,(partition_y)*nb/partition2d+1:(partition_y)*nb/partition2d+nb/partition2d,(partition)*slices/partition3rd+1:(partition)*slices/partition3rd+slices/partition3rd) = real(fdct3d_inverse(Ct));
-                map_3d_slices_filt3d((partition_x)*nb/partition2d+1:(partition_x)*nb/partition2d+nb/partition2d,(partition_y)*nb/partition2d+1:(partition_y)*nb/partition2d+nb/partition2d,(partition)*slices/partition3rd+1:(partition)*slices/partition3rd+slices/partition3rd) = real(fdct3d_inverse(Ct2));
-
+                map_3d_slices_filt3d((partition_x)*nb/partition2d+1:(partition_x)*nb/partition2d+nb/partition2d,(partition_y)*nb/partition2d+1:(partition_y)*nb/partition2d+nb/partition2d,(partition)*slices/partition3rd+1:(partition)*slices/partition3rd+slices/partition3rd) = real(fdct3d_inverse(Ct));
+                
                 anali3_curv_aux(1,partition+1,partition_x+1,partition_y+1,:)=curv_1(:);
                 anali3_curv_aux(2,partition+1,partition_x+1,partition_y+1,:)=curv_2(:);
                 anali3_curv_aux(3,partition+1,partition_x+1,partition_y+1,:)=curv_3(:);

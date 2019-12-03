@@ -1,4 +1,4 @@
-function [ map,anali ] = slices_curv_2a3d_locangreala_inf( root,root_data_2d_in,root_data_2d_out,root_data_2d_anali_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,numb_rand,slices,lev,lev_2drid,lev_3d,lev_3drid,step_of_degree,wavel_removal_factor,NSIDE,partition2d,partition3rd,sum_depth,snapshot,visual_type,visual_in_or_out,stage)
+function [ map,anali ] = slices_curv_2a3d_locangrealaRid_inf( root,root_data_2d_in,root_data_2d_out,root_data_2d_anali_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,numb_rand,slices,lev,lev_2drid,lev_3d,lev_3drid,step_of_degree,wavel_removal_factor,NSIDE,partition2d,partition3rd,snapshot,visual_type,visual_in_or_out,stage)
 
 % (example) [ map ] = slices_curv_2d('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data_test2/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,8,4,8,2,5 );
 
@@ -99,6 +99,8 @@ function [ map,anali ] = slices_curv_2a3d_locangreala_inf( root,root_data_2d_in,
  addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_matlab'));
  addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct3d'));
 
+ 
+run('../ridgelet/ppft3_nomex/ppft3/initpath.m')
 
 cd('../../preprocessing');
 
@@ -160,6 +162,16 @@ if ismember(3,stage)
     C_zero2 = fdct3d_forward(F2);
     
 end
+
+%radon
+
+% nb_m=max(nb,slices);
+nb_m=min(nb,slices);
+% nb_m=sqrt(nb*slices);
+
+Rad_norm = radon3(ones(nb_m,nb_m,nb_m));
+
+
 
 anali=zeros(slices,4,5);
 anali_curv=zeros(slices,5,lev);
