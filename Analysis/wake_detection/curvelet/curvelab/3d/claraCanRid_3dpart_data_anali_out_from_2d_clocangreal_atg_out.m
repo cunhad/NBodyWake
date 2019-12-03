@@ -860,7 +860,7 @@ if ~ismember(1,sum_depth)
         %         theta = 0:step_of_degree:180;
         %         [R,xp] = radon(map_3d_slices_filt3d_depth(:,:,slice_depth_id),theta);
         
-        R = radon3(imresize3(map_3d_slices_filt3d_depth,[nb_m nb_m nb_m]));
+        R = radon3(imresize3(map_3d_slices_filt3d,[nb_m nb_m nb_m]));
         
         %         unit=ones(nb);
         %         [R_u,xp] = radon(unit,theta);
@@ -937,7 +937,7 @@ if ~ismember(1,sum_depth)
 %         theta = 0:step_of_degree:180;
 %         [R,xp] = radon(map_3d_slices_filt3d_canny_depth(:,:,slice_depth_id),theta);
         
-        R = radon3(imresize3(map_3d_slices_filt3d_canny_depth,[nb_m nb_m nb_m]));
+        R = radon3(imresize3(map_3d_slices_filtCanny3d,[nb_m nb_m nb_m]));
         
 %         unit=ones(nb);
 %         [R_u,xp] = radon(unit,theta);
