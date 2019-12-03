@@ -895,11 +895,13 @@ if ~ismember(1,sum_depth)
         %         R_nor_filt(length(xp)-nb*wavel_removal_factor:end,:)=[];
         %         R_nor_filt(1:nb*wavel_removal_factor,:)=[];
         
-        WDEC = wavedec3(squeeze(R_nor(1,:,:,:)),1,'db1') ;
+        n_levels=floor(log2(max(size(squeeze(R_nor(1,:,:,:))))));
+        
+        WDEC = wavedec3(squeeze(R_nor(1,:,:,:)),n_levels,'db1') ;
         R_nor_filt_x = waverec3(WDEC,'d',lev_3drig);
-        WDEC = wavedec3(squeeze(R_nor(2,:,:,:)),1,'db1') ;
+        WDEC = wavedec3(squeeze(R_nor(2,:,:,:)),n_levels,'db1') ;
         R_nor_filt_y = waverec3(WDEC,'d',lev_3drig);
-        WDEC = wavedec3(squeeze(R_nor(3,:,:,:)),1,'db1') ;
+        WDEC = wavedec3(squeeze(R_nor(3,:,:,:)),n_levels,'db1') ;
         R_nor_filt_z = waverec3(WDEC,'d',lev_3drig);
         
         R_nor_filt=[R_nor_filt_x;R_nor_filt_y;R_nor_filt_z];
@@ -937,7 +939,7 @@ if ~ismember(1,sum_depth)
 %         theta = 0:step_of_degree:180;
 %         [R,xp] = radon(map_3d_slices_filt3d_canny_depth(:,:,slice_depth_id),theta);
         
-        R = radon3(imresize3(map_3d_slices_filt3d_canny,[nb_m nb_m nb_m]));
+        R = radon3(imresize3(map_3d_slices_filtCanny3d,[nb_m nb_m nb_m]));
         
 %         unit=ones(nb);
 %         [R_u,xp] = radon(unit,theta);

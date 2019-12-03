@@ -1252,7 +1252,9 @@ for w_nw=1:2
             
 %             R_nor=R_nor_(:,1+end/4:-1+3*end/4,1+end/4:-1+3*end/4,1+end/4:-1+3*end/4);
 
-            WDEC = wavedec3(squeeze(R_nor(1,:,:,:)),1,'db1') ;
+            n_levels=floor(log2(max(size(squeeze(R_nor(1,:,:,:))))));
+            
+            WDEC = wavedec3(squeeze(R_nor(1,:,:,:)),n_levels,'db1') ;
             R_nor_filt_x = waverec3(WDEC,'d',lev_2drig);
             WDEC = wavedec3(squeeze(R_nor(2,:,:,:)),1,'db1') ;
             R_nor_filt_y = waverec3(WDEC,'d',lev_2drig);
