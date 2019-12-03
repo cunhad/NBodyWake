@@ -963,7 +963,7 @@ if ~ismember(1,sum_depth)
         if ismember(slice_depth_id,floor(snapshot/sum_depth))&(ismember(2,visual_type))&ismember(3,visual_in_or_out)
             
             %                 figure; imagesc((size_mpc/nc)*[1:nc],(size_mpc/1024)*[1:nc],map_3d_slices_filt2a3d(:,:,slice_id)); colorbar; axis('image');
-            fig=figure('Visible', 'off'); imagesc(0:step_of_degree:180,(size_box/nb)*[1:nb],sum(R_nor_filt_z,3)));colorbar;
+            fig=figure('Visible', 'off'); imagesc(0:step_of_degree:180,(size_box/nb)*[1:nb],sum(R_nor_filt_z,3));colorbar;
             xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
             ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
             set(gca,'FontName','FixedWidth');
