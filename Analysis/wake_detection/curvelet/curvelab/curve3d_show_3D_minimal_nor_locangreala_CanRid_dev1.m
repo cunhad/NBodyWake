@@ -134,8 +134,11 @@ C_zero2 = fdct3d_forward(F2);
 
 %radon
 
-F2 = ones(nc,nc,slices);
-Rad_norm = radon3(F2);
+% nb_m=max(nb,slices)
+% nb_m=min(nb,slices)
+nb_m=sqrt(nb*slices);
+Z2 = ones(nb_m,nb_m,nb_m);
+Rad_norm = radon3(Z2);
 
 
 
@@ -1231,7 +1234,9 @@ for w_nw=1:2
 %             [R,xp] = radon(map_3d_slices_filt2a3d(:,:,slice_id),theta);
 %             [R,xp] = radon(BW,theta);
         
-            R = radon3(map_3d_slices_filt2a3d);
+            
+
+            R = radon3(imresize3(map_3d_slices_filt2a3d,[nb_m nb_m nb_m]));
 %             
 %             R_nor_=R./Rad_norm;
 %             R_nor_(isinf(R_nor)|isnan(R_nor))=0;
@@ -1242,8 +1247,8 @@ for w_nw=1:2
             
             frac_cut=0.5;
             R_nor=R;
-            R_nor(Rad_norm>nc*nc*frac_cut)=R_nor(Rad_norm>nc*nc*frac_cut)./Rad_norm(Rad_norm>nc*nc*frac_cut);
-            R_nor(Rad_norm<=nc*nc*frac_cut)=0;
+            R_nor(Rad_norm>nb_m*nb_m*frac_cut)=R_nor(Rad_norm>nb_m*nb_m*frac_cut)./Rad_norm(Rad_norm>nb_m*nb_m*frac_cut);
+            R_nor(Rad_norm<=nb_m*nb_m*frac_cut)=0;
             
 %             R_nor=R_nor_(:,1+end/4:-1+3*end/4,1+end/4:-1+3*end/4,1+end/4:-1+3*end/4);
 

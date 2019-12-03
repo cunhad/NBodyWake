@@ -1,4 +1,4 @@
-function [  ] = claraCanny_3dpart_data_anali_out_from_2d_clocangreal_atg_out( root,root_data_2d_in,root_data_2d_out,root_anali_2d_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,slices,lev_3d,lev_3drig,sigma,step_of_degree,wavel_removal_factor,snapshot,visual_type,visual_in_or_out,partition2d,partition3rd,sum_depth)
+function [  ] = claraCanRid_3dpart_data_anali_out_from_2d_clocangreal_atg_out( root,root_data_2d_in,root_data_2d_out,root_anali_2d_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,slices,lev_3d,lev_3drig,sigma,step_of_degree,wavel_removal_factor,snapshot,visual_type,visual_in_or_out,partition2d,partition3rd)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 % 
@@ -40,10 +40,12 @@ function [  ] = claraCanny_3dpart_data_anali_out_from_2d_clocangreal_atg_out( ro
 %  partition2d=1;
 % partition3rd=2;
 % %  sum_depth=1;
-%  sum_depth=4;
+% %  sum_depth=4;
+
+sum_depth=slices;
 
 % filename_read_path=_2dproj_z3_data_sl;
-% 
+% % 
 addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_cpp/mex/'));
 addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_matlab'));
 addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct3d'));
@@ -51,6 +53,8 @@ addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3
 % addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_cpp/mex/'));
 % addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_matlab'));
 % addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct3d'));
+
+run('../../../ridgelet/ppft3_nomex/ppft3/initpath.m')
 
 % record the path to data in
 
@@ -273,6 +277,13 @@ end
 F2=zeros(nc_anal3d,nc_anal3d,slices/partition3rd);
 C_zero2 = fdct3d_forward(F2);
 
+%radon
+
+% nb_m=max(nb,slices)
+% nb_m=min(nb,slices)
+nb_m=sqrt(nb*slices);
+
+Rad_norm = radon3(ones(nb_m,nb_m,nb_m));
 
 map_3d_slices=zeros(nb,nb,slices);
 map_3d_slices_filt3d=zeros(nb,nb,slices);
@@ -812,51 +823,67 @@ if ~ismember(1,sum_depth)
             end
             
         end
-%         
-%         this=map_3d_slices_filt3d_depth(:,:,slice_depth_id);
-%         
-%         anali_depth(slice_id,1,:)=[max(this(:)),std(this(:)),max(this(:))/std(this(:)),kurtosis(kurtosis(this)),kurtosis(this(:))];
-%         
+        %
+        %         this=map_3d_slices_filt3d_depth(:,:,slice_depth_id);
+        %
+        %         anali_depth(slice_id,1,:)=[max(this(:)),std(this(:)),max(this(:))/std(this(:)),kurtosis(kurtosis(this)),kurtosis(this(:))];
+        %
         % theta = 0:180/nc:180;
         
         
         
-        theta = 0:step_of_degree:180;
-        [R,xp] = radon(map_3d_slices_filt3d_depth(:,:,slice_depth_id),theta);
+        %         theta = 0:step_of_degree:180;
+        %         [R,xp] = radon(map_3d_slices_filt3d_depth(:,:,slice_depth_id),theta);
         
-        unit=ones(nb);
-        [R_u,xp] = radon(unit,theta);
+        R = radon3(imresize3(map_3d_slices_filt3d_depth,[nb_m nb_m nb_m]));
+        
+        %         unit=ones(nb);
+        %         [R_u,xp] = radon(unit,theta);
+        
+        %         frac_cut=0.5;
+        %         R_nor=R;
+        %         R_nor(R_u>nb*frac_cut)=R_nor(R_u>nb*frac_cut)./R_u(R_u>nb*frac_cut);
+        %         R_nor(R_u<=nb*frac_cut)=0;
         
         frac_cut=0.5;
         R_nor=R;
-        R_nor(R_u>nb*frac_cut)=R_nor(R_u>nb*frac_cut)./R_u(R_u>nb*frac_cut);
-        R_nor(R_u<=nb*frac_cut)=0;
+        R_nor(Rad_norm>nb_m*nb_m*frac_cut)=R_nor(Rad_norm>nb_m*nb_m*frac_cut)./Rad_norm(Rad_norm>nb_m*nb_m*frac_cut);
+        R_nor(Rad_norm<=nb_m*nb_m*frac_cut)=0;
         
-        %     boudary_removal_factor=2048/nb;
+        %         %     boudary_removal_factor=2048/nb;
+        %
+        %         n_levels=floor(log2(length(R_nor(:,1))));
+        %         R_nor_filt=zeros(size(R_nor));
+        %         for i=1:length(R_nor(1,:))
+        %             %                 [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
+        %             [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
+        %             D = wrcoef('d',dc_dwt,levels,'db1',lev_3drig);
+        %             %                 D(floor((2465-200)/boudary_removal_factor):end)=0;
+        %             %                 D(1:floor((448+200)/boudary_removal_factor))=0;
+        %             D(length(xp)-nb*wavel_removal_factor:end)=0;
+        %             D(1:nb*wavel_removal_factor)=0;
+        %
+        %             R_nor_filt(:,i)=D;
+        %         end
+        %         %             R_nor_filt(floor((2465-200)/boudary_removal_factor):end,:)=[];
+        %         %             R_nor_filt(1:floor((448+200)/boudary_removal_factor),:)=[];
+        %         R_nor_filt(length(xp)-nb*wavel_removal_factor:end,:)=[];
+        %         R_nor_filt(1:nb*wavel_removal_factor,:)=[];
         
-        n_levels=floor(log2(length(R_nor(:,1))));
-        R_nor_filt=zeros(size(R_nor));
-        for i=1:length(R_nor(1,:))
-            %                 [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
-            [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
-            D = wrcoef('d',dc_dwt,levels,'db1',lev_3drig);
-            %                 D(floor((2465-200)/boudary_removal_factor):end)=0;
-            %                 D(1:floor((448+200)/boudary_removal_factor))=0;
-            D(length(xp)-nb*wavel_removal_factor:end)=0;
-            D(1:nb*wavel_removal_factor)=0;
-            
-            R_nor_filt(:,i)=D;
-        end
-        %             R_nor_filt(floor((2465-200)/boudary_removal_factor):end,:)=[];
-        %             R_nor_filt(1:floor((448+200)/boudary_removal_factor),:)=[];
-        R_nor_filt(length(xp)-nb*wavel_removal_factor:end,:)=[];
-        R_nor_filt(1:nb*wavel_removal_factor,:)=[];
+        WDEC = wavedec3(squeeze(R_nor(1,:,:,:)),1,'db1') ;
+        R_nor_filt_x = waverec3(WDEC,'d',lev_3drig);
+        WDEC = wavedec3(squeeze(R_nor(2,:,:,:)),1,'db1') ;
+        R_nor_filt_y = waverec3(WDEC,'d',lev_3drig);
+        WDEC = wavedec3(squeeze(R_nor(3,:,:,:)),1,'db1') ;
+        R_nor_filt_z = waverec3(WDEC,'d',lev_3drig);
+        
+        R_nor_filt=[R_nor_filt_x;R_nor_filt_y;R_nor_filt_z];
         
         
         if ismember(slice_depth_id,floor(snapshot/sum_depth))&(ismember(2,visual_type))&ismember(2,visual_in_or_out)
             
             %                 figure; imagesc((size_mpc/nc)*[1:nc],(size_mpc/1024)*[1:nc],map_3d_slices_filt2a3d(:,:,slice_id)); colorbar; axis('image');
-            fig=figure('Visible', 'off'); imagesc(0:step_of_degree:180,(size_box/nb)*[1:nb],R_nor_filt);colorbar;
+            fig=figure('Visible', 'off'); imagesc(0:step_of_degree:180,(size_box/nb)*[1:nb],sum(R_nor_filt_z,3));colorbar;
             xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
             ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
             set(gca,'FontName','FixedWidth');
@@ -872,47 +899,55 @@ if ~ismember(1,sum_depth)
          
         this=map_3d_slices_filt3d_depth(:,:,slice_depth_id);
         
-        anali_depth(slice_depth_id,1,:)=[max(this(:)),std(this(:)),max(this(:))/std(this(:)),kurtosis(kurtosis(this)),kurtosis(this(:))];      
-        anali_depth(slice_depth_id,2,:)=[max(R(:)),std(R(:)),max(R(:))/std(R(:)),kurtosis(kurtosis(R)),kurtosis(R(:))];
-        anali_depth(slice_depth_id,3,:)=[max(R_nor(:)),std(R_nor(:)),max(R_nor(:))/std(R_nor(:)),kurtosis(kurtosis(R_nor)),kurtosis(R_nor(:))];
-        anali_depth(slice_depth_id,4,:)=[max(R_nor_filt(:)),std(R_nor_filt(:)),max(R_nor_filt(:))/std(R_nor_filt(:)),kurtosis(kurtosis(R_nor_filt)),kurtosis(R_nor_filt(:))];
+        anali_depth(slice_depth_id,1,:)=[max(this(:)),std(this(:)),max(this(:))/std(this(:)),kurtosis(this(:))];      
+        anali_depth(slice_depth_id,2,:)=[max(R(:)),std(R(:)),max(R(:))/std(R(:)),kurtosis(R(:))];
+        anali_depth(slice_depth_id,3,:)=[max(R_nor(:)),std(R_nor(:)),max(R_nor(:))/std(R_nor(:)),kurtosis(R_nor(:))];
+        anali_depth(slice_depth_id,4,:)=[max(R_nor_filt(:)),std(R_nor_filt(:)),max(R_nor_filt(:))/std(R_nor_filt(:)),kurtosis(R_nor_filt(:))];
         
         
         %now for Canny
         
         
+%         
+%         theta = 0:step_of_degree:180;
+%         [R,xp] = radon(map_3d_slices_filt3d_canny_depth(:,:,slice_depth_id),theta);
         
-        theta = 0:step_of_degree:180;
-        [R,xp] = radon(map_3d_slices_filt3d_canny_depth(:,:,slice_depth_id),theta);
+        R = radon3(imresize3(map_3d_slices_filt3d_canny_depth,[nb_m nb_m nb_m]));
         
-        unit=ones(nb);
-        [R_u,xp] = radon(unit,theta);
+%         unit=ones(nb);
+%         [R_u,xp] = radon(unit,theta);
+        
+        
+%         frac_cut=0.5;
+%         R_nor=R;
+%         R_nor(R_u>nb*frac_cut)=R_nor(R_u>nb*frac_cut)./R_u(R_u>nb*frac_cut);
+%         R_nor(R_u<=nb*frac_cut)=0;
         
         frac_cut=0.5;
         R_nor=R;
-        R_nor(R_u>nb*frac_cut)=R_nor(R_u>nb*frac_cut)./R_u(R_u>nb*frac_cut);
-        R_nor(R_u<=nb*frac_cut)=0;
+        R_nor(Rad_norm>nb_m*nb_m*frac_cut)=R_nor(Rad_norm>nb_m*nb_m*frac_cut)./Rad_norm(Rad_norm>nb_m*nb_m*frac_cut);
+        R_nor(Rad_norm<=nb_m*nb_m*frac_cut)=0;
         
         %     boudary_removal_factor=2048/nb;
         
-        n_levels=floor(log2(length(R_nor(:,1))));
-        R_nor_filt=zeros(size(R_nor));
-        for i=1:length(R_nor(1,:))
-            %                 [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
-            [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
-            D = wrcoef('d',dc_dwt,levels,'db1',lev_3drig);
-            %                 D(floor((2465-200)/boudary_removal_factor):end)=0;
-            %                 D(1:floor((448+200)/boudary_removal_factor))=0;
-            D(length(xp)-nb*wavel_removal_factor:end)=0;
-            D(1:nb*wavel_removal_factor)=0;
-            
-            R_nor_filt(:,i)=D;
-        end
-        %             R_nor_filt(floor((2465-200)/boudary_removal_factor):end,:)=[];
-        %             R_nor_filt(1:floor((448+200)/boudary_removal_factor),:)=[];
-        R_nor_filt(length(xp)-nb*wavel_removal_factor:end,:)=[];
-        R_nor_filt(1:nb*wavel_removal_factor,:)=[];
-        
+%         n_levels=floor(log2(length(R_nor(:,1))));
+%         R_nor_filt=zeros(size(R_nor));
+%         for i=1:length(R_nor(1,:))
+%             %                 [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
+%             [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
+%             D = wrcoef('d',dc_dwt,levels,'db1',lev_3drig);
+%             %                 D(floor((2465-200)/boudary_removal_factor):end)=0;
+%             %                 D(1:floor((448+200)/boudary_removal_factor))=0;
+%             D(length(xp)-nb*wavel_removal_factor:end)=0;
+%             D(1:nb*wavel_removal_factor)=0;
+%             
+%             R_nor_filt(:,i)=D;
+%         end
+%         %             R_nor_filt(floor((2465-200)/boudary_removal_factor):end,:)=[];
+%         %             R_nor_filt(1:floor((448+200)/boudary_removal_factor),:)=[];
+%         R_nor_filt(length(xp)-nb*wavel_removal_factor:end,:)=[];
+%         R_nor_filt(1:nb*wavel_removal_factor,:)=[];
+%         
         
         if ismember(slice_depth_id,floor(snapshot/sum_depth))&(ismember(2,visual_type))&ismember(3,visual_in_or_out)
             
