@@ -895,7 +895,7 @@ if ~ismember(1,sum_depth)
         %         R_nor_filt(length(xp)-nb*wavel_removal_factor:end,:)=[];
         %         R_nor_filt(1:nb*wavel_removal_factor,:)=[];
         
-        n_levels=floor(log2(max(size(squeeze(R_nor(1,:,:,:))))));
+        n_levels=-1+floor(log2(max(size(squeeze(R_nor(1,:,:,:))))));
         
         WDEC = wavedec3(squeeze(R_nor(1,:,:,:)),n_levels,'db1') ;
         R_nor_filt_x = waverec3(WDEC,'d',lev_3drig);
@@ -975,7 +975,7 @@ if ~ismember(1,sum_depth)
 %         R_nor_filt(length(xp)-nb*wavel_removal_factor:end,:)=[];
 %         R_nor_filt(1:nb*wavel_removal_factor,:)=[];
 
-        n_levels=floor(log2(max(size(squeeze(R_nor(1,:,:,:))))));
+        n_levels=-1+floor(log2(max(size(squeeze(R_nor(1,:,:,:))))));
         
         WDEC = wavedec3(squeeze(R_nor(1,:,:,:)),n_levels,'db1') ;
         R_nor_filt_x = waverec3(WDEC,'d',lev_3drig);
