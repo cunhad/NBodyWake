@@ -1,4 +1,4 @@
-function [  ] = curveCanny_3d_from_2d_slices_anali_all(  )
+function [  ] = curveCanRid_3d_from_2d_slices_anali_all(  )
 % 
 % root='/home/asus/Dropbox/extras/storage/graham/ht/';
 % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurv_s5lv2_anali/';
@@ -10,7 +10,7 @@ lenght_factor=1;
 resol_factor=0.5;
 pivot=[0,0,0];
 rot_angle=[1.5708,0,0];
-filename='3.000xv0.dat'; GMU_pre=4;
+filename='3.000xv0.dat'; GMU_pre=1;
 slices=128;
 nc=512;
 sum_depth=128;
@@ -316,8 +316,8 @@ for w_nw=1:2
             %             info_curv_depth = dlmread(filename_curv_depth);
             %             lv_sz_depth=prod(size(info_curv_depth))*sum_depth/(slices*5);
             %
-            anali_depth(w_nw,sample,:,:,:)=reshape(info_depth,slices/sum_depth,4,5);
-            anali_Canny_depth(w_nw,sample,:,:,:)=reshape(info_Canny_depth,slices/sum_depth,4,5);
+            anali_depth(w_nw,sample,:,:,:)=reshape(info_depth,slices/sum_depth,4,4);
+            anali_Canny_depth(w_nw,sample,:,:,:)=reshape(info_Canny_depth,slices/sum_depth,4,4);
             
             %             anali_curv_depth(w_nw,sample,:,:,:)=reshape(info_curv_depth,slices/sum_depth,5,lv_sz_depth);
             
@@ -534,8 +534,8 @@ end
 % stn=mean_stn-std_stn
 % significance=abs(mean_wake-mean_nowake)./(std_wake+std_nowake)
 % 
-nowake=reshape(permute(anali_depth(1,1:length(sample_list_nowake),:,4,3),[1,3,2,4,5]),[1,numel(anali_depth(1,1:length(sample_list_nowake),:,2,1))])
-wake=reshape(permute(anali_depth(2,1:length(sample_list_wake),:,4,3),[1,3,2,4,5]),[1,numel(anali_depth(1,1:length(sample_list_wake),:,2,1))])
+nowake=reshape(permute(anali_depth(1,1:length(sample_list_nowake),:,4,3),[1,3,2,4]),[1,numel(anali_depth(1,1:length(sample_list_nowake),:,2,1))])
+wake=reshape(permute(anali_depth(2,1:length(sample_list_wake),:,4,3),[1,3,2,4]),[1,numel(anali_depth(1,1:length(sample_list_wake),:,2,1))])
 mean_wake=mean(wake)
 mean_nowake=mean(nowake)
 std_nowake=std(nowake,1)
@@ -561,8 +561,8 @@ std_stn=std(stn_wake,1)
 stn=mean_stn-std_stn
 significance=abs(mean_wake-mean_nowake)/(std_wake+std_nowake)
 % 
-% nowake=reshape(permute(anali_Canny_depth(1,1:length(sample_list_nowake),:,4,1),[1,3,2,4,5]),[1,numel(anali_depth(1,1:length(sample_list_nowake),:,2,1))])
-% wake=reshape(permute(anali_Canny_depth(2,1:length(sample_list_wake),:,4,1),[1,3,2,4,5]),[1,numel(anali_depth(1,1:length(sample_list_wake),:,2,1))])
+% nowake=reshape(permute(anali_Canny_depth(1,1:length(sample_list_nowake),:,4,1),[1,3,2,4]),[1,numel(anali_depth(1,1:length(sample_list_nowake),:,2,1))])
+% wake=reshape(permute(anali_Canny_depth(2,1:length(sample_list_wake),:,4,1),[1,3,2,4]),[1,numel(anali_depth(1,1:length(sample_list_wake),:,2,1))])
 % mean_wake=mean(wake)
 % mean_nowake=mean(nowake)
 % std_nowake=std(nowake,1)

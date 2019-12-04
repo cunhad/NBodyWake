@@ -305,8 +305,8 @@ C_zero2 = fdct3d_forward(F2);
 %radon
 
 % nb_m=max(nb,slices);
-nb_m=min(nb,slices);
-% nb_m=sqrt(nb*slices);
+% nb_m=min(nb,slices);
+nb_m=sqrt(nb*slices);
 
 Rad_norm = radon3(ones(nb_m,nb_m,nb_m));
 
