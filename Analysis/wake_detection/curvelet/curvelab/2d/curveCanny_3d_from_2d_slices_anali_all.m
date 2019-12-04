@@ -10,12 +10,13 @@ lenght_factor=1;
 resol_factor=0.5;
 pivot=[0,0,0];
 rot_angle=[1.5708,0,0];
-filename='3.000xv0.dat'; GMU_pre=4;
+filename='3.000xv0.dat'; GMU_pre=1;
 slices=128;
 nc=512;
-sum_depth=128;
+sum_depth=4;
 L_box=4;
-root_anali_2d_in=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclara-l3lr2na1024_to_3dparclar_p4d2_ridMi-l3lr3_anali/');
+root_anali_2d_in=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclara-l1lr1na1024_to_3dparclar-l1lr1_anali/');
+% root_anali_2d_in=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclara-l3lr2na1024_to_3dparclar_p4d2-l3lr1_anali/');
 root='/home/asus/Dropbox/extras/storage/graham/ht/';
 % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps16_512_2dclar-l2lr1na128_to_3dparcurv-l1lr1_anali/';
 % root_anali_2d_in=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclar-l2lr1na256_to_3dparcurv-l1lr2_anali/');
@@ -449,9 +450,9 @@ if ~ismember(1,sum_depth)
     
 end
 
-
-
-%
+% 
+% 
+% 
 % nowake=reshape(permute(anali(1,1:length(sample_list_nowake),:,4,1),[1,3,2,4,5]),[1,numel(anali(1,1:length(sample_list_nowake),:,2,1))])
 % wake=reshape(permute(anali(2,1:length(sample_list_wake),:,4,1),[1,3,2,4,5]),[1,numel(anali(1,1:length(sample_list_wake),:,2,1))])
 % mean_wake=mean(wake)

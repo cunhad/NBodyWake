@@ -860,7 +860,21 @@ if ~ismember(1,sum_depth)
         %         theta = 0:step_of_degree:180;
         %         [R,xp] = radon(map_3d_slices_filt3d_depth(:,:,slice_depth_id),theta);
         
-        R = radon3(imresize3(map_3d_slices_filt3d,[nb_m nb_m nb_m]));
+%         R = radon3(imresize3(map_3d_slices_filt3d,[nb_m nb_m nb_m]));
+        
+        map_3d_slices_filt3d_rz=zeros(nb_m,nb_m,nb_m);
+        ft_x=nb/nb_m;
+        ft_y=nb/nb_m;
+        ft_z=slices/nb_m;
+        for i=1:nb_m
+            for j=1:nb_m
+                for k=1:nb_m
+                
+                    map_3d_slices_filt3d_rz(i,j,k)=max(map_3d_slices_filt3d(1+ft_x*(i-1):ft_x*i,1+ft_y*(j-1):ft_y*j,1+ft_z*(k-1):ft_z*k));
+                
+                end
+            end
+        end
         
         %         unit=ones(nb);
         %         [R_u,xp] = radon(unit,theta);
@@ -895,7 +909,7 @@ if ~ismember(1,sum_depth)
         %         R_nor_filt(length(xp)-nb*wavel_removal_factor:end,:)=[];
         %         R_nor_filt(1:nb*wavel_removal_factor,:)=[];
         
-        n_levels=floor(log2(max(size(squeeze(R_nor(1,:,:,:))))));
+        n_levels=-1+floor(log2(max(size(squeeze(R_nor(1,:,:,:))))));
         
         WDEC = wavedec3(squeeze(R_nor(1,:,:,:)),n_levels,'db1') ;
         R_nor_filt_x = waverec3(WDEC,'d',lev_3drig);
@@ -974,12 +988,14 @@ if ~ismember(1,sum_depth)
 %         %             R_nor_filt(1:floor((448+200)/boudary_removal_factor),:)=[];
 %         R_nor_filt(length(xp)-nb*wavel_removal_factor:end,:)=[];
 %         R_nor_filt(1:nb*wavel_removal_factor,:)=[];
+
+        n_levels=-1+floor(log2(max(size(squeeze(R_nor(1,:,:,:))))));
         
-        WDEC = wavedec3(squeeze(R_nor(1,:,:,:)),1,'db1') ;
+        WDEC = wavedec3(squeeze(R_nor(1,:,:,:)),n_levels,'db1') ;
         R_nor_filt_x = waverec3(WDEC,'d',lev_3drig);
-        WDEC = wavedec3(squeeze(R_nor(2,:,:,:)),1,'db1') ;
+        WDEC = wavedec3(squeeze(R_nor(2,:,:,:)),n_levels,'db1') ;
         R_nor_filt_y = waverec3(WDEC,'d',lev_3drig);
-        WDEC = wavedec3(squeeze(R_nor(3,:,:,:)),1,'db1') ;
+        WDEC = wavedec3(squeeze(R_nor(3,:,:,:)),n_levels,'db1') ;
         R_nor_filt_z = waverec3(WDEC,'d',lev_3drig);
         
         R_nor_filt=[R_nor_filt_x;R_nor_filt_y;R_nor_filt_z];
