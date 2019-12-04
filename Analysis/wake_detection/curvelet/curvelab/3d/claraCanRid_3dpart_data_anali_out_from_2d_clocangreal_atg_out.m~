@@ -869,12 +869,15 @@ if ~ismember(1,sum_depth)
         for i=1:nb_m
             for j=1:nb_m
                 for k=1:nb_m
-                
+                    tem
                     map_3d_slices_filt3d_rz(i,j,k)=max(map_3d_slices_filt3d(1+ft_x*(i-1):ft_x*i,1+ft_y*(j-1):ft_y*j,1+ft_z*(k-1):ft_z*k));
                 
                 end
             end
         end
+        
+        R = radon3(map_3d_slices_filt3d_rz);
+
         
         %         unit=ones(nb);
         %         [R_u,xp] = radon(unit,theta);
@@ -953,7 +956,23 @@ if ~ismember(1,sum_depth)
 %         theta = 0:step_of_degree:180;
 %         [R,xp] = radon(map_3d_slices_filt3d_canny_depth(:,:,slice_depth_id),theta);
         
-        R = radon3(imresize3(map_3d_slices_filtCanny3d,[nb_m nb_m nb_m]));
+%         R = radon3(imresize3(map_3d_slices_filtCanny3d,[nb_m nb_m nb_m]));
+
+        map_3d_slices_filtCanny3d_rz=zeros(nb_m,nb_m,nb_m);
+        ft_x=nb/nb_m;
+        ft_y=nb/nb_m;
+        ft_z=slices/nb_m;
+        for i=1:nb_m
+            for j=1:nb_m
+                for k=1:nb_m
+                
+                    map_3d_slices_filtCanny3d_rz(i,j,k)=max(map_3d_slices_filtCanny3d(1+ft_x*(i-1):ft_x*i,1+ft_y*(j-1):ft_y*j,1+ft_z*(k-1):ft_z*k));
+                
+                end
+            end
+        end
+        
+        R = radon3(map_3d_slices_filtCanny3d_rz);
         
 %         unit=ones(nb);
 %         [R_u,xp] = radon(unit,theta);

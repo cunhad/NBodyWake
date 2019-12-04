@@ -869,8 +869,8 @@ if ~ismember(1,sum_depth)
         for i=1:nb_m
             for j=1:nb_m
                 for k=1:nb_m
-                
-                    map_3d_slices_filt3d_rz(i,j,k)=max(map_3d_slices_filt3d(1+ft_x*(i-1):ft_x*i,1+ft_y*(j-1):ft_y*j,1+ft_z*(k-1):ft_z*k));
+                    temp_max=map_3d_slices_filt3d(1+ft_x*(i-1):ft_x*i,1+ft_y*(j-1):ft_y*j,1+ft_z*(k-1):ft_z*k);
+                    map_3d_slices_filt3d_rz(i,j,k)=max(temp_max(:));
                 
                 end
             end
@@ -966,7 +966,8 @@ if ~ismember(1,sum_depth)
             for j=1:nb_m
                 for k=1:nb_m
                 
-                    map_3d_slices_filtCanny3d_rz(i,j,k)=max(map_3d_slices_filtCanny3d(1+ft_x*(i-1):ft_x*i,1+ft_y*(j-1):ft_y*j,1+ft_z*(k-1):ft_z*k));
+                    temp_max=map_3d_slices_filtCanny3d(1+ft_x*(i-1):ft_x*i,1+ft_y*(j-1):ft_y*j,1+ft_z*(k-1):ft_z*k);
+                    map_3d_slices_filtCanny3d_rz(i,j,k)=max(temp_max(:));
                 
                 end
             end
