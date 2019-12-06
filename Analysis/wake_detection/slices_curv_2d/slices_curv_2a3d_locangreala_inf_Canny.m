@@ -381,7 +381,7 @@ for slice_id=1:slices
         dc=(map-mean(map_3d_slices_pre(:)))/mean(map_3d_slices_pre(:));
         %             dc=(map-mean(map(:)))/mean(map(:));
         %             map_3d_slices(:,:,slice_id)=(atan(dc+1));
-        map_3d_slices=(atan((dc+1)*16));
+        map_3d_slices(:,:,slice_id)=(atan((dc+1)*16));
         
         fig=figure('Visible', 'off'); imagesc((size_box/nb)*[1:nb],(size_box/nb)*[1:nb],map_3d_slices(:,:,slice_id)); colorbar; axis('image');
         xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
@@ -860,7 +860,7 @@ if ~ismember(1,sum_depth)
         R_nor_filt(length(xp)-nb*wavel_removal_factor:end,:)=[];
         R_nor_filt(1:nb*wavel_removal_factor,:)=[];
                       
-        if ismember(slice_depth_id,floor(snapshot/sum_depth))&(ismember(3,visual_type))&ismember(2,visual_in_or_out)
+        if ismember(slice_depth_id,floor(snapshot/sum_depth))&(ismember(2,visual_type))&ismember(2,visual_in_or_out)
             
             %                 figure; imagesc((size_mpc/nc)*[1:nc],(size_mpc/1024)*[1:nc],map_3d_slices_filt2a3d(:,:,slice_id)); colorbar; axis('image');
             fig=figure('Visible', 'off'); imagesc(0:step_of_degree:180,(size_box/nb)*[1:nb],R_nor_filt);colorbar;

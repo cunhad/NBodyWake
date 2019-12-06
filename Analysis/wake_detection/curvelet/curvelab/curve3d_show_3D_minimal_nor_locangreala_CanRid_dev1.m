@@ -1236,7 +1236,7 @@ for w_nw=1:2
         
             
 
-            R = radon3(imresize3(map_3d_slices_filt2a3d,[nb_m nb_m nb_m]));
+            R = radon3(                                                                                                                                                                                                                                                                                                                                         (map_3d_slices_filt2a3d,[nb_m nb_m nb_m]));
 %             
 %             R_nor_=R./Rad_norm;
 %             R_nor_(isinf(R_nor)|isnan(R_nor))=0;
