@@ -374,14 +374,15 @@ map_3d_slices_pre(:,:,slice_id)=map;
 end
 
 for slice_id=1:slices
+    
+    map=map_3d_slices_pre(:,:,slice_id);
+    dc=(map-mean(map_3d_slices_pre(:)))/mean(map_3d_slices_pre(:));
+    %             dc=(map-mean(map(:)))/mean(map(:));
+    %             map_3d_slices(:,:,slice_id)=(atan(dc+1));
+    map_3d_slices(:,:,slice_id)=(atan((dc+1)*16));
 
     if ismember(slice_id,snapshot)&(ismember(1,visual_type))&ismember(1,visual_in_or_out)
         
-        map=map_3d_slices_pre(:,:,slice_id);
-        dc=(map-mean(map_3d_slices_pre(:)))/mean(map_3d_slices_pre(:));
-        %             dc=(map-mean(map(:)))/mean(map(:));
-        %             map_3d_slices(:,:,slice_id)=(atan(dc+1));
-        map_3d_slices(:,:,slice_id)=(atan((dc+1)*16));
         
         fig=figure('Visible', 'off'); imagesc((size_box/nb)*[1:nb],(size_box/nb)*[1:nb],map_3d_slices(:,:,slice_id)); colorbar; axis('image');
         xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
