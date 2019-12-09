@@ -1,4 +1,4 @@
-function [ map,anali ] = slices_curv_2a3d_locangreala_inf( root,root_data_2d_in,root_data_2d_out,root_data_2d_anali_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,numb_rand,slices,lev,lev_2drid,lev_3d,lev_3drid,step_of_degree,wavel_removal_factor,NSIDE,partition2d,partition3rd,sum_depth,snapshot,visual_type,visual_in_or_out,stage)
+function [ map,anali ] = slices_curv_2a3d_locangreala_inf_Canny( root,root_data_2d_in,root_data_2d_out,root_data_2d_anali_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,numb_rand,slices,lev,lev_2drid,lev_3d,lev_3drid,step_of_degree,wavel_removal_factor,NSIDE,partition2d,partition3rd,sum_depth,snapshot,visual_type,visual_in_or_out,stage)
 
 % (example) [ map ] = slices_curv_2d('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data_test2/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,8,4,8,2,5 );
 
@@ -39,14 +39,12 @@ function [ map,anali ] = slices_curv_2a3d_locangreala_inf( root,root_data_2d_in,
 % visual_type=[1:2:3];        %if 1, shows the 2d proj; %if 2 shows the ridgelet transformation    %if 3 does everything above also for the depth                          
 % visual_in_or_out=[1:3]; %if 1 do visualization of the input,%  if 2 of the 2d_filtered    %  if 3 of the 3d filtered                            
 % %  visual_in_or_out=[2];
-%  stage=[3]              % for doing the 3d
+% %  stage=[3]              % for doing the 3d
 % % %  info=[0,1,2]             %0,for just simplest visualisation
 % %                             %1 with minimal information
 % %                             %2 wthi some information
 % %                             %3for maximal information
 %   
-
-
 % root='/home/asus/Dropbox/extras/storage/graham/ht/';
 % root_data_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_hpx_2d/';
 % root_data_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_tst1/';
@@ -91,12 +89,12 @@ function [ map,anali ] = slices_curv_2a3d_locangreala_inf( root,root_data_2d_in,
 %%%%    anali3_curv definition
 
 % 
-% 
+
 % addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_cpp/mex/'));
 % addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_matlab'));
 % addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct3d'));
 
-% 
+
  addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_cpp/mex/'));
  addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_matlab'));
  addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct3d'));
@@ -1030,7 +1028,7 @@ if ismember(3,stage)
                 %             map_3d_slices_filt2a3d(:,:,(partition)*slices/2+1:(partition)*slices/2+slices/2) = real(fdct3d_inverse(Ct));
 %                 map_3d_slices_filt3d((partition_x)*nb/partition2d+1:(partition_x)*nb/partition2d+nb/partition2d,(partition_y)*nb/partition2d+1:(partition_y)*nb/partition2d+nb/partition2d,(partition)*slices/partition3rd+1:(partition)*slices/partition3rd+slices/partition3rd) = real(fdct3d_inverse(Ct));
                 map_3d_slices_filt3d((partition_x)*nb/partition2d+1:(partition_x)*nb/partition2d+nb/partition2d,(partition_y)*nb/partition2d+1:(partition_y)*nb/partition2d+nb/partition2d,(partition)*slices/partition3rd+1:(partition)*slices/partition3rd+slices/partition3rd) = real(fdct3d_inverse(Ct2));
-
+    
                 anali3_curv_aux(1,partition+1,partition_x+1,partition_y+1,:)=curv_1(:);
                 anali3_curv_aux(2,partition+1,partition_x+1,partition_y+1,:)=curv_2(:);
                 anali3_curv_aux(3,partition+1,partition_x+1,partition_y+1,:)=curv_3(:);
@@ -1069,6 +1067,14 @@ if ismember(3,stage)
     %now the analysis of the 3d filtered slices
     
     for slice_id=1:slices
+        
+        %now canny filter
+        
+        [this,thresOut] = edge(map_3d_slices_filt3d(:,:,slice_id),'Canny',0.5);
+        
+        map_3d_slices_filt3d(:,:,slice_id)=this;
+        
+        
         
         if ismember(slice_id,snapshot)&(ismember(1,visual_type))
             

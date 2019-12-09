@@ -10,7 +10,7 @@ lenght_factor=1;
 resol_factor=0.5;
 pivot=[0,0,0];
 rot_angle=[1.5708,0,0];
-filename='3.000xv0.dat'; GMU_pre=4;
+filename='3.000xv0.dat'; GMU_pre=1;
 slices=128;
 nc=512;
 sum_depth=16;
