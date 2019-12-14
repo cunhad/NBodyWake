@@ -2,6 +2,24 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangreal_all( root,ro
 
 %(example)  [ anali] = slices_curv_2a3d_all('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','/home/asus/Dropbox/extras/storage/graham/small_res/anali_hpx/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,2,2 );
 
+% for i=3001:3010
+%     spec='4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m';
+%     aux_path=strcat('/sample',num2str(i),'/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
+%     slices_curv_2a3d_locangreal_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type);
+% end
+
+% for i=3001:3010
+%     spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
+%     aux_path=strcat('/sample',num2str(i),'/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
+%     slices_curv_2a3d_locangreal_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type);
+% end
+% 
+% for i=3001:3010
+%     spec='4Mpc_2048c_1024p_zi63_nowakem';    
+%     aux_path=strcat('/sample',num2str(i),'/');
+%     slices_curv_2a3d_locangreal_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type);
+% end
+
 % root='/home/asus/Dropbox/extras/storage/graham/small_res/';
 % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/small_res/anali3/';
 % root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/small_res/anali3_hpx/';
@@ -15,22 +33,40 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangreal_all( root,ro
 % NSIDE=8;
 % analy_type=3;
 % 
-root='/home/asus/Dropbox/extras/storage/graham/ht/';
-root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE4_2dclarl3lr3na256_and_3dparclarCannyl1lr3_anali/';
-root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE4_2dclarl3lr3na256_and_3dparclarCannyl1lr3_anali_hpx/';
-spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
-% aux_path='/sample3001/';
-%spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
-%aux_path='/sample3001/half_lin_cutoff_half_tot_pert_nvpw/';
-aux_path='/sample3001/half_lin_cutoff_half_tot_pert_nvpw_v0p6/';
-aux_path_out='';
-filename='3.000xv0.dat';
-lenght_factor=1;
-resol_factor=1;
-slice=32;
-NSIDE=4;
-analy_type=1;
+% root='/home/asus/Dropbox/extras/storage/graham/ht/';
+% root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE4_2dclarl3lr3na256_and_3dparclarCannyl1lr3_anali/';
+% root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE4_2dclarl3lr3na256_and_3dparclarCannyl1lr3_anali_hpx/';
+% spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
+% % aux_path='/sample3001/';
+% %spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
+% %aux_path='/sample3001/half_lin_cutoff_half_tot_pert_nvpw/';
+% aux_path='/sample3001/half_lin_cutoff_half_tot_pert_nvpw_v0p6/';
+% aux_path_out='';
+% filename='3.000xv0.dat';
+% lenght_factor=1;
+% resol_factor=1;
+% slice=32;
+% NSIDE=4;
+% analy_type=1;
 
+% 
+% root='/home/asus/Dropbox/extras/storage/graham/ht/';
+% root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali/';
+% root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3/';
+% % spec='4Mpc_2048c_1024p_zi63_nowakem';
+% spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
+% % aux_path='/sample3001/';
+% %spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
+% % aux_path='/sample3001/';
+% %aux_path='/sample3001/half_lin_cutoff_half_tot_pert_nvpw/';
+% aux_path='/sample3001/half_lin_cutoff_half_tot_pert_nvpw_v0p6/';
+% aux_path_out='';
+% filename='3.000xv0.dat';
+% lenght_factor=1;
+% resol_factor=0.5;
+% slice=128;
+% NSIDE=4;
+% analy_type=3;
 
 angles_hpx(1,:) = dlmread(strcat('../../../python/angles',num2str(NSIDE),'_t.cvs'));
 angles_hpx(2,:) = dlmread(strcat('../../../python/angles',num2str(NSIDE),'_p.cvs'));
@@ -62,7 +98,7 @@ for angle_id=1:N_angles
     
     path_in=string(strcat(strcat(root_anali_2d_in,spec,aux_path),'data_2d_filt_slices/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(angle_id),'/',path2,'/2dproj/dm/'))
     
-    aux=dlmread(strcat(path_in,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv_z',num2str(z_glob),'_anali2a3','.txt'));
+    aux=dlmread(strcat(path_in,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3','.txt'));
     
     anali(angle_id,:,:,:)=reshape(aux,slice,4,5);
     
@@ -140,7 +176,8 @@ mkdir(tot_anali_data_path_out);
     dlmwrite(strcat(tot_anali_data_path_out,strcat('/molvd'),'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2a3d_z',z,'_data.txt'),[thetas,phis,signal'],'delimiter','\t')
     dlmwrite(strcat(tot_anali_data_path_out,strcat('/molvd'),'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2a3d_z',z,'_data_det.txt'),signal_det,'delimiter','\t')
 
-    
+        close(fig)
+
 %molweide projection details
 
 
@@ -178,7 +215,8 @@ mkdir(tot_anali_data_path_out);
    
     dlmwrite(strcat(tot_anali_data_path_out,strcat('/molvd'),'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2a3d_z',z,'_data_summary.txt'),[thetas_max, phis_max,peak,std(signal(:)),peak/std(signal(:))],'delimiter','\t')
     
-    
+        close(fig)
+
     %molweide projection histogram
 
 
@@ -207,6 +245,9 @@ mkdir(tot_anali_data_path_out);
     
     max_indx=find(equator_signal==max(equator_signal),1);
     
+        close(fig)
+
+    
         fig=figure('Visible', 'off');
 % figure;
 plot(equator_phi,equator_signal);
@@ -228,6 +269,7 @@ set(gca,'linewidth',2);
    mkdir(tot_anali_data_path_out,strcat('/equator_data/'));
     dlmwrite(strcat(tot_anali_data_path_out,strcat('/equator_data'),'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_equdata_slice_cuvr_2a3d_z',z,'_data.txt'),[equator_phi,equator_signal'],'delimiter','\t')
     dlmwrite(strcat(tot_anali_data_path_out,strcat('/equator_data'),'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_equdata_slice_cuvr_2a3d_z',z,'_data_summary.txt'),[equator_phi(max_indx),max(equator_signal(:)),std(equator_signal(:)),max(equator_signal(:))/std(equator_signal(:))],'delimiter','\t')
+    close(fig)
 
     
 end

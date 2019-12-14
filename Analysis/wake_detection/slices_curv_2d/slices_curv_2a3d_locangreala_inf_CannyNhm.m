@@ -379,7 +379,7 @@ for slice_id=1:slices
         map(map<=1)=mean(map_3d_slices_pre(:));%to remove problem with holes
         
     dc=(map-mean(map_3d_slices_pre(:)))/mean(map_3d_slices_pre(:));
-    %             dc=(map-mean(map(:)))/mean(map(:));
+                dc=(map-mean(map(:)))/mean(map(:));
     %             map_3d_slices(:,:,slice_id)=(atan(dc+1));
     map_3d_slices(:,:,slice_id)=(atan((dc+1)*16));
 

@@ -2,6 +2,7 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangreal_eachslice_al
 
 %(example)  [ anali] = slices_curv_2a3d_all('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','/home/asus/Dropbox/extras/storage/graham/small_res/anali_hpx/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,2,2 );
 
+%clearvars
 cd('../../preprocessing');
 
 %for this resolution, one in eahc 40 orientations (sqrt(384)) will show the wake, so we
@@ -22,15 +23,17 @@ z='3.000';
 N_angles=12*NSIDE*NSIDE/2;
 
 
-specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dclarhpxNSIDE4l2lr1na256_to_3dparcurv-2dclarhpxNSIDE4l1lr1_anali3_hpx/4Mpc_2048c_1024p_zi63_nowakem'
+specs_path_list_nowake=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE',num2str(NSIDE),'_2dclaral1lr1na1024_and_3dparclaral1lr1_analiFhm_hpx_Sa4t3/4Mpc_2048c_1024p_zi63_nowakem')
 sample_list_nowake=dir(strcat(specs_path_list_nowake,'/sample*'));
 sample_list_nowake={sample_list_nowake.name};
 % sample_list_nowake=sort_nat(sample_list_nowake)
 
-specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dclarhpxNSIDE4l2lr1na256_to_3dparcurv-2dclarhpxNSIDE4l1lr1_anali3_hpx/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m'
+% specs_path_list_wake=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE',num2str(NSIDE),'_2dclaral1lr1na1024_and_3dparclaral1lr1_analiFhm_hpx_Sa4t3/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m')
+specs_path_list_wake=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE',num2str(NSIDE),'_2dclaral1lr1na1024_and_3dparclaral1lr1_analiFhm_hpx_Sa4t3/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m')
 sample_list_wake=dir(strcat(specs_path_list_wake,'/sample*'));
 sample_list_wake={sample_list_wake.name};
-sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw');
+% sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw');
+sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw_v0p6');
 % sample_list_wake=sort_nat(sample_list_wake)
 
 for w_nw=1:2
@@ -60,7 +63,7 @@ for w_nw=1:2
     
     for sample = 1:length(sample_list)
         
-        path_in=strcat(specs_path_list,'/',string(sample_list(sample)),'/data_anali/1lf_1rf/NSIDE_',num2str(NSIDE),'/slices_curv_2a3d/hpx/molvd/')
+        path_in=strcat(specs_path_list,'/',string(sample_list(sample)),'/data_anali/1lf_0.5rf/NSIDE_',num2str(NSIDE),'/slices_curv_2a3d/hpx/molvd/')
         
         filename=strcat(path_in,'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2a3d_z',z,'_data_det.txt')
         
@@ -128,6 +131,41 @@ relevand_fraction_signal_sample_w=all_signal_sample_w_sorted(1:rel_frac);
 
 
 cd('../wake_detection/slices_curv_2d/');
+
+
+
+sorted_signal_sample_nw=sort((signal_sample_nw),2);
+sorted_signal_sample_w=sort((signal_sample_w),2);
+
+
+figure;
+h1 = histogram(signal_sample_nw(:),'BinWidth',10);
+hold on
+h2 = histogram(signal_sample_w(:),'BinWidth',10);
+xlabel('$S$ value', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('histogram', 'interpreter', 'latex', 'fontsize', 20);
+legend('G\mu=0','G\mu=1 \times 10^{-7}','location','northeast')
+set(gca, 'YScale', 'log')
+
+
+N_slices=prod(size(signal_sample_w));
+N_slices_probe=N_slices;
+n_strin_per_hubble=1;
+
+thresh=max(signal_sample_nw(:))
+% thresh=532;
+outlier_w_count=sum(signal_sample_w>thresh,2);
+sum_w=sum(outlier_w_count)
+sum_w_=floor(sum(outlier_w_count)/(24/n_strin_per_hubble))
+prob_w=sum(outlier_w_count)/(N_slices*(24/n_strin_per_hubble))
+outlier_nw_count=sum(signal_sample_nw>=thresh,2);
+sum_nw=sum(outlier_nw_count)
+prob_nw=sum(outlier_nw_count)/N_slices
+sum(outlier_w_count)/((24/n_strin_per_hubble)*sum(outlier_nw_count))
+
+number_nowake=round(N_slices_probe*prob_nw)
+number_wake=round(N_slices_probe*prob_w)
+
 
 
 

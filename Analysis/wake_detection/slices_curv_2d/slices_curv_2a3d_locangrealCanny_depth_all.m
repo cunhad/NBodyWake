@@ -1,8 +1,14 @@
 function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangrealCanny_depth_all( root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type,sum_depth)
 
 %(example)  [ anali] = slices_curv_2a3d_all('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','/home/asus/Dropbox/extras/storage/graham/small_res/anali_hpx/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,2,2 );
+% 
+% for i=3001:3010
+%     spec='4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m';
+%     aux_path=strcat('/sample',num2str(i),'/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
+%     slices_curv_2a3d_locangrealCanny_depth_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type,sum_depth);
+% end
 
-
+% 
 % for i=3001:3010
 %     spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
 %     aux_path=strcat('/sample',num2str(i),'/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
@@ -45,10 +51,10 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangrealCanny_depth_a
 % NSIDE=8;
 % analy_type=3;
 % sum_depth=4;
-
+% 
 % root='/home/asus/Dropbox/extras/storage/graham/ht/';
 % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali/';
-% root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali3_dp4t1_hpx/';
+% root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa4t3_dp/';
 % spec='4Mpc_2048c_1024p_zi63_nowakem';
 % aux_path='/sample3001/';
 % % spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
@@ -59,8 +65,8 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangrealCanny_depth_a
 % resol_factor=0.5;
 % slice=128;
 % NSIDE=4;
-% analy_type=1;
-% sum_depth=16;
+% analy_type=3;
+% sum_depth=8;
 
 
 angles_hpx(1,:) = dlmread(strcat('../../../python/angles',num2str(NSIDE),'_t.cvs'));
@@ -168,7 +174,7 @@ mkdir(tot_anali_data_path_out);
     mkdir(tot_anali_data_path_out,strcat('/molvd/'));
     dlmwrite(strcat(tot_anali_data_path_out,strcat('/molvd'),'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2a3d_z',z,'_data.txt'),[thetas,phis,signal'],'delimiter','\t')
     dlmwrite(strcat(tot_anali_data_path_out,strcat('/molvd'),'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2a3d_z',z,'_data_det.txt'),signal_det,'delimiter','\t')
-
+close(fig)
     
 %molweide projection details
 
@@ -207,7 +213,7 @@ mkdir(tot_anali_data_path_out);
    
     dlmwrite(strcat(tot_anali_data_path_out,strcat('/molvd'),'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2a3d_z',z,'_data_summary.txt'),[thetas_max, phis_max,peak,std(signal(:)),peak/std(signal(:))],'delimiter','\t')
     
-    
+    close(fig)
     %molweide projection histogram
 
 
@@ -235,6 +241,7 @@ mkdir(tot_anali_data_path_out);
     equator_phi=phis(equator_idx);
     
     max_indx=find(equator_signal==max(equator_signal),1);
+    close(fig)
     
         fig=figure('Visible', 'off');
 % figure;
@@ -257,7 +264,7 @@ set(gca,'linewidth',2);
    mkdir(tot_anali_data_path_out,strcat('/equator_data/'));
     dlmwrite(strcat(tot_anali_data_path_out,strcat('/equator_data'),'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_equdata_slice_cuvr_2a3d_z',z,'_data.txt'),[equator_phi,equator_signal'],'delimiter','\t')
     dlmwrite(strcat(tot_anali_data_path_out,strcat('/equator_data'),'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_equdata_slice_cuvr_2a3d_z',z,'_data_summary.txt'),[equator_phi(max_indx),max(equator_signal(:)),std(equator_signal(:)),max(equator_signal(:))/std(equator_signal(:))],'delimiter','\t')
-
+close(fig)
     
 end
 

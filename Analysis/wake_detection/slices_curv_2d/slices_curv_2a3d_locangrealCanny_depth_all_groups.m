@@ -2,6 +2,8 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangrealCanny_depth_a
 
 %(example)  [ anali] = slices_curv_2a3d_all('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','/home/asus/Dropbox/extras/storage/graham/small_res/anali_hpx/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,2,2 );
 
+
+%clearvars
 cd('../../preprocessing');
 
 %for this resolution, one in eahc 40 orientations (sqrt(384)) will show the wake, so we
@@ -23,12 +25,13 @@ sum_depth=16;
 N_angles=12*NSIDE*NSIDE/2;
 
 
-specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali3_dp4t1_hpx/4Mpc_2048c_1024p_zi63_nowakem'
+specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_analiFhm_hpx_Sa4t5_dp/4Mpc_2048c_1024p_zi63_nowakem'
 sample_list_nowake=dir(strcat(specs_path_list_nowake,'/sample*'));
 sample_list_nowake={sample_list_nowake.name};
 % sample_list_nowake=sort_nat(sample_list_nowake)
 
-specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali3_dp4t1_hpx/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m'
+% specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_analiFhm_hpx_Sa2t5_dp/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m'
+specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_analiFhm_hpx_Sa4t5_dp/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
 sample_list_wake=dir(strcat(specs_path_list_wake,'/sample*'));
 sample_list_wake={sample_list_wake.name};
 sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw_v0p6');
@@ -113,6 +116,9 @@ legend('G\mu=0','G\mu=1 \times 10^{-7}','location','northeast')
 set(gca, 'YScale', 'log')
 
 
+cd('../wake_detection/slices_curv_2d/');
+
+
 
 
 stn_nw_count=sum(stn_nw>4,2);
@@ -170,7 +176,7 @@ stn_w_self=sort((signal_sample_w-mean_w)/std_w,2);
 
     
 
-cd('../wake_detection/slices_curv_2d/');
+% cd('../wake_detection/slices_curv_2d/');
 
 end
 
