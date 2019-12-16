@@ -500,7 +500,7 @@ anali3_curv5(:)=sum(anali_curv(:,:,5),2);
 
 
 %3d curv filter
-display('3d curv filter')
+
 
 for slice_id=1:slices
     
@@ -628,7 +628,6 @@ end
 
 
 %now canny filter
-display('now canny filter')
 
 for slice_id=1:slices
     
@@ -751,7 +750,6 @@ dlmwrite(strcat(path_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_
 
 
 % now we do the depth analysis
-display('now we do the depth analysis')
 
 if ~ismember(1,sum_depth)
     
