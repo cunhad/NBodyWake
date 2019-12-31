@@ -3,6 +3,11 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangrealCanny_all( ro
 %(example)  [ anali] = slices_curv_2a3d_all('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','/home/asus/Dropbox/extras/storage/graham/small_res/anali_hpx/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,2,2 );
 
 
+% for i=3001:3010
+%     spec='4Mpc_2048c_1024p_zi63_wakeGmu2t10m8zi10m';
+%     aux_path=strcat('/sample',num2str(i),'/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
+%     slices_curv_2a3d_locangrealCanny_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type);
+% end
 
 % for i=3001:3010
 %     spec='4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m';
