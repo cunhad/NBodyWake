@@ -530,7 +530,7 @@ for slice_id=1:slices
             set(gca,'FontName','FixedWidth');
             set(gca,'FontSize',10);
             set(gca,'linewidth',2);
-            title(strcat('filt2 info:',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
+%             title(strcat('filt2 info:',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
             
             saveas(fig,char(strcat(path_visual_in','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
             close(fig);
@@ -544,7 +544,7 @@ for slice_id=1:slices
             set(gca,'FontName','FixedWidth');
             set(gca,'FontSize',10);
             set(gca,'linewidth',2);
-            title(strcat('filt2 info:',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
+%             title(strcat('filt2 info:',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
             
             saveas(fig,char(strcat(path_visual','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
             close(fig);
@@ -600,7 +600,7 @@ for slice_id=1:slices
         set(gca,'FontName','FixedWidth');
         set(gca,'FontSize',10);
         set(gca,'linewidth',2);
-        title(strcat('radon for ',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
+%         title(strcat('radon for ',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
         
         saveas(fig,char(strcat(path_visual_rid','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurv&rad_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
         close(fig);
@@ -612,7 +612,7 @@ for slice_id=1:slices
         set(gca,'FontName','FixedWidth');
         set(gca,'FontSize',10);
         set(gca,'linewidth',2);
-        title(strcat('Normalized radon for ',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
+%         title(strcat('Normalized radon for ',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
         
         saveas(fig,char(strcat(path_visual_rid','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurv&radn_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
         close(fig);
@@ -624,7 +624,7 @@ for slice_id=1:slices
         set(gca,'FontName','FixedWidth');
         set(gca,'FontSize',10);
         set(gca,'linewidth',2);
-        title(strcat('ridg norm for ',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
+%         title(strcat('ridg norm for ',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
         
         saveas(fig,char(strcat(path_visual_rid','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurv&ridn_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
         close(fig);
@@ -678,7 +678,7 @@ for slice_id=1:slices
                     set(gca,'FontName','FixedWidth');
                     set(gca,'FontSize',10);
                     set(gca,'linewidth',2);
-                    title(strcat('filt2 info:',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
+%                     title(strcat('filt2 info:',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
                     
                     saveas(fig,char(strcat(path_visual_depth_in','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id*sum_depth),'.png')));
                     close(fig);
@@ -692,7 +692,7 @@ for slice_id=1:slices
                     set(gca,'FontName','FixedWidth');
                     set(gca,'FontSize',10);
                     set(gca,'linewidth',2);
-                    title(strcat('filt2 info:',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
+%                     title(strcat('filt2 info:',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
                     
                     saveas(fig,char(strcat(path_visual_depth','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id*sum_depth),'.png')));
                     close(fig);
@@ -959,7 +959,7 @@ for slice_id=1:slices
                 set(gca,'FontName','FixedWidth');
                 set(gca,'FontSize',10);
                 set(gca,'linewidth',2);
-                title(strcat('radon for ',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
+%                 title(strcat('radon for ',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
                 
                 saveas(fig,char(strcat(path_visual_rid_depth','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurv&rad_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
                 close(fig);
@@ -971,7 +971,7 @@ for slice_id=1:slices
                 set(gca,'FontName','FixedWidth');
                 set(gca,'FontSize',10);
                 set(gca,'linewidth',2);
-                title(strcat('Normalized radon for ',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
+%                 title(strcat('Normalized radon for ',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
                 
                 saveas(fig,char(strcat(path_visual_rid_depth','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurv&radn_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
                 close(fig);
@@ -983,7 +983,7 @@ for slice_id=1:slices
                 set(gca,'FontName','FixedWidth');
                 set(gca,'FontSize',10);
                 set(gca,'linewidth',2);
-                title(strcat('ridg norm for ',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
+%                 title(strcat('ridg norm for ',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
                 
                 saveas(fig,char(strcat(path_visual_rid_depth','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurv&rid_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id*sum_depth),'.png')));
                 close(fig);
