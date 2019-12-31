@@ -462,7 +462,7 @@ for slice_id=1:slices
             set(gca,'FontName','FixedWidth');
             set(gca,'FontSize',10);
             set(gca,'linewidth',2);
-%             title(strcat('filt2 info:',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
+            title(strcat('filt2 info:',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
             
             saveas(fig,char(strcat(path_visual_in','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
                                 close(fig);
@@ -477,7 +477,7 @@ for slice_id=1:slices
             set(gca,'FontName','FixedWidth');
             set(gca,'FontSize',10);
             set(gca,'linewidth',2);
-%             title(strcat('filt2 info:',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
+            title(strcat('filt2 info:',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
             
             saveas(fig,char(strcat(path_visual','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
                                 close(fig);
@@ -534,7 +534,7 @@ for slice_id=1:slices
         set(gca,'FontName','FixedWidth');
         set(gca,'FontSize',10);
         set(gca,'linewidth',2);
-%         title(strcat('ridg filt2 for ',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
+        title(strcat('ridg filt2 for ',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
         
         saveas(fig,char(strcat(path_visual_rid','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv&rid_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
                             close(fig);
@@ -593,7 +593,7 @@ for slice_id=1:slices
             set(gca,'FontName','FixedWidth');
             set(gca,'FontSize',10);
             set(gca,'linewidth',2);
-%             title(strcat('filt3 plus canny, info:',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
+            title(strcat('filt3 plus canny, info:',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
             
             saveas(fig,char(strcat(path_visual_canny','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurvCanny_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
                                 close(fig);
@@ -650,7 +650,7 @@ for slice_id=1:slices
         set(gca,'FontName','FixedWidth');
         set(gca,'FontSize',10);
         set(gca,'linewidth',2);
-%         title(strcat('ridg filt3 and canny for ',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
+        title(strcat('ridg filt3 and canny for ',' ',aux_path(2:11),';slice =',num2str(slice_id),';G\mu = ',num2str(Gmu)));
         
         saveas(fig,char(strcat(path_visual_canny_rid,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurvCanny&rid_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
                             close(fig);
@@ -726,7 +726,7 @@ if ~ismember(1,sum_depth)
                 set(gca,'FontName','FixedWidth');
                 set(gca,'FontSize',10);
                 set(gca,'linewidth',2);
-%                 title(strcat('filt2 info:',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
+                title(strcat('filt2 info:',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
                 
                 saveas(fig,char(strcat(path_visual_depth_in','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id*sum_depth),'.png')));
                                     close(fig);
@@ -741,7 +741,7 @@ if ~ismember(1,sum_depth)
                 set(gca,'FontName','FixedWidth');
                 set(gca,'FontSize',10);
                 set(gca,'linewidth',2);
-%                 title(strcat('filt2 info:',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
+                title(strcat('filt2 info:',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
                 
                 saveas(fig,char(strcat(path_visual_depth','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id*sum_depth),'.png')));
                                     close(fig);
@@ -756,7 +756,7 @@ if ~ismember(1,sum_depth)
                 set(gca,'FontName','FixedWidth');
                 set(gca,'FontSize',10);
                 set(gca,'linewidth',2);
-%                 title(strcat('filt2 canny info:',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
+                title(strcat('filt2 canny info:',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
                 
                 saveas(fig,char(strcat(path_visual_canny_depth','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurvCanny_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id*sum_depth),'.png')));
                                     close(fig);
@@ -814,7 +814,7 @@ if ~ismember(1,sum_depth)
             set(gca,'FontName','FixedWidth');
             set(gca,'FontSize',10);
             set(gca,'linewidth',2);
-%             title(strcat('ridg filt2 for ',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
+            title(strcat('ridg filt2 for ',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
             
             saveas(fig,char(strcat(path_visual_rid_depth','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv&rid_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id*sum_depth),'.png')));
                                 close(fig);
@@ -875,7 +875,7 @@ if ~ismember(1,sum_depth)
             set(gca,'FontName','FixedWidth');
             set(gca,'FontSize',10);
             set(gca,'linewidth',2);
-%             title(strcat('ridg filt2 canny for ',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
+            title(strcat('ridg filt2 canny for ',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
             
             saveas(fig,char(strcat(path_visual_canny_rid_depth','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurvCanny&rid_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id*sum_depth),'.png')));
                                 close(fig);
