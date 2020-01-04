@@ -18,19 +18,19 @@ cd('../../preprocessing');
 % slices=32;
 % anal_lev=2;
 NSIDE=4;
-z_glob=str2num('2.900')
-z='2.900';
+z_glob=str2num('3.000')
+z='3.000';
 
 N_angles=12*NSIDE*NSIDE/2;
 
 
-specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_z2p9_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa2t1/4Mpc_2048c_1024p_zi63_nowakem'
+specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa4t1/16Mpc_2048c_1024p_zi63_nowakem'
 sample_list_nowake=dir(strcat(specs_path_list_nowake,'/sample*'));
 sample_list_nowake={sample_list_nowake.name};
 % sample_list_nowake=sort_nat(sample_list_nowake)
 
 % specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa2t1/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m'
-specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_z2p9_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa2t1/4Mpc_2048c_1024p_zi63_wakeGmu2t10m8zi10m'
+specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa4t1/16Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m'
 sample_list_wake=dir(strcat(specs_path_list_wake,'/sample*'));
 sample_list_wake={sample_list_wake.name};
 sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw_v0p6');
@@ -40,13 +40,13 @@ for w_nw=1:2
     % for w_nw=2
     
     if w_nw==1
-        [~,redshift_list,nodes_list,size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw] = preprocessing_info('/home/asus/Dropbox/extras/storage/graham/ht/','4Mpc_2048c_1024p_zi63_nowakem','/sample3001/');
+        [~,redshift_list,nodes_list,size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw] = preprocessing_info('/home/asus/Dropbox/extras/storage/graham/ht/','8Mpc_2048c_1024p_zi63_nowakem','/sample4001/');
         specs_path_list=specs_path_list_nowake;
         sample_list=sample_list_nowake;
         ch='_7';
         coul='b';
     else
-        [~,redshift_list,nodes_list,size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw] = preprocessing_info('/home/asus/Dropbox/extras/storage/graham/ht/','4Mpc_2048c_1024p_zi63_wakeGmu2t10m8zi10m','/sample3001/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
+        [~,redshift_list,nodes_list,size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw] = preprocessing_info('/home/asus/Dropbox/extras/storage/graham/ht/','8Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m','/sample4001/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
         specs_path_list=specs_path_list_wake;
         sample_list=sample_list_wake;
         ch='_4';
@@ -229,8 +229,8 @@ sum_nw=sum(outlier_nw_count)
 prob_nw=sum(outlier_nw_count)/N_slices
 sum(outlier_w_count)/((24/n_strin_per_hubble)*sum(outlier_nw_count))
 
-number_nowake=round(N_slices_probe*prob_nw)
-number_wake=round(N_slices_probe*prob_w)
+% number_nowake=round(N_slices_probe*prob_nw)
+% number_wake=round(N_slices_probe*prob_w)
 
 cd('../wake_detection/slices_curv_2d/');
 

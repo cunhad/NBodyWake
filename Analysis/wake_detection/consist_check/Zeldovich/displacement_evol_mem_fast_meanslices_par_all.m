@@ -5,9 +5,9 @@ function [ ] = comvel_evol_mem_fast_meanslices_par_all( root_data_in,spec,wake_t
 % (example) []=comvel_evol_mem_fast_meanslices_par_all( '/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_96c_48p_zi255_wakeGmu5t10m7zi63m','')
 
 % root='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/'
-root_data_in='/home/asus/Dropbox/extras/storage/graham/ht/data_paper3newRange/check/'
+root_data_in='/home/asus/Dropbox/extras/storage/graham/ht/data_paper3newRange2/check/'
 % root_plot_out='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/plot_paper2/'
-spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m'
+spec='16Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m'
 % aux_path='/sample3001/'
 wake_type='/half_lin_cutoff_half_tot_pert_nvpw_v0p6/'
 
@@ -97,7 +97,8 @@ set(gca,'FontName','FixedWidth');
 set(gca,'FontSize',16);
 set(gca,'linewidth',2);
 title({strcat('Displacement comparizon')},'interpreter', 'latex', 'fontsize', 20);
-legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
+% legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
+legend("Simulation","Zel'dovich",'Location','northwest')
 hold off;
 
 
