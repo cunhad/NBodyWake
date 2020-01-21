@@ -14,6 +14,11 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangrealCanny_depth_a
 %     slices_curv_2a3d_locangrealCanny_depth_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type,sum_depth);
 % end
 
+% for i=4001:4010
+%     spec='16Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m';
+%     aux_path=strcat('/sample',num2str(i),'/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
+%     slices_curv_2a3d_locangrealCanny_depth_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type,sum_depth);
+% end
 
 % 
 % for i=4001:4010
@@ -91,7 +96,7 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangrealCanny_depth_a
 % filename='3.000xv0.dat';
 % lenght_factor=1;
 % resol_factor=0.5;
-% slice=128;
+% slice=32;
 % NSIDE=4;
 % analy_type=1;
 % sum_depth=4;

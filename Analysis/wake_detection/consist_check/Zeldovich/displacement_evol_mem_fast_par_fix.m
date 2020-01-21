@@ -1,4 +1,4 @@
-function [  ] = displacement_evol_mem_fast_par( root,root_data_out,root_plot_out,spec,aux_path,wake_type,num_cores)
+function [  ] = displacement_evol_mem_fast_par_fix( root,root_data_out,root_plot_out,spec,aux_path,wake_type,num_cores)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -238,13 +238,23 @@ for rds=1:length(redshift_list)
     pos_diff=cell2mat(tall(pos_diff_ds));
     
     fig2=figure('Visible', 'off');
-    histogram2(mod(pos_diff(:,2),nc)*size_box/nc,pos_diff(:,3)*size_box/nc,nc/2,'DisplayStyle','tile','ShowEmptyBins','on');colorbar;
+    h2=histogram2(mod(pos_diff(:,2),nc)*size_box/nc,pos_diff(:,3)*size_box/nc,nc/2,'DisplayStyle','tile','ShowEmptyBins','on');colorbar;
+    xlabel('Position (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel('Induced Displacement (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+    set(gca,'FontName','FixedWidth');
+    set(gca,'FontSize',16);
+    set(gca,'linewidth',2);
     mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/'));
-    saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_displacement_z',char(redshift_list(rds)),'_plot.png'));
+    saveas(fig2,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_displacement_z',char(redshift_list(rds)),'_plot.png'));
     
     fig2_=figure('Visible', 'off');
     imagesc((h2.XBinEdges'),h2.YBinEdges',flip(log(h2.Values')));colorbar;
-    saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_displacement_z',char(redshift_list(rds)),'_plot_log.png'));
+    xlabel('Position (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel('Induced Displacement (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+    set(gca,'FontName','FixedWidth');
+    set(gca,'FontSize',16);
+    set(gca,'linewidth',2);
+    saveas(fig2_,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_displacement_z',char(redshift_list(rds)),'_plot_log.png'));
     close(fig2_);
         
     close(fig2);
@@ -254,6 +264,11 @@ for rds=1:length(redshift_list)
     hold on
     set(gca,'YScale','log')
     ylim ([0.9 inf]); 
+    xlabel('Induced Displacement (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel('Number Count', 'interpreter', 'latex', 'fontsize', 20);
+    set(gca,'FontName','FixedWidth');
+    set(gca,'FontSize',16);
+    set(gca,'linewidth',2);
     mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/hist/'));    
     saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/hist/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_displacement_z',char(redshift_list(rds)),'_plot.png'));
     close(fig);
@@ -276,12 +291,22 @@ for rds=1:length(redshift_list)
     fig2=figure('Visible', 'off');
     h2=histogram2(mod(pos_diff(:,2),nc)*size_box/nc,pos_diff(:,3)*size_box/nc,nc/4,'DisplayStyle','tile','ShowEmptyBins','on');
     colorbar;
+    xlabel('Position (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel('Induced Displacement (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+    set(gca,'FontName','FixedWidth');
+    set(gca,'FontSize',16);
+    set(gca,'linewidth',2);
     mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/'));
     saveas(fig2,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_displacement_z',char(redshift_list(rds)),'_plot.png'));
     
     fig2_=figure('Visible', 'off');
     imagesc((h2.XBinEdges'),h2.YBinEdges',flip(log(h2.Values')));colorbar;
-    saveas(fig2,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_displacement_z',char(redshift_list(rds)),'_plot_log.png'));    
+    xlabel('Position (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel('Induced Displacement (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+    set(gca,'FontName','FixedWidth');
+    set(gca,'FontSize',16);
+    set(gca,'linewidth',2);
+    saveas(fig2_,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_displacement_z',char(redshift_list(rds)),'_plot_log.png'));    
     close(fig2_);
     
     fig=figure('Visible', 'off');
@@ -289,6 +314,11 @@ for rds=1:length(redshift_list)
     hold on
     set(gca,'YScale','log')
     ylim ([0.9 inf]);
+    xlabel('Induced Displacement (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel('Number Count', 'interpreter', 'latex', 'fontsize', 20);
+    set(gca,'FontName','FixedWidth');
+    set(gca,'FontSize',16);
+    set(gca,'linewidth',2);
     mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/hist/'));    
     saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/hist/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_displacement_z',char(redshift_list(rds)),'_plot.png'));
     close(fig);
@@ -310,8 +340,27 @@ for rds=1:length(redshift_list)
     mean_disp_per_slice(isinf(mean_disp_per_slice)|isnan(mean_disp_per_slice)) = 0;
     fig=figure('Visible', 'off');
     plot(Pos_Bin_Centers,mean_disp_per_slice)
+    xlabel('Position (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel('Induced Displacement (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+    set(gca,'FontName','FixedWidth');
+    set(gca,'FontSize',16);
+    set(gca,'linewidth',2);
     mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/mean_pos/'));    
     saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/mean_pos/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_displ_z',char(redshift_list(rds)),'_plot.png'));    
+    close(fig);
+    
+    fig=figure('Visible', 'off');
+    h=histogram(mean_disp_per_slice)
+    hold on
+    set(gca,'YScale','log')
+    ylim ([0.9 inf]);
+    xlabel('Induced Displacement (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel('Number Count', 'interpreter', 'latex', 'fontsize', 20);
+    set(gca,'FontName','FixedWidth');
+    set(gca,'FontSize',16);
+    set(gca,'linewidth',2);
+    mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/mean_pos/hist/'));    
+    saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/mean_pos/hist/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_displ_z',char(redshift_list(rds)),'_plot.png'));    
     close(fig);
     
     half_mp_mn(rds)=(mean(abs(mean_disp_per_slice)));
@@ -326,19 +375,38 @@ for rds=1:length(redshift_list)
 %     indx_quart=[length(Pos_Bin_Centers)/8:3*length(Pos_Bin_Centers)/8,5*length(Pos_Bin_Centers)/8:7*length(Pos_Bin_Centers)/8];
     indx_quart=[length(Pos_Bin_Centers)/8:2*length(Pos_Bin_Centers)/8,6*length(Pos_Bin_Centers)/8:7*length(Pos_Bin_Centers)/8];
     Pos_Bin_Centers_quart=Pos_Bin_Centers(indx_quart);
-    mean_disp_per_slice=mean_disp_per_slice(indx_quart);
+    mean_vel_per_slice_quart=mean_disp_per_slice(indx_quart);
     fig=figure('Visible', 'off');
-    plot(Pos_Bin_Centers_quart,mean_disp_per_slice);
+    plot(Pos_Bin_Centers_quart,mean_vel_per_slice_quart);
+    xlabel('Position (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel('Induced Displacement (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+    set(gca,'FontName','FixedWidth');
+    set(gca,'FontSize',16);
+    set(gca,'linewidth',2);
     mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/quart/'));
     saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/quart/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_vel_z',char(redshift_list(rds)),'_plot.png'));        
     close(fig);
     
-    quart_mp_mn(rds)=(mean(abs(mean_disp_per_slice)));
-    quart_mp_std(rds)=(std(abs(mean_disp_per_slice)));
+    fig=figure('Visible', 'off');
+    h=histogram(mean_vel_per_slice_quart);
+    hold on
+    set(gca,'YScale','log')
+    ylim ([0.9 inf]);
+    xlabel('Induced Displacement (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel('Number Count', 'interpreter', 'latex', 'fontsize', 20);
+    set(gca,'FontName','FixedWidth');
+    set(gca,'FontSize',16);
+    set(gca,'linewidth',2);
+    mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/quart/hist/'));
+    saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/quart/hist/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_vel_z',char(redshift_list(rds)),'_plot.png'));        
+    close(fig);
     
-    quart_mp_med(rds)=(median(abs(mean_disp_per_slice)));
+    quart_mp_mn(rds)=(mean(abs(mean_vel_per_slice_quart)));
+    quart_mp_std(rds)=(std(abs(mean_vel_per_slice_quart)));
     
-    mean_displ_per_slice_quart_=round(mean_disp_per_slice,3);
+    quart_mp_med(rds)=(median(abs(mean_vel_per_slice_quart)));
+    
+    mean_displ_per_slice_quart_=round(mean_vel_per_slice_quart,3);
     mean_displ_per_slice_quart_(mean_displ_per_slice_quart_==0)=[];
     quart_mp_mod(rds)=(mode(abs(mean_displ_per_slice_quart_)));
     
@@ -493,7 +561,7 @@ legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest'
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/','_Check_Zel','.png'));
-dlmwrite(strcat(root_data_out,'check/',spec,aux_path,type_folder,'check/displ/half/','_Check_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,((half_mn_pos'+abs(half_mn_neg'))/2)*size_box/nc,((half_std_pos'+half_std_neg')/2)*size_box/nc],'delimiter','\t')
+dlmwrite(strcat(root_data_out,'check/',spec,aux_path,type_folder,'check/displ/half/','_Check_totmn_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,((half_mn_pos'+abs(half_mn_neg'))/2)*size_box/nc,((half_std_pos'+half_std_neg')/2)*size_box/nc],'delimiter','\t')
 
 
 

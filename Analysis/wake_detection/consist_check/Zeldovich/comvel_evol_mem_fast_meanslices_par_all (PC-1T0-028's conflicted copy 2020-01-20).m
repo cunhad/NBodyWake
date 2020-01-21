@@ -5,9 +5,9 @@ function [ ] = comvel_evol_mem_fast_meanslices_par_all( root_data_in,spec,wake_t
 % (example) []=comvel_evol_mem_fast_meanslices_par_all( '/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_96c_48p_zi255_wakeGmu5t10m7zi63m','')
 
 % root='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/'
-root_data_in='/home/asus/Dropbox/extras/storage/graham/ht/data_paper3newRange4/check/'
+root_data_in='/home/disraelcunha/Dropbox/extras/storage/graham/ht/data_paper3newRange/check/'
 % root_plot_out='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/plot_paper2/'
-spec='4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
+spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m'
 % aux_path='/sample3001/'
 wake_type='/half_lin_cutoff_half_tot_pert_nvpw_v0p6/'
 
@@ -47,7 +47,7 @@ for sample = 1:length(sample_list_wake)
 %                 info_med = dlmread(filename_wake);
 
                 filename_wake=strcat('',specs_path_list_nowake,'/',string(sample_list_wake(sample)),type_folder,'check/vel/half/','_Check_mod_Vel_Zel_quart.txt')
-%                filename_wake=strcat('',specs_path_list_nowake,'/',string(sample_list_wake(sample)),type_folder,'check/vel/half/','_Check_mod_Vel_Zel.txt')
+%                 filename_wake=strcat('',specs_path_list_nowake,'/',string(sample_list_wake(sample)),type_folder,'check/vel/half/','_Check_mod_Vel_Zel.txt')
 %                 info_med = dlmread(filename_wake);
 
 %                 filename_wake=strcat('',specs_path_list_nowake,'/',string(sample_list_wake(sample)),type_folder,'check/vel/half/','_Check_med_Vel_Zel_quart.txt')
@@ -88,18 +88,13 @@ cd('../Analysis/wake_detection/consist_check/Zeldovich/')
 
 % fig=figure('Visible', 'off');
 fig=figure;
-% errorbar(a_factor,med_mn*10^-17,med_std*10^-17)
-% hold on
-% plot(a_factor,wake_vel_pert_zeld)
-errorbar(a_factor(1:4),med_mn(1:4)*10^-17,med_std(1:4)*10^-17)
+errorbar(a_factor,med_mn*10^-17,med_std*10^-17)
 hold on
-plot(a_factor(1:4),wake_vel_pert_zeld(1:4))
+plot(a_factor,wake_vel_pert_zeld)
 
 %xlim ([-inf inf]);
-% xlim ([0.08 0.26]);    %for paper
-% ylim ([2 4.5]*10^-19);    %for paper
 xlim ([0.08 0.26]);    %for paper
-ylim ([0.9 1.7]*10^-19);    %for paper
+ylim ([2 4.5]*10^-19);    %for paper
 xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('Velocity (Mpc/h)/s', 'interpreter', 'latex', 'fontsize', 20);
 set(gca,'FontName','FixedWidth');

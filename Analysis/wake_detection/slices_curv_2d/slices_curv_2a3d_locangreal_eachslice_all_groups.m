@@ -23,13 +23,13 @@ z='3.000';
 N_angles=12*NSIDE*NSIDE/2;
 
 
-specs_path_list_nowake=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE',num2str(NSIDE),'_2dclaral1lr1na1024_and_3dparclaral1lr1_analiFhm_hpx_Sa4t3/4Mpc_2048c_1024p_zi63_nowakem')
+specs_path_list_nowake=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE',num2str(NSIDE),'_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t5/4Mpc_2048c_1024p_zi63_nowakem')
 sample_list_nowake=dir(strcat(specs_path_list_nowake,'/sample*'));
 sample_list_nowake={sample_list_nowake.name};
 % sample_list_nowake=sort_nat(sample_list_nowake)
 
 % specs_path_list_wake=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE',num2str(NSIDE),'_2dclaral1lr1na1024_and_3dparclaral1lr1_analiFhm_hpx_Sa4t3/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m')
-specs_path_list_wake=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE',num2str(NSIDE),'_2dclaral1lr1na1024_and_3dparclaral1lr1_analiFhm_hpx_Sa4t3/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m')
+specs_path_list_wake=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE',num2str(NSIDE),'_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t5/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m')
 sample_list_wake=dir(strcat(specs_path_list_wake,'/sample*'));
 sample_list_wake={sample_list_wake.name};
 % sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw');
@@ -130,7 +130,7 @@ rel_frac=ceil(length(all_signal_sample_w_sorted)/32768)
 relevand_fraction_signal_sample_w=all_signal_sample_w_sorted(1:rel_frac);
 
 
-cd('../wake_detection/slices_curv_2d/');
+% cd('../wake_detection/slices_curv_2d/');
 
 
 
@@ -139,9 +139,11 @@ sorted_signal_sample_w=sort((signal_sample_w),2);
 
 
 figure;
-h1 = histogram(signal_sample_nw(:),'BinWidth',10);
+% h1 = histogram(signal_sample_nw(:),'BinWidth',10);
+h1 = histogram(signal_sample_nw(:));
 hold on
-h2 = histogram(signal_sample_w(:),'BinWidth',10);
+% h2 = histogram(signal_sample_w(:),'BinWidth',10);
+h2 = histogram(signal_sample_w(:),'BinWidth',h1.BinWidth);
 xlabel('$S$ value', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('histogram', 'interpreter', 'latex', 'fontsize', 20);
 legend('G\mu=0','G\mu=1 \times 10^{-7}','location','northeast')
@@ -168,6 +170,7 @@ number_wake=round(N_slices_probe*prob_w)
 
 
 
+cd('../wake_detection/slices_curv_2d/');
 
 
 

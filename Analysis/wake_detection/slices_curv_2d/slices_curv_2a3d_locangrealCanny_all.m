@@ -25,6 +25,12 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangrealCanny_all( ro
 % end
 
 % for i=4001:4010
+%     spec='16Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m';
+%     aux_path=strcat('/sample',num2str(i),'/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
+%     slices_curv_2a3d_locangrealCanny_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type);
+% end
+
+% for i=4001:4010
 %     spec='8Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
 %     aux_path=strcat('/sample',num2str(i),'/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
 %     slices_curv_2a3d_locangrealCanny_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type);
@@ -90,7 +96,7 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangrealCanny_all( ro
 % % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali/';
 % % root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa2t1/';
 % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali/';
-% root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa4t1/';
+% root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa2t1/';
 % % spec='4Mpc_2048c_1024p_zi63_nowakem';
 % spec='8Mpc_2048c_1024p_zi63_nowakem';
 % % spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
@@ -149,7 +155,7 @@ end
 % signal=reshape(permute(anali(:,:,2,1),[1,3,2,4,5]),[1,numel(anali(:,:,2,1))]);
 % signal = reshape(signal,[N_angles,2])';
 % signal = reshape(signal,[slice,N_angles]);
-signal=anali(:,:,4,analy_type);
+signal=anali(:,:,2,analy_type);
 
 %before
 % signal=sum(signal,2);
@@ -159,7 +165,7 @@ signal=anali(:,:,4,analy_type);
 % signal = max(signal');
 signal = sum(signal');
 
-signal_det=anali(:,:,4,analy_type);
+signal_det=anali(:,:,2,analy_type);
 
 for angl=N_angles+1:N_angles_t
     
