@@ -1,10 +1,20 @@
-function [  ] = comvel_evol_mem_fast_par( root,root_data_out,root_plot_out,spec,aux_path,wake_type,num_cores)
+function [  ] = comvel_evol_mem_fast_meanslices_par_mod( root,root_data_out,root_plot_out,spec,aux_path,wake_type,num_cores)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
 % (example) []=comvel_evol_mem_fast_par( '/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','64Mpc_96c_48p_zi255_wakeGmu6t10m6zi10m','/sample1001/','test/',4)
-% (example) []=comvel_evol_mem_fast_par( '/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','64Mpc_96c_48p_zi255_wakeGmu6t10m6zi10m','/sample1001/','test/',4)
+% (example) []=comvel_evol_mem_fast_meanslices_par( '/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m','/sample1001/','',4)
+% (example) []=comvel_evol_mem_fast_meanslices_par( '/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','/home/asus/Dropbox/extras/storage/graham/small_res/plot/','64Mpc_96c_48p_zi255_wakeGmu5t10m7zi63m','/sample1001/','',4)
 
+% 
+% 
+% root='/home/asus/Dropbox/extras/storage/graham/small_res/'
+% root_data_out='/home/asus/Dropbox/extras/storage/graham/small_res/data/'
+% root_plot_out='/home/asus/Dropbox/extras/storage/graham/small_res/plot_test_mod/'
+% spec='64Mpc_96c_48p_zi255_wakeGmu5t10m7zi63m'
+% aux_path='/sample1001/'
+% wake_type=''
+% num_cores=4
 
 
 type_folder=wake_type;
@@ -72,6 +82,8 @@ p = parpool(num_cores);
 % mkdir(strcat(root_out))
 mkdir(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/'))
 mkdir(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/half/'))
+
+mkdir(strcat(root_data_out,'check/',spec,aux_path,type_folder,'check/vel/half/'))
 
 mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/'))
 mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/'))
@@ -179,6 +191,7 @@ for rds=1:length(redshift_list)
         fclose(fid);
         
         [sorted_ sort_inx]=sort(part_id);
+        sorted_pos_z=pos_z(sort_inx);
         sorted_vel_z=vel_z(sort_inx);
         %         pid_posZ=[part_id(sort_inx);pos_z(sort_inx)];
         
@@ -216,12 +229,17 @@ for rds=1:length(redshift_list)
         
         %         lent_out=length(find(sorted_w_(:)==sorted_));
         [comom_ID,com_id_w,com_id_nw]=intersect(sorted_w_,sorted_);
+        pos_list_z_nw=sorted_pos_z(com_id_nw);        
         pos_list_z_w=sorted_pos_z_w(com_id_w);
+        displac_list=pos_list_z_w-pos_list_z_nw;
         part_z_nw=sorted_vel_z(com_id_nw);
         part_z_w=sorted_vel_z_w(com_id_w);
         vel_list=part_z_w-part_z_nw;
         %         displac_list(displac_list>nc/2)=displac_list(displac_list>nc/2)-nc;
         %         displac_list(displac_list<-nc/2)=displac_list(displac_list<-nc/2)+nc;
+        vel_list(displac_list<-nc/2)=-vel_list(displac_list<-nc/2);
+        vel_list(displac_list<-nc/2)=-vel_list(displac_list<-nc/2);
+        
         
         comom_ID_half=comom_ID(pos_list_z_w>nc/4&pos_list_z_w<3*nc/4);
         pos_list_z_w_half=pos_list_z_w(pos_list_z_w>nc/4&pos_list_z_w<3*nc/4);
@@ -253,16 +271,45 @@ for rds=1:length(redshift_list)
     vel_diff_ds = fileDatastore(filename_out,'ReadFcn',@read_bin,'FileExtensions','.dat');
     vel_diff=cell2mat(tall(vel_diff_ds));
     
-    fig=figure('Visible', 'off');
-    histogram2(mod(vel_diff(:,2),nc)*size_box/nc,vel_diff(:,3)*10^17,nc/2,'DisplayStyle','tile','ShowEmptyBins','on');
+    fig2=figure('Visible', 'off');
+    h2=histogram2(mod(vel_diff(:,2),nc)*size_box/nc,vel_diff(:,3)*10^17,nc/2,'DisplayStyle','tile','ShowEmptyBins','on','YBinLimits',[gather(min(vel_diff(:,3))*10^17)*1.05 gather(max(vel_diff(:,3))*10^17)*1.05 ]);
+    colorbar;
+    xlabel('Position (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel('Induced Velocity ((Mpc/h)/s)$*10^{17}$', 'interpreter', 'latex', 'fontsize', 20);
+    set(gca,'FontName','FixedWidth');
+    set(gca,'FontSize',16);
+    set(gca,'linewidth',2);
     mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/'));
-    saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_vel_z',char(redshift_list(rds)),'_plot.png'));
+    saveas(fig2,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_vel_z',char(redshift_list(rds)),'_plot.png'));
+    
+    
+    fig2_=figure('Visible', 'off');
+    %     h2=histogram2(mod(vel_diff(:,2),nc)*size_box/nc,vel_diff(:,3)*10^17,nc/2,'DisplayStyle','tile','ShowEmptyBins','on');
+    imagesc((h2.XBinEdges'),h2.YBinEdges',flip(log(h2.Values')));colorbar;
+    xlabel('Position (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel('Induced Velocity ((Mpc/h)/s)$*10^{17}$', 'interpreter', 'latex', 'fontsize', 20);
+    set(gca,'FontName','FixedWidth');
+    set(gca,'FontSize',16);
+    set(gca,'linewidth',2);
+    saveas(fig2_,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_vel_z',char(redshift_list(rds)),'_plot_log.png'));    
+    close(fig2_);
+    
+    close(fig2);
     
     fig=figure('Visible', 'off');
     h=histogram(vel_diff(:,3)*10^17);
+    hold on
+    set(gca,'YScale','log')
+    ylim ([0.9 inf]);
+    xlabel('Induced Velocity ((Mpc/h)/s)$*10^{17}$', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel('Number Count', 'interpreter', 'latex', 'fontsize', 20);
+    set(gca,'FontName','FixedWidth');
+    set(gca,'FontSize',16);
+    set(gca,'linewidth',2);
     mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/hist/'));    
     saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/hist/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_vel_z',char(redshift_list(rds)),'_plot.png'));
-
+    close(fig);
+    
     posit_values=vel_diff(vel_diff(:,3)>0,3);
     mn_pos(rds)=gather(mean(posit_values));
     std_pos(rds)=gather(std(posit_values,1));
@@ -277,20 +324,48 @@ end
 
 
 for rds=1:length(redshift_list)
+    
     filename_out=cellstr(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/half/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_node',char(nodes_list),'_Check_Zel_wpid_half_posZ_vel_z',char(redshift_list(rds)),'.dat'));
     vel_diff_ds = fileDatastore(filename_out,'ReadFcn',@read_bin,'FileExtensions','.dat');
     vel_diff=cell2mat(tall(vel_diff_ds));
     
-    fig=figure('Visible', 'off');
-    histogram2(mod(vel_diff(:,2),nc)*size_box/nc,vel_diff(:,3)*10^17,nc/2,'DisplayStyle','tile','ShowEmptyBins','on');
+    fig2=figure('Visible', 'off');
+    %     h2=histogram2(mod(vel_diff(:,2),nc)*size_box/nc,vel_diff(:,3)*10^17,nc/2,'DisplayStyle','tile','ShowEmptyBins','on');
+    h2=histogram2(mod(vel_diff(:,2),nc)*size_box/nc,vel_diff(:,3)*10^17,nc/4,'DisplayStyle','tile','ShowEmptyBins','on','YBinLimits',[gather(min(vel_diff(:,3))*10^17)*1.05 gather(max(vel_diff(:,3))*10^17)*1.05 ]);
+    colorbar;
+    xlabel('Position (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel('Induced Velocity ((Mpc/h)/s)$*10^{17}$', 'interpreter', 'latex', 'fontsize', 20);
+    set(gca,'FontName','FixedWidth');
+    set(gca,'FontSize',16);
+    set(gca,'linewidth',2);
     mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half'));
-    saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_vel_z',char(redshift_list(rds)),'_plot.png'));
+    saveas(fig2,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_vel_z',char(redshift_list(rds)),'_plot.png'));
+    
+    fig2_=figure('Visible', 'off');
+    %     h2=histogram2(mod(vel_diff(:,2),nc)*size_box/nc,vel_diff(:,3)*10^17,nc/2,'DisplayStyle','tile','ShowEmptyBins','on');
+    imagesc((h2.XBinEdges'),h2.YBinEdges',flip(log(h2.Values')));colorbar;
+    xlabel('Position (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel('Induced Velocity ((Mpc/h)/s)$*10^{17}$', 'interpreter', 'latex', 'fontsize', 20);
+    set(gca,'FontName','FixedWidth');
+    set(gca,'FontSize',16);
+    set(gca,'linewidth',2);
+    saveas(fig2_,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_vel_z',char(redshift_list(rds)),'_plot_log.png'));    
+    close(fig2_);
     
     fig=figure('Visible', 'off');
     h=histogram(vel_diff(:,3)*10^17);
-    mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/hist/'));    
+    hold on
+    set(gca,'YScale','log')
+    ylim ([0.9 inf]);
+    xlabel('Induced Velocity((Mpc/h)/s)$*10^{17}$', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel('Number Count', 'interpreter', 'latex', 'fontsize', 20);
+    set(gca,'FontName','FixedWidth');
+    set(gca,'FontSize',16);
+    set(gca,'linewidth',2);
+    mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/hist/'));
     saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/hist/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_vel_z',char(redshift_list(rds)),'_plot.png'));
-
+    close(fig);
+    
     half_posit_values=vel_diff(vel_diff(:,3)>0,3);
     half_mn_pos(rds)=gather(mean(half_posit_values));
     half_std_pos(rds)=gather(std(half_posit_values,1));
@@ -298,6 +373,102 @@ for rds=1:length(redshift_list)
     half_negat_values=vel_diff(vel_diff(:,3)<0,3);
     half_mn_neg(rds)=gather(mean(half_negat_values));
     half_std_neg(rds)=gather(std(half_negat_values,1));
+    
+
+    Pos_Bin_Centers=mean([h2.XBinEdges(1:end-1);h2.XBinEdges(2:end)]);
+    Vel_Bin_Centers=mean([h2.YBinEdges(1:end-1);h2.YBinEdges(2:end)]);
+    Hist2_val=h2.Values;
+    close(fig2);
+        
+% 
+%     mean_vel_per_slice=(Hist2_val*Vel_Bin_Centers')./sum(Hist2_val')';     
+%     mean_vel_per_slice(isinf(mean_vel_per_slice)|isnan(mean_vel_per_slice)) = 0;
+    
+    for i=1:length(Hist2_val(:,1))
+        if max(Hist2_val(i,:))~=0
+            [a location]=find(Hist2_val(i,:)==max(Hist2_val(i,:)));
+            location_=location(1);
+            mod_vel_per_slice(i)=Vel_Bin_Centers(location_);
+        else
+            mod_vel_per_slice(i)=NaN;
+        end
+    end
+        
+        
+        
+    
+    fig=figure('Visible', 'off');
+    plot(Pos_Bin_Centers,mod_vel_per_slice)
+    xlabel('Position (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel('Induced Velocity ((Mpc/h)/s)$*10^{17}$', 'interpreter', 'latex', 'fontsize', 20);
+    set(gca,'FontName','FixedWidth');
+    set(gca,'FontSize',16);
+    set(gca,'linewidth',2);
+    mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/mean_pos/'));    
+    saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/mean_pos/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_vel_z',char(redshift_list(rds)),'_plot.png'));    
+    close(fig);
+    
+    fig=figure('Visible', 'off');
+    h=histogram(mod_vel_per_slice);
+    hold on
+    set(gca,'YScale','log')
+    ylim ([0.9 inf]);
+    xlabel('Induced Velocity ((Mpc/h)/s)$*10^{17}$', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel('Number Count', 'interpreter', 'latex', 'fontsize', 20);
+    set(gca,'FontName','FixedWidth');
+    set(gca,'FontSize',16);
+    set(gca,'linewidth',2);
+    mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/mean_pos/hist/'));
+    saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/mean_pos/hist/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_vel_z',char(redshift_list(rds)),'_plot.png'));
+    close(fig);
+
+    half_mp_mn(rds)=(mean(abs(mod_vel_per_slice)));
+    half_mp_std(rds)=(std(abs(mod_vel_per_slice)));
+    
+    half_mp_med(rds)=(median(abs(mod_vel_per_slice)));
+    
+    mean_vel_per_slice_=round(mod_vel_per_slice,3);
+    mean_vel_per_slice_(mean_vel_per_slice_==0)=[];
+    half_mp_mod(rds)=(mode(abs(mean_vel_per_slice_)));
+    
+%     indx_quart=[length(Pos_Bin_Centers)/8:3*length(Pos_Bin_Centers)/8,5*length(Pos_Bin_Centers)/8:7*length(Pos_Bin_Centers)/8];
+    indx_quart=[length(Pos_Bin_Centers)/8:2*length(Pos_Bin_Centers)/8,6 *length(Pos_Bin_Centers)/8:7*length(Pos_Bin_Centers)/8];
+    Pos_Bin_Centers_quart=Pos_Bin_Centers(indx_quart);
+    mod_vel_per_slice_quart=mod_vel_per_slice(indx_quart);
+    fig=figure('Visible', 'off');
+    plot(Pos_Bin_Centers_quart,mod_vel_per_slice_quart);
+    xlabel('Position (Mpc/h)', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel('Induced Velocity ((Mpc/h)/s)$*10^{17}$', 'interpreter', 'latex', 'fontsize', 20);
+    set(gca,'FontName','FixedWidth');
+    set(gca,'FontSize',16);
+    set(gca,'linewidth',2);
+    mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/quart/'));
+    saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/quart/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_vel_z',char(redshift_list(rds)),'_plot.png'));        
+    close(fig);
+    
+    fig=figure('Visible', 'off');
+    h=histogram(mod_vel_per_slice_quart);
+    hold on
+    set(gca,'YScale','log')
+    ylim ([0.9 inf]);
+    xlabel('Induced Velocity ((Mpc/h)/s)$*10^{17}$', 'interpreter', 'latex', 'fontsize', 20);
+    ylabel('Number Count', 'interpreter', 'latex', 'fontsize', 20);
+    set(gca,'FontName','FixedWidth');
+    set(gca,'FontSize',16);
+    set(gca,'linewidth',2);
+    mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/quart/hist/'));
+    saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/quart/hist/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_vel_z',char(redshift_list(rds)),'_plot.png'));
+    close(fig);
+    
+    quart_mp_mn(rds)=(mean(abs(mod_vel_per_slice_quart)));
+    quart_mp_std(rds)=(std(abs(mod_vel_per_slice_quart)));
+    
+    quart_mp_med(rds)=(median(abs(mod_vel_per_slice_quart)));
+    
+    mean_vel_per_slice_quart_=round(mod_vel_per_slice_quart,3);
+    mean_vel_per_slice_quart_(mean_vel_per_slice_quart_==0)=[];
+    quart_mp_mod(rds)=(mode(abs(mean_vel_per_slice_quart_)));
+        
     
 end
 
@@ -381,7 +552,76 @@ saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/','_Check_v
 dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/','_Check_vel_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,((mn_pos'+abs(mn_neg'))/2)*10^17,((std_pos'+std_neg')/2)*10^17],'delimiter','\t')
 
 
+
 %same for half plot
+
+%plot total values using mean_position way
+
+fig=figure('Visible', 'off');
+% fig=figure;
+errorbar((str2num(char(redshift_list))+1).^-1,(half_mp_mn),(half_mp_std))
+hold on
+plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
+
+%xlim ([-inf inf]);
+xlim ([0.08 0.26]);    %for paper
+xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('Velocity ((Mpc/h)/s)*10^-17', 'interpreter', 'latex', 'fontsize', 20);
+set(gca,'FontName','FixedWidth');
+set(gca,'FontSize',16);
+set(gca,'linewidth',2);
+title({strcat('Velocity comparizon')},'interpreter', 'latex', 'fontsize', 20);
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
+hold off;
+
+saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/mean_pos/','_Check_vel_Zel','.png'));
+dlmwrite(strcat(root_data_out,'check/',spec,aux_path,type_folder,'check/vel/half/','_Check_mn_Vel_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,(half_mp_mn'),(half_mp_std')],'delimiter','\t')
+
+%plot total values using mean_position median way
+
+fig=figure('Visible', 'off');
+% fig=figure;
+errorbar((str2num(char(redshift_list))+1).^-1,(half_mp_med),(half_mp_std))
+hold on
+plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
+
+%xlim ([-inf inf]);
+xlim ([0.08 0.26]);    %for paper
+xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('Velocity ((Mpc/h)/s)*10^-17', 'interpreter', 'latex', 'fontsize', 20);
+set(gca,'FontName','FixedWidth');
+set(gca,'FontSize',16);
+set(gca,'linewidth',2);
+title({strcat('Velocity comparizon')},'interpreter', 'latex', 'fontsize', 20);
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
+hold off;
+
+saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/mean_pos/','_Check_med_vel_Zel','.png'));
+dlmwrite(strcat(root_data_out,'check/',spec,aux_path,type_folder,'check/vel/half/','_Check_med_Vel_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,(half_mp_med'),(half_mp_std')],'delimiter','\t')
+
+
+%plot total values using mean_position, mode way
+
+fig=figure('Visible', 'off');
+% fig=figure;
+errorbar((str2num(char(redshift_list))+1).^-1,(half_mp_mod),(half_mp_std))
+hold on
+plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
+
+%xlim ([-inf inf]);
+xlim ([0.08 0.26]);    %for paper
+xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('Velocity ((Mpc/h)/s)*10^-17', 'interpreter', 'latex', 'fontsize', 20);
+set(gca,'FontName','FixedWidth');
+set(gca,'FontSize',16);
+set(gca,'linewidth',2);
+title({strcat('Velocity comparizon')},'interpreter', 'latex', 'fontsize', 20);
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
+hold off;
+
+saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/mean_pos/','_Check_mod_vel_Zel','.png'));
+dlmwrite(strcat(root_data_out,'check/',spec,aux_path,type_folder,'check/vel/half/','_Check_mod_Vel_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,(half_mp_mod'),(half_mp_std')],'delimiter','\t')
+
 
 %plot positive values
 
@@ -448,7 +688,84 @@ legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest'
 hold off;
 
 saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/','_Check_vel_Zel','.png'));
-dlmwrite(strcat(root_data_out,spec,aux_path,type_folder,'check/vel/half/','_Check_vel_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,((half_mn_pos'+abs(half_mn_neg'))/2)*10^17,((half_std_pos'+half_std_neg')/2)*10^17],'delimiter','\t')
+dlmwrite(strcat(root_data_out,'check/',spec,aux_path,type_folder,'check/vel/half/','_Check_totmn_vel_Zel.txt'),[(str2num(char(redshift_list))+1).^-1,((half_mn_pos'+abs(half_mn_neg'))/2)*10^17,((half_std_pos'+half_std_neg')/2)*10^17],'delimiter','\t')
+
+
+
+
+
+
+%same for quart plot
+
+%plot total values using mean_position way
+
+fig=figure('Visible', 'off');
+% fig=figure;
+errorbar((str2num(char(redshift_list))+1).^-1,(quart_mp_mn),(quart_mp_std))
+hold on
+plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
+
+%xlim ([-inf inf]);
+xlim ([0.08 0.26]);    %for paper
+xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('Velocity ((Mpc/h)/s)*10^-17', 'interpreter', 'latex', 'fontsize', 20);
+set(gca,'FontName','FixedWidth');
+set(gca,'FontSize',16);
+set(gca,'linewidth',2);
+title({strcat('Velocity comparizon')},'interpreter', 'latex', 'fontsize', 20);
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
+hold off;
+
+saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/quart/','_Check_vel_Zel','.png'));
+dlmwrite(strcat(root_data_out,'check/',spec,aux_path,type_folder,'check/vel/half/','_Check_mn_Vel_Zel_quart.txt'),[(str2num(char(redshift_list))+1).^-1,(quart_mp_mn'),(quart_mp_std')],'delimiter','\t')
+
+%plot total values using mean_position median way
+
+fig=figure('Visible', 'off');
+% fig=figure;
+errorbar((str2num(char(redshift_list))+1).^-1,(quart_mp_med),(quart_mp_std))
+hold on
+plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
+
+%xlim ([-inf inf]);
+xlim ([0.08 0.26]);    %for paper
+xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('Velocity ((Mpc/h)/s)*10^-17', 'interpreter', 'latex', 'fontsize', 20);
+set(gca,'FontName','FixedWidth');
+set(gca,'FontSize',16);
+set(gca,'linewidth',2);
+title({strcat('Velocity comparizon')},'interpreter', 'latex', 'fontsize', 20);
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
+hold off;
+
+saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/quart/','_Check_med_vel_Zel','.png'));
+dlmwrite(strcat(root_data_out,'check/',spec,aux_path,type_folder,'check/vel/half/','_Check_med_Vel_Zel_quart.txt'),[(str2num(char(redshift_list))+1).^-1,(quart_mp_med'),(quart_mp_std')],'delimiter','\t')
+
+
+%plot total values using mean_position, mode way
+
+fig=figure('Visible', 'off');
+% fig=figure;
+errorbar((str2num(char(redshift_list))+1).^-1,(quart_mp_mod),(quart_mp_std))
+hold on
+plot((str2num(char(redshift_list))+1).^-1,wake_vel_pert_zeld*10^17)
+
+%xlim ([-inf inf]);
+xlim ([0.08 0.26]);    %for paper
+xlabel('Scale factor', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('Velocity ((Mpc/h)/s)*10^-17', 'interpreter', 'latex', 'fontsize', 20);
+set(gca,'FontName','FixedWidth');
+set(gca,'FontSize',16);
+set(gca,'linewidth',2);
+title({strcat('Velocity comparizon')},'interpreter', 'latex', 'fontsize', 20);
+legend(strcat('G\mu = ',num2str(Gmu,'%.1E')),"Zel'dovich",'Location','northwest')
+hold off;
+
+saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/vel/half/quart/','_Check_mod_vel_Zel','.png'));
+dlmwrite(strcat(root_data_out,'check/',spec,aux_path,type_folder,'check/vel/half/','_Check_mod_Vel_Zel_quart.txt'),[(str2num(char(redshift_list))+1).^-1,(quart_mp_mod'),(quart_mp_std')],'delimiter','\t')
+
+
+
 
 
 

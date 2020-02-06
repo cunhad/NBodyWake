@@ -7,7 +7,11 @@ function [ ] = comvel_evol_mem_fast_meanslices_par_all( root_data_in,spec,wake_t
 % root='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/'
 root_data_in='/home/asus/Dropbox/extras/storage/graham/ht/data_paper3newRange4/check/'
 % root_plot_out='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/plot_paper2/'
+<<<<<<< HEAD
+spec='16Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
+=======
 spec='4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
+>>>>>>> f4dca8940b6887c34e2edb3234b5acbb3d6165fb
 % aux_path='/sample3001/'
 wake_type='/half_lin_cutoff_half_tot_pert_nvpw_v0p6/'
 
@@ -55,7 +59,7 @@ for sample = 1:length(sample_list_wake)
                 info_med = dlmread(filename_wake);
                 
 %                 mn(sample,:)=info(2,:);
-                med(sample,:)=info_med(:,2);
+                med(sample,:)=info_med(1:8,2);
 %                 mod(sample,:)=info_mod(2,:);
 
 
