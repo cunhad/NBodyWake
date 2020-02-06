@@ -423,7 +423,7 @@ if ~ismember(0,data_stream)
             hold on;
             axes('Position',[0 0 1 1],'Visible','off');
             imagesc([0 nb-1],[0 nb-1],colorfigure);
-%             set(gca,'YTick',[])
+% %             set(gca,'YTick',[])
 %             set(gca,'XTick',[])
             saveas(fig,char(strcat(path_out_fig,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_col_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'_log_fig','.png')));
             close(fig);
