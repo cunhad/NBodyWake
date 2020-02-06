@@ -321,8 +321,10 @@ for node = 1 : particl_part
     
 end
 
-% average=mean2(count_sum);
+average=mean2(count_sum);
 % count_sum=(count_sum-average)/average;
+dc=(count_sum-average)/average;
+count_sum_tg=(atan((dc+1)*16));
 
 if ~ismember(0,data_stream)
     
@@ -332,10 +334,44 @@ if ~ismember(0,data_stream)
     path_out=strcat(strcat(root_out,spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/');
     mkdir(strcat(root_out,spec,aux_path),strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/'));
     
+    if ismember(5,data_stream)|ismember(6,data_stream)|ismember(9,data_stream)|ismember(10,data_stream)
+        path_out_fig=strcat(strcat(root_out(1:end-1),'_fig/',spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_angl),'/',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/');
+        mkdir(strcat(root_out(1:end-1),'_fig/',spec,aux_path),strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_angl),'/',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/'));
+    end
     
     %     mkdir(path_out,'dc/');
     
     for count_slice=1:slice
+        
+        this=count_sum(:,:,count_slice);        
+        this(this<1)=1;
+        this=log(this);
+        this=this/(max(this(:)));
+        thisTg=count_sum_tg(:,:,count_slice);
+        thisTg=this/(max(thisTg(:)));
+        
+        thisp=count_sum(:,:,mod(count_slice+1-1,slice)+1);        
+        thisp(thisp<1)=1;
+        thisp=log(thisp);
+        thisp=thisp/(max(thisp(:)));
+        thispTg=count_sum_tg(:,:,mod(count_slice+1-1,slice)+1);
+        thispTg=thispTg/(max(thispTg(:)));
+        
+        thism=count_sum(:,:,mod(count_slice-1-1,slice)+1);        
+        thism(thism<1)=1;
+        thism=log(thism);
+        thism=thism/(max(thism(:)));
+        thismTg=count_sum_tg(:,:,mod(count_slice-1-1,slice)+1);        
+        thismTg=thismTg/(max(thismTg(:)));
+        
+        
+        colorfigure(:,:,1)=thism;
+        colorfigure(:,:,2)=this;
+        colorfigure(:,:,3)=thisp;
+        
+        colorfigure_tg(:,:,1)=thismTg;
+        colorfigure_tg(:,:,2)=thisTg;
+        colorfigure_tg(:,:,3)=thispTg;
         
         if ismember(1,data_stream)
             fileID = fopen(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'.bin'),'w');
@@ -344,7 +380,75 @@ if ~ismember(0,data_stream)
         end
         
         if ismember(2,data_stream)
+            fileID = fopen(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'_log.bin'),'w');
+            fwrite(fileID,this, 'float32','l');
+            fclose(fileID);
+        end
+        
+        if ismember(3,data_stream)
             dlmwrite(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'.txt'),count_sum(:,:,count_slice),'delimiter','\t');
+        end
+        
+        if ismember(4,data_stream)
+            dlmwrite(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'.txt'),this,'delimiter','\t');
+        end
+        
+        if ismember(5,data_stream)
+            fig=figure('Visible', 'off');
+            set(gcf, 'Position', [0 0 nb-1 nb-1]);
+            hold on;
+            axes('Position',[0 0 1 1],'Visible','off');
+            imagesc([0 nb-1],[0 nb-1],repmat(this,[1 1 3]));
+            set(gca,'YTick',[])
+            set(gca,'XTick',[])
+            saveas(fig,char(strcat(path_out_fig,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'_log_fig','.png')));
+            close(fig);
+        end
+        
+        if ismember(6,data_stream)
+            fig=figure('Visible', 'off');
+            set(gcf, 'Position', [0 0 nb-1 nb-1]);
+            hold on;
+            axes('Position',[0 0 1 1],'Visible','off');
+            imagesc([0 nb-1],[0 nb-1],colorfigure);
+            set(gca,'YTick',[])
+            set(gca,'XTick',[])
+            saveas(fig,char(strcat(path_out_fig,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_col_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'_log_fig','.png')));
+            close(fig);
+        end
+        
+        if ismember(7,data_stream)
+            fileID = fopen(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'_tg16.bin'),'w');
+            fwrite(fileID,thisTg, 'float32','l');
+            fclose(fileID);
+        end
+        
+        if ismember(8,data_stream)
+            dlmwrite(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'_tg16.txt'),this,'delimiter','\t');
+        end
+        
+        if ismember(9,data_stream)
+            fig=figure('Visible', 'off');
+            set(gcf, 'Position', [0 0 nb-1 nb-1]);
+            hold on;
+            axes('Position',[0 0 1 1],'Visible','off');
+            imagesc([0 nb-1],[0 nb-1],repmat(thisTg,[1 1 3]));
+            set(gca,'YTick',[])
+            set(gca,'XTick',[])
+            saveas(fig,char(strcat(path_out_fig,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'_tg_fig','.png')));
+            close(fig);
+        end
+        
+        if ismember(10,data_stream)
+            fig=figure('Visible', 'off');
+            set(gcf, 'Position', [0 0 nb-1 nb-1]);
+            hold on;
+            axes('Position',[0 0 1 1],'Visible','off');
+            imagesc([0 nb-1],[0 nb-1],colorfigure_tg);
+            set(gca,'YTick',[])
+            set(gca,'XTick',[])
+            saveas(fig,char(strcat(path_out_fig,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_col_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'_tg_fig','.png')));
+            close(fig);
         end
         
     end
