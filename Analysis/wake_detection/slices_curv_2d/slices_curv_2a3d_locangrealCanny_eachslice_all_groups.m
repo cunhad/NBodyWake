@@ -24,13 +24,13 @@ z='3.000';
 N_angles=12*NSIDE*NSIDE/2;
 
 
-specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa4t1/16Mpc_2048c_1024p_zi63_nowakem'
+specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa4t1/4Mpc_2048c_1024p_zi63_nowakem'
 sample_list_nowake=dir(strcat(specs_path_list_nowake,'/sample*'));
 sample_list_nowake={sample_list_nowake.name};
 % sample_list_nowake=sort_nat(sample_list_nowake)
 
 % specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa2t1/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m'
-specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa4t1/16Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
+specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa4t1/4Mpc_2048c_1024p_zi63_wakeGmu2t10m8zi10m'
 sample_list_wake=dir(strcat(specs_path_list_wake,'/sample*'));
 sample_list_wake={sample_list_wake.name};
 sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw_v0p6');
@@ -63,7 +63,7 @@ for w_nw=1:2
     
     for sample = 1:length(sample_list)
         
-        path_in=strcat(specs_path_list,'/',string(sample_list(sample)),'/data_anali/1lf_0.5rf/NSIDE_',num2str(NSIDE),'/slices_curv_2a3d/hpx/molvd/')
+        path_in=strcat(specs_path_list,'/',string(sample_list(sample)),'/data_anali/1lf_1rf/NSIDE_',num2str(NSIDE),'/slices_curv_2a3d/hpx/molvd/')
         
         filename=strcat(path_in,'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2a3d_z',z,'_data_det.txt')
         
@@ -204,9 +204,11 @@ sorted_signal_sample_w=sort((signal_sample_w),2);
 
 
 figure;
-h1 = histogram(signal_sample_nw(:),'BinWidth',10);
+% h1 = histogram(signal_sample_nw(:),'BinWidth',10);
+h1 = histogram(signal_sample_nw(:));
 hold on
-h2 = histogram(signal_sample_w(:),'BinWidth',10);
+% h2 = histogram(signal_sample_w(:),'BinWidth',10);
+h2 = histogram(signal_sample_w(:),'BinWidth',h1.BinWidth);
 xlabel('$S$ value', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('histogram', 'interpreter', 'latex', 'fontsize', 20);
 legend('G\mu=0','G\mu=1 \times 10^{-7}','location','northeast')
@@ -236,7 +238,7 @@ cd('../wake_detection/slices_curv_2d/');
 
 
 
-
+N_slices_probe=8*N_slices; 
 
 
 s_value=0;

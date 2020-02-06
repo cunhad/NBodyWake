@@ -77,19 +77,22 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangreal_depth_all( r
 % sum_depth=4;
 
 % root='/home/asus/Dropbox/extras/storage/graham/ht/';
-% root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_z2p9_2dclaral1lr1na1024_and_3dparclaral1lr1_anali/';
-% root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_z2p9_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp8/';
+% % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_z2p9_2dclaral1lr1na1024_and_3dparclaral1lr1_anali/';
+% % root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_z2p9_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp8/';
+% root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE8_2dclaral1lr1na1024_and_3dparclaral1lr1_anali/';
+% root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE8_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/';
 % spec='4Mpc_2048c_1024p_zi63_nowakem';
 % % aux_path='/sample3001/';
 % aux_path='/sample4001/';
 % % spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
 % % aux_path='/sample3001/half_lin_cutoff_half_tot_pert_nvpw/';
 % aux_path_out='';
-% filename='2.900xv0.dat';
+% filename='3.000xv0.dat';
 % lenght_factor=1;
 % resol_factor=0.5;
 % slice=32;
-% NSIDE=4;
+% % NSIDE=4;
+% NSIDE=8;
 % analy_type=3;
 % sum_depth=4;
 
@@ -121,9 +124,11 @@ for angle_id=1:N_angles
     
     path3='/2dproj/dm/';
     
-    path_in=string(strcat(strcat(root_anali_2d_in,spec,aux_path),'data_2d_filt_slices/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(angle_id),'/',path2,'/2dproj/dm/'))
-    
+%     if (~ismember(angle_id,[120,121,125,141,143]))
+        
+    path_in=string(strcat(strcat(root_anali_2d_in,spec,aux_path),'data_2d_filt_slices/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(angle_id),'/',path2,'/2dproj/dm/'))    
     aux=dlmread(strcat(path_in,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3_depth',num2str(sum_depth),'.txt'));
+%     end
     
     anali(angle_id,:,:,:)=reshape(aux,slice/sum_depth,4,5);
     

@@ -2,7 +2,7 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangrealCanny_all( ro
 
 %(example)  [ anali] = slices_curv_2a3d_all('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','/home/asus/Dropbox/extras/storage/graham/small_res/anali_hpx/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,2,2 );
 
-
+% 
 % for i=3001:3010
 %     spec='4Mpc_2048c_1024p_zi63_wakeGmu2t10m8zi10m';
 %     aux_path=strcat('/sample',num2str(i),'/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
@@ -95,8 +95,8 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangrealCanny_all( ro
 % root='/home/asus/Dropbox/extras/storage/graham/ht/';
 % % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali/';
 % % root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa2t1/';
-% root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali/';
-% root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa2t1/';
+% root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali/';
+% root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa4t1/';
 % % spec='4Mpc_2048c_1024p_zi63_nowakem';
 % spec='8Mpc_2048c_1024p_zi63_nowakem';
 % % spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
@@ -109,8 +109,8 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangrealCanny_all( ro
 % filename='3.000xv0.dat';
 % % filename='2.900xv0.dat';
 % lenght_factor=1;
-% resol_factor=0.5;
-% slice=128;
+% resol_factor=1;
+% slice=32;
 % NSIDE=4;
 % analy_type=1;
 
@@ -155,7 +155,7 @@ end
 % signal=reshape(permute(anali(:,:,2,1),[1,3,2,4,5]),[1,numel(anali(:,:,2,1))]);
 % signal = reshape(signal,[N_angles,2])';
 % signal = reshape(signal,[slice,N_angles]);
-signal=anali(:,:,2,analy_type);
+signal=anali(:,:,4,analy_type);
 
 %before
 % signal=sum(signal,2);
@@ -165,7 +165,7 @@ signal=anali(:,:,2,analy_type);
 % signal = max(signal');
 signal = sum(signal');
 
-signal_det=anali(:,:,2,analy_type);
+signal_det=anali(:,:,4,analy_type);
 
 for angl=N_angles+1:N_angles_t
     

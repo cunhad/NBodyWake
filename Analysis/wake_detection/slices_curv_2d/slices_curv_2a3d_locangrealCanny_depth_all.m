@@ -8,6 +8,12 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangrealCanny_depth_a
 %     slices_curv_2a3d_locangrealCanny_depth_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type,sum_depth);
 % end
 
+% for i=3001:3010
+%     spec='4Mpc_2048c_1024p_zi63_wakeGmu2t10m8zi10m';
+%     aux_path=strcat('/sample',num2str(i),'/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
+%     slices_curv_2a3d_locangrealCanny_depth_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type,sum_depth);
+% end
+
 % for i=4001:4010
 %     spec='16Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
 %     aux_path=strcat('/sample',num2str(i),'/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
@@ -84,22 +90,22 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangrealCanny_depth_a
 % analy_type=3;
 % sum_depth=4;
 % 
-% root='/home/asus/Dropbox/extras/storage/graham/ht/';
-% root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali/';
-% root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa4t1_dp4/';
-% spec='4Mpc_2048c_1024p_zi63_nowakem';
-% % aux_path='/sample3001/';
-% aux_path='/sample4001/';
-% % spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
-% % aux_path='/sample3001/half_lin_cutoff_half_tot_pert_nvpw/';
-% aux_path_out='';
-% filename='3.000xv0.dat';
-% lenght_factor=1;
-% resol_factor=0.5;
-% slice=32;
-% NSIDE=4;
-% analy_type=1;
-% sum_depth=4;
+root='/home/asus/Dropbox/extras/storage/graham/ht/';
+root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali/';
+root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa2t1_dp4/';
+spec='4Mpc_2048c_1024p_zi63_nowakem';
+% aux_path='/sample3001/';
+aux_path='/sample4001/';
+% spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
+% aux_path='/sample3001/half_lin_cutoff_half_tot_pert_nvpw/';
+aux_path_out='';
+filename='3.000xv0.dat';
+lenght_factor=1;
+resol_factor=1;
+slice=32;
+NSIDE=4;
+analy_type=1;
+sum_depth=4;
 
 
 angles_hpx(1,:) = dlmread(strcat('../../../python/angles',num2str(NSIDE),'_t.cvs'));

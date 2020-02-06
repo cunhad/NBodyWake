@@ -387,7 +387,8 @@ for rds=1:length(redshift_list)
     for i=1:length(Hist2_val(:,1))
         if max(Hist2_val(i,:))~=0
             [a location]=find(Hist2_val(i,:)==max(Hist2_val(i,:)));
-            mod_vel_per_slice(i)=Vel_Bin_Centers(location);
+            location_=location(1);
+            mod_vel_per_slice(i)=Vel_Bin_Centers(location_);
         else
             mod_vel_per_slice(i)=NaN;
         end
