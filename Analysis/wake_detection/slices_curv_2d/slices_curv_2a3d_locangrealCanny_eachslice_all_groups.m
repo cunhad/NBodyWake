@@ -30,7 +30,11 @@ sample_list_nowake={sample_list_nowake.name};
 % sample_list_nowake=sort_nat(sample_list_nowake)
 
 % specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa2t1/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m'
+<<<<<<< HEAD
 specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa4t1/4Mpc_2048c_1024p_zi63_wakeGmu2t10m8zi10m'
+=======
+specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa4t1/16Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
+>>>>>>> f4dca8940b6887c34e2edb3234b5acbb3d6165fb
 sample_list_wake=dir(strcat(specs_path_list_wake,'/sample*'));
 sample_list_wake={sample_list_wake.name};
 sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw_v0p6');

@@ -237,16 +237,27 @@ for rds=1:length(redshift_list)
     pos_diff_ds = fileDatastore(filename_out,'ReadFcn',@read_bin,'FileExtensions','.dat');
     pos_diff=cell2mat(tall(pos_diff_ds));
     
-    fig=figure('Visible', 'off');
-    histogram2(mod(pos_diff(:,2),nc)*size_box/nc,pos_diff(:,3)*size_box/nc,nc/2,'DisplayStyle','tile','ShowEmptyBins','on');
+    fig2=figure('Visible', 'off');
+    histogram2(mod(pos_diff(:,2),nc)*size_box/nc,pos_diff(:,3)*size_box/nc,nc/2,'DisplayStyle','tile','ShowEmptyBins','on');colorbar;
     mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/'));
     saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_displacement_z',char(redshift_list(rds)),'_plot.png'));
     
+    fig2_=figure('Visible', 'off');
+    imagesc((h2.XBinEdges'),h2.YBinEdges',flip(log(h2.Values')));colorbar;
+    saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_displacement_z',char(redshift_list(rds)),'_plot_log.png'));
+    close(fig2_);
+        
+    close(fig2);
+    
     fig=figure('Visible', 'off');
     h=histogram(pos_diff(:,3)*size_box/nc);
+    hold on
+    set(gca,'YScale','log')
+    ylim ([0.9 inf]); 
     mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/hist/'));    
     saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/hist/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_displacement_z',char(redshift_list(rds)),'_plot.png'));
-
+    close(fig);
+    
     posit_values=pos_diff(pos_diff(:,3)>0,3);
     mn_pos(rds)=gather(mean(posit_values));
     std_pos(rds)=gather(std(posit_values,1));
@@ -263,12 +274,21 @@ for rds=1:length(redshift_list)
     pos_diff=cell2mat(tall(pos_diff_ds));
     
     fig2=figure('Visible', 'off');
-    h2=histogram2(mod(pos_diff(:,2),nc)*size_box/nc,pos_diff(:,3)*size_box/nc,nc/2,'DisplayStyle','tile','ShowEmptyBins','on');
+    h2=histogram2(mod(pos_diff(:,2),nc)*size_box/nc,pos_diff(:,3)*size_box/nc,nc/4,'DisplayStyle','tile','ShowEmptyBins','on');
+    colorbar;
     mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/'));
     saveas(fig2,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_displacement_z',char(redshift_list(rds)),'_plot.png'));
     
+    fig2_=figure('Visible', 'off');
+    imagesc((h2.XBinEdges'),h2.YBinEdges',flip(log(h2.Values')));colorbar;
+    saveas(fig2,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_displacement_z',char(redshift_list(rds)),'_plot_log.png'));    
+    close(fig2_);
+    
     fig=figure('Visible', 'off');
     h=histogram(pos_diff(:,3)*size_box/nc);
+    hold on
+    set(gca,'YScale','log')
+    ylim ([0.9 inf]);
     mkdir(strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/hist/'));    
     saveas(fig,strcat(root_plot_out,spec,aux_path,type_folder,'check/displ/half/hist/','_',num2str(find(str2num(char(redshift_list))==str2num(char(redshift_list(rds))))),'_displacement_z',char(redshift_list(rds)),'_plot.png'));
     close(fig);
