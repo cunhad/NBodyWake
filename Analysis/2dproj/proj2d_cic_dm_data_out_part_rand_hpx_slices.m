@@ -475,7 +475,7 @@ if ~ismember(0,data_stream)
             imagesc([0 nb-1],[0 nb-1],repmat(thisTg,[1 1 3]));
             set(gca,'YTick',[])
             set(gca,'XTick',[])
-            saveas(fig,char(strcat(path_out_fig,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'_tg_fig','.png')));
+            saveas(fig,char(strcat(path_out_fig,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'_tg16_fig','.png')));
             close(fig);
         end
         
@@ -487,7 +487,7 @@ if ~ismember(0,data_stream)
             imagesc([0 nb-1],[0 nb-1],colorfigure_tg);
             set(gca,'YTick',[])
             set(gca,'XTick',[])
-            saveas(fig,char(strcat(path_out_fig,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_col_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'_tg_fig','.png')));
+            saveas(fig,char(strcat(path_out_fig,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_col_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'_tg16_fig','.png')));
             close(fig);
         end
         
