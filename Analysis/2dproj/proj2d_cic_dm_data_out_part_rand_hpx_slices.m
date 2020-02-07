@@ -23,18 +23,26 @@ function [ count_sum] = proj2d_cic_dm_data_out_part_rand_hpx_slices( root,root_o
 
 % root='/home/disraelcunha/Dropbox/extras/storage/graham/small_res/';
 % root_out='/home/disraelcunha/Dropbox/extras/storage/graham/small_res/data_test3/';
-% spec='64Mpc_256c_128p_zi63_nowakem';
-% aux_path='/sample2001/';
+% % spec='64Mpc_256c_128p_zi63_nowakem';
+% spec='64Mpc_96c_48p_zi255_nowakem';
+% % spec='64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m';
+% % aux_path='/sample2001/';
+% aux_path='/sample1001/';
 % aux_path_out='';
-% filename='10.000xv0.dat';
+% filename='63.000xv0.dat';
 % lenght_factor=1;
 % resol_factor=1;
-% data_stream=[1,2,3,4,5,6,7,8,9,10];
+% % data_stream=[1,2,3,4,5,6,7,8,9,10];
+% data_stream=[5,6,9,10];
 % particl_part=1;
 % numb_angl=1;
 % slice=4;
-% NSIDE=8;
-
+% NSIDE=1;
+% 
+% 
+% for numb_angl=1:6
+% proj2d_cic_dm_data_out_part_rand_hpx_slices( root,root_out,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,data_stream,particl_part,numb_angl,slice,NSIDE);
+% end
 
 
 % rng('shuffle')
