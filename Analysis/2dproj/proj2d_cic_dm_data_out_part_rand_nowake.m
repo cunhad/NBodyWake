@@ -315,8 +315,10 @@ for node = 1 : particl_part
     
 end
 
-% average=mean2(count_sum);
+average=mean2(count_sum);
 % count_sum=(count_sum-average)/average;
+dc=(count_sum-average)/average;
+count_sum_tg=(atan((dc+1)*16));
 
 if ~ismember(0,data_stream)
     
@@ -326,6 +328,10 @@ if ~ismember(0,data_stream)
     path_out=strcat(strcat(root_out,spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/');
     mkdir(strcat(root_out,spec,aux_path),strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/'));
     
+    if ismember(5,data_stream)|ismember(6,data_stream)|ismember(9,data_stream)|ismember(10,data_stream)
+        path_out_fig=strcat(strcat(root_out(1:end-1),'_fig/',spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_angl),'/',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/');
+        mkdir(strcat(root_out(1:end-1),'_fig/',spec,aux_path),strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_angl),'/',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/'));
+    end
     
 %     mkdir(path_out,'dc/');
     

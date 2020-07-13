@@ -3,6 +3,7 @@ function [ xv_files_list,redshift_list,nodes_list  ] = preprocessing( path_files
 %   with the filenames
 
 %(example)[ xv_files_list,redshift_list,nodes_list ] = preprocessing('/home/asus/Dropbox/extras/storage/graham/small_res/','64Mpc_96c_48p_zi255_wakeGmu6t10m6zi10m','/sample1001/');
+% (example)[ xv_files_list,redshift_list,nodes_list ] = preprocessing('/home/disraelcunha/Dropbox/extras/storage/graham/small_res/','64Mpc_96c_48p_zi255_nowakem','/sample1001/');
 
 
 
