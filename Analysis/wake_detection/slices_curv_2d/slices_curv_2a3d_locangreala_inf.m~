@@ -232,7 +232,7 @@ if ~isempty(snapshot)
         % string(strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'))
         mkdir(char(strcat(root_visual_2d,spec,aux_path)),char(strcat('visual_2dfilt/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/')));                
         
-        if (ismember(4,visual_type)|ismember(5,visual_type))
+        if (ismember(4,visual_type))
             
             path_visual_2dfilt_fig=string(strcat(strcat(root_visual_2d(1:end-1),'_fig/',spec,aux_path),'visual_2dfilt/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'));
             % string(strcat(root_data_2d_anali,spec,aux_path))
@@ -250,7 +250,7 @@ if ~isempty(snapshot)
         % string(strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'))
         mkdir(char(strcat(root_visual_2d,spec,aux_path)),char(strcat('visual_3dfilt/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/')));                
         
-        if (ismember(4,visual_type)|ismember(5,visual_type))
+        if (ismember(4,visual_type))
             
             path_visual_3dfilt_fig=string(strcat(strcat(root_visual_2d(1:end-1),'_fig/',spec,aux_path),'visual_3dfilt/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'));
             % string(strcat(root_data_2d_anali,spec,aux_path))
@@ -1416,7 +1416,7 @@ end
 
 %doing the figures for ai analysis
 
-if ismember(4,visual_type)|ismember(5,visual_type)
+if ismember(4,visual_type)
     for slice_id=1:slices
         
         if ismember(slice_id,snapshot)
@@ -1436,8 +1436,6 @@ if ismember(4,visual_type)|ismember(5,visual_type)
                 colorfigure(:,:,2)=this;
                 colorfigure(:,:,3)=thisp;
                 
-                if ismember(4,visual_type)
-                
                 fig=figure('Visible', 'off');
                 set(gcf, 'Position', [0 0 nb-1 nb-1]);
                 hold on;
@@ -1446,10 +1444,6 @@ if ismember(4,visual_type)|ismember(5,visual_type)
                 saveas(fig,char(strcat(path_visual_2dfilt_fig','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
                 close(fig);
                 
-                end
-                
-                if ismember(5,visual_type)
-                
                 fig=figure('Visible', 'off');
                 set(gcf, 'Position', [0 0 nb-1 nb-1]);
                 hold on;
@@ -1457,8 +1451,6 @@ if ismember(4,visual_type)|ismember(5,visual_type)
                 imagesc([0 nb-1],[0 nb-1],colorfigure);
                 saveas(fig,char(strcat(path_visual_2dfilt_fig','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_col_2dproj_2dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
                 close(fig);
-                
-                end
                 
                 
             end
@@ -1478,8 +1470,6 @@ if ismember(4,visual_type)|ismember(5,visual_type)
                 colorfigure(:,:,2)=this;
                 colorfigure(:,:,3)=thisp;
                 
-                if ismember(4,visual_type)
-                
                 fig=figure('Visible', 'off');
                 set(gcf, 'Position', [0 0 nb-1 nb-1]);
                 hold on;
@@ -1488,10 +1478,6 @@ if ismember(4,visual_type)|ismember(5,visual_type)
                 saveas(fig,char(strcat(path_visual_3dfilt_fig','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
                 close(fig);
                 
-                end
-                
-                if ismember(5,visual_type)
-                
                 fig=figure('Visible', 'off');
                 set(gcf, 'Position', [0 0 nb-1 nb-1]);
                 hold on;
@@ -1499,8 +1485,6 @@ if ismember(4,visual_type)|ismember(5,visual_type)
                 imagesc([0 nb-1],[0 nb-1],colorfigure);
                 saveas(fig,char(strcat(path_visual_3dfilt_fig','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_col_2dproj_3dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
                 close(fig);
-                
-                end
                 
                 
             end
