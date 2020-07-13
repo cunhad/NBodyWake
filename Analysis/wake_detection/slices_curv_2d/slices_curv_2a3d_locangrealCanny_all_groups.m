@@ -24,21 +24,13 @@ z='3.000';
 N_angles=12*NSIDE*NSIDE/2;
 
 
-<<<<<<< HEAD
-specs_path_list_nowake=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa4t1/4Mpc_2048c_1024p_zi63_nowakem')
-=======
-specs_path_list_nowake=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa4t1/16Mpc_2048c_1024p_zi63_nowakem')
->>>>>>> f4dca8940b6887c34e2edb3234b5acbb3d6165fb
+specs_path_list_nowake=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa4t1/16Mpc_2048c_1024p_zi63_nowakem')
 sample_list_nowake=dir(strcat(specs_path_list_nowake,'/sample*'));
 sample_list_nowake={sample_list_nowake.name};
 % sample_list_nowake=sort_nat(sample_list_nowake)
 
 % specs_path_list_wake=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_analiFhm_hpx_Sa2t1/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m')
-<<<<<<< HEAD
-specs_path_list_wake=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa4t1/4Mpc_2048c_1024p_zi63_wakeGmu2t10m8zi10m')
-=======
-specs_path_list_wake=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa4t1/16Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m')
->>>>>>> f4dca8940b6887c34e2edb3234b5acbb3d6165fb
+specs_path_list_wake=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaraCannyl1lr1_anali_hpx_Sa4t1/16Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m')
 sample_list_wake=dir(strcat(specs_path_list_wake,'/sample*'));
 sample_list_wake={sample_list_wake.name};
 sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw_v0p6');
@@ -108,21 +100,40 @@ stn_w=sort((signal_sample_w-mean_nw)/std_nw,2);
 sorted_signal_sample_nw=sort((signal_sample_nw),2);
 sorted_signal_sample_w=sort((signal_sample_w),2);
 
-thresh=max(signal_sample_nw(:))
-% thresh=532;
-outlier_w_count=sum(signal_sample_w>thresh,2)
-sum(sum(signal_sample_w>thresh,2))
+% thresh=max(signal_sample_nw(:))
+% % thresh=532;
+% outlier_w_count=sum(signal_sample_w>thresh,2)
+% sum(sum(signal_sample_w>thresh,2))
 
 
 
 figure;
-h1 = histogram(signal_sample_nw(:),'BinWidth',10);
+% h1 = histogram(signal_sample_nw(:),'BinWidth',10);
+h1 = histogram(signal_sample_nw(:));
 hold on
-h2 = histogram(signal_sample_w(:),'BinWidth',10);
+% h2 = histogram(signal_sample_w(:),'BinWidth',10);
+h2 = histogram(signal_sample_w(:),'BinWidth',h1.BinWidth);
 xlabel('$S$ value', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('histogram', 'interpreter', 'latex', 'fontsize', 20);
 legend('G\mu=0','G\mu=1 \times 10^{-7}','location','northeast')
 set(gca, 'YScale', 'log')
+
+
+N_slices=prod(size(signal_sample_w));
+N_slices_probe=N_slices;        %for L_box=4Mpc/h,N=96=6*N_side^2,samples=10, we would have ~0.65*N_slices per hubble 
+n_strin_per_hubble=1;
+
+thresh=max(signal_sample_nw(:))
+% thresh=532;
+outlier_w_count=sum(signal_sample_w>thresh,2);
+sum(signal_sample_w>thresh,2)'
+sum_w=sum(outlier_w_count)
+sum_w_=floor(sum(outlier_w_count)/(24/n_strin_per_hubble))
+prob_w=sum(outlier_w_count)/(N_slices*(24/n_strin_per_hubble))
+outlier_nw_count=sum(signal_sample_nw>=thresh,2);
+sum_nw=sum(outlier_nw_count)
+prob_nw=sum(outlier_nw_count)/N_slices
+sum(outlier_w_count)/((24/n_strin_per_hubble)*sum(outlier_nw_count))
 
 cd('../wake_detection/slices_curv_2d/');
 

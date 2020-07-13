@@ -16,37 +16,27 @@ cd('../../preprocessing');
 % sigma = 5;
 % slices=32;
 % anal_lev=2;
-<<<<<<< HEAD
-NSIDE=8;
-z_glob=str2num('3.000')
-z='3.000';
-=======
 NSIDE=4;
-z_glob=str2num('2.900')
-z='2.900';
->>>>>>> f4dca8940b6887c34e2edb3234b5acbb3d6165fb
+z_glob=str2num('2.000')
+z='2.000';
 sum_depth=4;
 
 N_angles=12*NSIDE*NSIDE/2;
 
 
-<<<<<<< HEAD
-specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE8_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_nowakem'
-% specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_z2p9_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_nowakem'
-=======
-specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_z2p9_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_nowakem'
->>>>>>> f4dca8940b6887c34e2edb3234b5acbb3d6165fb
+% specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE8_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_nowakem'
+% specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_nowakem'
+specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_z2p0_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_nowakem'
+% specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/16Mpc_2048c_1024p_zi63_nowakem'
 sample_list_nowake=dir(strcat(specs_path_list_nowake,'/sample*'));
 sample_list_nowake={sample_list_nowake.name};
 % sample_list_nowake=sort_nat(sample_list_nowake)
 
 % specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_analiFhm_hpx_Sa2t1_dp/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m'
-<<<<<<< HEAD
-specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE8_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
-% specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_z2p9_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
-=======
-specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_z2p9_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
->>>>>>> f4dca8940b6887c34e2edb3234b5acbb3d6165fb
+% specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE8_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
+% specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
+specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_z2p0_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
+% specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/16Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
 sample_list_wake=dir(strcat(specs_path_list_wake,'/sample*'));
 sample_list_wake={sample_list_wake.name};
 % sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw');
@@ -57,12 +47,14 @@ for w_nw=1:2
     % for w_nw=2
     
     if w_nw==1
+%         [~,redshift_list,nodes_list,size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw] = preprocessing_info('/home/asus/Dropbox/extras/storage/graham/ht/old/','4Mpc_2048c_1024p_zi63_nowakem','/sample3001/');
         [~,redshift_list,nodes_list,size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw] = preprocessing_info('/home/asus/Dropbox/extras/storage/graham/ht/','4Mpc_2048c_1024p_zi63_nowakem','/sample3001/');
         specs_path_list=specs_path_list_nowake;
         sample_list=sample_list_nowake;
         ch='_7';
         coul='b';
     else
+%         [~,redshift_list,nodes_list,size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw] = preprocessing_info('/home/asus/Dropbox/extras/storage/graham/ht/old/','4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m','/sample3001/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
         [~,redshift_list,nodes_list,size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw] = preprocessing_info('/home/asus/Dropbox/extras/storage/graham/ht/','4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m','/sample3001/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
         specs_path_list=specs_path_list_wake;
         sample_list=sample_list_wake;
@@ -156,12 +148,16 @@ cd('../wake_detection/slices_curv_2d/');
 
 
 
-N_slices_probe=8*N_slices;
-
+% N_slices_probe=8*N_slices;
+% N_slices_probe=14694;
+% N_slices_probe=458304279;
+N_slices_probe=50000;
+% number_max=20;
+number_max=150;
 
 s_value=0;
 % for i=0:number_wake
-for i=0:20
+for i=0:number_max
 times=i;
 value(i+1)=((1-prob_nw)^(N_slices_probe-times))*((prob_nw)^times)*nchoosek(N_slices_probe,times);
 s_value=s_value+value(i+1);
@@ -172,7 +168,7 @@ sum_value_notrange_nw=1-sum_value
 
 s_value=0;
 % for i=0:number_wake
-for i=0:20
+for i=0:number_max
 times=i;
 value(i+1)=((1-prob_w)^(N_slices_probe-times))*((prob_w)^times)*nchoosek(N_slices_probe,times);
 s_value=s_value+value(i+1);
@@ -180,9 +176,150 @@ sum_value(i+1)=s_value;
 end
 sum_value_notrange_w=1-sum_value;
 
+% 
+% sum_value_notrange_nw(18)
+% sum_value_notrange_w(18)
 
-sum_value_notrange_nw(18)
-sum_value_notrange_w(18)
+sum_value_notrange_nw(91)
+sum_value_notrange_w(91)
+
+
+figure
+plot(sum_value_notrange_nw)
+hold on
+plot(1-sum_value_notrange_w)
+set(gca, 'YScale', 'log')
+
+vpa(sum_value_notrange_w(92))
+vpa(sum_value_notrange_nw(92))
+vpa(1-sum_value_notrange_w(92))
+
+
+cd '/home/asus/Dropbox/Disrael/Work/Research/NBodyWake/production/fortran/utils'
+% info = dlmread('Prob_out_NW_ZA_cut.out');
+filename='Prob_out_NW_ZA_NN.out';
+fileID = fopen(filename);
+C = textscan(fileID,'%s');
+fclose(fileID);
+for i=1:length(C{:})
+C{1}{i}(62)='e';
+data_nw(i)=str2num(C{1}{i});
+end
+
+filename='Prob_out_W_ZA_NN.out';
+fileID = fopen(filename);
+C = textscan(fileID,'%s');
+fclose(fileID);
+for i=1:length(C{:})
+C{1}{i}(62)='e';
+data_w(i)=str2num(C{1}{i});
+end
+
+figure
+plot(data_nw)
+hold on
+plot(1-data_w)
+% plot(1-sum_value_notrange_w)
+set(gca, 'YScale', 'log')
+set(gca, 'XScale', 'log')
+
+ylim([0 10^-65])
+xlim([-0.5*10^6 1.35*10^6])
+
+%
+% digits 300
+% vpa(exp(y),1000000)
+
+% % times=1
+% % x=((1-prob_w)^(N_slices_probe-times))*((prob_w)^times)*nchoosek(N_slices_probe,times);
+% % a=times/N_slices_probe;
+% % y=sqrt(1/(2*pi*(1-a)))*(((1-prob_w)/(1-a))^N_slices_probe)*(((1-a)/a)*(prob_w/(1-prob_w)))^times;
+% % x
+% % y
+% % y/x
+
+% N_slices_probe=600000000;
+% times=600000;
+% x=((1-prob_w)^(N_slices_probe-times))*((prob_w)^times)*nchoosek(N_slices_probe,times);
+% a=times/N_slices_probe;
+% y=0.5*log(1/(times*2*pi*(1-a)))+N_slices_probe*log(((1-prob_w)/(1-a)))+times*log(((1-a)/a)*(prob_w/(1-prob_w)));
+% x
+% %exp(y)
+% vpa(exp(sym(y)))
+% vpa(exp(sym(y)))/x
+
+
+% sum_value_notrange_nw(18)
+% sum_value_notrange_w(18)
+
+% 
+% N_slices_probe=458304279;
+% % number_max=round(0.001171875000000*N_slices_probe); %=537075
+% number_max=6000;
+% 
+% s_value=0;
+% % for i=0:number_wake
+% for i=0:number_max
+% times=i;
+% value(i+1)=((1-prob_nw)^(N_slices_probe-times))*((prob_nw)^times)*nchoosek(sym(N_slices_probe),sym(times));
+% s_value=s_value+value(i+1);
+% sum_value(i+1)=s_value;
+% end
+% sum_value_notrange_nw=1-sum_value;
+% 
+% 
+% s_value=0;
+% % for i=0:number_wake
+% for i=0:number_max
+% times=i;
+% value(i+1)=((1-prob_w)^(N_slices_probe-times))*((prob_w)^times)*nchoosek(sym(N_slices_probe),sym(times));
+% s_value=s_value+value(i+1);
+% sum_value(i+1)=s_value;
+% end
+% sum_value_notrange_w=1-sum_value;
+% 
+% 
+% sum_value_notrange_nw(18)
+% sum_value_notrange_w(18)
+% 
+% 
+
+
+
+% 
+% digits 300
+% vpa(exp(y),1000000)
+% N_slices_probe=458304279;
+% number_max=round(0.001171875000000*N_slices_probe);
+N_slices_probe=6000000;
+number_max=6000
+
+s_value=0;
+% for i=0:number_wake
+for i=0:number_max
+    times=i;
+    a=times/N_slices_probe;
+    x=0.5*log(1/(times*2*pi*(1-a)))+N_slices_probe*log(((1-prob_nw)/(1-a)))+times*log(((1-a)/a)*(prob_nw/(1-prob_nw)));
+    value(i+1)=vpa(exp(sym(x)));
+    s_value=s_value+value(i+1);
+    sum_value(i+1)=s_value;
+end
+sum_value_notrange_nw=1-sum_value;
+s_value=0;
+% for i=0:number_wake
+for i=0:number_max
+    times=i;
+    x=0.5*log(1/(times*2*pi*(1-a)))+N_slices_probe*log(((1-prob_w)/(1-a)))+times*log(((1-a)/a)*(prob_w/(1-prob_w)));
+    value(i+1)=vpa(exp(sym(x)));
+    s_value=s_value+value(i+1);
+    sum_value(i+1)=s_value;
+end
+sum_value_notrange_w=1-sum_value;
+
+
+
+
+
 
 
 
