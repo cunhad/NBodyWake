@@ -131,7 +131,7 @@ end
 
 label= categorical(abs(double(contains(string(list),'nowake'))-1));
 label_logical= logical(abs(double(contains(string(list),'nowake'))-1));
-label_num
+% label_num
 % list_nowake=list(~label_logical);
 % list_wake=list(label_logical);
 
