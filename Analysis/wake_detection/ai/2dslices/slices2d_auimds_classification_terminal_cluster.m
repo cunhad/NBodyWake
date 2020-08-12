@@ -254,7 +254,7 @@ layers = [
 
 %minibatch size
 
-miniBatchSize=2;
+miniBatchSize=32;
 
 %Specify Training Options
 

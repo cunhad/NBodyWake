@@ -4,15 +4,21 @@ function [ output_args ] = Ridgelet2d( input_args )
 
 
 nc=128;
-X=zeros(nc);
+ncx=nc;ncy=nc/2;
+
+X=zeros(ncx,ncy);
 % X(end/2,:)=1;
 % X(end/2,end/2)=1;
 % X(nc/4:3*nc/4,nc/4:3*nc/4)=1;
-X(:,nc/2)=1;
+X(nc/2,:)=1;
 % X=ones(nc);
 
-
 % figure; imagesc(X);
+
+
+XP=sum(X,2);
+
+% figure; imagesc(XP);
 
 Y = fftn(X);
 % Y = fftshift(X);
@@ -21,8 +27,10 @@ Y = fftn(X);
 % figure; imagesc(real(Y));
 % figure; imagesc(imag(Y));
 
+
+
 % F = circshift(Y,[1+nc/2 1+nc/2]);
-F=Y;
+% F=Y;
 
 
 % figure; imagesc(abs(F));
