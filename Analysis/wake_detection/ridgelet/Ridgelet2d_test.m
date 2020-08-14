@@ -11,14 +11,14 @@ X=zeros(ncx,ncy);
 % X(end/2,end/2)=1;
 % X(nc/4:3*nc/4,nc/4:3*nc/4)=1;
 % X(nc/2,:)=1;
-%X(:,nc/4:1+nc/4)=1;
-X(nc/2:1+nc/2,:)=1;
+X(:,nc/4:1+nc/4)=1;
+% X(nc/2:1+nc/2,:)=1;
 % X=ones(nc);
 
-% figure; imagesc(X);
+figure; imagesc(X);
 
 
-XP=sum(X,2);
+% XP=sum(D,2);
 
 % figure; plot(XP);
 
@@ -30,13 +30,21 @@ XP=sum(X,2);
 % Y2 = fft(fft(X).').';
 % figure; imagesc(abs(Y2))
 
-Y = fftshift(fftshift(X).').';
-figure; imagesc(abs(Y));
+% F = fftshift(fftshift(X).').';
+% figure; imagesc(abs(F));
+% 
+% 
+% F = fftshift(fft(fftshift(fft(X)).',2),1).';
+% figure; imagesc(abs(F));
 
 
-% figure; imagesc(abs(Y));
-% figure; imagesc(real(Y));
-% figure; imagesc(imag(Y));
+ F = fftshift(fft(fftshift(fft(X).',2)).',2);
+%F=fftshift(fft(X),1);
+figure; imagesc(abs(F));
+
+% figure; imagesc(abs(F));
+% figure; imagesc(real(F));
+% figure; imagesc(imag(F));
 
 
 
@@ -60,6 +68,8 @@ theta = (0:1/4:2)*pi;
  [T, R] = meshgrid(theta, rad);
  [X, Y] = pol2cart(T, R);
  Z = X.^2+Y.^2;
+ 
+ 
  
  
 
