@@ -6,7 +6,7 @@ function [ map,anali ] = slices_curv_2a3d_locangreala_inf( root,root_data_2d_in,
 %(example) for i=1:24; [ count_sum] = proj2d_cic_dm_data_out_part_rand_hpx_slices('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data_test2/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,1,1,i,2,2); end;
 %(example) for i=1:24; [ map ,anali] = slices_curv_2a3d('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data_test2/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,i,2,2,2,5 ); end;
 %  
-% 
+% % 
 % root='/home/asus/Dropbox/extras/storage/graham/small_res/';
 % root_data_2d_in='/home/asus/Dropbox/extras/storage/graham/small_res/data_test3/';
 % root_data_2d_out='/home/asus/Dropbox/extras/storage/graham/small_res/data3/';
@@ -32,11 +32,11 @@ function [ map,anali ] = slices_curv_2a3d_locangreala_inf( root,root_data_2d_in,
 % partition2d=1;
 % partition3rd=2;
 % sum_depth=4;
-% snapshot=[];
+% % snapshot=[];
 % snapshot=[23];
 % % snapshot=[13,28]*(256/32);
 % % snapshot=[9,29]*(128/32);
-% visual_type=[1:2:3];        %if 1, shows the 2d proj; %if 2 shows the ridgelet transformation    %if 3 does everything above also for the depth                          
+% visual_type=[1,2,3,4,5];        %if 1, shows the 2d proj; %if 2 shows the ridgelet transformation    %if 3 does everything above also for the depth                          
 % visual_in_or_out=[1:3]; %if 1 do visualization of the input,%  if 2 of the 2d_filtered    %  if 3 of the 3d filtered                            
 % %  visual_in_or_out=[2];
 %  stage=[3]              % for doing the 3d
