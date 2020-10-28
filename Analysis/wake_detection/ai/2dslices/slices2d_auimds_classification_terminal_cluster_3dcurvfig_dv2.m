@@ -5,8 +5,8 @@ function [  ] = slices2d_auimds_classification_terminal_cluster_3dcurvfig_dv2()
 
 
 % filename='_col_2dproj_z3_data_sl';
-% filename='_col_2dproj_3dcurv_z3_visual_sl';
-filename='_2dproj_3dcurv_z3_visual_sl';
+filename='_col_2dproj_3dcurv_z3_visual_sl';
+% filename='_2dproj_3dcurv_z3_visual_sl';
 
 % nc=512;
 NSIDE=4;
