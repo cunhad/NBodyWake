@@ -134,7 +134,8 @@ for w_nw=1:3
 %                 path_in=strcat(specs_path_list,'/',string(sample_list(sample)),'/visual_2dfilt/1lf_0.5rf','/NSIDE_',num2str(NSIDE),'/',list_of_angle_paths(angle_id),'/',string(path2),'/2dproj/dm/',ch,filename,num2str(slice_id),'_log_fig.png');
                 path_in=strcat(specs_path_list,'/',string(sample_list(sample)),'/visual_3dfilt/1lf_0.5rf','/NSIDE_',num2str(NSIDE),'/',list_of_angle_paths(angle_id),'/',string(path2),'/2dproj/dm/',ch,filename,num2str(slice_id),'.png');
                 
-                if w_nw==3
+%                 if w_nw==3
+                if w_nw==2
                     list_nonparal{count}=char(path_in);
                     count=count+1;
                 else
