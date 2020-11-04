@@ -57,7 +57,8 @@ sample_id_range=[1 : length(sample_list_nowake)];
 % label_number=dlmread(strcat(label_numbers_path,'curvfilt2a3d_label_notover.txt'));
 % label_numbers_statistics=dlmread(strcat(label_numbers_path,'curvfilt2a3d_label_notover_numbers_statistics.txt'));
 
-count=1;
+count_a=1;
+count_b=1;
 
 for w_nw=1:3
 % for w_nw=1:1
@@ -76,7 +77,6 @@ for w_nw=1:3
     end
     
     if w_nw==3
-        count=1;
         specs_path_list=specs_path_list_wake_nonparal;
         sample_list=sample_list_wake_nonparal;
     end
@@ -136,11 +136,11 @@ for w_nw=1:3
                 
 %                 if w_nw==3
                 if w_nw==2
-                    list_nonparal{count}=char(path_in);
-                    count=count+1;
+                    list_nonparal{count_b}=char(path_in);
+                    count_b=count_b+1;
                 else
-                    list{count}=char(path_in);
-                    count=count+1;
+                    list{count_a}=char(path_in);
+                    count_a=count_a+1;
                 end
                 
             end
