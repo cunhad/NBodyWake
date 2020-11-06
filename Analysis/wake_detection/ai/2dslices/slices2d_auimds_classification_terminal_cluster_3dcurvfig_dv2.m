@@ -44,7 +44,7 @@ specs_path_list_nowake_nonparal='/home/cunhad/projects/rrg-rhb/cunhad/simulation
 % specs_path_list_wake_nonparal='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_visual_fig/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
 sample_list_nowake_nonparal=dir(strcat(specs_path_list_nowake_nonparal,'/sample*'));
 sample_list_nowake_nonparal={sample_list_nowake_nonparal.name};
-sample_list_nowake_nonparal=strcat(sample_list_nowake_nonparal,'/half_lin_cutoff_half_tot_pert_nvpw_v0p6');
+% sample_list_nowake_nonparal=strcat(sample_list_nowake_nonparal,'/half_lin_cutoff_half_tot_pert_nvpw_v0p6');
 
 specs_path_list_wake_nonparal='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512_hpxNSIDE4_wake_2dclaral1lr1na1024_and_3dparclaral1lr1_visual_fig/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
 % specs_path_list_wake_nonparal='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_visual_fig/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
