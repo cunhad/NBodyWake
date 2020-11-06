@@ -28,7 +28,7 @@ sample_list_nowake=dir(strcat(specs_path_list_nowake,'/sample*'));
 sample_list_nowake={sample_list_nowake.name};
 % sample_list_nowake=sort_nat(sample_list_nowake)
 
-specs_path_list_wake='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512_hpxNSIDE4_wake_2dclaral1lr1na1024_and_3dparclaral1lr1_visual_fig/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
+specs_path_list_wake='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_visual_fig/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
 % specs_path_list_wake='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_visual_fig/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
 % specs_path_list_wake='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_hpx_2d_NSIDE4_wake_fig/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
 % specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_wake_2dclaral1lr1na1024_and_3dparclaral1lr1_visual_fig/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
@@ -40,7 +40,13 @@ sample_list_wake=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw_v0
 % sample_list_wake=sort_nat(sample_list_wake)
 
 
-specs_path_list_wake_nonparal='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_visual_fig/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
+specs_path_list_nowake_nonparal='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512_hpxNSIDE4_wake_2dclaral1lr1na1024_and_3dparclaral1lr1_visual_fig/4Mpc_2048c_1024p_zi63_nowakem'
+% specs_path_list_wake_nonparal='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_visual_fig/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
+sample_list_nowake_nonparal=dir(strcat(specs_path_list_nowake_nonparal,'/sample*'));
+sample_list_nowake_nonparal={sample_list_nowake_nonparal.name};
+sample_list_nowake_nonparal=strcat(sample_list_nowake_nonparal,'/half_lin_cutoff_half_tot_pert_nvpw_v0p6');
+
+specs_path_list_wake_nonparal='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512_hpxNSIDE4_wake_2dclaral1lr1na1024_and_3dparclaral1lr1_visual_fig/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
 % specs_path_list_wake_nonparal='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_visual_fig/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
 sample_list_wake_nonparal=dir(strcat(specs_path_list_wake_nonparal,'/sample*'));
 sample_list_wake_nonparal={sample_list_wake_nonparal.name};
@@ -60,7 +66,7 @@ sample_id_range=[1 : length(sample_list_nowake)];
 count_a=1;
 count_b=1;
 
-for w_nw=1:3
+for w_nw=1:4
 % for w_nw=1:1
 % for w_nw=1
     
@@ -69,7 +75,9 @@ for w_nw=1:3
         sample_list=sample_list_nowake;
         ch='_7';
         coul='b';
-    else
+    end
+    
+    if w_nw==2
         specs_path_list=specs_path_list_wake;
         sample_list=sample_list_wake;
         ch='_4';
@@ -77,8 +85,17 @@ for w_nw=1:3
     end
     
     if w_nw==3
+        specs_path_list=specs_path_list_nowake_nonparal;
+        sample_list=sample_list_nowake_nonparal;
+        ch='_7';
+        coul='b';
+    end
+    
+    if w_nw==4
         specs_path_list=specs_path_list_wake_nonparal;
         sample_list=sample_list_wake_nonparal;
+        ch='_4';
+        coul='r';
     end
     
     
@@ -135,12 +152,12 @@ for w_nw=1:3
                 path_in=strcat(specs_path_list,'/',string(sample_list(sample)),'/visual_3dfilt/1lf_0.5rf','/NSIDE_',num2str(NSIDE),'/',list_of_angle_paths(angle_id),'/',string(path2),'/2dproj/dm/',ch,filename,num2str(slice_id),'.png');
                 
 %                 if w_nw==3
-                if w_nw==2
-                    list_nonparal{count_b}=char(path_in);
-                    count_b=count_b+1;
-                else
-                    list{count_a}=char(path_in);
+                if w_nw==1|w_nw==2
+                    list_nonparal{count_a}=char(path_in);
                     count_a=count_a+1;
+                else
+                    list{count_b}=char(path_in);
+                    count_b=count_b+1;
                 end
                 
             end
