@@ -342,7 +342,8 @@ YPred_wake_nonparal=YPred_nonparal;
 FractionPredic_with_wake_nonparal=sum(YPred_wake_nonparal==categorical(1))/numel(YPred_wake_nonparal)
 YPred_wake_where_theis_nonparal=categorical(str2num(char(YPred_wake_nonparal)).*str2num(char(YValidation_nonparal)));
 FractionYPred_wake_where_thereis_nonparal=sum(YPred_wake_where_theis_nonparal==categorical(1))/sum(YPred_wake_nonparal==categorical(1))
-
+YPred_wake_where_theisnot_nonparal=categorical(str2num(char(YPred_wake_nonparal)).*abs(1-str2num(char(YValidation_nonparal))));
+FractionYPred_wake_where_thereisnot_nonparal=sum(YPred_wake_where_theisnot_nonparal==categorical(1))/sum(YPred_wake_nonparal==categorical(1))
 
 
 % 
