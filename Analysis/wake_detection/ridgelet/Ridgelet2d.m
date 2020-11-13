@@ -3,13 +3,13 @@ function [ output_args ] = Ridgelet2d( input_args )
 %   Detailed explanation goes here
 
 nc=128;
-ncx=nc;ncy=nc/2;
+ncx=nc;ncy=nc/4;
 
 X=zeros(ncx,ncy);
-X(:,nc/4)=1;
-X=X+randn([ncx,ncy]);
+X(:,nc/8)=1;
+X=X+0.5*randn([ncx,ncy]);
 % X=randn([ncx,ncy]);
-figure; imagesc(X);
+figure; imagesc(X);colorbar;
 
 
 % y = 2*randn([1,256]);
@@ -30,7 +30,7 @@ figure; imagesc(X);
 % X=randn([ncx,ncy]);F = fft(fft(X,256).',256).';figure; imagesc(abs(F));
 % F = fft2(X);
 F = fftshift(fft(fftshift(fft(X).',2)).',2);
-figure; imagesc(abs(F));
+figure; imagesc(abs(F));colorbar;
 
 % F = fftshift(fft(fftshift(fft(X).',256)).',256);
 % figure; imagesc(abs(F));

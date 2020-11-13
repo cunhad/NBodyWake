@@ -325,10 +325,10 @@ YPred_wake=YPred;
 FractionPredic_with_wake=sum(YPred_wake==categorical(1))/numel(YPred_wake)
 
 YPred_wake_where_theis=categorical(str2num(char(YPred_wake)).*str2num(char(YValidation)));
-FractionYPred_wake_where_thereis=sum(YPred_wake_where_theis==categorical(1))/sum(YPred_wake==categorical(1))
+FractionYPred_wake_where_thereis=sum(YPred_wake_where_theis==categorical(1))/sum(YValidation==categorical(1))
 
 YPred_wake_where_theisnot=categorical(str2num(char(YPred_wake)).*abs(1-str2num(char(YValidation))));
-FractionYPred_wake_where_thereisnot=sum(YPred_wake_where_theisnot==categorical(1))/sum(YPred_wake==categorical(1))
+FractionYPred_wake_where_thereisnot=sum(YPred_wake_where_theisnot==categorical(1))/sum(YValidation==categorical(0))
 
 
 YValidation_wake=YValidation(YValidation==categorical(1));
@@ -338,12 +338,15 @@ YValidation_wake=YValidation(YValidation==categorical(1));
 YPred_nonparal = classify(net,imdsValidation_nonparal,'MiniBatchSize',miniBatchSize);
 YValidation_nonparal = imdsValidation_nonparal.Labels;
 accuracy_nonparal = sum(YPred_nonparal == YValidation_nonparal)/numel(YValidation_nonparal)
+
 YPred_wake_nonparal=YPred_nonparal;
 FractionPredic_with_wake_nonparal=sum(YPred_wake_nonparal==categorical(1))/numel(YPred_wake_nonparal)
+
 YPred_wake_where_theis_nonparal=categorical(str2num(char(YPred_wake_nonparal)).*str2num(char(YValidation_nonparal)));
-FractionYPred_wake_where_thereis_nonparal=sum(YPred_wake_where_theis_nonparal==categorical(1))/sum(YPred_wake_nonparal==categorical(1))
+FractionYPred_wake_where_thereis_nonparal=sum(YPred_wake_where_theis_nonparal==categorical(1))/sum(YValidation_nonparal==categorical(1))
+
 YPred_wake_where_theisnot_nonparal=categorical(str2num(char(YPred_wake_nonparal)).*abs(1-str2num(char(YValidation_nonparal))));
-FractionYPred_wake_where_thereisnot_nonparal=sum(YPred_wake_where_theisnot_nonparal==categorical(1))/sum(YPred_wake_nonparal==categorical(1))
+FractionYPred_wake_where_thereisnot_nonparal=sum(YPred_wake_where_theisnot_nonparal==categorical(1))/sum(YValidation_nonparal==categorical(0))
 
 
 % 
