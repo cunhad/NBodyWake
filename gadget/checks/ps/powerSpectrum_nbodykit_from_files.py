@@ -465,6 +465,45 @@ def plot_ps_picola_CAMB(path_in,file_in_picola,path_out,bin_x_,bin_k,k1,P_k1):
     return
 
 
+def plot_ps_comp_GadPic(path_in,file_in_gadget,file_in_picola,path_out,bin_x_,bin_k,k1,P_k1,k2,P_k2):
+    
+#    print(path_in+'gadget_out/')
+#    pos1=ReadPos(path_in+'gadget_out/',file_in_gadget)
+    z=readheader(path_in+'gadget_out/'+file_in_gadget,'redshift')
+#    L=readheader(path_in+'gadget_out/'+file_in_gadget,'boxsize')  
+             
+    
+    plt.plot(k1,P_k1,label="Gadget")
+    plt.plot(k2,P_k2,label="MG-Picola")
+    plt.xlim(xmax = max(k1), xmin = min(k1))
+    plt.legend(loc=1)
+    plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
+    plt.ylabel(r"$P$ $[h^{-3} \mathrm{Mpc}^{3}]$")
+    plt.title('Gadget and Picola, z=%2.f' %z)
+    plt.xscale('log')
+    plt.yscale('log')
+    #plt.show()
+    if not os.path.exists(os.path.dirname(path_out+'Gad_Pic_comp/')):
+        os.makedirs(path_out+'Gad_Pic_comp/')
+    plt.savefig(path_out+'Gad_Pic_comp/ps_'+file_in_picola+'.png', bbox_inches = "tight",dpi=300)
+    plt.close()
+    
+    f2 = intp.interp1d(k2, P_k2, kind='nearest')
+    P_k2_=f2(k1)    
+    plt.plot(k1,P_k1/P_k2_)
+    plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
+    plt.ylabel(r'$P_{Picola}(k)/P_{Gadget}(k)$ $[h^{-3} \mathrm{Mpc}^{3}]$')
+    plt.title('Frac of Picola and Gadget P(k), z=%2.f' %z)
+    plt.xscale('log')
+#    plt.yscale('log')
+#    plt.show()
+    if not os.path.exists(os.path.dirname(path_out+'pic_gad_comp_ferr2/')):
+        os.makedirs(path_out+'pic_gad_comp_ferr2/')
+    plt.savefig(path_out+'pic_gad_comp_ferr2/ps_ferr_'+file_in_picola+'.png', bbox_inches = "tight",dpi=300)
+    plt.close()
+    
+    return   
+
 
 def plot_ps_comp_all(path_in,file_in_gadget,file_in_picola,path_out,bin_x_,bin_k,k1,P_k1,k2,P_k2):
     
@@ -658,6 +697,8 @@ for x, y in zip(just_files_gadget, just_files_picola):
 #    print(readheader(sys.argv[1]+'gadget_out/'+x,'redshift'),readheader(sys.argv[1]+'picola_out/'+y,'redshift'))
 #    plot_ps_comp(sys.argv[1],x,y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_gad,P_k_gad,k_pic,P_k_pic)
 #    
+    plot_ps_comp_GadPic(sys.argv[1],x,y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_gad,P_k_gad,k_pic,P_k_pic)
+    
     plot_ps_comp_all(sys.argv[1],x,y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_gad,P_k_gad,k_pic,P_k_pic)
 ##  
 
