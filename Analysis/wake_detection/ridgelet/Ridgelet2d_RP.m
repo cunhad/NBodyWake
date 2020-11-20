@@ -5,16 +5,17 @@ clearvars;
 %Construct the sample image
 
 nc=128;
-% ncx=nc;ncy=nc/4;
-ncx=nc;ncy=nc;
+ncx=nc;ncy=nc/4;
+% ncx=nc;ncy=nc;
 
 
-X=zeros(ncx,ncy);
+% X=zeros(ncx,ncy);
+X=ones(ncx,ncy);
 % X(:,nc/8)=1;
-X(:,nc/2)=1;
+% X(:,nc/2)=1;
 % for i=1:ncx
 % %     X(i,min(max(round(i/4),1),ncy))=1;
-%     X(i,min(max(round(i),1),ncy))=1;
+%     X(i,10+min(max(round(i/8),1),ncy))=1;
 % 
 % end
 % X=X+0.5*randn([ncx,ncy]);
@@ -76,6 +77,8 @@ end
 % figure; plot(abs(ifft(RPinterp_vert(1,:))))
 
 
+
+
 %Radon Transformation
 
 % Radon = ifftshift(ifft(RPinterp_hor).',2);
@@ -98,6 +101,88 @@ figure;imagesc(abs(Radon_vert)); colorbar;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+%inverse Radon Transformation
+
+RPinterp_hor_rec=(fft(Radon_hor.').');
+RPinterp_vert_rec=(fft(Radon_vert.').');
+
+F_rec=zeros(ncx,ncy);
+F_rec_count=zeros(ncx,ncy);
+
+%Horizontal lines
+
+for t=1:ncx
+    for r=1:ncy
+        M=(ncx-(2*t)+1)/(ncy-1);
+        Y=min(max(round(r),1),ncy);
+        X=min(max(round(t+M*(r-1)),1),ncx);
+        F_rec(X,Y)=F_rec(X,Y)+RPinterp_hor_rec(t,r);
+        F_rec_count(X,Y)=F_rec_count(X,Y)+1;
+    end
+end
+
+% figure; imagesc(F_rec_count);colorbar;
+% figure; imagesc(abs(F_rec));colorbar;
+
+
+%Vertical lines
+
+for t=1:ncy
+    for r=1:ncx
+        M=(ncy-(2*t)+1)/(ncx-1);
+        X=min(max(round(r),1),ncx);
+        Y=min(max(round(t+M*(r-1)),1),ncy);
+        F_rec(X,Y)=F_rec(X,Y)+RPinterp_vert_rec(t,r);
+        F_rec_count(X,Y)=F_rec_count(X,Y)+1;        
+    end
+end
+
+%normalization
+
+F_rec_norm=F_rec./F_rec_count;
+
+% figure; imagesc(abs(F_rec_norm));colorbar;
+
+
+
+
+%get rid of zero-mode-at-the-center convention
+
+for i=1:ncx
+    for j=1:ncy
+        F_rec_norm(i,j)=((-1)^(i+j))*F_rec_norm(i,j);
+    end
+end
+
+%Apply iFFT2
+
+X_rec = ifft(ifftshift(ifft(ifftshift(F_rec_norm,2).'),2).');
+
+
+
+% figure; imagesc(abs(X_rec));colorbar;
+
+% figure; imagesc(real(X_rec));colorbar;
+
+
+
+
+
+diff=RPinterp_hor_inv-RPinterp_hor;
+max(abs(diff(:)))
 
 
 end

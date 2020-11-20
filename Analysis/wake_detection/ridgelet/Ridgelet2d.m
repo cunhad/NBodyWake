@@ -6,9 +6,15 @@ nc=128;
 ncx=nc;ncy=nc/4;
 
 X=zeros(ncx,ncy);
-X(:,nc/8)=1;
+% X(:,nc/8)=1;
+for i=1:ncx
+    X(i,min(max(round(i/4),1),ncy))=1;
+%     X(i,10+min(max(round(i/8),1),ncy))=1;
+
+end
 X=X+0.5*randn([ncx,ncy]);
-% X=randn([ncx,ncy]);
+
+% % X=randn([ncx,ncy]);
 figure; imagesc(X);colorbar;
 
 
@@ -32,22 +38,50 @@ figure; imagesc(X);colorbar;
 F = fftshift(fft(fftshift(fft(X).',2)).',2);
 figure; imagesc(abs(F));colorbar;
 
+%use zero=mode-at-the-center convention
+
+for i=1:ncx
+    for j=1:ncy
+        F(i,j)=((-1)^(i+j))*F(i,j);
+    end
+end
+
+
 % F = fftshift(fft(fftshift(fft(X).',256)).',256);
 % figure; imagesc(abs(F));
 
-theta = (0:1/4:2)*pi;
- rad = 0:floor(sqrt((ncx^2)+ncy^2));
- [T, R] = meshgrid(theta, rad);
- [X, Y] = pol2cart(T, R);
- Z = X.^2+Y.^2;
+
+
+
+
+
+
+
+% 
+% 
+% theta = (0:1/4:2)*pi;
+%  rad = 0:floor(sqrt((ncx^2)+ncy^2));
+%  [T, R] = meshgrid(theta, rad);
+%  [X, Y] = pol2cart(T, R);
+%  Z = X.^2+Y.^2;
+%  
+%  theta = (0:1/4:2)*pi;
+%  rad = 0:floor(sqrt((ncx^2)+ncy^2));
+%  [T, R] = meshgrid(theta, rad);
+%  [X, Y] = pol2cart(T, R);
+%  Z = X.^2+Y.^2;
+
+
  
- theta = (0:1/4:2)*pi;
- rad = 0:floor(sqrt((ncx^2)+ncy^2));
- [T, R] = meshgrid(theta, rad);
- [X, Y] = pol2cart(T, R);
- Z = X.^2+Y.^2;
-
-
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  
  [ncx_F,ncy_F]=size(F);
 nc_r=max(ncx_F,ncx_F);
@@ -63,8 +97,11 @@ ncx_centre=floor((ncx_F+1)/2);
 ncy_centre=floor((ncy_F+1)/2);
 lin_ncx_centred=(0:ncx_F-1)-ncx_centre;
 lin_ncy_centred=(0:ncy_F-1)-ncy_centre;
+% lin_ncx_centred=(0:ncx_F-1)-ncx_centre+0.5;
+% lin_ncy_centred=(0:ncy_F-1)-ncy_centre+0.5;
 [x_q,y_q] = meshgrid(lin_ncx_centred,lin_ncy_centred);
 % F_intp = griddata(x_q(:),y_q(:),F(:),x,y,'cubic');
+% F2=F;
 F2=F';
 F_intp = griddata(x_q(:),y_q(:),F2(:),x,y,'cubic');
 
@@ -75,10 +112,11 @@ figure;surf(x,y,abs(F_intp)); colorbar;
 
 F_intp_nonan=F_intp;
 
-F_intp_nonan(isnan(F_intp))=0;
+% F_intp_nonan(isnan(F_intp))=0;
 
 
-Radon = ifft(F_intp_nonan').';
+% Radon = ifft(F_intp_nonan').';
+Radon = ifft(F_intp_nonan.').';
 figure;imagesc(real(Radon)); colorbar;
 figure;imagesc(abs(Radon)); colorbar;
 
