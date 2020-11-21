@@ -2,6 +2,12 @@ function [  ] = slices2d_auimds_classification_terminal_cluster_3dcurvfig_dv2()
 %UNTITLED Summary of this function goes here
 %   we will also classify the non-parallel to wake data
 
+
+myCluster = parcluster('local');
+myCluster.NumWorkers = 4;  % 'Modified' property now TRUE
+saveProfile(myCluster);    % 'local' profile now updated,
+                           % 'Modified' property now FALSE
+                           
 parpool('local',gpuDeviceCount);
 
 
