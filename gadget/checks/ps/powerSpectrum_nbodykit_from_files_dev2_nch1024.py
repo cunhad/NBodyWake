@@ -302,7 +302,7 @@ def plot_ps_gadget(path_in,file_in,path_out,bin_x_,mesh,L):
 #    print(len(pos))
     z=readheader(path_in+'gadget_out/'+file_in,'redshift')
    
-    r = FFTPower(mesh, mode='1d', dk=0.05, kmin=0.1)
+    r = FFTPower(mesh, mode='1d', dk=0.005, kmin=0.001)
     # the result is stored at "power" attribute
     Pk = r.power
     #print out the meta-data
@@ -331,7 +331,7 @@ def plot_ps_pic(path_in,file_in,path_out,bin_x_,mesh,L):
 #    print(len(pos))
     z=readheader(path_in+'picola_out/'+file_in,'redshift')
    
-    r = FFTPower(mesh, mode='1d', dk=0.05, kmin=0.1)
+    r = FFTPower(mesh, mode='1d', dk=0.0005, kmin=0.001)
     # the result is stored at "power" attribute
     Pk = r.power
     #print out the meta-data
