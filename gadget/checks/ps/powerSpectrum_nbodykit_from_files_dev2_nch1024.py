@@ -389,7 +389,8 @@ def plot_ps_gadget_CAMB(path_in,file_in_gadget,path_out,bin_x_,bin_k,k1,P_k1):
     plt.savefig(path_out+'gad_CAMB_comp2/ps_'+file_in_gadget+'.png', bbox_inches = "tight",dpi=300)
     plt.close()
     
-    f2 = intp.interp1d(k2, P_k2, kind='nearest')
+#    f2 = intp.interp1d(k2, P_k2, kind='nearest')
+    f2 = intp.interp1d(k2, P_k2, kind='nearest',fill_value="extrapolate")
     P_k2_=f2(k1)    
     plt.plot(k1,P_k1/P_k2_)
     plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
@@ -447,7 +448,8 @@ def plot_ps_picola_CAMB(path_in,file_in_picola,path_out,bin_x_,bin_k,k1,P_k1):
     plt.savefig(path_out+'pic_CAMB_comp2/ps_'+file_in_picola+'.png', bbox_inches = "tight",dpi=300)
     plt.close()
     
-    f2 = intp.interp1d(k2, P_k2, kind='nearest')
+#    f2 = intp.interp1d(k2, P_k2, kind='nearest')
+    f2 = intp.interp1d(k2, P_k2, kind='nearest',fill_value="extrapolate")    
     P_k2_=f2(k1)    
     plt.plot(k1,P_k1/P_k2_)
     plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
@@ -490,7 +492,8 @@ def plot_ps_comp_GadPic(path_in,file_in_gadget,file_in_picola,path_out,bin_x_,bi
     plt.savefig(path_out+'Gad_Pic_comp/ps_'+file_in_picola+'.png', bbox_inches = "tight",dpi=300)
     plt.close()
     
-    f2 = intp.interp1d(k2, P_k2, kind='nearest')
+#    f2 = intp.interp1d(k2, P_k2, kind='nearest')
+    f2 = intp.interp1d(k2, P_k2, kind='nearest',fill_value="extrapolate")    
     P_k2_=f2(k1)    
     plt.plot(k1,P_k1/P_k2_)
     plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
