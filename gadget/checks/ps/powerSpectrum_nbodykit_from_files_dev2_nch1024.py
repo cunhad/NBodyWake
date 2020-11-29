@@ -479,7 +479,7 @@ def plot_ps_comp_GadPic(path_in,file_in_gadget,file_in_picola,path_out,bin_x_,bi
     
     plt.plot(k1,P_k1,label="Gadget")
     plt.plot(k2,P_k2,label="MG-Picola")
-    plt.xlim(xmax = max(k1), xmin = min(k1))
+#    plt.xlim(xmax = max(k1), xmin = min(k1))
     plt.legend(loc=1)
     plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
     plt.ylabel(r"$P$ $[h^{-3} \mathrm{Mpc}^{3}]$")
@@ -685,7 +685,7 @@ for x, y in zip(just_files_gadget[::-1], just_files_picola):
     pos,vel,L=phase_gadget(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
     mesh=mesh_gadget(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),pos,vel,L)
     k_gad,P_k_gad=plot_ps_gadget(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),mesh,L)
-    plot_ps_gadget_CAMB(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_gad,P_k_gad)
+#    plot_ps_gadget_CAMB(sys.argv[1],x,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_gad,P_k_gad)
     
 
 #    
@@ -695,16 +695,14 @@ for x, y in zip(just_files_gadget[::-1], just_files_picola):
     pos,vel,L=phase_pic(sys.argv[1],y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]))
     mesh=mesh_pic(sys.argv[1],y,sys.argv[2],float(sys.argv[3]),pos,vel,L)
     k_pic,P_k_pic=plot_ps_pic(sys.argv[1],y,sys.argv[2],float(sys.argv[3]),mesh,L)  
-    plot_ps_picola_CAMB(sys.argv[1],y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_pic,P_k_pic)
-##    
-#    
-##  
-#    print(readheader(sys.argv[1]+'gadget_out/'+x,'redshift'),readheader(sys.argv[1]+'picola_out/'+y,'redshift'))
-#    plot_ps_comp(sys.argv[1],x,y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_gad,P_k_gad,k_pic,P_k_pic)
-#    
+#    plot_ps_picola_CAMB(sys.argv[1],y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_pic,P_k_pic)
+    
+    
     plot_ps_comp_GadPic(sys.argv[1],x,y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_gad,P_k_gad,k_pic,P_k_pic)
     
-    plot_ps_comp_all(sys.argv[1],x,y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_gad,P_k_gad,k_pic,P_k_pic)
+#    plot_ps_comp_all(sys.argv[1],x,y,sys.argv[2],float(sys.argv[3]),float(sys.argv[4]),k_gad,P_k_gad,k_pic,P_k_pic)
+    
+    
 ##  
 
 
