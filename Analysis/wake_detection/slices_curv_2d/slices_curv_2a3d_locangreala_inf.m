@@ -308,6 +308,14 @@ if ~isempty(snapshot)
             % string(strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'))
             mkdir(char(strcat(root_visual_2d,spec,aux_path)),char(strcat('visual_depth_',num2str(sum_depth),'_2dfilt/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/')));
             
+            if (ismember(4,visual_type)|ismember(5,visual_type))
+                
+                path_visual_depth_2dfilt_fig=string(strcat(strcat(root_visual_2d(1:end-1),'_fig/',spec,aux_path),'visual_depth_',num2str(sum_depth),'_2dfilt/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'));
+                % string(strcat(root_data_2d_anali,spec,aux_path))
+                % string(strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'))
+                mkdir(char(strcat(root_visual_2d(1:end-1),'_fig/',spec,aux_path)),char(strcat('visual_depth_',num2str(sum_depth),'_2dfilt/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/')));
+                
+            end
             
         end
         
@@ -318,6 +326,14 @@ if ~isempty(snapshot)
             % string(strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'))
             mkdir(char(strcat(root_visual_2d,spec,aux_path)),char(strcat('visual_depth_',num2str(sum_depth),'_3dfilt/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/')));
             
+            if (ismember(4,visual_type)|ismember(5,visual_type))
+                
+                path_visual_depth_3dfilt_fig=string(strcat(strcat(root_visual_2d(1:end-1),'_fig/',spec,aux_path),'visual_depth_',num2str(sum_depth),'_3dfilt/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'));
+                % string(strcat(root_data_2d_anali,spec,aux_path))
+                % string(strcat('data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'))
+                mkdir(char(strcat(root_visual_2d(1:end-1),'_fig/',spec,aux_path)),char(strcat('visual_depth_',num2str(sum_depth),'_3dfilt/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/')));
+                
+            end
             
         end
         
@@ -1508,6 +1524,108 @@ if ismember(4,visual_type)|ismember(5,visual_type)
         end
     end
 end
+
+
+
+
+%doing the figures for ai analysis, depth
+
+if ~ismember(1,sum_depth)
+    if ismember(4,visual_type)|ismember(5,visual_type)
+        
+        slices_depth=slices/sum_depth;
+        
+        for slice_depth_id=1:slices_depth
+            
+            if ismember(2,visual_in_or_out)
+                
+                this=map_3d_slices_filt2d_depth(:,:,slice_depth_id);
+                this=this/(max(this(:)));
+                
+                thisp=map_3d_slices_filt2d_depth(:,:,mod(slice_depth_id+1-1,slices_depth)+1);
+                thisp=thisp/(max(thisp(:)));
+                
+                thism=map_3d_slices_filt2d_depth(:,:,mod(slice_depth_id-1-1,slices_depth)+1);
+                thism=thism/(max(thism(:)));
+                
+                colorfigure(:,:,1)=thism;
+                colorfigure(:,:,2)=this;
+                colorfigure(:,:,3)=thisp;
+                
+                if ismember(4,visual_type)
+                    
+                    fig=figure('Visible', 'off');
+                    set(gcf, 'Position', [0 0 nb-1 nb-1]);
+                    hold on;
+                    axes('Position',[0 0 1 1],'Visible','off');
+                    imagesc([0 nb-1],[0 nb-1],repmat(this,[1 1 3]));
+                    saveas(fig,char(strcat(path_visual_depth_2dfilt_fig','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
+                    close(fig);
+                    
+                end
+                
+                if ismember(5,visual_type)
+                    
+                    fig=figure('Visible', 'off');
+                    set(gcf, 'Position', [0 0 nb-1 nb-1]);
+                    hold on;
+                    axes('Position',[0 0 1 1],'Visible','off');
+                    imagesc([0 nb-1],[0 nb-1],colorfigure);
+                    saveas(fig,char(strcat(path_visual_depth_2dfilt_fig','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_col_2dproj_2dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
+                    close(fig);
+                    
+                end
+                
+                
+            end
+            
+            if ismember(3,visual_in_or_out)
+                
+                this=map_3d_slices_filt3d_depth(:,:,slice_depth_id);
+                this=this/(max(this(:)));
+                
+                thisp=map_3d_slices_filt3d_depth(:,:,mod(slice_depth_id+1-1,slices_depth)+1);
+                thisp=thisp/(max(thisp(:)));
+                
+                thism=map_3d_slices_filt3d_depth(:,:,mod(slice_depth_id-1-1,slices_depth)+1);
+                thism=thism/(max(thism(:)));
+                
+                colorfigure(:,:,1)=thism;
+                colorfigure(:,:,2)=this;
+                colorfigure(:,:,3)=thisp;
+                
+                if ismember(4,visual_type)
+                    
+                    fig=figure('Visible', 'off');
+                    set(gcf, 'Position', [0 0 nb-1 nb-1]);
+                    hold on;
+                    axes('Position',[0 0 1 1],'Visible','off');
+                    imagesc([0 nb-1],[0 nb-1],repmat(this,[1 1 3]));
+                    saveas(fig,char(strcat(path_visual_depth_3dfilt_fig','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
+                    close(fig);
+                    
+                end
+                
+                if ismember(5,visual_type)
+                    
+                    fig=figure('Visible', 'off');
+                    set(gcf, 'Position', [0 0 nb-1 nb-1]);
+                    hold on;
+                    axes('Position',[0 0 1 1],'Visible','off');
+                    imagesc([0 nb-1],[0 nb-1],colorfigure);
+                    saveas(fig,char(strcat(path_visual_depth_3dfilt_fig','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_col_2dproj_3dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
+                    close(fig);
+                    
+                end
+                
+                
+            end
+            
+        end
+    end
+    
+end
+
 
 % 
 
