@@ -1559,7 +1559,7 @@ if ~ismember(1,sum_depth)
                     hold on;
                     axes('Position',[0 0 1 1],'Visible','off');
                     imagesc([0 nb-1],[0 nb-1],repmat(this,[1 1 3]));
-                    saveas(fig,char(strcat(path_visual_depth_2dfilt_fig','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
+                    saveas(fig,char(strcat(path_visual_depth_2dfilt_fig','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_2dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id),'.png')));
                     close(fig);
                     
                 end
@@ -1571,7 +1571,7 @@ if ~ismember(1,sum_depth)
                     hold on;
                     axes('Position',[0 0 1 1],'Visible','off');
                     imagesc([0 nb-1],[0 nb-1],colorfigure);
-                    saveas(fig,char(strcat(path_visual_depth_2dfilt_fig','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_col_2dproj_2dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
+                    saveas(fig,char(strcat(path_visual_depth_2dfilt_fig','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_col_2dproj_2dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id),'.png')));
                     close(fig);
                     
                 end
@@ -1601,7 +1601,7 @@ if ~ismember(1,sum_depth)
                     hold on;
                     axes('Position',[0 0 1 1],'Visible','off');
                     imagesc([0 nb-1],[0 nb-1],repmat(this,[1 1 3]));
-                    saveas(fig,char(strcat(path_visual_depth_3dfilt_fig','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
+                    saveas(fig,char(strcat(path_visual_depth_3dfilt_fig','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id),'.png')));
                     close(fig);
                     
                 end
@@ -1613,7 +1613,7 @@ if ~ismember(1,sum_depth)
                     hold on;
                     axes('Position',[0 0 1 1],'Visible','off');
                     imagesc([0 nb-1],[0 nb-1],colorfigure);
-                    saveas(fig,char(strcat(path_visual_depth_3dfilt_fig','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_col_2dproj_3dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_id),'.png')));
+                    saveas(fig,char(strcat(path_visual_depth_3dfilt_fig','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_col_2dproj_3dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id),'.png')));
                     close(fig);
                     
                 end
