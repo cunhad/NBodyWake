@@ -1,4 +1,4 @@
-function [  ] = slices2d_auimds_classification_terminal_cluster_3dcurvfig_dv2()
+function [  ] = slices2d_auimds_classification_terminal_cluster_3dcurvfig_deep()
 %UNTITLED Summary of this function goes here
 %   we will also classify the non-parallel to wake data
 
