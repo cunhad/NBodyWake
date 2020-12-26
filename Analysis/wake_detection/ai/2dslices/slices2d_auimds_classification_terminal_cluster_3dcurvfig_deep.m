@@ -182,7 +182,7 @@ end
 
 label= categorical(abs(double(contains(string(list),'nowake'))-1));
 label_logical= logical(abs(double(contains(string(list),'nowake'))-1));
-% label_nonparal= categorical(abs(double(contains(string(list_nonparal),'nowake'))-1));
+label_nonparal= categorical(abs(double(contains(string(list_nonparal),'nowake'))-1));
 % label_num
 % list_nowake=list(~label_logical);
 % list_wake=list(label_logical);
@@ -193,7 +193,7 @@ label_logical= logical(abs(double(contains(string(list),'nowake'))-1));
 
 % imdsValidation_nonparal = imageDatastore(list_nonparal,'Labels',label_nonparal);
 
-imds = imageDatastore(list,'Labels',list_nonparal);
+imds = imageDatastore(list_nonparal,'Labels',label_nonparal);
 [imdsTrain,imdsValidation] = splitEachLabel(imds,0.6,'randomized');
 
 labelCount = countEachLabel(imds);
