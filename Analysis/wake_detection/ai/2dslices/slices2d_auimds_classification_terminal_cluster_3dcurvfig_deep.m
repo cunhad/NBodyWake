@@ -21,7 +21,7 @@ NSIDE=4;
 % cut=1;
 % lev=2;
 % sigma = 5;
-depth=4;
+depth=2;
 slices=32/depth;
 % anal_lev=2;
 
@@ -107,8 +107,8 @@ for w_nw=1:4
     end
     
     
-    for sample = 1:length(sample_id_range)
-%     for sample = 1:1
+%     for sample = 1:length(sample_id_range)
+    for sample = 1:2
 %     sample = 1        
 %         map_3d_slices=zeros(nc,nc,slices);
 %         map_3d_slices_filt2d=zeros(nc,nc,slices);
@@ -182,15 +182,19 @@ end
 
 label= categorical(abs(double(contains(string(list),'nowake'))-1));
 label_logical= logical(abs(double(contains(string(list),'nowake'))-1));
-label_nonparal= categorical(abs(double(contains(string(list_nonparal),'nowake'))-1));
+% label_nonparal= categorical(abs(double(contains(string(list_nonparal),'nowake'))-1));
 % label_num
 % list_nowake=list(~label_logical);
 % list_wake=list(label_logical);
 
 
-imds = imageDatastore(list,'Labels',label);
+% imds = imageDatastore(list,'Labels',label);
+% [imdsTrain,imdsValidation] = splitEachLabel(imds,0.6,'randomized');
+
+% imdsValidation_nonparal = imageDatastore(list_nonparal,'Labels',label_nonparal);
+
+imds = imageDatastore(list,'Labels',list_nonparal);
 [imdsTrain,imdsValidation] = splitEachLabel(imds,0.6,'randomized');
-imdsValidation_nonparal = imageDatastore(list_nonparal,'Labels',label_nonparal);
 
 labelCount = countEachLabel(imds);
 img = readimage(imds,1);
@@ -355,18 +359,28 @@ YValidation_wake=YValidation(YValidation==categorical(1));
 
 
 
-YPred_nonparal = classify(net,imdsValidation_nonparal,'MiniBatchSize',miniBatchSize);
-YValidation_nonparal = imdsValidation_nonparal.Labels;
-accuracy_nonparal = sum(YPred_nonparal == YValidation_nonparal)/numel(YValidation_nonparal)
+% YPred_nonparal = classify(net,imdsValidation_nonparal,'MiniBatchSize',miniBatchSize);
+% YValidation_nonparal = imdsValidation_nonparal.Labels;
+% accuracy_nonparal = sum(YPred_nonparal == YValidation_nonparal)/numel(YValidation_nonparal)
+% 
+% YPred_wake_nonparal=YPred_nonparal;
+% FractionPredic_with_wake_nonparal=sum(YPred_wake_nonparal==categorical(1))/numel(YPred_wake_nonparal)
+% 
+% YPred_wake_where_theis_nonparal=categorical(str2num(char(YPred_wake_nonparal)).*str2num(char(YValidation_nonparal)));
+% FractionYPred_wake_where_thereis_nonparal=sum(YPred_wake_where_theis_nonparal==categorical(1))/sum(YValidation_nonparal==categorical(1))
+% 
+% YPred_wake_where_theisnot_nonparal=categorical(str2num(char(YPred_wake_nonparal)).*abs(1-str2num(char(YValidation_nonparal))));
+% FractionYPred_wake_where_thereisnot_nonparal=sum(YPred_wake_where_theisnot_nonparal==categorical(1))/sum(YValidation_nonparal==categorical(0))
 
-YPred_wake_nonparal=YPred_nonparal;
-FractionPredic_with_wake_nonparal=sum(YPred_wake_nonparal==categorical(1))/numel(YPred_wake_nonparal)
 
-YPred_wake_where_theis_nonparal=categorical(str2num(char(YPred_wake_nonparal)).*str2num(char(YValidation_nonparal)));
-FractionYPred_wake_where_thereis_nonparal=sum(YPred_wake_where_theis_nonparal==categorical(1))/sum(YValidation_nonparal==categorical(1))
 
-YPred_wake_where_theisnot_nonparal=categorical(str2num(char(YPred_wake_nonparal)).*abs(1-str2num(char(YValidation_nonparal))));
-FractionYPred_wake_where_thereisnot_nonparal=sum(YPred_wake_where_theisnot_nonparal==categorical(1))/sum(YValidation_nonparal==categorical(0))
+
+
+
+
+
+
+
 
 
 % 
