@@ -180,8 +180,8 @@ end
 
 %labels
 
-label= categorical(abs(double(contains(string(list),'nowake'))-1));
-label_logical= logical(abs(double(contains(string(list),'nowake'))-1));
+% label= categorical(abs(double(contains(string(list),'nowake'))-1));
+% label_logical= logical(abs(double(contains(string(list),'nowake'))-1));
 label_nonparal= categorical(abs(double(contains(string(list_nonparal),'nowake'))-1));
 % label_num
 % list_nowake=list(~label_logical);
