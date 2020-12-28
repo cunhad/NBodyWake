@@ -74,9 +74,9 @@ sample_id_range=[1 : length(sample_list_nowake)];
 count_a=1;
 count_b=1;
 
-for w_nw=1:4
+% for w_nw=1:4
 % for w_nw=1:1
-% for w_nw=1
+for w_nw=1:2
     
     if w_nw==1
         specs_path_list=specs_path_list_nowake;
@@ -107,8 +107,8 @@ for w_nw=1:4
     end
     
     
-%     for sample = 1:length(sample_id_range)
-    for sample = 1:2
+    for sample = 1:length(sample_id_range)
+%     for sample = 1:2
 %     sample = 1        
 %         map_3d_slices=zeros(nc,nc,slices);
 %         map_3d_slices_filt2d=zeros(nc,nc,slices);
