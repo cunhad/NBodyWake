@@ -16,12 +16,12 @@ filename='_col_2dproj_3dcurv_z3_visual_sl';
 % filename='_2dproj_3dcurv_z3_visual_sl';
 
 % nc=512;
-NSIDE=4;
+NSIDE=8;
 % trsh=20;
 % cut=1;
 % lev=2;
 % sigma = 5;
-depth=4;
+depth=2;
 slices=32/depth;
 % anal_lev=2;
 
@@ -29,14 +29,14 @@ slices=32/depth;
 N_angles=12*NSIDE*NSIDE/2;
 N_angles_t=12*NSIDE*NSIDE;
 
-specs_path_list_nowake='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_visual_fig/4Mpc_2048c_1024p_zi63_nowakem'
+specs_path_list_nowake='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512_hpxNSIDE8_2dclaral1lr1na1024_and_3dparclaral1lr1_visual_fig/4Mpc_2048c_1024p_zi63_nowakem'
 % specs_path_list_nowake='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512_hpx_2d_NSIDE4_ai_fig/4Mpc_2048c_1024p_zi63_nowakem'
 % specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_visual_fig/4Mpc_2048c_1024p_zi63_nowakem'
 sample_list_nowake=dir(strcat(specs_path_list_nowake,'/sample*'));
 sample_list_nowake={sample_list_nowake.name};
 % sample_list_nowake=sort_nat(sample_list_nowake)
 
-specs_path_list_wake='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_visual_fig/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
+specs_path_list_wake='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512_hpxNSIDE8_2dclaral1lr1na1024_and_3dparclaral1lr1_visual_fig/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
 % specs_path_list_wake='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_visual_fig/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
 % specs_path_list_wake='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_hpx_2d_NSIDE4_wake_fig/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
 % specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_wake_2dclaral1lr1na1024_and_3dparclaral1lr1_visual_fig/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
