@@ -8,9 +8,9 @@ nc=128;
 ncx=nc;ncy=nc/4;
 % ncx=nc;ncy=nc;
 
-
-% X=zeros(ncx,ncy);
-X=ones(ncx,ncy);
+% X=ones(ncx,ncy);
+X=zeros(ncx,ncy);
+X(ncx/4:3*ncx/4,ncy/4:3*ncy/4)=1;
 % X(:,nc/8)=1;
 % X(:,nc/2)=1;
 % for i=1:ncx
@@ -20,7 +20,22 @@ X=ones(ncx,ncy);
 % end
 % X=X+0.5*randn([ncx,ncy]);
 % X=randn([ncx,ncy]);
+
+% 
+% %odd image test
+% 
+nc=129;
+ncx=nc;ncy=1+(nc-1)/2;
+X=zeros(ncx,ncy);
+X((ncx-1)/4:1+end-(ncx-1)/4,(ncy-1)/4:1+end-(ncy-1)/4)=1;
+
 figure; imagesc(X);colorbar;
+
+%build in matlab rad transf
+figure;
+theta = 0:180;
+[R,xp] = radon(X,theta);
+imagesc(theta,xp,R);colorbar;
 
 %Apply FFT2
 
@@ -40,6 +55,26 @@ end
 
 
 figure; imagesc(abs(F_));colorbar;
+
+
+% %recenter
+% F_ext=zeros(size(F_)+1);
+% F_ext(1:end-1,1:end-1)=F_;
+% F_ext(:,end)=[F_(1,1); F_(end:-1:1,1)];
+% F_ext(end,:)=[F_(1,1) F_(1,end:-1:1)];
+% 
+% figure; imagesc(abs(F_ext));colorbar;
+% 
+% [X,Y] = meshgrid(1:(ncy+1),1:(ncx+1));
+% [Xq,Yq] = meshgrid(1:(ncy),1:(ncx));
+% Xq=Xq+0.5;
+% Yq=Yq+0.5;
+% Fq = interp2(X,Y,F_ext,Xq,Yq,'cubic');
+% 
+% figure; imagesc(abs(Fq));colorbar;
+% 
+% F_=Fq;
+
 
 
 %Apply Recto-Polar interpolation
@@ -88,6 +123,7 @@ Radon_vert = (ifft(RPinterp_vert.').');
 
 figure;imagesc(abs(Radon_hor)); colorbar;
 figure;imagesc(abs(Radon_vert)); colorbar;
+
 
 % figure;subplot(2,1,1)
 % imagesc(abs(Radon_hor));
@@ -167,13 +203,43 @@ for i=1:ncx
     end
 end
 
+figure; imagesc(abs(F_rec_norm));colorbar;
+
+%un re-center
+
+
+% F_rec_norm_ext=zeros(size(F_rec_norm)+1);
+% 
+% F_rec_norm_ext(2:end,2:end)=F_rec_norm;
+% F_rec_norm_ext(:,1)=[F_rec_norm(end,end); F_rec_norm(end:-1:1,end)];
+% F_rec_norm_ext(1,:)=[F_rec_norm(end,end) F_rec_norm(end,end:-1:1)];
+% 
+% % figure; imagesc(abs(F_rec_norm_ext));colorbar;
+% 
+% [X,Y] = meshgrid(0:(ncy),0:(ncx));
+% [Xq,Yq] = meshgrid(1:(ncy),1:(ncx));
+% Xq=Xq-0.5;
+% Yq=Yq-0.5;
+% F_rec_normq = interp2(X,Y,F_rec_norm_ext,Xq,Yq,'cubic');
+% figure; imagesc(abs(F_rec_normq));colorbar;
+% F_rec_norm=F_rec_normq;
+
+%un re-center (2nd try)
+% 
+% F_rec_norm_ext=zeros(size(F_rec_norm));
+% F_rec_norm_ext(2:end,2:end)=F_rec_norm(1:end-1,1:end-1);
+% F_rec_norm_ext(1,2:end)=F_rec_norm(1,1:end-1);
+% F_rec_norm_ext(2:end,1)=F_rec_norm(1:end-1,1);
+% F_rec_norm_ext(1,1)=F_rec_norm(end,end);
+% F_rec_norm=F_rec_norm_ext;
+
 %Apply iFFT2
 
 X_rec = ifft(ifftshift(ifft(ifftshift(F_rec_norm,2).'),2).');
 
 
 
-% figure; imagesc(abs(X_rec));colorbar;
+figure; imagesc(abs(X_rec));colorbar;
 
 % figure; imagesc(real(X_rec));colorbar;
 
