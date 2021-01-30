@@ -1,5 +1,5 @@
 function [ output_args ] = Ridgelet2d_RP( input_args )
-% 2d Ridgelet transformation with recto-polar interpolation
+% 2d Ridgelet transformation with recto-polar interpolation, not cetered
 
 clearvars;
 %Construct the sample image
@@ -24,16 +24,26 @@ X(ncx/4:3*ncx/4,ncy/4:3*ncy/4)=1;
 % 
 % %odd image test
 % 
-nc=129;
-ncx=nc;ncy=1+(nc-1)/2;
-X=zeros(ncx,ncy);
-X((ncx-1)/4:1+end-(ncx-1)/4,(ncy-1)/4:1+end-(ncy-1)/4)=1;
+
+
+
+% nc=129;
+% ncx=nc;ncy=1+(nc-1)/2;
+% X=zeros(ncx,ncy);
+% X((ncx-1)/4:1+end-(ncx-1)/4,(ncy-1)/4:1+end-(ncy-1)/4)=1;
+% 
+% nc=129;
+% ncx=nc;ncy=nc;
+% X=ones(ncx,ncy);
+
 
 figure; imagesc(X);colorbar;
 
 %build in matlab rad transf
 figure;
-theta = 0:180;
+% theta = 0:180;
+% theta-linspace()
+theta = 180/nc:180/nc:180;
 [R,xp] = radon(X,theta);
 imagesc(theta,xp,R);colorbar;
 

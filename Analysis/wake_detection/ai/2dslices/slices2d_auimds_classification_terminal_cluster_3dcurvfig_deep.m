@@ -21,7 +21,7 @@ NSIDE=8;
 % cut=1;
 % lev=2;
 % sigma = 5;
-depth=16;
+depth=32;
 slices=32/depth;
 % anal_lev=2;
 
