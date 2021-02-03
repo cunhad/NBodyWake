@@ -66,6 +66,7 @@ sample_id_range_nowake=[1 : length(sample_list_nowake)];
 
 
 thetas=dlmread(strcat('../../../../python/angles',num2str(NSIDE),'_t.cvs'));
+thetas=thetas(1:end/2);
 theta_range_low=-aperture_angle+pi/2;
 theta_range_high=aperture_angle+pi/2;
 sample_id_range_wake=sample_id_range_nowake(thetas>=theta_range_low&thetas<=theta_range_high)
