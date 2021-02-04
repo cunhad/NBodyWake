@@ -61,18 +61,19 @@ sample_list_wake_nonparal=dir(strcat(specs_path_list_wake_nonparal,'/sample*'));
 sample_list_wake_nonparal={sample_list_wake_nonparal.name};
 sample_list_wake_nonparal=strcat(sample_list_wake_nonparal,'/half_lin_cutoff_half_tot_pert_nvpw_v0p6');
 
-sample_id_range_nowake=[1 : length(sample_list_nowake)];
+% sample_id_range_nowake=[1 : length(sample_list_nowake)];
 % sample_id_range_nowake=[1 : 192];
 
+
+
+sample_id_range=[1 : length(sample_list_nowake)];
 
 thetas=dlmread(strcat('../../../../python/angles',num2str(NSIDE),'_t.cvs'));
 thetas=thetas(1:end/2);
 theta_range_low=-aperture_angle+pi/2;
 theta_range_high=aperture_angle+pi/2;
-sample_id_range_wake=sample_id_range_nowake(thetas>=theta_range_low&thetas<=theta_range_high)
-size(sample_id_range_wake)
-
-% sample_id_range=[1 : length(sample_list_nowake)];
+        
+        
 
 % label_numbers_path='/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_hpx_2a3d_anali_all_group/';
 % label_number=dlmread(strcat(label_numbers_path,'curvfilt2a3d_label_large.txt'));
@@ -88,13 +89,12 @@ count_b=1;
 % for w_nw=1:4
 % for w_nw=1:1
 for w_nw=1:2
-    
+%    w_nw=2 
     if w_nw==1
         specs_path_list=specs_path_list_nowake;
         sample_list=sample_list_nowake;
         ch='_7';
         coul='b';
-        sample_id_range=sample_id_range_nowake;
     end
     
     if w_nw==2
@@ -102,7 +102,6 @@ for w_nw=1:2
         sample_list=sample_list_wake;
         ch='_4';
         coul='r';
-        sample_id_range=sample_id_range_wake;
     end
     
     if w_nw==3
@@ -110,7 +109,6 @@ for w_nw=1:2
         sample_list=sample_list_nowake_nonparal;
         ch='_7';
         coul='b';
-        sample_id_range=sample_id_range_nowake;
     end
     
     if w_nw==4
@@ -118,7 +116,6 @@ for w_nw=1:2
         sample_list=sample_list_wake_nonparal;
         ch='_4';
         coul='r';
-        sample_id_range=sample_id_range_wake;
     end
     
     
@@ -132,8 +129,30 @@ for w_nw=1:2
 %         list_of_angle_paths=dir(char(strcat(specs_path_list,'/',string(sample_list(sample)),'/visual_3dfilt/1lf_0.5rf','/NSIDE_',num2str(NSIDE),'/anglid_*')));
         list_of_angle_paths=dir(char(strcat(specs_path_list,'/',string(sample_list(sample)),'/visual_depth_',string(depth),'_3dfilt/1lf_0.5rf','/NSIDE_',num2str(NSIDE),'/anglid_*')));
         list_of_angle_paths={list_of_angle_paths.name};
+        angle_id_nowake=1:length(list_of_angle_paths);
         
-        for angle_id=1:length(list_of_angle_paths)
+        angle_id_wake=angle_id_nowake(thetas>=theta_range_low&thetas<=theta_range_high);
+        
+        
+        
+    if w_nw==1
+        angle_id_list=angle_id_nowake
+    end
+    
+    if w_nw==2
+        angle_id_list=angle_id_wake
+    end
+    
+    if w_nw==3
+        angle_id_list=angle_id_nowake
+    end
+    
+    if w_nw==4
+        angle_id_list=angle_id_wake
+    end        
+        
+        
+        for angle_id=angle_id_list
 %             for angle_id=1:100
 %             angle_id=1
             

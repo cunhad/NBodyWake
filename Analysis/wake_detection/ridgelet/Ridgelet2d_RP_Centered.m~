@@ -233,8 +233,8 @@ ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 
 for i=1:ncx
     for j=1:ncy
-%         RPinterp_hor_(i,j)=(-exp(1i*pi*(j-1)*(1-1/ncy)))*RPinterp_hor(i,j);
-        RPinterp_hor_q_(i,j)=(-exp(1i*pi*(i-1)*(1-1/ncx)))*RPinterp_hor_q(i,j);
+        RPinterp_hor_(i,j)=(-exp(1i*pi*(j-1)*(1-1/ncy)))*RPinterp_hor(i,j);
+%         RPinterp_hor_q_(i,j)=(-exp(1i*pi*(j-1)*(1-1/ncy)))*RPinterp_hor_q(i,j);
     end
 end
 Radon_hor_q_ = (ifft(RPinterp_hor_q_.').');
