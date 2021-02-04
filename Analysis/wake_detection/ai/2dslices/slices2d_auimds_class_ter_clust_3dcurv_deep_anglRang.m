@@ -136,19 +136,19 @@ for w_nw=1:2
         
         
     if w_nw==1
-        angle_id_list=angle_id_nowake
+        angle_id_list=angle_id_nowake;
     end
     
     if w_nw==2
-        angle_id_list=angle_id_wake
+        angle_id_list=angle_id_wake;
     end
     
     if w_nw==3
-        angle_id_list=angle_id_nowake
+        angle_id_list=angle_id_nowake;
     end
     
     if w_nw==4
-        angle_id_list=angle_id_wake
+        angle_id_list=angle_id_wake;
     end        
         
         
