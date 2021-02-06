@@ -1,4 +1,4 @@
-function [ output_args ] = Ridgelet2d_RP_Centered( input_args )
+function [ output_args ] = Ridgelet2d_RP_CenteReal( input_args )
 % 2d Ridgelet transformation with recto-polar interpolation, try to ceter
 % by upsampling beforehand
 
@@ -28,9 +28,10 @@ clearvars;
 
 
 
-nc=1+2*64;
+% nc=1+2*64;
 % nc=1+2*16;
 % nc=1+2*8;
+nc=1+2*4;
 ncx=nc;ncy=1+(nc-1)/2;
 % ncx=nc;ncy=nc;
 X=zeros(ncx,ncy);
@@ -109,8 +110,9 @@ figure; imagesc(abs(F));colorbar;
 
 %Apply Recto-Polar interpolation
 
-%Horizontal lines
+F_=F;
 
+%Horizontal lines
 for t=1:ncx
     for r=1:ncy
         M=(ncx-(2*t)+1)/(ncy-1);
@@ -211,11 +213,25 @@ ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 Radon_hor = (ifft(RPinterp_hor.').');
 Radon_vert = (ifft(RPinterp_vert.').');
 
-figure;imagesc(abs(Radon_hor)); colorbar;
+for i=1:ncx
+    for j=1:ncy
+        Radon_hor_(i,j)=(exp(-1i*pi*(j-1)*(1-1/ncy)))*Radon_hor(i,j);
+%         RPinterp_hor_q_(i,j)=(exp(-1i*pi*(i-1)*(1-1/ncx)))*RPinterp_hor_q(i,j);
+    end
+end
+
+for i=1:ncx
+    for j=1:ncy
+        Radon_vert_(j,i)=(exp(-1i*pi*(i-1)*(1-1/ncx)))*Radon_vert(j,i);
+%         RPinterp_hor_q_(i,j)=(exp(-1i*pi*(i-1)*(1-1/ncx)))*RPinterp_hor_q(i,j);
+    end
+end
+
+figure;imagesc(real(Radon_hor_)); colorbar;
 xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 
-figure;imagesc(abs(Radon_vert)); colorbar;
+figure;imagesc(real(Radon_vert_)); colorbar;
 xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 
@@ -231,30 +247,43 @@ ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 % Radon_hor_q = (ifft(RPinterp_hor_q_norm.').');
 % figure;imagesc(abs(Radon_hor_q)); colorbar;
 
-for i=1:ncx
-    for j=1:ncy
-%         RPinterp_hor_(i,j)=(-exp(1i*pi*(j-1)*(1-1/ncy)))*RPinterp_hor(i,j);
-        RPinterp_hor_q_(i,j)=(-exp(1i*pi*(i-1)*(1-1/ncx)))*RPinterp_hor_q(i,j);
-    end
-end
-Radon_hor_q_ = (ifft(RPinterp_hor_q_.').');
-figure;imagesc(abs(Radon_hor_q_)); colorbar;
+% for i=1:ncx
+%     for j=1:ncy
+%         RPinterp_hor_q_(i,j)=(exp(-1i*pi*(j-1)*(1-1/ncy)))*RPinterp_hor_q(i,j);
+% %         RPinterp_hor_q_(i,j)=(exp(-1i*pi*(i-1)*(1-1/ncx)))*RPinterp_hor_q(i,j);
+%     end
+% end
 
 Radon_hor_q = (ifft(RPinterp_hor_q.').');
-figure;imagesc(abs(Radon_hor_q)); colorbar;
-
-% Radon_hor_ = (ifft(RPinterp_hor_.').');
-% figure;imagesc(abs(Radon_hor_)); colorbar;
+% figure;imagesc(abs(Radon_hor_q)); colorbar;
 
 Radon_vert_q = (ifft(RPinterp_vert_q.').');
+% figure;imagesc(abs(Radon_vert_q)); colorbar;
 
-figure;imagesc(abs(Radon_hor_q)); colorbar;
+
+for i=1:ncx
+    for j=1:ncy
+        Radon_hor_q_(i,j)=(exp(-1i*pi*(j-1)*(1-1/ncy)))*Radon_hor_q(i,j);
+%         RPinterp_hor_q_(i,j)=(exp(-1i*pi*(i-1)*(1-1/ncx)))*RPinterp_hor_q(i,j);
+    end
+end
+
+for i=1:ncx
+    for j=1:ncy
+        Radon_vert_q_(j,i)=(exp(-1i*pi*(i-1)*(1-1/ncx)))*Radon_vert_q(j,i);
+%         RPinterp_hor_q_(i,j)=(exp(-1i*pi*(i-1)*(1-1/ncx)))*RPinterp_hor_q(i,j);
+    end
+end
+
+figure;imagesc(real(Radon_hor_q_)); colorbar;
 xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 
-figure;imagesc(abs(Radon_vert_q)); colorbar;
+
+figure;imagesc(real(Radon_vert_q_)); colorbar;
 xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
+
 
 
 % figure;subplot(2,1,1)
