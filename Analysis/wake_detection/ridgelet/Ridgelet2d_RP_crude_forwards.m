@@ -64,11 +64,11 @@ for t=1:ncy+(1-is_odd_ncy)
 end
 
 
-
+% 
 % figure; imagesc(abs(RPinterp_hor));colorbar;
 % xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
 % ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
-
+% 
 % figure; imagesc(abs(RPinterp_vert));colorbar;
 % xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
 % ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
@@ -94,11 +94,11 @@ for i=1:ncx
     end
 end
 
-
+% 
 % figure;imagesc(real(Radon_hor_)); colorbar;
 % xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
 % ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
-
+% 
 % figure;imagesc(real(Radon_vert_)); colorbar;
 % xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
 % ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);

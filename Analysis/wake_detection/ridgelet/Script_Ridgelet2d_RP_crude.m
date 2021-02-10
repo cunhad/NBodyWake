@@ -8,8 +8,8 @@ clearvars;
 
 nc=128;
 % nc=8;
-ncx=nc;ncy=nc/2;
-% ncx=nc;ncy=nc;
+% ncx=nc;ncy=nc/2;
+ncx=nc;ncy=nc;
 
 % X=ones(ncx,ncy);
 X=zeros(ncx,ncy);
@@ -62,7 +62,7 @@ imagesc(R(-(ncx-1)/4+(end+1)/2:(ncx-1)/4+(end+1)/2,1:(end-1)/2)); colorbar;
 
 %Radon Transformation
 
-[ Radon_hor_, Radon_vert_] = Ridgelet2d_RP_crude_forwards_dev1(X);
+[ Radon_hor_, Radon_vert_] = Ridgelet2d_RP_crude_forwards(X);
 
 
 figure;imagesc(real(Radon_hor_)); colorbar;
@@ -79,7 +79,7 @@ ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 % figure; histogram(real(Radon_vert_(:)));
 
 
-[ X_rec_phase ] = Ridgelet2d_RP_crude_backwards_dev1( Radon_hor_, Radon_vert_ );
+[ X_rec_phase ] = Ridgelet2d_RP_crude_backwards( Radon_hor_, Radon_vert_ );
 
 figure; imagesc(real(X_rec_phase));colorbar;
 

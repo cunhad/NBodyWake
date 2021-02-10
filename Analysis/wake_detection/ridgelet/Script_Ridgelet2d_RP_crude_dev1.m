@@ -8,8 +8,8 @@ clearvars;
 
 nc=128;
 % nc=8;
-ncx=nc;ncy=nc/2;
-% ncx=nc;ncy=nc;
+% ncx=nc;ncy=nc/2;
+ncx=nc;ncy=nc;
 
 % X=ones(ncx,ncy);
 X=zeros(ncx,ncy);
@@ -54,25 +54,32 @@ figure;
 % theta-linspace()
 theta = 180/nc:180/nc:180;
 [R,xp] = radon(X,theta);
-% imagesc(theta,xp,R);colorbar;
+imagesc(theta,xp,R);colorbar;
 % imagesc(R(1+(ncx-1)/4:end-(ncx-1)/4,1:(end-1)/2)); colorbar;
-imagesc(R(-(ncx-1)/4+(end+1)/2:(ncx-1)/4+(end+1)/2,1:(end-1)/2)); colorbar;
+% imagesc(R(-(ncx-1)/4+(end+1)/2:(ncx-1)/4+(end+1)/2,1:(end-1)/2)); colorbar;
 
 
 
 %Radon Transformation
 
-[ Radon_hor_, Radon_vert_] = Ridgelet2d_RP_crude_forwards_dev1(X);
+[ Radon_hor_h_, Radon_vert_h_,Radon_hor_v_, Radon_vert_v_] = Ridgelet2d_RP_crude_forwards_dev1(X);
 
 
-figure;imagesc(real(Radon_hor_)); colorbar;
+figure;imagesc(real(Radon_hor_h_)); colorbar;
 xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 
-figure;imagesc(real(Radon_vert_)); colorbar;
+figure;imagesc(real(Radon_vert_h_)); colorbar;
 xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 
+figure;imagesc(real(Radon_hor_h_)); colorbar;
+xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
+
+figure;imagesc(real(Radon_vert_v_)); colorbar;
+xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 
 % figure; histogram(real(Radon_hor_(:)));
 % 
