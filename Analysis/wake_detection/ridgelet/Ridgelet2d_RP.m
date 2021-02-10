@@ -4,7 +4,8 @@ function [ output_args ] = Ridgelet2d_RP( input_args )
 clearvars;
 %Construct the sample image
 
-nc=128;
+% nc=128;
+% nc=64;
 ncx=nc;ncy=nc/4;
 % ncx=nc;ncy=nc;
 

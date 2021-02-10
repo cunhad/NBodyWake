@@ -28,10 +28,10 @@ clearvars;
 
 
 
-% nc=1+2*64;
+nc=1+2*64;
 % nc=1+2*16;
 % nc=1+2*8;
-nc=1+2*4;
+% nc=1+2*4;
 ncx=nc;ncy=1+(nc-1)/2;
 % ncx=nc;ncy=nc;
 X=zeros(ncx,ncy);
@@ -112,24 +112,49 @@ figure; imagesc(abs(F));colorbar;
 
 F_=F;
 
-%Horizontal lines
+% %Horizontal lines
+% for t=1:ncx
+%     for r=1:ncy
+%         M=(ncx-(2*t)+1)/(ncy-1);
+%         y=min(max(round(r),1),ncy);
+%         x=min(max(round(t+M*(r-1)),1),ncx);
+% %         Y=min(max(floor(r),1),ncy);
+% %         X=min(max(floor(t+M*(r-1)),1),ncx);
+% %         A((t-1)*ncy+r,1)=X;
+% %         A((t-1)*ncy+r,2)=Y;
+%         Yh_q(t,r)=r;
+%         Xh_q(t,r)=t+M*(r-1);
+% %         B((t-1)*ncy+r,2)=r;
+% %         B((t-1)*ncy+r,1)=t+M*(r-1);
+%         RPinterp_hor(t,r)=F_(x,y);
+% %         RPinterp_hor(t,r)=((-1)^(1+t))*F_(X,Y);
+%     end
+% end
+% 
+
+%Horizontal lines_centered
+
 for t=1:ncx
     for r=1:ncy
         M=(ncx-(2*t)+1)/(ncy-1);
-        Y=min(max(round(r),1),ncy);
-        X=min(max(round(t+M*(r-1)),1),ncx);
+        y=min(max(round(r),1),ncy);
+%         x=min(max(round(t+M*(r-1)),1),ncx);    
+        x=min(max(fix(t+M*(r-1)-(ncx+1)/2)+(ncx+1)/2,1),ncx);    
 %         Y=min(max(floor(r),1),ncy);
 %         X=min(max(floor(t+M*(r-1)),1),ncx);
-%         A((t-1)*ncy+r,1)=X;
-%         A((t-1)*ncy+r,2)=Y;
+        A((t-1)*ncy+r,1)=x;
+        A((t-1)*ncy+r,2)=y;
         Yh_q(t,r)=r;
         Xh_q(t,r)=t+M*(r-1);
 %         B((t-1)*ncy+r,2)=r;
 %         B((t-1)*ncy+r,1)=t+M*(r-1);
-        RPinterp_hor(t,r)=F_(X,Y);
+        RPinterp_hor(t,r)=F_(x,y);
 %         RPinterp_hor(t,r)=((-1)^(1+t))*F_(X,Y);
     end
 end
+
+
+% x=min(max(round(t+M*([1:ncy]-1-((ncy-1)/2))),1),ncx)
 
 % figure; imagesc(abs(RPinterp_hor));colorbar;
 
@@ -149,17 +174,18 @@ end
 for t=1:ncy
     for r=1:ncx
         M=(ncy-(2*t)+1)/(ncx-1);
-        X=min(max(round(r),1),ncx);
-        Y=min(max(round(t+M*(r-1)),1),ncy);
-        A((t-1)*ncx+r,1)=X;
-        A((t-1)*ncx+r,2)=Y;
+        x=min(max(round(r),1),ncx);
+%         y=min(max(round(t+M*(r-1)),1),ncy);
+        y=min(max(fix(t+M*(r-1)-(ncy+1)/2)+(ncy+1)/2,1),ncy);
+%         A((t-1)*ncx+r,1)=x;
+%         A((t-1)*ncx+r,2)=y;
 %         X=min(max(floor(r),1),ncx);
 %         Y=min(max(floor(t+M*(r-1)),1),ncy);
         Xv_q(t,r)=r;
         Yv_q(t,r)=t+M*(r-1);
         B((t-1)*ncx+r,1)=r;
         B((t-1)*ncx+r,2)=t+M*(r-1);        
-        RPinterp_vert(t,r)=F_(X,Y);
+        RPinterp_vert(t,r)=F_(x,y);
 %         RPinterp_vert(t,r)=((-1)^(1+t))*F_(X,Y);
     end
 end
@@ -313,11 +339,64 @@ ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 
 %inverse Radon Transformation
 
-RPinterp_hor_rec=(fft(Radon_hor.').');
-RPinterp_vert_rec=(fft(Radon_vert.').');
 
-RPinterp_hor_q_rec=(fft(Radon_hor_q.').');
-RPinterp_vert_q_rec=(fft(Radon_vert_q.').');
+for i=1:ncx
+    for j=1:ncy
+        Radon_hor_phase_rec(i,j)=(exp(1i*pi*(j-1)*(1-1/ncy)))*Radon_hor_(i,j);
+%         RPinterp_hor_q_(i,j)=(exp(-1i*pi*(i-1)*(1-1/ncx)))*RPinterp_hor_q(i,j);
+    end
+end
+
+for i=1:ncx
+    for j=1:ncy
+        Radon_vert_phase_rec(j,i)=(exp(1i*pi*(i-1)*(1-1/ncx)))*Radon_vert_(j,i);
+%         RPinterp_hor_q_(i,j)=(exp(-1i*pi*(i-1)*(1-1/ncx)))*RPinterp_hor_q(i,j);
+    end
+end
+
+
+
+
+
+RPinterp_hor_rec=(fft(Radon_hor_phase_rec.').');
+RPinterp_vert_rec=(fft(Radon_vert_phase_rec.').');
+
+
+
+figure; imagesc(abs(RPinterp_hor_rec));colorbar;
+figure; imagesc(abs(RPinterp_vert_rec));colorbar;
+
+
+
+
+
+
+for i=1:ncx
+    for j=1:ncy
+        Radon_hor_phase_rec_q(i,j)=(exp(1i*pi*(j-1)*(1-1/ncy)))*Radon_hor_q_(i,j);
+%         RPinterp_hor_q_(i,j)=(exp(-1i*pi*(i-1)*(1-1/ncx)))*RPinterp_hor_q(i,j);
+    end
+end
+
+for i=1:ncx
+    for j=1:ncy
+        Radon_vert_phase_rec_q(j,i)=(exp(1i*pi*(i-1)*(1-1/ncx)))*Radon_vert_q_(j,i);
+%         RPinterp_hor_q_(i,j)=(exp(-1i*pi*(i-1)*(1-1/ncx)))*RPinterp_hor_q(i,j);
+    end
+end
+
+
+
+RPinterp_hor_rec_q=(fft(Radon_hor_phase_rec_q.').');
+RPinterp_vert_rec_q=(fft(Radon_vert_phase_rec_q.').');
+
+
+figure; imagesc(abs(RPinterp_hor_rec_q));colorbar;
+figure; imagesc(abs(RPinterp_vert_rec_q));colorbar;
+
+
+
+
 
 
 F_rec=zeros(ncx,ncy);
@@ -328,12 +407,13 @@ F_rec_count=zeros(ncx,ncy);
 for t=1:ncx
     for r=1:ncy
         M=(ncx-(2*t)+1)/(ncy-1);
-%         Y=min(max(round(r),1),ncy);
-%         X=min(max(round(t+M*(r-1)),1),ncx);
-        Y=min(max(floor(r),1),ncy);
-        X=min(max(floor(t+M*(r-1)),1),ncx);
-        F_rec(X,Y)=F_rec(X,Y)+RPinterp_hor_rec(t,r);
-        F_rec_count(X,Y)=F_rec_count(X,Y)+1;
+        y=min(max(round(r),1),ncy);
+%         x=min(max(round(t+M*(r-1)),1),ncx);
+        x=min(max(fix(t+M*(r-1)-(ncx+1)/2)+(ncx+1)/2,1),ncx);
+%         Y=min(max(floor(r),1),ncy);
+%         X=min(max(floor(t+M*(r-1)),1),ncx);
+        F_rec(x,y)=F_rec(x,y)+RPinterp_hor_rec(t,r);
+        F_rec_count(x,y)=F_rec_count(x,y)+1;
     end
 end
 
@@ -346,42 +426,84 @@ end
 for t=1:ncy
     for r=1:ncx
         M=(ncy-(2*t)+1)/(ncx-1);
-%         X=min(max(round(r),1),ncx);
-%         Y=min(max(round(t+M*(r-1)),1),ncy);
-        X=min(max(floor(r),1),ncx);
-        Y=min(max(floor(t+M*(r-1)),1),ncy);
-        F_rec(X,Y)=F_rec(X,Y)+RPinterp_vert_rec(t,r);
-        F_rec_count(X,Y)=F_rec_count(X,Y)+1;        
+        x=min(max(round(r),1),ncx);
+%         y=min(max(round(t+M*(r-1)),1),ncy);
+        y=min(max(fix(t+M*(r-1)-(ncy+1)/2)+(ncy+1)/2,1),ncy);
+%         X=min(max(floor(r),1),ncx);
+%         Y=min(max(floor(t+M*(r-1)),1),ncy);
+        F_rec(x,y)=F_rec(x,y)+RPinterp_vert_rec(t,r);
+        F_rec_count(x,y)=F_rec_count(x,y)+1;        
     end
 end
-
-
 
 %normalization
 
 F_rec_norm=F_rec./F_rec_count;
 
-% figure; imagesc(abs(F_rec_norm));colorbar;
+figure; imagesc(abs(F_rec_norm));colorbar;
+% 
+% X_rec = ifft((ifft((F_rec_norm_phase.')).'));
+% F = fft(fft(X_).').';
 
 
-RPinterp=[RPinterp_hor_q_rec(:); RPinterp_vert_q_rec(:)];
-Xinterp=[Xh_q;Xv_q];
-Yinterp=[Yh_q;Yv_q];
+X_rec = ifft(ifft(F_rec_norm.').');
 
-F_rec_norm_q = griddata(Xinterp(:),Yinterp(:),RPinterp(:),grid_y,grid_x,'linear');
-
-
-
-%get rid of zero-mode-at-the-center convention
+% X_rec = ifft(ifft(F_rec_norm_phase).').';
 
 for i=1:ncx
     for j=1:ncy
 %         F_rec_norm(i,j)=((-1)^(i+j))*F_rec_norm(i,j);
-        F_rec_norm(i,j)=((-1)^(i+j))*F_rec_norm_q(i,j);
+        X_rec_phase(i,j)=(exp(-1i*pi*(i-1)*(1-1/ncx)))*(exp(-1i*pi*(j-1)*(1-1/ncy)))*X_rec(i,j);
     end
 end
 
-figure; imagesc(abs(F_rec_norm));colorbar;
+
+
+
+figure; imagesc(real(X_rec_phase));colorbar;
+
+
+
+
+
+
+RPinterp=[RPinterp_hor_rec_q; RPinterp_vert_rec_q'];
+Xinterp=[Xh_q;Xv_q'];
+Yinterp=[Yh_q;Yv_q'];
+
+% F_rec_norm_q = griddata(Xinterp(:),Yinterp(:),RPinterp(:),grid_y,grid_x,'linear')';
+
+F_rec_norm_q = griddata(Xinterp(:),Yinterp(:),RPinterp(:),grid_x,grid_y,'linear')';
+
+
+% figure; imagesc(abs(F_rec_norm));colorbar;
+
+
+%get rid of zero-mode-at-the-center convention
+% 
+% for i=1:ncx
+%     for j=1:ncy
+% %         F_rec_norm(i,j)=((-1)^(i+j))*F_rec_norm(i,j);
+%         F_rec_norm_phase_q(i,j)=(exp(-1i*pi*(i-1)*(1-1/ncx)))*(exp(-1i*pi*(j-1)*(1-1/ncy)))*F_rec_norm_q(i,j);
+%     end
+% end
+
+figure; imagesc(abs(F_rec_norm_q));colorbar;
+
+X_rec_q = ifft(ifft(F_rec_norm_q.').');
+
+for i=1:ncx
+    for j=1:ncy
+%         F_rec_norm(i,j)=((-1)^(i+j))*F_rec_norm(i,j);
+        X_rec_phase_q(i,j)=(exp(-1i*pi*(i-1)*(1-1/ncx)))*(exp(-1i*pi*(j-1)*(1-1/ncy)))*X_rec_q(i,j);
+    end
+end
+
+
+figure; imagesc(abs(X_rec_phase_q));colorbar;
+
+
+
 
 %un re-center
 
@@ -412,21 +534,21 @@ figure; imagesc(abs(F_rec_norm));colorbar;
 % F_rec_norm=F_rec_norm_ext;
 
 %Apply iFFT2
-
-X_rec = ifft(ifftshift(ifft(ifftshift(F_rec_norm,2).'),2).');
-
-
-
-figure; imagesc(abs(X_rec));colorbar;
-
-% figure; imagesc(real(X_rec));colorbar;
-
-
-
-
-
-diff=RPinterp_hor_inv-RPinterp_hor;
-max(abs(diff(:)))
-
+% 
+% X_rec = ifft(ifftshift(ifft(ifftshift(F_rec_norm_phase,2).'),2).');
+% 
+% 
+% 
+% figure; imagesc(abs(X_rec));colorbar;
+% 
+% % figure; imagesc(real(X_rec));colorbar;
+% 
+% 
+% 
+% 
+% 
+% diff=RPinterp_hor_inv-RPinterp_hor;
+% max(abs(diff(:)))
+% 
 
 end
