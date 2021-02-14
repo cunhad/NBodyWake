@@ -7,13 +7,15 @@ clearvars;
 
 
 nc=128;
+% nc=16;
 % nc=8;
-% ncx=nc;ncy=nc/2;
-ncx=nc;ncy=nc;
+ncx=nc;ncy=nc/2;
+% ncx=nc;ncy=nc;
 
 % X=ones(ncx,ncy);
 X=zeros(ncx,ncy);
 X(1+ncx/4:3*ncx/4,1+ncy/4:3*ncy/4)=1;
+
 % X(:,nc/8)=1;
 % X(:,nc/2)=1;
 % for i=1:ncx
@@ -62,16 +64,8 @@ imagesc(theta,xp,R);colorbar;
 
 %Radon Transformation
 
-[ Radon_hor_h_, Radon_vert_h_,Radon_hor_v_, Radon_vert_v_] = Ridgelet2d_RP_crude_forwards_dev1(X);
+[ Radon_hor_h_, Radon_vert_v_] = Ridgelet2d_RP_crude_forwards_dev1(X);
 
-
-figure;imagesc(real(Radon_hor_h_)); colorbar;
-xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
-ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
-
-figure;imagesc(real(Radon_vert_h_)); colorbar;
-xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
-ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 
 figure;imagesc(real(Radon_hor_h_)); colorbar;
 xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
@@ -86,32 +80,66 @@ ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 % figure; histogram(real(Radon_vert_(:)));
 
 
-[ X_rec_phase ] = Ridgelet2d_RP_crude_backwards_dev1( Radon_hor_, Radon_vert_ );
+[ X_rec_phase ] = Ridgelet2d_RP_crude_backwards_dev1( Radon_hor_h_, Radon_vert_v_ );
 
 figure; imagesc(real(X_rec_phase));colorbar;
 
 
 
 
-Radon_hor=zeros(size(Radon_hor_));
-Radon_vert=zeros(size(Radon_vert_));
-
-% Radon_hor(65,1)=1;
-% Radon_hor(34,1)=1;
-Radon_hor(1,15)=1;
-
-% figure;imagesc(real(Radon_hor)); colorbar;
-% xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
-% ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
-% 
-% figure;imagesc(real(Radon_vert)); colorbar;
-% xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
-% ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 
 
-[ X_rec_phase ] = Ridgelet2d_RP_crude_backwards( Radon_hor, Radon_vert);
 
-figure; imagesc(real(X_rec_phase));colorbar;
+for i=1:ncx_v+(1-is_odd_ncx_v)
+    for j=1:ncy_v
+        Radon_vert_phase_rec_v(i,j)=(exp(1i*pi*(j-1)*(1-is_odd_ncy_v/ncy_v)))*Radon_vert_v_(i,j);
+    end
+end
+
+for i=1:ncx_h
+    for j=1:ncy_h+(1-is_odd_ncy_h)
+        Radon_hor_phase_rec_h(j,i)=(exp(1i*pi*(i-1)*(1-is_odd_ncx_h/ncx_h)))*Radon_hor_h_(j,i);
+    end
+end
+
+
+% % max(abs(Radon_hor_phase_rec_h(:)-Radon_hor_h(:)))
+
+
+RPinterp_vert_rec_v=(fft(Radon_vert_phase_rec_v.').');
+RPinterp_hor_rec_h=(fft(Radon_hor_phase_rec_h.').');
+
+
+max(abs(RPinterp_hor_rec_h(:)-RPinterp_hor_h(:)))
+
+
+
+
+
+RPinterp_vert_rec_v=(fft(Radon_vert_v.').');
+RPinterp_hor_rec_h=(fft(Radon_hor_h.').');
+
+
+max(abs(RPinterp_hor_rec_h(:)-RPinterp_hor_h(:)))
+
+% previous = fftw('planner','estimate') 
+
+Radon_vert_v = (ifft(double(vpa(RPinterp_vert_v)).').');
+RPinterp_vert_rec_v=(fft(double(vpa(Radon_vert_v)).').');
+
+
+max(abs(double(vpa(RPinterp_vert_rec_v(:)-RPinterp_vert_v(:)))))
+
+
+
+RPinterp_vert_vA=RPinterp_vert_v(1,:);
+
+Radon_vert_v = (ifft(RPinterp_vert_vA.').');
+RPinterp_vert_rec_v=(fft(Radon_vert_v.').');
+
+
+
+max(abs(RPinterp_vert_rec_v(:)-RPinterp_vert_vA(:)))
 
 
 end
