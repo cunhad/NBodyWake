@@ -1,4 +1,4 @@
-function [ X_rec_phase ] = Ridgelet2d_RP_crude_backwards_dev1( Radon_hor_h_, Radon_vert_v_ )
+function [ X_rec_phase ] = Ridgelet2d_RP_interpol_backwards_dev1( Radon_hor_h_, Radon_vert_v_ )
 
 % Inverse 2-D Radon transformation, recto-polar crude interpolation (nearest, close to center)
 
@@ -6,10 +6,10 @@ function [ X_rec_phase ] = Ridgelet2d_RP_crude_backwards_dev1( Radon_hor_h_, Rad
 % implicit variables
 
 ncy_v_=size(Radon_vert_v_(1,:));
-ncy_v_=ncy_v_(2)-1;
+ncy_v_=ncy_v_(2);
 
 ncx_h_=size(Radon_hor_h_(1,:));
-ncx_h_=ncx_h_(2)-1;
+ncx_h_=ncx_h_(2);
 
 
 % If original is padded, use padd=3, of not, use padd=1
@@ -45,64 +45,26 @@ is_odd_ncy=mod(ncy,2);
 % is_odd_ncy=mod(ncy,2);
 
 
-% the following is for the pure real ridgelet
 
-clearvars Radon_vert_phase_rec_v Radon_hor_phase_rec_h
+
 
 for i=1:ncx_v_+(1-is_odd_ncx)
-    for j=1:2*ncy_v_+2
-        if mod(j,2)==1
-            Radon_vert_phase_rec_v(i,j)=Radon_vert_v_(i,floor(1+j/2));
-        else
-            Radon_vert_phase_rec_v(i,j)=0;            
-        end
+    for j=1:ncy_v_
+        Radon_vert_phase_rec_v(i,j)=(exp(1i*pi*(j-1)*(1-is_odd_ncy/ncy_v_)))*Radon_vert_v_(i,j);
     end
 end
-% Radon_vert_phase_rec_v(:,end+1)=Radon_vert_phase_rec_v(:,1);
-% Radon_vert_phase_rec_v(:,end+1)=Radon_vert_phase_rec_v(:,2);
 
-
-for i=1:2*ncx_h_+2
+for i=1:ncx_h_
     for j=1:ncy_h_+(1-is_odd_ncy)
-        if mod(i,2)==1
-            Radon_hor_phase_rec_h(j,i)=Radon_hor_h_(j,floor(1+i/2));
-        else
-            Radon_hor_phase_rec_h(j,i)=0;            
-        end
+        Radon_hor_phase_rec_h(j,i)=(exp(1i*pi*(i-1)*(1-is_odd_ncx/ncx_h_)))*Radon_hor_h_(j,i);
     end
 end
-% Radon_hor_phase_rec_h(:,end+1)=Radon_hor_phase_rec_h(:,1);
-% Radon_hor_phase_rec_h(:,end+1)=Radon_hor_phase_rec_h(:,2);
-
-
-
-RPinterp_vert_rec_v_=(fft(Radon_vert_phase_rec_v.').');
-RPinterp_hor_rec_h_=(fft(Radon_hor_phase_rec_h.').');
-
-
-RPinterp_vert_rec_v=RPinterp_vert_rec_v_(:,2+ncy_v_/2:end-(ncy_v_/2));
-RPinterp_hor_rec_h=RPinterp_hor_rec_h_(:,2+ncx_h_/2:end-(ncx_h_/2));
-
-% 
-% % the following is for the not pure real ridgelet
-% 
-% for i=1:ncx_v_+(1-is_odd_ncx)
-%     for j=1:ncy_v_
-%         Radon_vert_phase_rec_v(i,j)=(exp(1i*pi*(j-1)*(1-is_odd_ncy/ncy_v_)))*Radon_vert_v_(i,j);
-%     end
-% end
-% 
-% for i=1:ncx_h_
-%     for j=1:ncy_h_+(1-is_odd_ncy)
-%         Radon_hor_phase_rec_h(j,i)=(exp(1i*pi*(i-1)*(1-is_odd_ncx/ncx_h_)))*Radon_hor_h_(j,i);
-%     end
-% end
 
 
 % % max(abs(Radon_hor_phase_rec_h(:)-Radon_hor_h(:)))
-% 
-% RPinterp_vert_rec_v=(fft(Radon_vert_phase_rec_v.').');
-% RPinterp_hor_rec_h=(fft(Radon_hor_phase_rec_h.').');
+
+RPinterp_vert_rec_v=(fft(Radon_vert_phase_rec_v.').');
+RPinterp_hor_rec_h=(fft(Radon_hor_phase_rec_h.').');
 
 %ver isso aqui
 

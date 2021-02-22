@@ -1,4 +1,4 @@
-function [ Radon_hor_h_,Radon_vert_v_] = Ridgelet2d_RP_crude_forwards_dev1(X)
+function [ Radon_hor_h__,Radon_vert_v__] = Ridgelet2d_RP_crude_forwards_dev1(X)
 
 %  2-D Radon transformation, recto-polar crude interpolation (nearest, close to center)
 % try zero-padding
@@ -106,26 +106,46 @@ end
 
 %Radon Transformation
 
-RPinterp_vert_v(:,end)=[];
-RPinterp_hor_h(:,end)=[];
+%gives a pure real result
+
+RPinterp_hor_h_a=cat(2,RPinterp_hor_h(:,1+ncx_h/2:end),RPinterp_hor_h,RPinterp_hor_h(:,1:ncx_h/2));
+Radon_hor_h_b = (ifft(RPinterp_hor_h_a.').');
+Radon_hor_h__=Radon_hor_h_b(:,1:2:end);
+% Radon_hor_h__(:,end)=[];
+
+RPinterp_vert_v_a=cat(2,RPinterp_vert_v(:,1+ncy_v/2:end),RPinterp_vert_v,RPinterp_vert_v(:,1:ncy_v/2));
+Radon_vert_v_b = (ifft(RPinterp_vert_v_a.').');
+Radon_vert_v__=Radon_vert_v_b(:,1:2:end);
+% Radon_vert_v__(:,end)=[];
+
+% figure;imagesc(real(Radon_hor_h__));colorbar;
+% figure;imagesc(real(Radon_vert_v__));colorbar;
 
 
 
-Radon_vert_v = (ifft(RPinterp_vert_v.').');
-Radon_hor_h = (ifft(RPinterp_hor_h.').');
+% the following does not gives a pure real result
 
-for i=1:ncx_v+(1-is_odd_ncx_v)
-    for j=1:ncy_v
-        Radon_vert_v_(i,j)=(exp(-1i*pi*(j-1)*(1-is_odd_ncy_v/ncy_v)))*Radon_vert_v(i,j);
-    end
-end
+% RPinterp_vert_v(:,end)=[];
+% RPinterp_hor_h(:,end)=[];
+% 
+% 
+% 
+% Radon_vert_v = (ifft(RPinterp_vert_v.').');
+% Radon_hor_h = (ifft(RPinterp_hor_h.').');
+% 
+% for i=1:ncx_v+(1-is_odd_ncx_v)
+%     for j=1:ncy_v
+%         Radon_vert_v_(i,j)=(exp(-1i*pi*(j-1)*(1-is_odd_ncy_v/ncy_v)))*Radon_vert_v(i,j);
+%     end
+% end
+% 
+% for i=1:ncx_h
+%     for j=1:ncy_h+(1-is_odd_ncy_h)
+%         Radon_hor_h_(j,i)=(exp(-1i*pi*(i-1)*(1-is_odd_ncx_h/ncx_h)))*Radon_hor_h(j,i);
+%     end
+% end
 
-for i=1:ncx_h
-    for j=1:ncy_h+(1-is_odd_ncy_h)
-        Radon_hor_h_(j,i)=(exp(-1i*pi*(i-1)*(1-is_odd_ncx_h/ncx_h)))*Radon_hor_h(j,i);
-    end
-end
-
+% 
 % 
 % figure;imagesc(real(Radon_hor_h_)); colorbar;
 % xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);

@@ -1,4 +1,4 @@
-function [ ] = Script_Ridgelet2d_RP_crude_dev1()
+function [ ] = Script_Ridgelet2d_RP_interpl_dev1()
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -13,8 +13,8 @@ ncx=nc;ncy=nc/2;
 % ncx=nc;ncy=nc;
 
 % X=ones(ncx,ncy);
-% X=zeros(ncx,ncy);
-% X(1+ncx/4:3*ncx/4,1+ncy/4:3*ncy/4)=1;
+X=zeros(ncx,ncy);
+X(1+ncx/4:3*ncx/4,1+ncy/4:3*ncy/4)=1;
 
 % X(:,nc/8)=1;
 % X(:,nc/2)=1;
@@ -24,9 +24,12 @@ ncx=nc;ncy=nc/2;
 % 
 % end
 % X=X+0.5*randn([ncx,ncy]);
-X=randn([ncx,ncy]);
+% X=randn([ncx,ncy]);
 
 figure; imagesc(X);colorbar;
+
+
+
 
 % 
 % 
@@ -34,6 +37,7 @@ figure; imagesc(X);colorbar;
 % % nc=1+2*16;
 % % nc=1+2*8;
 % % nc=1+2*4;
+% nc=1+2*2;
 % ncx=nc;ncy=1+(nc-1)/2;
 % % ncx=nc;ncy=nc;
 % X=zeros(ncx,ncy);
@@ -44,6 +48,7 @@ figure; imagesc(X);colorbar;
 % % nc=129;
 % % ncx=nc;ncy=nc;
 % % X=ones(ncx,ncy);
+% X=randn([ncx,ncy]);
 % 
 
 % figure; imagesc(X);colorbar;
@@ -60,15 +65,7 @@ imagesc(theta,xp,R);colorbar;
 % imagesc(R(1+(ncx-1)/4:end-(ncx-1)/4,1:(end-1)/2)); colorbar;
 % imagesc(R(-(ncx-1)/4+(end+1)/2:(ncx-1)/4+(end+1)/2,1:(end-1)/2)); colorbar;
 
-clearvars A A_ B B_ C C_
-A=rand([10,1]);
-for j=1:length(A)
-A_(j,1)=((-1)^(j-1))*A(j);
-end
-B=fft(A);
-B_=fft(A_);
-C=ifft(B);
-C_=ifft(B_);
+
 
 %Radon Transformation
 
@@ -94,7 +91,6 @@ figure; imagesc(real(X_rec_phase));colorbar;
 
 
 
-max(abs(X_rec_phase(:)-X(:)))
 
 
 
