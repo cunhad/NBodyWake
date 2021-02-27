@@ -1,94 +1,47 @@
-function [ X_rec_phase ] = Ridgelet2d_RP_crude_backwards_dev1( Radon_hor_h_, Radon_vert_v_ )
+function [ X_rec_phase ] = Ridgelet2d_RP_crude_backwards_dev2( Radon_hor_, Radon_vert_ )
 
 % Inverse 2-D Radon transformation, recto-polar crude interpolation (nearest, close to center)
 
+ 
+% implicit variable
+ 
+[ncx,ncy]=size(Radon_hor_);
+ 
+ 
+for i=1:ncx
+     for j=1:ncy
+        Radon_hor_phase_rec(i,j)=(exp(1i*pi*(j-1)*(1-1/ncy)))*Radon_hor_(i,j);
+     end
+ end
+ 
+ for i=1:ncx
+    for j=1:ncy
+        Radon_vert_phase_rec(j,i)=(exp(1i*pi*(i-1)*(1-1/ncx)))*Radon_vert_(j,i);
+     end
+ end
+ 
 
-% implicit variables
+RPinterp_hor_rec=(fft(Radon_hor_phase_rec.').');
+RPinterp_vert_rec=(fft(Radon_vert_phase_rec.').');
+ 
 
-ncy_v_=size(Radon_vert_v_(1,:));
-if mod(ncy_v_(2)-1,3)==0
-    ncy_v_=ncy_v_(2)-1;
-else
-    ncy_v_=ncy_v_(2);
-end
-
-ncx_h_=size(Radon_hor_h_(1,:));
-if mod(ncx_h_(2)-1,3)==0
-    ncx_h_=ncx_h_(2)-1;
-else
-    ncx_h_=ncx_h_(2);
-end
-
-% If original is padded, use padd=3, of not, use padd=1
-padd=3;
-% padd=1;
-
-ncx_v_=ncx_h_/padd;
-% ncy_v_=ncx/3;
-
-ncy_h_=ncy_v_/padd;
-% ncy_h=ncy/3;
-
-ncx=ncx_h_/padd;
-ncy=ncy_v_/padd;
+% %Apply inverse Recto-Polar interpolation
 
 
-is_odd_ncx=mod(ncx,2);
-is_odd_ncy=mod(ncy,2);
-
-
+ 
+ % figure; imagesc(abs(RPinterp_hor_rec));colorbar;
+ % figure; imagesc(abs(RPinterp_vert_rec));colorbar;
+ 
+%   
+% F_rec=zeros(ncx,ncy);
+% F_rec_count=zeros(ncx,ncy);
+% 
+% RPinterp_vert_rec_=(fft(Radon_vert_phase_rec.').');
+% RPinterp_hor_rec_=(fft(Radon_hor_phase_rec.').');
 % 
 % 
-% 
-% ncy=size(Radon_hor_(1,:));
-% ncy=ncy(2);
-% 
-% ncx=size(Radon_hor_(:,1));
-% ncx=ncx(1)-1;
-% 
-% Radon_vert_=zeros([ncy+1,ncx]);
-% 
-% is_odd_ncx=mod(ncx,2);
-% is_odd_ncy=mod(ncy,2);
-
-
-% the following is for the pure real ridgelet
-
-clearvars Radon_vert_phase_rec_v Radon_hor_phase_rec_h
-
-for i=1:ncx_v_+(1-is_odd_ncx)
-    for j=1:2*ncy_v_+2*(1-is_odd_ncy)
-        if mod(j,2)==1
-            Radon_vert_phase_rec_v(i,j)=Radon_vert_v_(i,floor(1+j/2));
-        else
-            Radon_vert_phase_rec_v(i,j)=0;            
-        end
-    end
-end
-% Radon_vert_phase_rec_v(:,end+1)=Radon_vert_phase_rec_v(:,1);
-% Radon_vert_phase_rec_v(:,end+1)=Radon_vert_phase_rec_v(:,2);
-
-
-for i=1:2*ncx_h_+2*(1-is_odd_ncx)
-    for j=1:ncy_h_+(1-is_odd_ncy)
-        if mod(i,2)==1
-            Radon_hor_phase_rec_h(j,i)=Radon_hor_h_(j,floor(1+i/2));
-        else
-            Radon_hor_phase_rec_h(j,i)=0;            
-        end
-    end
-end
-% Radon_hor_phase_rec_h(:,end+1)=Radon_hor_phase_rec_h(:,1);
-% Radon_hor_phase_rec_h(:,end+1)=Radon_hor_phase_rec_h(:,2);
-
-
-
-RPinterp_vert_rec_v_=(fft(Radon_vert_phase_rec_v.').');
-RPinterp_hor_rec_h_=(fft(Radon_hor_phase_rec_h.').');
-
-
-RPinterp_vert_rec_v=RPinterp_vert_rec_v_(:,2+(ncy_v_-is_odd_ncy)/2:end-((ncy_v_-is_odd_ncy)/2));
-RPinterp_hor_rec_h=RPinterp_hor_rec_h_(:,2+(ncx_h_-is_odd_ncx)/2:end-(ncx_h_-is_odd_ncx)/2);
+% RPinterp_vert_rec_v=RPinterp_vert_rec_(:,2+(ncy_-is_odd_ncy)/2:end-((ncy_-is_odd_ncy)/2));
+% RPinterp_hor_rec_h=RPinterp_hor_rec_(:,2+(ncx_-is_odd_ncx)/2:end-(ncx_-is_odd_ncx)/2);
 
 % 
 % % the following is for the not pure real ridgelet
@@ -116,14 +69,14 @@ RPinterp_hor_rec_h=RPinterp_hor_rec_h_(:,2+(ncx_h_-is_odd_ncx)/2:end-(ncx_h_-is_
 % max(abs(RPinterp_hor_rec_h(:)-RPinterp_hor_h(:)))
 
 
-RPinterp_vert_rec2=RPinterp_vert_rec_v(:,1:padd:end);
-RPinterp_hor_rec2=RPinterp_hor_rec_h(:,1:padd:end);
+% RPinterp_vert_rec2=RPinterp_vert_rec_v(:,1:padd:end);
+% RPinterp_hor_rec2=RPinterp_hor_rec_h(:,1:padd:end);
 
 
 % e isso aqui tambem
 
-RPinterp_vert_rec2=RPinterp_vert_rec_v(:,1+is_odd_ncy:padd:end);
-RPinterp_hor_rec2=RPinterp_hor_rec_h(:,1+is_odd_ncx:padd:end);
+% RPinterp_vert_rec2=RPinterp_vert_rec_v(:,1+is_odd_ncy:padd:end);
+% RPinterp_hor_rec2=RPinterp_hor_rec_h(:,1+is_odd_ncx:padd:end);
 
 % RPinterp_vert_rec2(:,end+1)=conj(RPinterp_vert_rec2(:,1));
 % RPinterp_hor_rec2(:,end+1)=conj(RPinterp_hor_rec2(:,1));
@@ -152,8 +105,23 @@ RPinterp_hor_rec2=RPinterp_hor_rec_h(:,1+is_odd_ncx:padd:end);
 % F_rec=zeros(ncx_v_+(1-is_odd_ncx),ncy_v_+(1-is_odd_ncy));
 % F_rec_count=zeros(ncx_v_+(1-is_odd_ncx),ncy_v_+(1-is_odd_ncy));
 
-F_rec=zeros(ncx+(1-is_odd_ncx),ncy+(1-is_odd_ncy));
-F_rec_count=zeros(ncx+(1-is_odd_ncx),ncy+(1-is_odd_ncy));
+% F_rec=zeros(ncx+(1-is_odd_ncx),ncy+(1-is_odd_ncy));
+% F_rec_count=zeros(ncx+(1-is_odd_ncx),ncy+(1-is_odd_ncy));
+
+
+
+
+
+
+
+%Apply inverse Recto-Polar interpolation
+
+F_rec=zeros(ncx,ncy);
+F_rec_count=zeros(ncx,ncy);
+
+
+% RPinterp_hor_rec
+% RPinterp_hor_hor
 
 %Vertical lines
 
@@ -162,7 +130,7 @@ for t=1:ncx+(1-is_odd_ncx)
         M=(ncx+(1-is_odd_ncx)-(2*t)+1)/(ncy-1+(1-is_odd_ncy));
         y=min(max(round(r),1),ncy+(1-is_odd_ncy));
         x=min(max(fix(t+M*(r-1)-ceil((ncx+1)/2))+ceil((ncx+1)/2),1),ncx+(1-is_odd_ncx));   
-        F_rec(x,y)=F_rec(x,y)+RPinterp_vert_rec2(t,r);
+        F_rec(x,y)=F_rec(x,y)+RPinterp_vert_rec(t,r);
         F_rec_count(x,y)=F_rec_count(x,y)+1;
     end
 end
@@ -189,7 +157,7 @@ for t=1:ncy+(1-is_odd_ncy)
         M=(ncy+(1-is_odd_ncy)-(2*t)+1)/(ncx-1+(1-is_odd_ncx));
         x=min(max(round(r),1),ncx+(1-is_odd_ncx));
         y=min(max(fix(t+M*(r-1)-ceil((ncy+1)/2))+ceil((ncy+1)/2),1),ncy+(1-is_odd_ncy));
-        F_rec(x,y)=F_rec(x,y)+RPinterp_hor_rec2(t,r);
+        F_rec(x,y)=F_rec(x,y)+RPinterp_hor_rec(t,r);
         F_rec_count(x,y)=F_rec_count(x,y)+1;        
     end
 end

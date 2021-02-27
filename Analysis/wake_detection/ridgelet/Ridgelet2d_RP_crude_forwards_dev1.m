@@ -47,16 +47,22 @@ end
 F_h_ = fft(fft(X_h_).').';
 F_v_ = fft(fft(X_v_).').';
 
-if is_odd_ncx_h==0 F_h_(:,end+1)=F_h_(:,1);end
-if is_odd_ncy_h==0 F_h_(end+1,:)=F_h_(1,:);end
+if is_odd_ncy_h==0 F_h_(:,end+1)=F_h_(:,1);end
+if is_odd_ncx_h==0 F_h_(end+1,:)=F_h_(1,:);end
 
-if is_odd_ncx_v==0 F_v_(:,end+1)=F_v_(:,1);end
-if is_odd_ncy_v==0 F_v_(end+1,:)=F_v_(1,:);end
+if is_odd_ncy_v==0 F_v_(:,end+1)=F_v_(:,1);end
+if is_odd_ncx_v==0 F_v_(end+1,:)=F_v_(1,:);end
 
 
 % figure; imagesc(abs(F_h_));colorbar;
 % figure; imagesc(abs(F_v_));colorbar;
 
+
+%see this
+
+% if is_odd_ncx_h==1 F_h_(1,:)=[];F_h_(end,:)=[];ncx_h=ncx_h-2; end
+% 
+% if is_odd_ncy_v==1 F_v_(:,1)=[];F_v_(:,end)=[];ncy_v=ncy_v-2; end
 
 
 
@@ -108,12 +114,12 @@ end
 
 %gives a pure real result
 
-RPinterp_hor_h_a=cat(2,RPinterp_hor_h(:,1+ncx_h/2:end),RPinterp_hor_h,RPinterp_hor_h(:,1:ncx_h/2));
+RPinterp_hor_h_a=cat(2,RPinterp_hor_h(:,1+(ncx_h-is_odd_ncx_h)/2:end),RPinterp_hor_h,RPinterp_hor_h(:,1:(ncx_h-is_odd_ncx_h)/2));
 Radon_hor_h_b = (ifft(RPinterp_hor_h_a.').');
 Radon_hor_h__=Radon_hor_h_b(:,1:2:end);
 % Radon_hor_h__(:,end)=[];
 
-RPinterp_vert_v_a=cat(2,RPinterp_vert_v(:,1+ncy_v/2:end),RPinterp_vert_v,RPinterp_vert_v(:,1:ncy_v/2));
+RPinterp_vert_v_a=cat(2,RPinterp_vert_v(:,1+(ncy_v-is_odd_ncy_v)/2:end),RPinterp_vert_v,RPinterp_vert_v(:,1:(ncy_v-is_odd_ncy_v)/2));
 Radon_vert_v_b = (ifft(RPinterp_vert_v_a.').');
 Radon_vert_v__=Radon_vert_v_b(:,1:2:end);
 % Radon_vert_v__(:,end)=[];

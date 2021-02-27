@@ -1,4 +1,4 @@
-function [ ] = Script_Ridgelet2d_RP_crude_dev1()
+function [ ] = Script_Ridgelet2d_RP_crude_dev2()
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -6,15 +6,16 @@ clearvars;
 %Construct the sample image
 
 
-% nc=128;
+nc=128;
 % nc=16;
 % nc=8;
 % nc=9;
 % nc=3;
-ncx=31;ncy=3;
+% ncx=31;ncy=3;
+% ncx=31;ncy=143;
 
 % ncx=nc;ncy=nc/2;
-% ncx=nc;ncy=nc;
+ncx=nc;ncy=nc;
 
 % ncx=5;ncy=32;
 
@@ -90,23 +91,23 @@ C_=ifft(B_);
 
 %Radon Transformation
 
-[ Radon_hor_h_, Radon_vert_v_] = Ridgelet2d_RP_crude_forwards_dev1(X);
+[ Radon_hor_, Radon_vert_] = Ridgelet2d_RP_crude_forwards_dev2(X);
 
 
-figure;imagesc(real(Radon_hor_h_)); colorbar;
+figure;imagesc(real(Radon_hor_)); colorbar;
 xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 
-figure;imagesc(real(Radon_vert_v_)); colorbar;
+figure;imagesc(real(Radon_vert_)); colorbar;
 xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 
 
-figure;imagesc(imag(Radon_hor_h_)); colorbar;
+figure;imagesc(imag(Radon_hor_)); colorbar;
 xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 
-figure;imagesc(imag(Radon_vert_v_)); colorbar;
+figure;imagesc(imag(Radon_vert_)); colorbar;
 xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 
@@ -116,7 +117,7 @@ ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 % figure; histogram(real(Radon_vert_(:)));
 
 
-[ X_rec_phase ] = Ridgelet2d_RP_crude_backwards_dev1( Radon_hor_h_, Radon_vert_v_ );
+[ X_rec_phase ] = Ridgelet2d_RP_crude_backwards_dev2( Radon_hor_, Radon_vert_ );
 
 figure; imagesc(real(X_rec_phase));colorbar;
 

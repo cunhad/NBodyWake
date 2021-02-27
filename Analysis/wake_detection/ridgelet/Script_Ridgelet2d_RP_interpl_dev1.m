@@ -2,19 +2,25 @@ function [ ] = Script_Ridgelet2d_RP_interpl_dev1()
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
+% clearvars;
+%Construct the sample image
+
+
 clearvars;
 %Construct the sample image
 
 
+nc=128;
+% nc=8;
 % nc=128;
 % nc=16;
-nc=8;
-ncx=nc;ncy=nc/2;
-% ncx=nc;ncy=nc;
+% nc=8;
+% ncx=nc;ncy=nc/2;
+ncx=nc;ncy=nc;
 
 % X=ones(ncx,ncy);
-X=zeros(ncx,ncy);
-X(1+ncx/4:3*ncx/4,1+ncy/4:3*ncy/4)=1;
+% X=zeros(ncx,ncy);
+% X(1+ncx/4:3*ncx/4,1+ncy/4:3*ncy/4)=1;
 
 % X(:,nc/8)=1;
 % X(:,nc/2)=1;
@@ -24,7 +30,7 @@ X(1+ncx/4:3*ncx/4,1+ncy/4:3*ncy/4)=1;
 % 
 % end
 % X=X+0.5*randn([ncx,ncy]);
-% X=randn([ncx,ncy]);
+X=randn([ncx,ncy]);
 
 figure; imagesc(X);colorbar;
 

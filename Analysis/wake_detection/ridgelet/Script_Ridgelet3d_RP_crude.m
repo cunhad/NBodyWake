@@ -9,10 +9,11 @@ clearvars;
 % nc=128;
 % nc=16;
 nc=8;
+% nc=9;
 %  nc=2;
 % ncx=nc;ncy=nc/2;ncz=nc/4;
 % ncx=nc;ncy=nc,ncz=nc;
-ncx=nc;ncy=nc,ncz=1;
+% ncx=nc;ncy=nc,ncz=1;
 
 % X=zeros(ncx,ncy,ncz);
 % X(1+ncx/4:3*ncx/4,1+ncy/4:3*ncy/4,1+ncz/4:3*ncz/4)=1;

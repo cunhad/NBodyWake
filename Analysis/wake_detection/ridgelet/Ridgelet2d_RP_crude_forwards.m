@@ -3,7 +3,29 @@ function [ Radon_hor_h_,Radon_vert_v_] = Ridgelet2d_RP_crude_forwards(X)
 %  2-D Radon transformation, recto-polar crude interpolation (nearest, close to center)
 % try zero-padding
 
-
+% %  2-D Radon transformation, recto-polar crude interpolation (nearest, close to center)
+% -
+% +% try zero-padding
+%  
+%  
+%  % implicit variable
+%  
+% -[ncx,ncy]=size(X);
+% +X_h=[zeros(size(X)); X;zeros(size(X))];
+% +X_v=[zeros(size(X)), X,zeros(size(X))];
+% +
+%  
+% -is_odd_ncx=mod(ncx,2);
+% -is_odd_ncy=mod(ncy,2);
+% +[ncx_h,ncy_h]=size(X_h);
+% +[ncx_v,ncy_v]=size(X_v);
+%  
+% +is_odd_ncx_h=mod(ncx_h,2);
+% +is_odd_ncy_h=mod(ncy_h,2);
+% +
+% +is_odd_ncx_v=mod(ncx_v,2);
+% +is_odd_ncy_v=mod(ncy_v,2);
+ 
 % implicit variable
 
 % Choose this if padding

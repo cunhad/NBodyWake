@@ -8,11 +8,12 @@ clearvars;
 
 nc=128;
 % nc=8;
-ncx=nc;ncy=nc/2;
-% ncx=nc;ncy=nc;
+% ncx=nc;ncy=nc/2;
+% ncx=89;ncy=5;
+ncx=nc;ncy=nc;
 
 % X=ones(ncx,ncy);
-X=zeros(ncx,ncy);
+% X=zeros(ncx,ncy);
 % X(1+ncx/4:3*ncx/4,1+ncy/4:3*ncy/4)=1;
 % X(:,nc/8)=1;
 % X(:,nc/2)=1;
@@ -73,6 +74,13 @@ figure;imagesc(real(Radon_hor_)); colorbar;
 xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 
+figure;imagesc(imag(Radon_vert_)); colorbar;
+xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
+
+figure;imagesc(imag(Radon_hor_)); colorbar;
+xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
+ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 
 % 
 % figure; histogram(real(Radon_vert_(:)));

@@ -25,7 +25,7 @@ depth=4
 slices=32/depth;
 % anal_lev=2;
 % aperture_angle=pi/4
-aperture_angle=pi/6;
+aperture_angle=pi/8
 
 
 N_angles=12*NSIDE*NSIDE/2;
