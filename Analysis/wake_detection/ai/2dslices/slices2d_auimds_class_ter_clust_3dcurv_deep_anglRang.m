@@ -21,12 +21,12 @@ NSIDE=8;
 % cut=1;
 % lev=2;
 % sigma = 5;
-depth=4
+depth=8
 slices=32/depth;
 % anal_lev=2;
 % aperture_angle=pi/4
-% aperture_angle=pi/8
-aperture_angle=pi/16
+aperture_angle=pi/8
+% aperture_angle=pi/16
 
 
 N_angles=12*NSIDE*NSIDE/2;
