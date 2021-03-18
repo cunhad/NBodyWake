@@ -1,5 +1,6 @@
-function [ ] = Script_Ridgelet2d_RP_crude_dev2()
-
+function [ ] = Script_Ridgelet2d_RP_crude_ifftReal()
+%UNTITLED2 Summary of this function goes here
+%   Detailed explanation goes here
 
 % using real ifft fix
 

@@ -34,7 +34,7 @@ X_h=[zeros(size(X)); X;zeros(size(X))];
 X_v=[zeros(size(X)), X,zeros(size(X))];
 
 % Or this is not padding
-
+% 
 % X_h=X;
 % X_v=X;
 
