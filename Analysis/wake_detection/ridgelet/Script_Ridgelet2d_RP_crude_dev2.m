@@ -1,7 +1,7 @@
 function [ ] = Script_Ridgelet2d_RP_crude_dev2()
 
 
-% using real ifft fix
+% using real ifft fix, with padding
 
 clearvars;
 %Construct the sample image
@@ -14,7 +14,7 @@ clearvars;
 % nc=6;
 % nc=9;
 % nc=3;
-ncx=11;ncy=8;
+% ncx=11;ncy=8;
 % ncx=31;ncy=3;
 % ncx=6;ncy=6;
 % ncx=31;ncy=143;
@@ -38,8 +38,8 @@ ncx=11;ncy=8;
 % 
 % end
 % X=X+0.5*randn([ncx,ncy]);
+% X=randn([ncx,ncy]);
 % X=rand([ncx,ncy]);
-X=randn([ncx,ncy]);
 
 figure; imagesc(X);colorbar;
 
@@ -54,18 +54,28 @@ clearvars;
 % nc=129;
 % ncx=nc;ncy=1+(nc-1)/2;
 % ncx=nc;ncy=nc;
+
+ncx=4;ncy=16;
+% ncx=4;ncy=15;
+% ncx=15;ncy=4;
+
 % ncx=64;ncy=64;
+% ncx=65;ncy=64;
+
+% ncx=64;ncy=128;
 % ncx=64;ncy=129;
 % ncx=17;ncy=8;
-ncx=129;ncy=64;
+% ncx=129;ncy=64;
 % ncx=65;ncy=65;
-% X=randn([ncx,ncy]);
-X=zeros(ncx,ncy);
-% X(1+(ncx-1)/4:end-(ncx-1)/4,1+(ncy-1)/4:end-(ncy-1)/4)=1;
+X=randn([ncx,ncy]);
+% X=rand([ncx,ncy]);
+% X=zeros(ncx,ncy);
+% X(1+(ncx)/4:end-(ncx)/4,1+(ncy)/4:end-(ncy)/4)=1;
+% X(1+(ncx)/4:end-(ncx)/4,1+(ncy)/4:end-(ncy)/4)=rand((ncx)/2,ncy/2);
 % X(1+(ncx)/4:end-(ncx)/4,1+(ncy-1)/4:end-(ncy-1)/4)=1;
 % X(1+(ncx-1)/4:end-(ncx-1)/4,1+(ncy)/4:3*(ncy)/4)=1;
 % X(1+(ncx-1)/4:end-(ncx-1)/4,1+(ncy-1)/4:end-(ncy-1)/4)=1;
-X(1+(ncx-1)/4:end-(ncx-1)/4,1+(ncy)/4:3*(ncy)/4)=rand((ncx+1)/2,ncy/2);
+% X(1+(ncx-1)/4:end-(ncx-1)/4,1+(ncy)/4:3*(ncy)/4)=rand((ncx+1)/2,ncy/2);
 % % X(1+3*(ncx-1)/8:end-3*(ncx-1)/8,1+3*(ncy-1)/8:end-3*(ncy-1)/8)=1;
 % % X=ones(ncx,ncy);
 % % 
@@ -119,6 +129,9 @@ Co_=ifft(Bo_);
 
 [ Radon_hor_, Radon_vert_] = Ridgelet2d_RP_crude_forwards_dev2(X);
 
+% [ Radon_hor_h_, Radon_vert_v_] = Ridgelet2d_RP_crude_forwards_dev2(X);
+
+% [ Radon_hor_h_, Radon_vert_h_] = Ridgelet2d_RP_crude_forwards_ifftReal(X);
 
 figure;imagesc(real(Radon_hor_)); colorbar;
 xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
@@ -153,11 +166,29 @@ ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 
 [ X_rec_phase ] = Ridgelet2d_RP_crude_backwards_dev2( Radon_hor_, Radon_vert_ );
 
+max(abs(X_rec_phase(:)-X(:)))
+
 figure; imagesc(real(X_rec_phase));colorbar;
 
 figure; imagesc(imag(X_rec_phase));colorbar;
 
-max(abs(X_rec_phase(:)-X(:)))
+
+
+
+Radon_hor_ = zeros(size(Radon_hor_));
+Radon_vert_ = zeros(size(Radon_vert_));
+
+% Radon_hor_(64,86)=1;
+Radon_hor_(9,7)=1;
+
+[ X_rec_phase ] = Ridgelet2d_RP_crude_backwards_dev2( Radon_hor_, Radon_vert_ );
+
+figure; imagesc(real(X_rec_phase));colorbar;
+
+figure; imagesc(imag(X_rec_phase));colorbar;
+
+
+
 
 
 [ X_rec_phase ] = Ridgelet2d_RP_crude_backwards_dev2( real(Radon_hor_),real(Radon_vert_));

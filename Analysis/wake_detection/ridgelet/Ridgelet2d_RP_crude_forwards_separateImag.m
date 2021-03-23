@@ -1,4 +1,4 @@
-function [ Radon_hor__,Radon_vert__] = Ridgelet2d_RP_crude_forwards_ifftReal(X)
+function [ Radon_hor__,Radon_vert__] = Ridgelet2d_RP_crude_forwards_separateImag(X)
 
 % using real ifft fix, padded
 

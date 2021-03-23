@@ -1,4 +1,4 @@
-function [ X_rec_phase ] = Ridgelet2d_RP_crude_backwards_dev2( Radon_hor_, Radon_vert_ )
+function [ X_rec_phase ] = Ridgelet2d_RP_crude_backwards_ifftReal( Radon_hor_, Radon_vert_ )
 
 % Inverse 2-D Radon transformation, recto-polar crude interpolation (nearest, close to center)
 
@@ -67,9 +67,9 @@ if is_odd_ncx==0
     %     RPinterp_hor(:,1)=real(RPinterp_hor(:,1));
     RPinterp_hor_toReal_rec=RPinterp_hor_rec(:,1);
     for t=1:ncy+(1-is_odd_ncy)
-        RPinterp_hor_toReal_rec_(t)=(exp(1i*pi*(t-1)*(1-is_odd_ncy/ncy)))*RPinterp_hor_toReal_rec(t);
+        RPinterp_hor_toReal_rec_(t)=(exp(1i*pi*(t-1)*(1-1/(ncy+(1-is_odd_ncy)))))*RPinterp_hor_toReal_rec(t);
     end
-    RPinterp_hor_rec=fft(RPinterp_hor_toReal_rec_(:));
+    RPinterp_hor_rec(:,1)=fft(RPinterp_hor_toReal_rec_(:));
     RPinterp_hor_rec(:,end+1)=conj(RPinterp_hor_rec(:,1));
     %     RPinterp_hor_rec(:,1)=RPinterp_hor_toReal_rec_;
     
@@ -81,7 +81,7 @@ if is_odd_ncy==0
     %     RPinterp_vert(:,1)=fft(circshift(RPinterp_vert(:,1),65));
     RPinterp_vert_toReal_rec=RPinterp_vert_rec(:,1);
     for t=1:ncx+(1-is_odd_ncx)
-        RPinterp_vert_toReal_rec_(t)=(exp(1i*pi*(t-1)*(1-is_odd_ncx/ncx)))*RPinterp_vert_toReal_rec(t);
+        RPinterp_vert_toReal_rec_(t)=(exp(1i*pi*(t-1)*(1-1/(ncx+(1-is_odd_ncx)))))*RPinterp_vert_toReal_rec(t);
     end
 %     for t=1:ncx+(1-is_odd_ncx)
 %         RPinterp_vert_toReal__rec(t)=(exp(-1i*pi*(t-1)*(1-is_odd_ncx/ncx)))*RPinterp_vert_toReal_rec(t);

@@ -1,4 +1,4 @@
-function [ ] = Script_Ridgelet2d_RP_crude_ifftReal()
+function [ ] = Script_Ridgelet2d_RP_crude_separateImag()
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -9,7 +9,7 @@ clearvars;
 
 
 % nc=128;
-nc=64;
+% nc=64;
 % nc=16;
 % nc=8;
 % nc=4;
@@ -20,21 +20,23 @@ nc=64;
 % ncx=31;ncy=3;
 % ncx=6;ncy=6;
 % ncx=31;ncy=143;
+ncx=4;ncy=6;
+
 
 % ncx=nc;ncy=nc/2;
-ncx=nc;ncy=nc;
+% ncx=nc;ncy=nc;
 
 % ncx=129;ncy=128;
 
 % X=ones(ncx,ncy);
-X=zeros(ncx,ncy);
+% X=zeros(ncx,ncy);
 % X(1+ncx/4:3*ncx/4,1+ncy/4:3*ncy/4)=1;
 % X(1+ncx/4:3*ncx/4,1+ncy/4:3*ncy/4)=randn([ncx/2,ncy/2]);
 % X(1+ncx/4:3*ncx/4,1+ncy/4:3*ncy/4)=1+rand([ncx/2,ncy/2]);
 
 % X(:,nc/8)=1;
 % X(:,nc/2)=1;
-X(nc/2,:)=1;
+% X(nc/2,:)=1;
 % for i=1:ncx
 % %     X(i,min(max(round(i/4),1),ncy))=1;
 %     X(i,10+min(max(round(i/8),1),ncy))=1;
@@ -42,7 +44,7 @@ X(nc/2,:)=1;
 % end
 % X=X+0.5*randn([ncx,ncy]);
 % X=rand([ncx,ncy]);
-% X=randn([ncx,ncy]);
+X=randn([ncx,ncy]);
 
 figure; imagesc(X);colorbar;
 
@@ -50,6 +52,7 @@ figure; imagesc(X);colorbar;
 %
 
 % clearvars;
+
 % nc=1+2*64;
 % % nc=1+2*16;
 % % nc=1+2*8;
@@ -120,7 +123,7 @@ Co_=ifft(Bo_);
 
 %Radon Transformation
 
-[ Radon_hor_, Radon_vert_] = Ridgelet2d_RP_crude_forwards_ifftReal(X);
+[ Radon_hor_, Radon_vert_] = Ridgelet2d_RP_crude_forwards_separateImag(X);
 
 % [ Radon_hor_h_, Radon_vert_v_] = Ridgelet2d_RP_crude_forwards_dev2(X);
 
@@ -142,6 +145,8 @@ xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 
 
+
+
 figure;imagesc(abs(Radon_hor_)); colorbar;
 xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
@@ -155,7 +160,7 @@ ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 % figure; histogram(real(Radon_vert_(:)));
 
 
-[ X_rec_phase ] = Ridgelet2d_RP_crude_backwards_ifftReal( Radon_hor_, Radon_vert_ );
+[ X_rec_phase ] = Ridgelet2d_RP_crude_backwards_separateImag( Radon_hor_, Radon_vert_ );
 
 max(abs(X_rec_phase(:)-X(:)))
 
