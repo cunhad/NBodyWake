@@ -4,7 +4,15 @@ function [ X_rec_phase ] = Ridgelet2d_RP_crude_backwards_separateImag( Radon_hor
 
 % using real ifft fix
 
- 
+RPinterp_hor_phase_=Radon_hor_(:,end);
+RPinterp_vert_phase_=Radon_vert_(:,end);
+
+Radon_hor_(:,end)=[];
+Radon_vert_(:,end)=[];
+
+
+
+
 % implicit variable
  
 ncy=size(Radon_vert_(1,:));
@@ -62,34 +70,71 @@ RPinterp_vert_rec=(fft(Radon_vert_phase_rec.').');
 
 
 
-if is_odd_ncx==0
-    %     RPinterp_hor_rec(:,end)=[];
-    %     RPinterp_hor(:,1)=real(RPinterp_hor(:,1));
-    RPinterp_hor_toReal_rec=RPinterp_hor_rec(:,1);
-    for t=1:ncy+(1-is_odd_ncy)
-        RPinterp_hor_toReal_rec_(t)=(exp(1i*pi*(t-1)*(1-1/(ncy+(1-is_odd_ncy)))))*RPinterp_hor_toReal_rec(t);
-    end
-    RPinterp_hor_rec(:,1)=fft(RPinterp_hor_toReal_rec_(:));
+if is_odd_ncx==0 
+%     RPinterp_hor(:,end)=[];
+%     RPinterp_hor_imag(end)=[];
+%     RPinterp_hor_imag=RPinterp_hor(:,1)-real(RPinterp_hor(:,1));
+%     RPinterp_hor(:,1)=abs(RPinterp_hor(:,1)).*sign(abs(RPinterp_hor(:,1)));
+    RPinterp_hor_rec(:,1)=abs(RPinterp_hor_rec(:,1)).*exp(+1i*RPinterp_hor_phase_);
     RPinterp_hor_rec(:,end+1)=conj(RPinterp_hor_rec(:,1));
-    %     RPinterp_hor_rec(:,1)=RPinterp_hor_toReal_rec_;
+end
     
-end
 
-if is_odd_ncy==0
-    %     RPinterp_vert_rec(:,end)=[];
-    %     RPinterp_vert_toReal_rec=ifft(RPinterp_vert_rec(:,1));
-    %     RPinterp_vert(:,1)=fft(circshift(RPinterp_vert(:,1),65));
-    RPinterp_vert_toReal_rec=RPinterp_vert_rec(:,1);
-    for t=1:ncx+(1-is_odd_ncx)
-        RPinterp_vert_toReal_rec_(t)=(exp(1i*pi*(t-1)*(1-1/(ncx+(1-is_odd_ncx)))))*RPinterp_vert_toReal_rec(t);
-    end
-%     for t=1:ncx+(1-is_odd_ncx)
-%         RPinterp_vert_toReal__rec(t)=(exp(-1i*pi*(t-1)*(1-is_odd_ncx/ncx)))*RPinterp_vert_toReal_rec(t);
-%     end
-     RPinterp_vert_rec(:,1)=fft(RPinterp_vert_toReal_rec_(:));
+if is_odd_ncy==0 
+%     RPinterp_hor(:,end)=[];
+%     RPinterp_hor_imag(end)=[];
+%     RPinterp_hor_imag=RPinterp_hor(:,1)-real(RPinterp_hor(:,1));
+%     RPinterp_hor(:,1)=abs(RPinterp_hor(:,1)).*sign(abs(RPinterp_hor(:,1)));
+    RPinterp_vert_rec(:,1)=abs(RPinterp_vert_rec(:,1)).*exp(+1i*RPinterp_vert_phase_);
     RPinterp_vert_rec(:,end+1)=conj(RPinterp_vert_rec(:,1));
-%     RPinterp_vert_rec(:,1)=RPinterp_vert_toReal_rec_;
 end
+    
+
+
+% 
+% 
+% 
+% % RPinterp_hor_phase=angle(RPinterp_hor(:,end));
+% 
+% if is_odd_ncx==0 
+%     RPinterp_hor(:,end)=[];
+% %     RPinterp_hor_imag(end)=[];
+% %     RPinterp_hor_imag=RPinterp_hor(:,1)-real(RPinterp_hor(:,1));
+%     RPinterp_hor(:,1)=abs(RPinterp_hor(:,1)).*sign(abs(RPinterp_hor(:,1)));
+% end
+%     
+% 
+% 
+% if is_odd_ncx==0
+%     %     RPinterp_hor_rec(:,end)=[];
+%     %     RPinterp_hor(:,1)=real(RPinterp_hor(:,1));
+%     RPinterp_hor_toReal_rec=RPinterp_hor_rec(:,1);
+%     for t=1:ncy+(1-is_odd_ncy)
+%         RPinterp_hor_toReal_rec_(t)=(exp(1i*pi*(t-1)*(1-1/(ncy+(1-is_odd_ncy)))))*RPinterp_hor_toReal_rec(t);
+%     end
+%     RPinterp_hor_rec(:,1)=fft(RPinterp_hor_toReal_rec_(:));
+%     RPinterp_hor_rec(:,end+1)=conj(RPinterp_hor_rec(:,1));
+%     %     RPinterp_hor_rec(:,1)=RPinterp_hor_toReal_rec_;
+%     
+% end
+% 
+% if is_odd_ncy==0
+%     %     RPinterp_vert_rec(:,end)=[];
+%     %     RPinterp_vert_toReal_rec=ifft(RPinterp_vert_rec(:,1));
+%     %     RPinterp_vert(:,1)=fft(circshift(RPinterp_vert(:,1),65));
+%     RPinterp_vert_toReal_rec=RPinterp_vert_rec(:,1);
+%     for t=1:ncx+(1-is_odd_ncx)
+%         RPinterp_vert_toReal_rec_(t)=(exp(1i*pi*(t-1)*(1-1/(ncx+(1-is_odd_ncx)))))*RPinterp_vert_toReal_rec(t);
+%     end
+% %     for t=1:ncx+(1-is_odd_ncx)
+% %         RPinterp_vert_toReal__rec(t)=(exp(-1i*pi*(t-1)*(1-is_odd_ncx/ncx)))*RPinterp_vert_toReal_rec(t);
+% %     end
+%      RPinterp_vert_rec(:,1)=fft(RPinterp_vert_toReal_rec_(:));
+%     RPinterp_vert_rec(:,end+1)=conj(RPinterp_vert_rec(:,1));
+% %     RPinterp_vert_rec(:,1)=RPinterp_vert_toReal_rec_;
+% end
+% 
+% 
 
 % 
 % 

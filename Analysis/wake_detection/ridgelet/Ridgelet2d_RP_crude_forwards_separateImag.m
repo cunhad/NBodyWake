@@ -1,8 +1,8 @@
 function [ Radon_hor__,Radon_vert__] = Ridgelet2d_RP_crude_forwards_separateImag(X)
 
-% using real ifft fix, padded
+% using real ifft fix, 
 
-
+% sometimes it is better to pass, not the imag part, but just the phase (mwith signed modulo)
 
 
 
@@ -95,26 +95,82 @@ end
 %     RPinterp_vert(:,1)=real(RPinterp_vert(:,1));
 % end
 
+
+% //store just the imaginary part,for either odd and even imaginary parts
+% (in the even case, only removes the first colum imag
+% (in the odd case, do not remove imaginary -> set the extra vector to sero)
+% 
+% RPinterp_hor_imag=imag(RPinterp_hor(:,1));
+% 
+% if is_odd_ncx==0 
+%     RPinterp_hor(:,end)=[];
+% %     RPinterp_hor_imag(end)=[];
+% %     RPinterp_hor_imag=RPinterp_hor(:,1)-real(RPinterp_hor(:,1));
+%     RPinterp_hor(:,1)=real(RPinterp_hor(:,1));
+% end
+%     
+% RPinterp_vert_imag=imag(RPinterp_vert(:,1));
+% 
+% if is_odd_ncy==0
+%     RPinterp_vert(:,end)=[];
+% %     RPinterp_vert_imag(end)=[];
+% %     RPinterp_hor_imag=RPinterp_hor(:,1)-real(RPinterp_hor(:,1));
+%     RPinterp_vert(:,1)=real(RPinterp_vert(:,1));
+% end
+% 
+% 
+% 
+
+
+% with the pseudo modulus idea, 
+% since the phase in matlab depends on [-pi,pi], 
+% abs(phase)-pi/2>0 
+% is the "negativeness" condition
+
+
+RPinterp_hor_phase=angle(RPinterp_hor(:,1));
+
 if is_odd_ncx==0 
     RPinterp_hor(:,end)=[];
-    RPinterp_hor_toReal=ifft(RPinterp_hor(:,1));    
-%     RPinterp_hor(:,1)=real(RPinterp_hor(:,1));
-    for t=1:ncy+(1-is_odd_ncy)
-        RPinterp_hor_toReal_(t)=(exp(-1i*pi*(t-1)*(1-1/(ncy+(1-is_odd_ncy)))))*RPinterp_hor_toReal(t);
-    end
-    RPinterp_hor(:,1)=RPinterp_hor_toReal_;
+%     RPinterp_hor_imag(end)=[];
+%     RPinterp_hor_imag=RPinterp_hor(:,1)-real(RPinterp_hor(:,1));
+    RPinterp_hor(:,1)=abs(RPinterp_hor(:,1)).*sign(real(RPinterp_hor(:,1)));
 end
+    
+RPinterp_vert_phase=angle(RPinterp_vert(:,1));
 
 if is_odd_ncy==0
     RPinterp_vert(:,end)=[];
-    RPinterp_vert_toReal=ifft(RPinterp_vert(:,1));
-    %     RPinterp_vert(:,1)=fft(circshift(RPinterp_vert(:,1),65));
-    for t=1:ncx+(1-is_odd_ncx)
-        RPinterp_vert_toReal_(t)=(exp(-1i*pi*(t-1)*(1-1/(ncx+(1-is_odd_ncx)))))*RPinterp_vert_toReal(t);
-    end
-    RPinterp_vert(:,1)=RPinterp_vert_toReal_;
+%     RPinterp_vert_imag(end)=[];
+%     RPinterp_hor_imag=RPinterp_hor(:,1)-real(RPinterp_hor(:,1));
+    RPinterp_vert(:,1)=abs(RPinterp_vert(:,1)).*sign(real(RPinterp_vert(:,1)));
 end
 
+    
+    
+    
+% 
+% if is_odd_ncx==0 
+%     RPinterp_hor(:,end)=[];
+%     RPinterp_hor_toReal=ifft(RPinterp_hor(:,1));    
+% %     RPinterp_hor(:,1)=real(RPinterp_hor(:,1));
+%     for t=1:ncy+(1-is_odd_ncy)
+%         RPinterp_hor_toReal_(t)=(exp(-1i*pi*(t-1)*(1-1/(ncy+(1-is_odd_ncy)))))*RPinterp_hor_toReal(t);
+%     end
+%     RPinterp_hor(:,1)=RPinterp_hor_toReal_;
+% end
+% 
+% 
+% if is_odd_ncy==0
+%     RPinterp_vert(:,end)=[];
+%     RPinterp_vert_toReal=ifft(RPinterp_vert(:,1));
+%     %     RPinterp_vert(:,1)=fft(circshift(RPinterp_vert(:,1),65));
+%     for t=1:ncx+(1-is_odd_ncx)
+%         RPinterp_vert_toReal_(t)=(exp(-1i*pi*(t-1)*(1-1/(ncx+(1-is_odd_ncx)))))*RPinterp_vert_toReal(t);
+%     end
+%     RPinterp_vert(:,1)=RPinterp_vert_toReal_;
+% end
+% 
 
 
 Radon_hor = (ifft(RPinterp_hor.').');
@@ -133,6 +189,15 @@ for t=1:ncx+(1-is_odd_ncx)
     end
 end
 
+% RPinterp_hor_imag=imag(RPinterp_hor(:,1));    
+% RPinterp_hor_imag=imag(RPinterp_vert(:,1));
+% 
+% Radon_hor__(:,end+1)=RPinterp_hor_imag;
+% Radon_vert__(:,end+1)=RPinterp_vert_imag;
+
+
+Radon_hor__(:,end+1)=RPinterp_hor_phase;
+Radon_vert__(:,end+1)=RPinterp_vert_phase;
 
 
 % Radon_hor__=Radon_hor;

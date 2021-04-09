@@ -18,6 +18,7 @@ clearvars;
 % ncx=31;ncy=3;
 % ncx=6;ncy=6;
 % ncx=31;ncy=143;
+ncx=4;ncy=6;
 
 % ncx=nc;ncy=nc/2;
 % ncx=nc;ncy=nc;
