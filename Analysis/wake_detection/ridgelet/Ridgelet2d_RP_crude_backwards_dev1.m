@@ -47,6 +47,11 @@ function [ X_rec_phase ] = Ridgelet2d_RP_crude_backwards_dev1( Radon_hor_, Radon
 % 
 % 
 % 
+
+
+
+
+
 % % implicit variable
 
 ncy=size(Radon_hor_(:,1));
@@ -63,6 +68,9 @@ ncx = ncx(1)-1;
 % 
 % % implicit variable
 %  
+
+
+
 % ncy=size(Radon_vert_(1,:));
 % ncy=ncy(2);
 % 
@@ -91,11 +99,13 @@ ncx = ncx(1)-1;
 is_odd_ncx=mod(ncx,2);
 is_odd_ncy=mod(ncy,2);
 
+% Remove redundant augmentation in "odd" case (done to makd the dimension implicit)
 
 
 if is_odd_ncy==1 Radon_hor_(end,:)=[];end
 if is_odd_ncx==1 Radon_vert_(end,:)=[];end
 
+% convention to the frequency center fft
 
 
 for r=1:ncx+(1-is_odd_ncx)
@@ -111,6 +121,7 @@ for t=1:ncx+(1-is_odd_ncx)
 end
 
 
+% Obtain Radon by inverse fft of the the RP interpolations
 
 
 
@@ -216,6 +227,10 @@ RPinterp_vert_rec=(fft(Radon_vert_phase_rec.').');
 % if is_odd_ncy==0 RPinterp_vert_rec(:,end+1)=conj(RPinterp_vert_rec(:,1)); end
 
 
+
+
+
+
 %Apply inverse Recto-Polar interpolation
 
 F_rec=zeros(ncx+(1-is_odd_ncx),ncy+(1-is_odd_ncy));
@@ -263,8 +278,20 @@ F_rec_norm=F_rec./F_rec_count;
 
 % figure; imagesc(abs(F_rec_norm));colorbar;
 
+
+
+
+
+% remove augmentation if even
+
+
 if is_odd_ncy==0 F_rec_norm(:,end)=[];end
 if is_odd_ncx==0 F_rec_norm(end,:)=[];end
+
+
+%Apply iFFT2 (% convention to the frequency center fft)
+
+
 
 X_rec = ifft(ifft(F_rec_norm.').');
 

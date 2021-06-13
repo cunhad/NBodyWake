@@ -1,9 +1,6 @@
 function [ Radon_hor__,Radon_vert__] = Ridgelet2d_RP_crude_forwards_dev1(X)
 
-% using real ifft fix, 
-
-% sometimes it is better to pass, not the imag part, but just the phase (mwith signed modulo)
-
+% Forward Radon Recto-polar interpolation
 
 
 
@@ -16,7 +13,7 @@ is_odd_ncx=mod(ncx,2);
 is_odd_ncy=mod(ncy,2);
 
 
-%Apply FFT2
+%Apply FFT2 (% convention to the frequency center fft)
 
 for i=1:ncx
     for j=1:ncy
@@ -26,6 +23,10 @@ end
 
 
 F_ = fft(fft(X_).').';
+
+
+
+% Augmentation if even
 
 if is_odd_ncy==0 F_(:,end+1)=F_(:,1);end
 if is_odd_ncx==0 F_(end+1,:)=F_(1,:);end
@@ -174,8 +175,22 @@ end
 % % 
 
 
+
+
+
+% Obtain Radon by inverse fft of the the RP interpolations
+
+
 Radon_hor = (ifft(RPinterp_hor.').');
 Radon_vert = (ifft(RPinterp_vert.').');
+
+
+
+
+
+
+% convention to the frequency center fft
+
 
 % 
 % for r=1:ncx
@@ -227,7 +242,15 @@ end
 % ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 
 
-% 
+
+
+
+
+
+
+
+% Redundant augmentation in "odd" case (to make the dimension implicit)
+
 
 if is_odd_ncy==1 Radon_hor__(end+1,:)=Radon_hor__(1,:);end
 if is_odd_ncx==1 Radon_vert__(end+1,:)=Radon_vert__(1,:);end

@@ -271,6 +271,101 @@ figure; scatter(sample_points_vert(:,3),sample_points_vert(:,4))
 hold on;
 scatter(sample_points_hor(:,3),sample_points_hor(:,4))
 
+
+
+
+
+
+
+
+
+
+%Vertical and horizontal lines (double interpolating)
+
+
+n_thetas=2*(2*(ncx+ncy));
+d_theta=2*pi/n_thetas;
+
+thetas=0:d_theta:2*pi-d_theta;
+theta_x_half=atan(floor(ncy/2)/floor(ncx/2));
+
+aux_count_vert=1;
+aux_count_hor=1;
+clearvars sample_points_vert sample_points_hor
+
+RPinterp_vert_x_cell={};
+RPinterp_vert_y_cell={};
+RPinterp_hor_x_cell={};
+RPinterp_hor_y_cell={};
+
+aux_count_interp_vert=1;
+aux_count_interp_vert_interp=1;
+aux_count_interp_vert_cell=1;
+aux_count_interp_hor=1;
+aux_count_interp_hor_interp=1;
+aux_count_interp_hor_cell=1;
+
+
+%para armazenar, ao invez de celulas, faz uma entrada auxiliar labelling
+%de 1 a lenght(t) (um numero para cada angulo)
+
+for t=thetas
+    if (t<theta_x_half)|((t>=pi-theta_x_half)&(t<pi+theta_x_half))|(t>=2*pi-theta_x_half)
+%     if (t<theta_x_half)|((t>=pi-theta_x_half)&(t<=pi+theta_x_half))|(t>2*pi-theta_x_half)
+        for r=-floor(abs(2+ncx/(2*cos(t)))):1/2:floor(abs(2+ncx/(2*cos(t))))            
+            sample_points_hor(aux_count_hor,1)=r;
+            sample_points_hor(aux_count_hor,2)=t;
+            sample_points_hor(aux_count_hor,3)=r*cos(t);
+            sample_points_hor(aux_count_hor,4)=r*sin(t);            
+            sample_points_hor(aux_count_hor,5)=aux_count_interp_hor_interp;            
+            aux_count_hor=aux_count_hor+1;
+            RPinterp_hor_x(aux_count_interp_hor)=r*cos(t);
+            RPinterp_hor_y(aux_count_interp_hor)=r*sin(t);
+            aux_count_interp_hor=aux_count_interp_hor+1;
+        end 
+        RPinterp_hor_x_cell{aux_count_interp_hor_cell}=RPinterp_hor_x;
+        RPinterp_hor_y_cell{aux_count_interp_hor_cell}=RPinterp_hor_y;
+        aux_count_interp_hor_cell=aux_count_interp_hor_cell+1;
+        aux_count_interp_hor=1;
+        clearvars RPinterp_hor_x RPinterp_hor_y
+        aux_count_interp_hor_interp=aux_count_interp_hor_interp+1;
+    else
+        for r=-floor(2+abs(ncy/(2*sin(t)))):1/2:floor(2+abs(ncy/(2*sin(t))))
+            sample_points_vert(aux_count_vert,1)=r;
+            sample_points_vert(aux_count_vert,2)=t;
+            sample_points_vert(aux_count_vert,3)=r*cos(t);
+            sample_points_vert(aux_count_vert,4)=r*sin(t);                
+            sample_points_vert(aux_count_vert,5)=aux_count_interp_vert_interp;                
+            aux_count_vert=aux_count_vert+1;
+            RPinterp_vert_x(aux_count_interp_vert)=r*cos(t);
+            RPinterp_vert_y(aux_count_interp_vert)=r*sin(t);
+            aux_count_interp_vert=aux_count_interp_vert+1;            
+        end 
+        RPinterp_vert_x_cell{aux_count_interp_vert_cell}=RPinterp_vert_x;
+        RPinterp_vert_y_cell{aux_count_interp_vert_cell}=RPinterp_vert_y;
+        aux_count_interp_vert_cell=aux_count_interp_vert_cell+1;
+        aux_count_interp_vert=1;
+        clearvars RPinterp_vert_x RPinterp_vert_y
+        aux_count_interp_vert_interp=aux_count_interp_vert_interp+1;        
+    end
+end
+
+
+
+for t=1:length(RPinterp_vert_x_cell)
+    RPinterp_vert_cell_info(t)=length(RPinterp_vert_x_cell{t});
+end
+
+for t=1:length(RPinterp_hor_x_cell)
+    RPinterp_hor_cell_info(t)=length(RPinterp_hor_x_cell{t});
+end
+
+
+
+
+
+
+
 % %Vertical lines_centered
 % 
 % 

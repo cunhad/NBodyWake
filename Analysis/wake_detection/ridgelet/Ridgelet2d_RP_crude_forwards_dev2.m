@@ -41,7 +41,7 @@ is_odd_ncy_v=mod(ncy_v,2);
 % end
 
 
-%Apply FFT2
+%Apply FFT2  (% convention to the frequency center fft)
 
 for i=1:ncx_h
     for j=1:ncy_h
@@ -65,13 +65,18 @@ end
 F_h_ = fft(fft(X_h_).').';
 F_v_ = fft(fft(X_v_).').';
 
+
+
+% Augmentation if even
+
+
 % 
 % if is_odd_ncy==0 F_(:,end+1)=F_(:,1);end
 % if is_odd_ncx==0 F_(end+1,:)=F_(1,:);end
 
 
-if is_odd_ncx_h==0 F_h_(end+1,:)=F_h_(1,:);end
 if is_odd_ncy_h==0 F_h_(:,end+1)=F_h_(:,1);end
+if is_odd_ncx_h==0 F_h_(end+1,:)=F_h_(1,:);end
 
 if is_odd_ncy_v==0 F_v_(:,end+1)=F_v_(:,1);end
 if is_odd_ncx_v==0 F_v_(end+1,:)=F_v_(1,:);end
@@ -119,7 +124,6 @@ for t=1:ncx_v+(1-is_odd_ncx_v)
     end
 end
 
-
 % %Horizontal lines_centered
 % 
 % 
@@ -133,7 +137,6 @@ end
 %         RPinterp_hor(t,r)=F_(x,y);
 %     end
 % % end
-
 
 %Horizontal lines_centered
 
@@ -182,41 +185,50 @@ end
 %     RPinterp_vert(:,1)=real(RPinterp_vert(:,1));
 % end
 
-if is_odd_ncx_h==0 
-    RPinterp_hor_h(:,end)=[];
-    RPinterp_hor_h_toReal=ifft(RPinterp_hor_h(:,1));    
-%     RPinterp_hor(:,1)=real(RPinterp_hor(:,1));
-    for t=1:ncy_h+(1-is_odd_ncy_h)
-        RPinterp_hor_h_toReal_(t)=(exp(-1i*pi*(t-1)*(1-1/(ncy_h+(1-is_odd_ncy_h)))))*RPinterp_hor_h_toReal(t);
-    end
-    RPinterp_hor_h(:,1)=RPinterp_hor_h_toReal_;
-end
+% if is_odd_ncx_h==0 
+%     RPinterp_hor_h(:,end)=[];
+%     RPinterp_hor_h_toReal=ifft(RPinterp_hor_h(:,1));    
+% %     RPinterp_hor(:,1)=real(RPinterp_hor(:,1));
+%     for t=1:ncy_h+(1-is_odd_ncy_h)
+%         RPinterp_hor_h_toReal_(t)=(exp(-1i*pi*(t-1)*(1-1/(ncy_h+(1-is_odd_ncy_h)))))*RPinterp_hor_h_toReal(t);
+%     end
+%     RPinterp_hor_h(:,1)=RPinterp_hor_h_toReal_;
+% end
+% 
+% if is_odd_ncy_v==0
+%     RPinterp_vert_v(:,end)=[];
+%     RPinterp_vert_v_toReal=ifft(RPinterp_vert_v(:,1));
+%     %     RPinterp_vert(:,1)=fft(circshift(RPinterp_vert(:,1),65));
+%     for t=1:ncx_v+(1-is_odd_ncx_v)
+%         RPinterp_vert_v_toReal_(t)=(exp(-1i*pi*(t-1)*(1-1/(ncx_v+(1-is_odd_ncx_v)))))*RPinterp_vert_v_toReal(t);
+%     end
+%     RPinterp_vert_v(:,1)=RPinterp_vert_v_toReal_;
+% end
 
-if is_odd_ncy_v==0
-    RPinterp_vert_v(:,end)=[];
-    RPinterp_vert_v_toReal=ifft(RPinterp_vert_v(:,1));
-    %     RPinterp_vert(:,1)=fft(circshift(RPinterp_vert(:,1),65));
-    for t=1:ncx_v+(1-is_odd_ncx_v)
-        RPinterp_vert_v_toReal_(t)=(exp(-1i*pi*(t-1)*(1-1/(ncx_v+(1-is_odd_ncx_v)))))*RPinterp_vert_v_toReal(t);
-    end
-    RPinterp_vert_v(:,1)=RPinterp_vert_v_toReal_;
-end
 
 
+
+% Obtain Radon by inverse fft of the the RP interpolations
 
 Radon_hor_h = (ifft(RPinterp_hor_h.').');
 Radon_vert_v = (ifft(RPinterp_vert_v.').');
 
 
-for r=1:ncx_h
+
+
+
+% convention to the frequency center fft
+
+
+for r=1:ncx_h+(1-is_odd_ncx_h)
     for t=1:ncy_h+(1-is_odd_ncy_h)
-        Radon_hor_h__(t,r)=(exp(-1i*pi*(r-1)*(1-is_odd_ncx_h/ncx_h)))*Radon_hor_h(t,r);
+        Radon_hor_h__(t,r)=(exp(-1i*pi*(r-1)*(1-1/(ncx_h+(1-is_odd_ncx_h)))))*Radon_hor_h(t,r);
     end
 end
 
 for t=1:ncx_v+(1-is_odd_ncx_v)
-    for r=1:ncy_v
-        Radon_vert_v__(t,r)=(exp(-1i*pi*(r-1)*(1-is_odd_ncy_v/ncy_v)))*Radon_vert_v(t,r);
+    for r=1:ncy_v+(1-is_odd_ncy_v)
+        Radon_vert_v__(t,r)=(exp(-1i*pi*(r-1)*(1-1/(ncy_v+(1-is_odd_ncy_v)))))*Radon_vert_v(t,r);
     end
 end
 
@@ -235,6 +247,15 @@ end
 % ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 
 
+
+
+% Redundant augmentation in "odd" case (to make the dimension implicit)
+
+
+
+if is_odd_ncy_h==1 Radon_hor_h__(end+1,:)=Radon_hor_h__(1,:);end
+
+if is_odd_ncx_v==1 Radon_vert_v__(end+1,:)=Radon_vert_v__(1,:);end
 
 
 end

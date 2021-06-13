@@ -1,4 +1,4 @@
-function [ ] = Script_Ridgelet2d_RP_crude_dev1()
+function [ ] = Script_Ridgelet2d_RP_crude_dev3()
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -9,7 +9,7 @@ clearvars;
 
 
 % nc=128;
-% nc=64;
+nc=64;
 % nc=16;
 % nc=8;
 % nc=4;
@@ -21,18 +21,19 @@ clearvars;
 % ncx=6;ncy=6;
 % ncx=31;ncy=143;
 % ncx=4;ncy=32;
-ncx=16;ncy=4;
+% ncx=16;ncy=8;
 
 
 % ncx=nc;ncy=nc/2;
-% ncx=nc;ncy=nc;
+ncx=nc;ncy=nc;
 
 % ncx=129;ncy=128;
 
 % X=ones(ncx,ncy);
-% X=zeros(ncx,ncy);
-% X(1+ncx/4:3*ncx/4,1+ncy/4:3*ncy/4)=1;
+X=zeros(ncx,ncy);
+X(1+ncx/4:3*ncx/4,1+ncy/4:3*ncy/4)=1;
 % X(1+ncx/4:3*ncx/4,1+ncy/4:3*ncy/4)=randn([ncx/2,ncy/2]);
+% X(1+ncx/4:3*ncx/4,1+ncy/4:3*ncy/4)=rand([ncx/2,ncy/2]);
 % X(1+ncx/4:3*ncx/4,1+ncy/4:3*ncy/4)=1+rand([ncx/2,ncy/2]);
 
 % X(:,nc/8)=1;
@@ -45,7 +46,8 @@ ncx=16;ncy=4;
 % end
 % X=X+0.5*randn([ncx,ncy]);
 % X=rand([ncx,ncy]);
-X=randn([ncx,ncy]);
+% X=randn([ncx,ncy]);
+% X(:,nc/2)=1;
 
 figure; imagesc(X);colorbar;
 
@@ -70,8 +72,9 @@ ncx=64;ncy=64;
 % ncx=64;ncy=65;
 % X=randn([ncx,ncy]);
 X=zeros(ncx,ncy);
-X(1+(ncx)/4:end-(ncx)/4,1+(ncy)/4:end-(ncy)/4)=1;
+% X(1+(ncx)/4:end-(ncx)/4,1+(ncy)/4:end-(ncy)/4)=1;
 % X(1+(ncx)/4:end-(ncx)/4,1+(ncy)/4:end-(ncy)/4)=randn((ncx)/2,ncy/2);
+X(1+(ncx)/4:end-(ncx)/4,1+(ncy)/4:end-(ncy)/4)=rand((ncx)/2,ncy/2);
 % X(1+(ncx-1)/4:end-(ncx-1)/4,1+(ncy-1)/4:end-(ncy-1)/4)=1;
 % X(1+(ncx)/4:end-(ncx)/4,1+(ncy-1)/4:end-(ncy-1)/4)=randn((ncx)/2,(ncy+1)/2);
 % X(1+(ncx-1)/4:end-(ncx-1)/4,1+(ncy)/4:3*(ncy)/4)=1;
@@ -94,11 +97,32 @@ figure;
 % theta = 0:180;
 % theta-linspace()
 % theta = 180/nc:180/nc:180;
-theta = 180/(ncx+ncy):180/(ncx+ncy):180;
+% theta = 180/(ncx+ncy):180/(ncx+ncy):180;
+theta = 180/(4*ncx+4*ncy):180/(4*ncx+4*ncy):180;
 [R,xp] = radon(X,theta);
 imagesc(theta,xp,R);colorbar;
 % imagesc(R(1+(ncx-1)/4:end-(ncx-1)/4,1:(end-1)/2)); colorbar;
 % imagesc(R(-(ncx-1)/4+(end+1)/2:(ncx-1)/4+(end+1)/2,1:(end-1)/2)); colorbar;
+
+
+
+
+clearvars;
+ncx=64+1;ncy=128;
+X=randn([ncx,ncy]);
+figure; imagesc(X);colorbar;
+figure;
+theta = 180/(4*ncx+4*ncy):180/(4*ncx+4*ncy):180;
+[R,xp] = radon(X,theta);
+imagesc(theta,xp,R);colorbar;
+[ Radon_hor_, Radon_vert_,RPinterp_hor_cell_info,RPinterp_vert_cell_info,ncx,ncy] = Ridgelet2d_RP_crude_forwards_dev3(X);
+Ridgelet2d_RP_crude_visual_dev3(Radon_hor_, Radon_vert_,RPinterp_hor_cell_info,RPinterp_vert_cell_info,ncx,ncy);
+
+
+
+
+
+
 
 clearvars A A_ B B_ C C_
 
@@ -130,8 +154,27 @@ Co_=ifft(Bo_);
 
 % [ Radon_hor_, Radon_vert_,ncx,ncy] = Ridgelet2d_RP_crude_forwards_dev1(X);
 
-[ Radon_hor_, Radon_vert_] = Ridgelet2d_RP_crude_forwards_dev1(X);
+
+
+[ Radon_hor_, Radon_vert_,RPinterp_hor_cell_info,RPinterp_vert_cell_info,ncx,ncy] = Ridgelet2d_RP_crude_forwards_dev3(X);
+
+
+% [ Radon_hor__, Radon_vert__,RPinterp_hor_cell_info,RPinterp_vert_cell_info,ncx,ncy] = Ridgelet2d_RP_crude_forwards_dev3(X);
+
 % [ Radon_hor_h_, Radon_vert_v_] = Ridgelet2d_RP_crude_forwards_dev2(X);
+
+
+Ridgelet2d_RP_crude_visual_dev3(Radon_hor_, Radon_vert_,RPinterp_hor_cell_info,RPinterp_vert_cell_info,ncx,ncy);
+
+
+
+
+
+
+
+
+
+
 
 
 figure;imagesc(real(Radon_hor_)); colorbar;

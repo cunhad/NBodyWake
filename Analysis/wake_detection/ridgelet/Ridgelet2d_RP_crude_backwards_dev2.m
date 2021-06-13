@@ -10,33 +10,48 @@ function [ X_rec_phase ] = Ridgelet2d_RP_crude_backwards_dev2( Radon_hor_h_, Rad
  
 % implicit variable
 
+ncy_h_ = size(Radon_hor_h_(:,1));
+ncy_h_ = ncy_h_(1)-1;
+
+ncx_v_ = size(Radon_vert_v_(:,1));
+ncx_v_ = ncx_v_(1)-1;
 
 
-ncv_=size(Radon_vert_v_(:,:));
-ncy_v_=ncv_(2);
-ncy_h_=ncy_v_/3;
-% ncx_v_=ncv_(1);
+ncx_h_ = 3*ncx_v_;
+ncy_v_ = 3*ncy_h_;
 
-% if mod(ncy_(2)-1,3)==0
-%     ncy_=ncy_(2)-1;
-% else
-%     ncy_=ncy_(2);
-% end
 
-nch_=size(Radon_hor_h_(:,:));
-ncx_h_=nch_(2);
-ncx_v_=ncx_h_/3;
+ncx_= ncx_v_;
+ncy_= ncy_h_;
+
+
 % 
-% if mod(ncx(2)-1,3)==0
-%     ncx=ncx(2)-1;
-% else
-%     ncx=ncx(2);
-% end
-
-
-
-ncx_= ncx_h_/3;
-ncy_= ncy_v_/3;
+% 
+% ncv_=size(Radon_vert_v_(:,:));
+% ncy_v_=ncv_(2);
+% ncy_h_=ncy_v_/3;
+% % ncx_v_=ncv_(1);
+% 
+% % if mod(ncy_(2)-1,3)==0
+% %     ncy_=ncy_(2)-1;
+% % else
+% %     ncy_=ncy_(2);
+% % end
+% 
+% nch_=size(Radon_hor_h_(:,:));
+% ncx_h_=nch_(2);
+% ncx_v_=ncx_h_/3;
+% % 
+% % if mod(ncx(2)-1,3)==0
+% %     ncx=ncx(2)-1;
+% % else
+% %     ncx=ncx(2);
+% % end
+% 
+% 
+% 
+% ncx_= ncx_h_/3;
+% ncy_= ncy_v_/3;
 
 
 
@@ -55,19 +70,32 @@ is_odd_ncy_v_=mod(ncy_v_,2);
 
 
 
+% Remove redundant augmentation in "odd" case (done to makd the dimension implicit)
 
-for r=1:ncx_h_
+
+
+if is_odd_ncy_h_==1 Radon_hor_h_(end,:)=[];end
+if is_odd_ncx_v_==1 Radon_vert_v_(end,:)=[];end
+
+
+
+% convention to the frequency center fft
+
+
+
+for r=1:ncx_h_+(1-is_odd_ncx_h_)
     for t=1:ncy_h_+(1-is_odd_ncy_h_)
-        Radon_hor_phase_rec(t,r)=(exp(1i*pi*(r-1)*(1-is_odd_ncx_h_/ncx_h_)))*Radon_hor_h_(t,r);
+        Radon_hor_phase_rec(t,r)=(exp(1i*pi*(r-1)*(1-1/(ncx_h_+(1-is_odd_ncx_h_)))))*Radon_hor_h_(t,r);
     end
 end
 
 for t=1:ncx_v_+(1-is_odd_ncx_v_)
-    for r=1:ncy_v_
-        Radon_vert_phase_rec(t,r)=(exp(1i*pi*(r-1)*(1-is_odd_ncy_v_/ncy_v_)))*Radon_vert_v_(t,r);
+    for r=1:ncy_v_+(1-is_odd_ncy_v_)
+        Radon_vert_phase_rec(t,r)=(exp(1i*pi*(r-1)*(1-1/(ncy_v_+(1-is_odd_ncy_v_)))))*Radon_vert_v_(t,r);
     end
 end
 
+% Obtain Radon by inverse fft of the the RP interpolations
 
 
 RPinterp_hor_rec=(fft(Radon_hor_phase_rec.').');
@@ -79,42 +107,42 @@ RPinterp_vert_rec=(fft(Radon_vert_phase_rec.').');
 % if is_odd_ncy==0 RPinterp_vert_rec(:,end+1)=conj(RPinterp_vert_rec(:,1)); end
 
 
-
-if is_odd_ncx_==0
-    %     RPinterp_hor_rec(:,end)=[];
-    %     RPinterp_hor(:,1)=real(RPinterp_hor(:,1));
-    RPinterp_hor_toReal_rec_=RPinterp_hor_rec(:,1);
-    for t=1:ncy_+(1-is_odd_ncy_)
-        RPinterp_hor_toReal_rec_(t)=(exp(1i*pi*(t-1)*(1-1/(ncy_+(1-is_odd_ncy_)))))*RPinterp_hor_toReal_rec_(t);
-    end
-    RPinterp_hor_rec(:,1)=fft(RPinterp_hor_toReal_rec_(:));
-    RPinterp_hor_rec(:,end+1)=conj(RPinterp_hor_rec(:,1));
-    %     RPinterp_hor_rec(:,1)=RPinterp_hor_toReal_rec_;
-    display('the following should be small if inverse of a image')
-    display(imag(RPinterp_hor_rec(1,1)))
-    RPinterp_hor_rec(1,1)=real(RPinterp_hor_rec(1,1));
-    
-end
-
-if is_odd_ncy_==0
-    %     RPinterp_vert_rec(:,end)=[];
-    %     RPinterp_vert_toReal_rec=ifft(RPinterp_vert_rec(:,1));
-    %     RPinterp_vert(:,1)=fft(circshift(RPinterp_vert(:,1),65));
-    RPinterp_vert_toReal_rec_=RPinterp_vert_rec(:,1);
-    for t=1:ncx_+(1-is_odd_ncx_)
-        RPinterp_vert_toReal_rec_(t)=(exp(1i*pi*(t-1)*(1-1/(ncx_+(1-is_odd_ncx_)))))*RPinterp_vert_toReal_rec_(t);
-    end
-%     for t=1:ncx+(1-is_odd_ncx)
-%         RPinterp_vert_toReal__rec(t)=(exp(-1i*pi*(t-1)*(1-is_odd_ncx/ncx)))*RPinterp_vert_toReal_rec(t);
+% 
+% if is_odd_ncx_==0
+%     %     RPinterp_hor_rec(:,end)=[];
+%     %     RPinterp_hor(:,1)=real(RPinterp_hor(:,1));
+%     RPinterp_hor_toReal_rec_=RPinterp_hor_rec(:,1);
+%     for t=1:ncy_+(1-is_odd_ncy_)
+%         RPinterp_hor_toReal_rec_(t)=(exp(1i*pi*(t-1)*(1-1/(ncy_+(1-is_odd_ncy_)))))*RPinterp_hor_toReal_rec_(t);
 %     end
-     RPinterp_vert_rec(:,1)=fft(RPinterp_vert_toReal_rec_(:));
-    RPinterp_vert_rec(:,end+1)=conj(RPinterp_vert_rec(:,1));
-%     RPinterp_vert_rec(:,1)=RPinterp_vert_toReal_rec_;
-    display('the following should be small if inverse of a image')
-    display(imag(RPinterp_vert_rec(1,1)))
-    RPinterp_vert_rec(1,1)=real(RPinterp_vert_rec(1,1));
-end
-
+%     RPinterp_hor_rec(:,1)=fft(RPinterp_hor_toReal_rec_(:));
+%     RPinterp_hor_rec(:,end+1)=conj(RPinterp_hor_rec(:,1));
+%     %     RPinterp_hor_rec(:,1)=RPinterp_hor_toReal_rec_;
+%     display('the following should be small if inverse of a image')
+%     display(imag(RPinterp_hor_rec(1,1)))
+%     RPinterp_hor_rec(1,1)=real(RPinterp_hor_rec(1,1));
+%     
+% end
+% 
+% if is_odd_ncy_==0
+%     %     RPinterp_vert_rec(:,end)=[];
+%     %     RPinterp_vert_toReal_rec=ifft(RPinterp_vert_rec(:,1));
+%     %     RPinterp_vert(:,1)=fft(circshift(RPinterp_vert(:,1),65));
+%     RPinterp_vert_toReal_rec_=RPinterp_vert_rec(:,1);
+%     for t=1:ncx_+(1-is_odd_ncx_)
+%         RPinterp_vert_toReal_rec_(t)=(exp(1i*pi*(t-1)*(1-1/(ncx_+(1-is_odd_ncx_)))))*RPinterp_vert_toReal_rec_(t);
+%     end
+% %     for t=1:ncx+(1-is_odd_ncx)
+% %         RPinterp_vert_toReal__rec(t)=(exp(-1i*pi*(t-1)*(1-is_odd_ncx/ncx)))*RPinterp_vert_toReal_rec(t);
+% %     end
+%      RPinterp_vert_rec(:,1)=fft(RPinterp_vert_toReal_rec_(:));
+%     RPinterp_vert_rec(:,end+1)=conj(RPinterp_vert_rec(:,1));
+% %     RPinterp_vert_rec(:,1)=RPinterp_vert_toReal_rec_;
+%     display('the following should be small if inverse of a image')
+%     display(imag(RPinterp_vert_rec(1,1)))
+%     RPinterp_vert_rec(1,1)=real(RPinterp_vert_rec(1,1));
+% end
+% 
 
 % 
 % RPinterp_vert_rec(:,end+1)=conj(RPinterp_vert_rec(:,1));
@@ -147,6 +175,11 @@ end
 % % 
 % if is_odd_ncx==0 RPinterp_hor_rec(:,end+1)=conj(RPinterp_hor_rec(:,1)); end
 % if is_odd_ncy==0 RPinterp_vert_rec(:,end+1)=conj(RPinterp_vert_rec(:,1)); end
+
+
+
+
+% Removes the extra degree of freedom introduced by the padding
 
 if is_odd_ncx_
     RPinterp_hor_rec_=RPinterp_hor_rec(:,2:3:end);
@@ -208,8 +241,19 @@ F_rec_norm=F_rec./F_rec_count;
 
 % figure; imagesc(abs(F_rec_norm));colorbar;
 
+
+
+
+
+
+% remove augmentation if even
+
 if is_odd_ncy_==0 F_rec_norm(:,end)=[];end
 if is_odd_ncx_==0 F_rec_norm(end,:)=[];end
+
+
+%Apply iFFT2 (% convention to the frequency center fft)
+
 
 X_rec = ifft(ifft(F_rec_norm.').');
 
