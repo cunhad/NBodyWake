@@ -9,9 +9,10 @@ clearvars;
 
 
 % nc=128;
-nc=64;
+% nc=64;
 % nc=16;
-% nc=8;
+nc=4;
+% nc=4;
 % nc=4;
 % nc=6;
 % nc=9;
@@ -25,7 +26,8 @@ nc=64;
 
 
 % ncx=nc;ncy=nc/2;
-ncx=nc;ncy=nc;
+% ncx=nc;ncy=2*nc;ncz=4*nc;
+ncx=nc;ncy=nc;ncz=nc;
 
 % ncx=129;ncy=128;
 
@@ -45,11 +47,16 @@ ncx=nc;ncy=nc;
 % 
 % end
 % X=X+0.5*randn([ncx,ncy]);
-X=rand([ncx,ncy]);
+% X=rand([ncx,ncy]);
 % X=randn([ncx,ncy]);
+X=randn([ncx,ncy,ncz]);
 % X(:,nc/2)=1;
 
-figure; imagesc(X);colorbar;
+
+
+volumeViewer(X)
+
+% figure; imagesc(X);colorbar;
 
 % 
 %
