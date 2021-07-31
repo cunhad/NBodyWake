@@ -1,4 +1,4 @@
-function [ Radon_X__,Radon_Y__,Radon_Z__,interp_X_info,interp_Y_info,interp_Z_info,ncx,ncy,ncz] = Ridgelet3d_interp_forwards_dev3(X)
+function [ Radon_X__,Radon_Y__,Radon_Z__,interp_X_cell_info,interp_Y_cell_info,interp_Z_cell_info,ncx,ncy,ncz] = Ridgelet3d_interp_forwards_dev3(X)
 
 
 
@@ -128,15 +128,14 @@ for t1 = thetas_xy
         
         aux_count_interp_Z_interp = aux_count_interp_Z_interp +1;
         
-        interp_Z_info(aux_count_t1,aux_count_t2)=aux_count_interp_Z-1;
+        interp_Z_info(aux_count_t1,aux_count_t2)=aux_count_interp_Z;
         
-        aux_count_t2 = aux_count_t2 +1;
+        
 
         
         interp_Z_x_cell{aux_count_interp_Z_cell}=interp_Z_x;
         interp_Z_y_cell{aux_count_interp_Z_cell}=interp_Z_y;
         interp_Z_z_cell{aux_count_interp_Z_cell}=interp_Z_z;
-        
         aux_count_interp_Z_cell=aux_count_interp_Z_cell+1;
         
         aux_count_interp_Z = 1;
@@ -144,10 +143,11 @@ for t1 = thetas_xy
         clearvars interp_Z_x interp_Z_y interp_Z_z
         
         
+        
+        
+        
+        
     end
-    
-    aux_count_t2 = 1;
-    aux_count_t1 = aux_count_t1+1;
 end
 
 
@@ -155,6 +155,12 @@ end
 % 
 % figure;
 % scatter3(sample_points_Z(:,4),sample_points_Z(:,5),sample_points_Z(:,6))
+
+
+for t=1:length(interp_X_x_cell)
+    interp_Z_cell_info(t)=length(interp_X_x_cell{t});
+end
+
 
 
 
@@ -187,9 +193,6 @@ aux_count_interp_Y=1;
 aux_count_interp_Y_cell=1;
 
 
-aux_count_t1 = 1;
-aux_count_t2 = 1;
-
 for t1 = thetas_xz
     for t2 = thetas_zx        
         half_diag = floor((ncy/2)*sqrt((tan(t1)^2)+(tan(t2)^2)+1));
@@ -211,10 +214,7 @@ for t1 = thetas_xz
             aux_count_interp_Y=aux_count_interp_Y+1;
         end
         
-        aux_count_interp_Y_interp = aux_count_interp_Y_interp +1;      
-        
-        interp_Y_info(aux_count_t1,aux_count_t2)=aux_count_interp_Y-1;        
-        aux_count_t2 = aux_count_t2 +1;
+        aux_count_interp_Y_interp = aux_count_interp_Y_interp +1;
         
         interp_Y_x_cell{aux_count_interp_Y_cell}=interp_Y_x;
         interp_Y_y_cell{aux_count_interp_Y_cell}=interp_Y_y;
@@ -226,9 +226,6 @@ for t1 = thetas_xz
         clearvars interp_Y_x interp_Y_y interp_Y_z
         
     end
-    
-    aux_count_t2 = 1;
-    aux_count_t1 = aux_count_t1+1;
 end
 
 % 
@@ -262,8 +259,6 @@ aux_count_interp_X_interp=1;
 aux_count_interp_X=1;
 aux_count_interp_X_cell=1;
 
-aux_count_t1 = 1;
-aux_count_t2 = 1;
 
 for t1 = thetas_zy
     for t2 = thetas_yz        
@@ -288,9 +283,6 @@ for t1 = thetas_zy
         
         aux_count_interp_X_interp = aux_count_interp_X_interp +1;
         
-        interp_X_info(aux_count_t1,aux_count_t2)=aux_count_interp_X-1;        
-        aux_count_t2 = aux_count_t2 +1;     
-        
         interp_X_x_cell{aux_count_interp_X_cell}=interp_X_x;
         interp_X_y_cell{aux_count_interp_X_cell}=interp_X_y;
         interp_X_z_cell{aux_count_interp_X_cell}=interp_X_z;
@@ -301,8 +293,6 @@ for t1 = thetas_zy
         clearvars interp_X_x interp_X_y interp_X_z
         
     end
-    aux_count_t2 = 1;
-    aux_count_t1 = aux_count_t1+1;
 end
 
 % 

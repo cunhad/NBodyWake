@@ -1,17 +1,26 @@
-function [ output_args ] = Ridgelet3d_interp_visual_dev3( Radon_hor__,Radon_vert__,RPinterp_hor_cell_info,RPinterp_vert_cell_info,ncx,ncy )
+function [  ] = Ridgelet3d_interp_visual_dev3( Radon_X__,Radon_Y__,Radon_Z__,interp_X_cell_info,interp_Y_cell_info,interp_Z_cell_info,ncx,ncy,ncz )
 
 
+Radon_X__ = Radon_X_;
+Radon_Y__ = Radon_Y_;
+Radon_Z__ = Radon_Z_;
+
+
+
+
+
+% h = volshow(X,'Renderer','MaximumIntensityProjection');
 
 % sample_points_hor = Radon_hor__(2,:);
+
+
+nct_vert = max(interp_Z_cell_info);
+ncr_vert = length(interp_Z_cell_info);
 
 
 
 nct_hor = max(RPinterp_hor_cell_info);
 ncr_hor = length(RPinterp_hor_cell_info);
-
-
-nct_vert = max(RPinterp_vert_cell_info);
-ncr_vert = length(RPinterp_vert_cell_info);
 
 
 

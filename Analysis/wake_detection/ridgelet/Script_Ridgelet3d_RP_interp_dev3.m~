@@ -166,7 +166,7 @@ Co_=ifft(Bo_);
 
 
 
-[ Radon_X_,Radon_Y_,Radon_Z_,interp_X_info,interp_Y_info,interp_Z_info,ncx,ncy,ncz] = Ridgelet3d_interp_forwards_dev3(X);
+[ Radon_X_,Radon_Y_,Radon_Z_,interp_X_cell_info,interp_Y_info,interp_Z_info,ncx,ncy,ncz] = Ridgelet3d_interp_forwards_dev3(X);
 
 
 % [ Radon_hor__, Radon_vert__,RPinterp_hor_cell_info,RPinterp_vert_cell_info,ncx,ncy] = Ridgelet2d_RP_crude_forwards_dev3(X);
