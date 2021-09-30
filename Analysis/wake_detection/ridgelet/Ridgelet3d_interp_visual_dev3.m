@@ -1,9 +1,13 @@
 function [  ] = Ridgelet3d_interp_visual_dev3( Radon_X__,Radon_Y__,Radon_Z__,interp_X_info,interp_Y_info,interp_Z_info)
 % 
+Radon_X__ = Radon_Z__;
+Radon_Y__ = Radon_Z__;
+% Radon_Z__ = Radon_Z__;
 
-Radon_X__ = Radon_X_;
-Radon_Y__ = Radon_Y_;
-Radon_Z__ = Radon_Z_;
+
+% Radon_X__ = Radon_X_;
+% Radon_Y__ = Radon_Y_;
+% Radon_Z__ = Radon_Z_;
 
 
 

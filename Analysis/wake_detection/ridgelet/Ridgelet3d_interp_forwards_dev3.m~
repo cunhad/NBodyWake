@@ -1,6 +1,5 @@
 % function [ Radon_X__,Radon_Y__,Radon_Z__,interp_X_info,interp_Y_info,interp_Z_info,ncx,ncy,ncz] = Ridgelet3d_interp_forwards_dev3(X)
-% function [] = Ridgelet3d_interp_forwards_dev3(X)
-function [ Radon_Z__,interp_Z_info,ncx,ncy,ncz] = Ridgelet3d_interp_forwards_dev3(X)
+function [] = Ridgelet3d_interp_forwards_dev3(X)
 
 
 
@@ -388,7 +387,7 @@ sample_points_Z(:,aux_count_Z:end) = [];
 % % 
 % % interp_X = interp3(x_,y_,z_,permute(F_, [2 1 3]),sample_points_X(:,4),sample_points_X(:,5),sample_points_X(:,6),'cubic');
 % % interp_Y = interp3(x_,y_,z_,permute(F_, [2 1 3]),sample_points_Y(:,4),sample_points_Y(:,5),sample_points_Y(:,6),'cubic');
-interp_Z = interp3(x_,y_,z_,permute(F_, [2 1 3]),sample_points_Z(4,:),sample_points_Z(5,:),sample_points_Z(6,:),'cubic');
+interp_Z = interp3(x_,y_,z_,permute(F_, [2 1 3]),sample_points_Z(:,4),sample_points_Z(:,5),sample_points_Z(:,6),'cubic');
 % % 
 % % 
 % % % interp_X = interp3(x_,y_,z_,F_,sample_points_X(:,4),sample_points_X(:,5),sample_points_X(:,6),'cubic');
@@ -454,8 +453,8 @@ Radon_Z=[];
 
 
 
-for i=1:length(sample_points_Z(1,:))
-    if (sample_points_Z(7,i)==aux_interp_Z_count)
+for i=1:length(sample_points_Z(:,1))
+    if (sample_points_Z(i,7)==aux_interp_Z_count)
         Radon_Z_aux(end+1)=interp_Z(i);
     else
         
@@ -529,8 +528,8 @@ Radon_Z=[Radon_Z,(ifft(Radon_Z_aux.').')];
 aux_interp_Z_count__=1;
 Radon_Z_aux__=[];
 Radon_Z__=[];
-for i=1:length(sample_points_Z(1,:))
-    if (sample_points_Z(7,i)==aux_interp_Z_count__)
+for i=1:length(sample_points_Z(:,1))
+    if (sample_points_Z(i,7)==aux_interp_Z_count__)
         Radon_Z_aux__(end+1)=Radon_Z(i);
     else
         ncr = length(Radon_Z_aux__);
@@ -563,7 +562,7 @@ Radon_Z__=[Radon_Z__,Radon_Z_aux__];
 % % 
 % % Radon_Y__(2,:)=sample_points_Y(:,7);
 % % 
-Radon_Z__(2,:)=sample_points_Z(7,:);
+Radon_Z__(2,:)=sample_points_Z(:,7);
 % % 
 % 
 
