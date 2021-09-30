@@ -99,7 +99,7 @@ thetas_yx=thetas_yx-D_theta_yx/2;
 aux_count_Z=1;
 aux_count_interp_Z_interp=1;
 aux_count_interp_Z=1;
-aux_count_interp_Z_cell=1;
+% aux_count_interp_Z_cell=1;
 
 aux_count_t1 = 1;
 aux_count_t2 = 1;
@@ -110,6 +110,9 @@ for t1 = thetas_xy
         half_diag = floor((ncz/2)*sqrt((tan(t1)^2)+(tan(t2)^2)+1));
         spherical_theta = atan(sqrt((tan(t1)^2)+(tan(t2)^2)));
         spherical_phi = atan(tan(t2)/tan(t1))+double(t1<0)*pi;
+        if (t1==0&t2==0) 
+            spherical_phi = 0;
+        end
         for r = -half_diag:half_diag
             sample_points_Z(aux_count_Z,1)=spherical_theta;
             sample_points_Z(aux_count_Z,2)=spherical_phi;
@@ -120,28 +123,26 @@ for t1 = thetas_xy
             sample_points_Z(aux_count_Z,7)=aux_count_interp_Z_interp;
             aux_count_Z=aux_count_Z+1;   
             
-            interp_Z_x(aux_count_interp_Z)=r*sin(spherical_theta)*cos(spherical_phi);
-            interp_Z_y(aux_count_interp_Z)=r*sin(spherical_theta)*sin(spherical_phi);
-            interp_Z_z(aux_count_interp_Z)=r*cos(spherical_theta);
+%             interp_Z_x(aux_count_interp_Z)=r*sin(spherical_theta)*cos(spherical_phi);
+%             interp_Z_y(aux_count_interp_Z)=r*sin(spherical_theta)*sin(spherical_phi);
+%             interp_Z_z(aux_count_interp_Z)=r*cos(spherical_theta);
             aux_count_interp_Z=aux_count_interp_Z+1;
         end
         
         aux_count_interp_Z_interp = aux_count_interp_Z_interp +1;
         
-        interp_Z_info(aux_count_t1,aux_count_t2)=aux_count_interp_Z-1;
-        
+        interp_Z_info(aux_count_t1,aux_count_t2)=aux_count_interp_Z-1;        
         aux_count_t2 = aux_count_t2 +1;
 
         
-        interp_Z_x_cell{aux_count_interp_Z_cell}=interp_Z_x;
-        interp_Z_y_cell{aux_count_interp_Z_cell}=interp_Z_y;
-        interp_Z_z_cell{aux_count_interp_Z_cell}=interp_Z_z;
-        
-        aux_count_interp_Z_cell=aux_count_interp_Z_cell+1;
+%         interp_Z_x_cell{aux_count_interp_Z_cell}=interp_Z_x;
+%         interp_Z_y_cell{aux_count_interp_Z_cell}=interp_Z_y;
+%         interp_Z_z_cell{aux_count_interp_Z_cell}=interp_Z_z;%         
+%         aux_count_interp_Z_cell=aux_count_interp_Z_cell+1;
         
         aux_count_interp_Z = 1;
         
-        clearvars interp_Z_x interp_Z_y interp_Z_z
+%         clearvars interp_Z_x interp_Z_y interp_Z_z
         
         
     end
@@ -184,7 +185,7 @@ thetas_zx=thetas_zx-D_theta_zx/2;
 aux_count_Y=1;
 aux_count_interp_Y_interp=1;
 aux_count_interp_Y=1;
-aux_count_interp_Y_cell=1;
+% aux_count_interp_Y_cell=1;
 
 
 aux_count_t1 = 1;
@@ -195,6 +196,9 @@ for t1 = thetas_xz
         half_diag = floor((ncy/2)*sqrt((tan(t1)^2)+(tan(t2)^2)+1));
         spherical_theta = atan(sqrt((tan(t1)^2)+(tan(t2)^2)));
         spherical_phi = atan(tan(t2)/tan(t1))+double(t1<0)*pi;
+        if (t1==0&t2==0) 
+            spherical_phi = 0;
+        end        
         for r = -half_diag:half_diag
             sample_points_Y(aux_count_Y,1)=spherical_theta;
             sample_points_Y(aux_count_Y,2)=spherical_phi;
@@ -205,9 +209,9 @@ for t1 = thetas_xz
             sample_points_Y(aux_count_Y,7)=aux_count_interp_Y_interp;
             aux_count_Y=aux_count_Y+1;   
             
-            interp_Y_x(aux_count_interp_Y)=r*sin(spherical_theta)*cos(spherical_phi);
-            interp_Y_y(aux_count_interp_Y)=r*cos(spherical_theta);
-            interp_Y_z(aux_count_interp_Y)=-r*sin(spherical_theta)*sin(spherical_phi);
+%             interp_Y_x(aux_count_interp_Y)=r*sin(spherical_theta)*cos(spherical_phi);
+%             interp_Y_y(aux_count_interp_Y)=r*cos(spherical_theta);
+%             interp_Y_z(aux_count_interp_Y)=-r*sin(spherical_theta)*sin(spherical_phi);
             aux_count_interp_Y=aux_count_interp_Y+1;
         end
         
@@ -216,14 +220,14 @@ for t1 = thetas_xz
         interp_Y_info(aux_count_t1,aux_count_t2)=aux_count_interp_Y-1;        
         aux_count_t2 = aux_count_t2 +1;
         
-        interp_Y_x_cell{aux_count_interp_Y_cell}=interp_Y_x;
-        interp_Y_y_cell{aux_count_interp_Y_cell}=interp_Y_y;
-        interp_Y_z_cell{aux_count_interp_Y_cell}=interp_Y_z;
-        aux_count_interp_Y_cell=aux_count_interp_Y_cell+1;
+%         interp_Y_x_cell{aux_count_interp_Y_cell}=interp_Y_x;
+%         interp_Y_y_cell{aux_count_interp_Y_cell}=interp_Y_y;
+%         interp_Y_z_cell{aux_count_interp_Y_cell}=interp_Y_z;
+%         aux_count_interp_Y_cell=aux_count_interp_Y_cell+1;
         
         aux_count_interp_Y = 1;
         
-        clearvars interp_Y_x interp_Y_y interp_Y_z
+%         clearvars interp_Y_x interp_Y_y interp_Y_z
         
     end
     
@@ -260,7 +264,7 @@ thetas_yz=thetas_yz-D_theta_yz/2;
 aux_count_X=1;
 aux_count_interp_X_interp=1;
 aux_count_interp_X=1;
-aux_count_interp_X_cell=1;
+% aux_count_interp_X_cell=1;
 
 aux_count_t1 = 1;
 aux_count_t2 = 1;
@@ -270,6 +274,9 @@ for t1 = thetas_zy
         half_diag = floor((ncx/2)*sqrt((tan(t1)^2)+(tan(t2)^2)+1));
         spherical_theta = atan(sqrt((tan(t1)^2)+(tan(t2)^2)));
         spherical_phi = atan(tan(t2)/tan(t1))+double(t1<0)*pi;
+        if (t1==0&t2==0) 
+            spherical_phi = 0;
+        end
         for r = -half_diag:half_diag
             sample_points_X(aux_count_X,1)=spherical_theta;
             sample_points_X(aux_count_X,2)=spherical_phi;
@@ -280,9 +287,9 @@ for t1 = thetas_zy
             sample_points_X(aux_count_X,7)=aux_count_interp_X_interp;
             aux_count_X=aux_count_X+1;   
             
-            interp_X_x(aux_count_interp_X)=r*cos(spherical_theta);
-            interp_X_y(aux_count_interp_X)=r*sin(spherical_theta)*sin(spherical_phi);
-            interp_X_z(aux_count_interp_X)=-r*sin(spherical_theta)*cos(spherical_phi);
+%             interp_X_x(aux_count_interp_X)=r*cos(spherical_theta);
+%             interp_X_y(aux_count_interp_X)=r*sin(spherical_theta)*sin(spherical_phi);
+%             interp_X_z(aux_count_interp_X)=-r*sin(spherical_theta)*cos(spherical_phi);
             aux_count_interp_X=aux_count_interp_X+1;
         end
         
@@ -291,14 +298,14 @@ for t1 = thetas_zy
         interp_X_info(aux_count_t1,aux_count_t2)=aux_count_interp_X-1;        
         aux_count_t2 = aux_count_t2 +1;     
         
-        interp_X_x_cell{aux_count_interp_X_cell}=interp_X_x;
-        interp_X_y_cell{aux_count_interp_X_cell}=interp_X_y;
-        interp_X_z_cell{aux_count_interp_X_cell}=interp_X_z;
-        aux_count_interp_X_cell=aux_count_interp_X_cell+1;
+%         interp_X_x_cell{aux_count_interp_X_cell}=interp_X_x;
+%         interp_X_y_cell{aux_count_interp_X_cell}=interp_X_y;
+%         interp_X_z_cell{aux_count_interp_X_cell}=interp_X_z;
+%         aux_count_interp_X_cell=aux_count_interp_X_cell+1;
         
         aux_count_interp_X = 1;
         
-        clearvars interp_X_x interp_X_y interp_X_z
+%         clearvars interp_X_x interp_X_y interp_X_z
         
     end
     aux_count_t2 = 1;
@@ -322,20 +329,20 @@ end
 
 
 
-
-% Record number on points in each line
-
-for t=1:length(interp_X_x_cell)
-    interp_Z_cell_info(t)=length(interp_X_x_cell{t});
-end
-
-for t=1:length(interp_Y_x_cell)
-    interp_Y_cell_info(t)=length(interp_Y_x_cell{t});
-end
-
-for t=1:length(interp_X_x_cell)
-    interp_X_cell_info(t)=length(interp_X_x_cell{t});
-end
+% 
+% % Record number on points in each line
+% 
+% for t=1:length(interp_X_x_cell)
+%     interp_Z_cell_info(t)=length(interp_X_x_cell{t});
+% end
+% 
+% for t=1:length(interp_Y_x_cell)
+%     interp_Y_cell_info(t)=length(interp_Y_x_cell{t});
+% end
+% 
+% for t=1:length(interp_X_x_cell)
+%     interp_X_cell_info(t)=length(interp_X_x_cell{t});
+% end
 
 
 
@@ -344,10 +351,20 @@ end
 
 
 [x_,y_,z_] = meshgrid(-(-1+length(F_(:,1,1)))/2:(-1+length(F_(:,1,1)))/2,-(-1+length(F_(1,:,1)))/2:(-1+length(F_(1,:,1)))/2,-(-1+length(F_(1,1,:)))/2:(-1+length(F_(1,1,:)))/2);
+% [y_,x_,z_] = meshgrid(-(-1+length(F_(1,:,1)))/2:(-1+length(F_(1,:,1)))/2,-(-1+length(F_(:,1,1)))/2:(-1+length(F_(:,1,1)))/2,-(-1+length(F_(1,1,:)))/2:(-1+length(F_(1,1,:)))/2);
 
-interp_X = interp3(x_,y_,z_,F_,sample_points_X(:,4),sample_points_X(:,5),sample_points_X(:,6),'cubic');
-interp_Y = interp3(x_,y_,z_,F_,sample_points_Y(:,4),sample_points_Y(:,5),sample_points_Y(:,6),'cubic');
-interp_Z = interp3(x_,y_,z_,F_,sample_points_Z(:,4),sample_points_Z(:,5),sample_points_Z(:,6),'cubic');
+% x_ = permute(x_, [2 1 3]);
+% y_ = permute(y_, [2 1 3]);
+% z_ = permute(z_, [2 1 3]);
+
+interp_X = interp3(x_,y_,z_,permute(F_, [2 1 3]),sample_points_X(:,4),sample_points_X(:,5),sample_points_X(:,6),'cubic');
+interp_Y = interp3(x_,y_,z_,permute(F_, [2 1 3]),sample_points_Y(:,4),sample_points_Y(:,5),sample_points_Y(:,6),'cubic');
+interp_Z = interp3(x_,y_,z_,permute(F_, [2 1 3]),sample_points_Z(:,4),sample_points_Z(:,5),sample_points_Z(:,6),'cubic');
+
+
+% interp_X = interp3(x_,y_,z_,F_,sample_points_X(:,4),sample_points_X(:,5),sample_points_X(:,6),'cubic');
+% interp_Y = interp3(x_,y_,z_,F_,sample_points_Y(:,4),sample_points_Y(:,5),sample_points_Y(:,6),'cubic');
+% interp_Z = interp3(x_,y_,z_,F_,sample_points_Z(:,4),sample_points_Z(:,5),sample_points_Z(:,6),'cubic');
 
 
 

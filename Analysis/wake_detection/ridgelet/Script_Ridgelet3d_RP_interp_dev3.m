@@ -25,13 +25,13 @@ nc=4;
 % ncx=16;ncy=8;
 
 
-% ncx=nc;ncy=nc/2;
-% ncx=nc;ncy=2*nc;ncz=4*nc;
-ncx=nc;ncy=nc;ncz=nc;
+% ncx=nc;ncy=nc;ncz=nc;
+% ncx=nc;ncy=2*nc;ncz=nc;
+ncx=nc;ncy=2*nc;ncz=4*nc;
 
 % ncx=129;ncy=128;
 
-% X=ones(ncx,ncy);
+% X=ones(ncx,ncy,ncz);
 % X=zeros(ncx,ncy);
 % X(1+ncx/4:3*ncx/4,1+ncy/4:3*ncy/4)=1;
 % X(1+ncx/4:3*ncx/4,1+ncy/4:3*ncy/4)=randn([ncx/2,ncy/2]);
@@ -130,7 +130,25 @@ Ridgelet2d_RP_crude_visual_dev3(Radon_hor_, Radon_vert_,RPinterp_hor_cell_info,R
 
 
 
+clearvars;
+nc=4;
+ncx=nc;ncy=2*nc;ncz=4*nc;
+X=randn([ncx,ncy,ncz]);
+[ Radon_X_,Radon_Y_,Radon_Z_,interp_X_info,interp_Y_info,interp_Z_info,ncx,ncy,ncz] = Ridgelet3d_interp_forwards_dev3(X);
+sum(imag(Radon_X_(1,:)))
+sum(imag(Radon_Y_(1,:)))
+sum(imag(Radon_Z_(1,:)))
 
+
+
+clearvars;
+nc=8;
+ncx=nc;ncy=nc;ncz=nc;
+X=randn([ncx,ncy,ncz]);
+[ Radon_X_,Radon_Y_,Radon_Z_,interp_X_info,interp_Y_info,interp_Z_info,ncx,ncy,ncz] = Ridgelet3d_interp_forwards_dev3(X);
+sum(imag(Radon_X_(1,:)))
+sum(imag(Radon_Y_(1,:)))
+sum(imag(Radon_Z_(1,:)))
 
 
 
@@ -174,7 +192,10 @@ Co_=ifft(Bo_);
 % [ Radon_hor_h_, Radon_vert_v_] = Ridgelet2d_RP_crude_forwards_dev2(X);
 
 
-Ridgelet2d_RP_crude_visual_dev3(Radon_hor_, Radon_vert_,RPinterp_hor_cell_info,RPinterp_vert_cell_info,ncx,ncy);
+Ridgelet3d_interp_visual_dev3(Radon_X_,Radon_Y_,Radon_Z_,interp_X_info,interp_Y_info,interp_Z_info);
+
+
+% function [  ] = Ridgelet3d_interp_visual_dev3( Radon_X__,Radon_Y__,Radon_Z__,interp_X_info,interp_Y_info,interp_Z_info)
 
 
 
@@ -182,34 +203,14 @@ Ridgelet2d_RP_crude_visual_dev3(Radon_hor_, Radon_vert_,RPinterp_hor_cell_info,R
 
 
 
-
-
-
-
-
-figure;imagesc(real(Radon_hor_)); colorbar;
-xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
-ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
-
-figure;imagesc(real(Radon_vert_)); colorbar;
-xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
-ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
-
-
-figure;imagesc(imag(Radon_hor_)); colorbar;
-xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
-ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
-
-figure;imagesc(imag(Radon_vert_)); colorbar;
-xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
-ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
-
-
-% figure;imagesc(real(Radon_hor_(:,1:end-1))); colorbar;
+% 
+% 
+% 
+% figure;imagesc(real(Radon_hor_)); colorbar;
 % xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
 % ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 % 
-% figure;imagesc(real(Radon_vert_(:,1:end-1))); colorbar;
+% figure;imagesc(real(Radon_vert_)); colorbar;
 % xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
 % ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 % 
@@ -223,111 +224,129 @@ ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 % ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
 % 
 % 
-
-
-figure;imagesc(abs(Radon_hor_)); colorbar;
-xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
-ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
-
-figure;imagesc(abs(Radon_vert_)); colorbar;
-xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
-ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
-
-% figure; histogram(real(Radon_hor_(:)));
+% % figure;imagesc(real(Radon_hor_(:,1:end-1))); colorbar;
+% % xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
+% % ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
+% % 
+% % figure;imagesc(real(Radon_vert_(:,1:end-1))); colorbar;
+% % xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
+% % ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
+% % 
+% % 
+% % figure;imagesc(imag(Radon_hor_)); colorbar;
+% % xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
+% % ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
+% % 
+% % figure;imagesc(imag(Radon_vert_)); colorbar;
+% % xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
+% % ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
+% % 
+% % 
 % 
-% figure; histogram(real(Radon_vert_(:)));
-
-
-[ X_rec_phase ] = Ridgelet2d_RP_crude_backwards_dev1( Radon_hor_, Radon_vert_ );
-
-max(abs(X_rec_phase(:)-X(:)))
-
-figure; imagesc(real(X_rec_phase));colorbar;
-
-figure; imagesc(imag(X_rec_phase));colorbar;
-
-
-
-
-
-Radon_hor_ = zeros(size(Radon_hor_));
-Radon_vert_ = zeros(size(Radon_vert_));
-
-Radon_hor_(64,64)=1;
-
-[ X_rec_phase ] = Ridgelet2d_RP_crude_backwards_separateImag( Radon_hor_, Radon_vert_ );
-
-figure; imagesc(real(X_rec_phase));colorbar;
-
-
-
-
-
-
-[ X_rec_phase ] = Ridgelet2d_RP_crude_backwards_dev2( real(Radon_hor_),real(Radon_vert_));
-
-figure; imagesc(real(X_rec_phase));colorbar;
-
-figure; imagesc(imag(X_rec_phase));colorbar;
-
-max(abs(X_rec_phase(:)-X(:)))
-
-
-
-
-
-
-
-for i=1:ncx_v+(1-is_odd_ncx_v)
-    for j=1:ncy_v
-        Radon_vert_phase_rec_v(i,j)=(exp(1i*pi*(j-1)*(1-is_odd_ncy_v/ncy_v)))*Radon_vert_v_(i,j);
-    end
-end
-
-for i=1:ncx_h
-    for j=1:ncy_h+(1-is_odd_ncy_h)
-        Radon_hor_phase_rec_h(j,i)=(exp(1i*pi*(i-1)*(1-is_odd_ncx_h/ncx_h)))*Radon_hor_h_(j,i);
-    end
-end
-
-
-% % max(abs(Radon_hor_phase_rec_h(:)-Radon_hor_h(:)))
-
-
-RPinterp_vert_rec_v=(fft(Radon_vert_phase_rec_v.').');
-RPinterp_hor_rec_h=(fft(Radon_hor_phase_rec_h.').');
-
-
-max(abs(RPinterp_hor_rec_h(:)-RPinterp_hor_h(:)))
-
-
-
-
-
-RPinterp_vert_rec_v=(fft(Radon_vert_v.').');
-RPinterp_hor_rec_h=(fft(Radon_hor_h.').');
-
-
-max(abs(RPinterp_hor_rec_h(:)-RPinterp_hor_h(:)))
-
-% previous = fftw('planner','estimate') 
-
-Radon_vert_v = (ifft(double(vpa(RPinterp_vert_v)).').');
-RPinterp_vert_rec_v=(fft(double(vpa(Radon_vert_v)).').');
-
-
-max(abs(double(vpa(RPinterp_vert_rec_v(:)-RPinterp_vert_v(:)))))
-
-
-
-RPinterp_vert_vA=RPinterp_vert_v(1,:);
-
-Radon_vert_v = (ifft(RPinterp_vert_vA.').');
-RPinterp_vert_rec_v=(fft(Radon_vert_v.').');
-
-
-
-max(abs(RPinterp_vert_rec_v(:)-RPinterp_vert_vA(:)))
+% 
+% figure;imagesc(abs(Radon_hor_)); colorbar;
+% xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
+% ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
+% 
+% figure;imagesc(abs(Radon_vert_)); colorbar;
+% xlabel('displacement', 'interpreter', 'latex', 'fontsize', 20);
+% ylabel('angle', 'interpreter', 'latex', 'fontsize', 20);
+% 
+% % figure; histogram(real(Radon_hor_(:)));
+% % 
+% % figure; histogram(real(Radon_vert_(:)));
+% 
+% 
+% [ X_rec_phase ] = Ridgelet2d_RP_crude_backwards_dev1( Radon_hor_, Radon_vert_ );
+% 
+% max(abs(X_rec_phase(:)-X(:)))
+% 
+% figure; imagesc(real(X_rec_phase));colorbar;
+% 
+% figure; imagesc(imag(X_rec_phase));colorbar;
+% 
+% 
+% 
+% 
+% 
+% Radon_hor_ = zeros(size(Radon_hor_));
+% Radon_vert_ = zeros(size(Radon_vert_));
+% 
+% Radon_hor_(64,64)=1;
+% 
+% [ X_rec_phase ] = Ridgelet2d_RP_crude_backwards_separateImag( Radon_hor_, Radon_vert_ );
+% 
+% figure; imagesc(real(X_rec_phase));colorbar;
+% 
+% 
+% 
+% 
+% 
+% 
+% [ X_rec_phase ] = Ridgelet2d_RP_crude_backwards_dev2( real(Radon_hor_),real(Radon_vert_));
+% 
+% figure; imagesc(real(X_rec_phase));colorbar;
+% 
+% figure; imagesc(imag(X_rec_phase));colorbar;
+% 
+% max(abs(X_rec_phase(:)-X(:)))
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% for i=1:ncx_v+(1-is_odd_ncx_v)
+%     for j=1:ncy_v
+%         Radon_vert_phase_rec_v(i,j)=(exp(1i*pi*(j-1)*(1-is_odd_ncy_v/ncy_v)))*Radon_vert_v_(i,j);
+%     end
+% end
+% 
+% for i=1:ncx_h
+%     for j=1:ncy_h+(1-is_odd_ncy_h)
+%         Radon_hor_phase_rec_h(j,i)=(exp(1i*pi*(i-1)*(1-is_odd_ncx_h/ncx_h)))*Radon_hor_h_(j,i);
+%     end
+% end
+% 
+% 
+% % % max(abs(Radon_hor_phase_rec_h(:)-Radon_hor_h(:)))
+% 
+% 
+% RPinterp_vert_rec_v=(fft(Radon_vert_phase_rec_v.').');
+% RPinterp_hor_rec_h=(fft(Radon_hor_phase_rec_h.').');
+% 
+% 
+% max(abs(RPinterp_hor_rec_h(:)-RPinterp_hor_h(:)))
+% 
+% 
+% 
+% 
+% 
+% RPinterp_vert_rec_v=(fft(Radon_vert_v.').');
+% RPinterp_hor_rec_h=(fft(Radon_hor_h.').');
+% 
+% 
+% max(abs(RPinterp_hor_rec_h(:)-RPinterp_hor_h(:)))
+% 
+% % previous = fftw('planner','estimate') 
+% 
+% Radon_vert_v = (ifft(double(vpa(RPinterp_vert_v)).').');
+% RPinterp_vert_rec_v=(fft(double(vpa(Radon_vert_v)).').');
+% 
+% 
+% max(abs(double(vpa(RPinterp_vert_rec_v(:)-RPinterp_vert_v(:)))))
+% 
+% 
+% 
+% RPinterp_vert_vA=RPinterp_vert_v(1,:);
+% 
+% Radon_vert_v = (ifft(RPinterp_vert_vA.').');
+% RPinterp_vert_rec_v=(fft(Radon_vert_v.').');
+% 
+% 
+% 
+% max(abs(RPinterp_vert_rec_v(:)-RPinterp_vert_vA(:)))
 
 
 end
