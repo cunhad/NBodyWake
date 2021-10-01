@@ -110,8 +110,8 @@ aux_count_interp_Z=1;
 aux_count_t1 = 1;
 aux_count_t2 = 1;
 
-sample_points_Z = zeros(7,length(thetas_xy)*length(thetas_yx)*ncz);
-interp_Z_info = zeros(length(thetas_xy),length(thetas_yx));
+% sample_points_Z = zeros(7,length(thetas_xy)*length(thetas_yx)*ncz);
+% interp_Z_info = zeros(length(thetas_xy),length(thetas_yx));
 
 %this is the bottleneck (0.9 of wallclock)
 
@@ -124,9 +124,9 @@ for t1 = thetas_xy
             spherical_phi = 0;
         end
         for r = -half_diag:half_diag
-%             sample_points_Z(aux_count_Z,1)=spherical_theta;
-%             sample_points_Z(aux_count_Z,2)=spherical_phi;
-%             sample_points_Z(aux_count_Z,3)=r;
+%             sample_points_Z(1,aux_count_Z)=spherical_theta;
+%             sample_points_Z(2,aux_count_Z)=spherical_phi;
+%             sample_points_Z(3,aux_count_Z)=r;
             sample_points_Z(4,aux_count_Z)=r*sin(spherical_theta)*cos(spherical_phi);
             sample_points_Z(5,aux_count_Z)=r*sin(spherical_theta)*sin(spherical_phi);
             sample_points_Z(6,aux_count_Z)=r*cos(spherical_theta);
@@ -161,7 +161,7 @@ for t1 = thetas_xy
     aux_count_t1 = aux_count_t1+1;
 end
 
-sample_points_Z(:,aux_count_Z:end) = [];
+% sample_points_Z(:,aux_count_Z:end) = [];
 
 % 
 % figure;

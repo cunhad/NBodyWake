@@ -160,15 +160,20 @@ X=randn([ncx,ncy,ncz]);
 Ridgelet3d_interp_forwards_dev3(X);
 toc;
 
+
+
 tic; 
 clearvars;
-nc=32;
+nc=64;
 ncx=nc;ncy=nc;ncz=nc;
 % X=randn([ncx,ncy,ncz]);
 X=ones(ncx,ncy,ncz);
 [ Radon_Z_,interp_Z_info,ncx,ncy,ncz] = Ridgelet3d_interp_forwards_dev3(X);
 toc;
 sum(imag(Radon_Z_(1,:)))
+
+
+
 
 Ridgelet3d_interp_visual_dev3(Radon_Z_,Radon_Z_,Radon_Z_,interp_Z_info,interp_Z_info,interp_Z_info);
 
