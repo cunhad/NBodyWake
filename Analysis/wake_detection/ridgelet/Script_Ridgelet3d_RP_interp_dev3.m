@@ -178,7 +178,16 @@ sum(imag(Radon_Z_(1,:)))
 Ridgelet3d_interp_visual_dev3(Radon_Z_,Radon_Z_,Radon_Z_,interp_Z_info,interp_Z_info,interp_Z_info);
 
 
-
+tic; 
+clearvars;
+nc=16;
+ncx=nc;ncy=nc;ncz=nc;
+X=randn([ncx,ncy,ncz]);
+[ Radon_X_,Radon_Y_,Radon_Z_,interp_X_info,interp_Y_info,interp_Z_info,ncx,ncy,ncz] = Ridgelet3d_interp_forwards_dev3_old(X);
+sum(imag(Radon_X_(1,:)))
+sum(imag(Radon_Y_(1,:)))
+sum(imag(Radon_Z_(1,:)))
+toc;
 
 clearvars A A_ B B_ C C_
 
