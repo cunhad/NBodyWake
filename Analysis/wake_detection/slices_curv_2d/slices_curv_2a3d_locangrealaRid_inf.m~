@@ -1274,7 +1274,7 @@ if ismember(3,stage)
                     for partition_y=0:partition2d-1                                                
                         %             C_aux=map_3d_slices_filt2d(:,:,:);
                         %             C_aux=map_3d_slices((partition_x)*nc/partition2d+1:(partition_x)*nc/partition2d+nc/partition2d,(partition_y)*nc/partition2d+1:(partition_y)*nc/partition2d+nc/partition2d,(partition)*slices/partition3rd+1:(partition)*slices/partition3rd+slices/partition3rd);
-                        map_3d_slices_filt3d_depth_=map_3d_slices_filt3d((partition_x)*nc/partition2d+1:(partition_x)*nc/partition2d+nc/partition2d,(partition_y)*nc/partition2d+1:(partition_y)*nc/partition2d+nc/partition2d,(partition)*slices/partition3rd+1:(partition)*slices/partition3rd+slices/partition3rd);
+                        map_3d_slices_depth_=map_3d_slices_filt3d((partition_x)*nc/partition2d+1:(partition_x)*nc/partition2d+nc/partition2d,(partition_y)*nc/partition2d+1:(partition_y)*nc/partition2d+nc/partition2d,(partition)*slices/partition3rd+1:(partition)*slices/partition3rd+slices/partition3rd);
                         
                         % %                         3d ridgelet implementation
 %                         
@@ -1293,16 +1293,16 @@ if ismember(3,stage)
 
 
                         
-                        [ Radon_Y_ones,interp_Y_info,sample_points_Y_id,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(ones(size(permute(map_3d_slices_filt3d_depth_,[1 3 2]))));
-                        [ Radon_Y_,interp_Y_info,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(permute(map_3d_slices_filt3d_depth_,[1 3 2]));
+                        [ Radon_Y_ones,interp_Y_info,sample_points_Y_id,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(ones(size(permute(map_3d_slices_depth,[1 3 2]))));
+                        [ Radon_Y_,interp_Y_info,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(permute(map_3d_slices_depth,[1 3 2]));
                         Radon_Y_norm_ = real(Radon_Y_)./real(Radon_Y_ones);
                         Ridgelet_Y = Ridgelet3d_fromRadon_dev3(Radon_Y_norm_,sample_points_Y_id,interp_Y_info,lev_3drig);
 %                         dataY = Radon_Y_norm_(1,:);
                         Ridgelet_Y(isnan(Ridgelet_Y(:))) = [];
                         dataY = Ridgelet_Y;
                         
-                        [ Radon_X_ones,interp_X_info,sample_points_X_id,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(ones(size(permute(map_3d_slices_filt3d_depth_,[3 2 1]))));
-                        [ Radon_X_,interp_X_info,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(permute(map_3d_slices_filt3d_depth_,[3 2 1]));
+                        [ Radon_X_ones,interp_X_info,sample_points_X_id,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(ones(size(permute(map_3d_slices_depth,[3 2 1]))));
+                        [ Radon_X_,interp_X_info,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(permute(map_3d_slices_depth,[3 2 1]));
                         Radon_X_norm_ = real(Radon_X_)./real(Radon_X_ones);
                         Ridgelet_X = Ridgelet3d_fromRadon_dev3(Radon_X_norm_,sample_points_X_id,interp_X_info,lev_3drig);
 %                         dataX = Radon_X_norm_(1,:);
@@ -1318,8 +1318,6 @@ if ismember(3,stage)
 %                         anali2a3_depth(slice_depth_id,3,:)=[max(R_nor(:)),std(R_nor(:)),max(R_nor(:))/std(R_nor(:)),kurtosis(kurtosis(R_nor)),kurtosis(R_nor(:))];
                         anali2a3_depth(1+partition_x+partition_y*partition2d+partition*partition2d*partition2d,:)=[max(data(:)),std(data(:)),max(data(:))/std(data(:)),kurtosis(data(:))];
 
-                        
-                        
                         
                     end
                 end

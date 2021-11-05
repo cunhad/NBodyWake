@@ -1274,224 +1274,178 @@ if ismember(3,stage)
                     for partition_y=0:partition2d-1                                                
                         %             C_aux=map_3d_slices_filt2d(:,:,:);
                         %             C_aux=map_3d_slices((partition_x)*nc/partition2d+1:(partition_x)*nc/partition2d+nc/partition2d,(partition_y)*nc/partition2d+1:(partition_y)*nc/partition2d+nc/partition2d,(partition)*slices/partition3rd+1:(partition)*slices/partition3rd+slices/partition3rd);
-                        map_3d_slices_filt3d_depth_=map_3d_slices_filt3d((partition_x)*nc/partition2d+1:(partition_x)*nc/partition2d+nc/partition2d,(partition_y)*nc/partition2d+1:(partition_y)*nc/partition2d+nc/partition2d,(partition)*slices/partition3rd+1:(partition)*slices/partition3rd+slices/partition3rd);
-                        
-                        % %                         3d ridgelet implementation
-%                         
-%                         
-%                         
-%                         
-%                         map_3d_slices_depth = repelem(map_3d_slices_depth,2,2,2);                        
-                        
-%                         [ Radon_Z_ones,interp_Z_info,sample_points_Z_id,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(ones(size(map_3d_slices_depth)));
-%                         [ Radon_Z_,interp_Z_info,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(map_3d_slices_depth);
-%                         Radon_Z_norm_ = real(Radon_Z_)./real(Radon_Z_ones);
-%                         Ridgelet_Z = Ridgelet3d_fromRadon_dev3(Radon_Z_norm_,sample_points_Z_id,lev_3drig);
-% %                         dataZ = Radon_Z_norm_(1,:);
-%                         Ridgelet_Z(isnan(Ridgelet_Z(:))) = [];
-%                         dataZ = Ridgelet_Z;
-
-
-                        
-                        [ Radon_Y_ones,interp_Y_info,sample_points_Y_id,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(ones(size(permute(map_3d_slices_filt3d_depth_,[1 3 2]))));
-                        [ Radon_Y_,interp_Y_info,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(permute(map_3d_slices_filt3d_depth_,[1 3 2]));
-                        Radon_Y_norm_ = real(Radon_Y_)./real(Radon_Y_ones);
-                        Ridgelet_Y = Ridgelet3d_fromRadon_dev3(Radon_Y_norm_,sample_points_Y_id,interp_Y_info,lev_3drig);
-%                         dataY = Radon_Y_norm_(1,:);
-                        Ridgelet_Y(isnan(Ridgelet_Y(:))) = [];
-                        dataY = Ridgelet_Y;
-                        
-                        [ Radon_X_ones,interp_X_info,sample_points_X_id,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(ones(size(permute(map_3d_slices_filt3d_depth_,[3 2 1]))));
-                        [ Radon_X_,interp_X_info,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(permute(map_3d_slices_filt3d_depth_,[3 2 1]));
-                        Radon_X_norm_ = real(Radon_X_)./real(Radon_X_ones);
-                        Ridgelet_X = Ridgelet3d_fromRadon_dev3(Radon_X_norm_,sample_points_X_id,interp_X_info,lev_3drig);
-%                         dataX = Radon_X_norm_(1,:);
-                        Ridgelet_X(isnan(Ridgelet_X(:))) = [];
-                        dataX = Ridgelet_X;
-                        
-%                         data = [dataX,dataY,dataZ];
-                        data = [dataX,dataY];
-                        
-                        
-%                         anali2a3_depth(slice_depth_id,1,:)=[max(this(:)),std(this(:)),max(this(:))/std(this(:)),kurtosis(kurtosis(this)),kurtosis(this(:))];
-%                         anali2a3_depth(slice_depth_id,2,:)=[max(R(:)),std(R(:)),max(R(:))/std(R(:)),kurtosis(kurtosis(R)),kurtosis(R(:))];
-%                         anali2a3_depth(slice_depth_id,3,:)=[max(R_nor(:)),std(R_nor(:)),max(R_nor(:))/std(R_nor(:)),kurtosis(kurtosis(R_nor)),kurtosis(R_nor(:))];
-                        anali2a3_depth(1+partition_x+partition_y*partition2d+partition*partition2d*partition2d,:)=[max(data(:)),std(data(:)),max(data(:))/std(data(:)),kurtosis(data(:))];
-
-                        
+                        map_3d_slices_depth_=map_3d_slices_filt3d((partition_x)*nc/partition2d+1:(partition_x)*nc/partition2d+nc/partition2d,(partition_y)*nc/partition2d+1:(partition_y)*nc/partition2d+nc/partition2d,(partition)*slices/partition3rd+1:(partition)*slices/partition3rd+slices/partition3rd);
                         
                         
                     end
                 end
         end
         
-                dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3_partXY',num2str(partition2d),'_partZ',num2str(partition3rd),'.txt'),anali2a3_depth,'delimiter','\t');
-
-
         
-%         for slice_depth_id=1:slices_depth
-%             
-%             %         map_3d_slices_depth(:,:,slice_depth_id)=sum(map_3d_slices_filt2d(:,:,(slice_depth_id-1)*sum_depth+1:(slice_depth_id)*sum_depth),3);
-%             map_3d_slices_filt3d_depth(:,:,slice_depth_id)=sum(map_3d_slices_filt3d(:,:,(slice_depth_id-1)*sum_depth+1:(slice_depth_id)*sum_depth),3);
-%             
-%             
-%             if ismember(slice_depth_id,floor(snapshot/sum_depth))&(ismember(3,visual_type))
-%                 
-%                 %             if ismember(1,visual_in_or_out)
-%                 %
-%                 %                 fig=figure('Visible', 'off'); imagesc((size_box/nb)*[1:nb],(size_box/nb)*[1:nb],map_3d_slices_depth(:,:,slice_depth_id)); colorbar; axis('image');
-%                 %                 xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
-%                 %                 ylabel('$Y(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
-%                 %                 set(gca,'FontName','FixedWidth');
-%                 %                 set(gca,'FontSize',10);
-%                 %                 set(gca,'linewidth',2);
-%                 %                 title(strcat('filt2 info:',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
-%                 %
-%                 %                 saveas(fig,char(strcat(path_visual_depth_in','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id*sum_depth),'.png')));
-%                 %
-%                 %             end
-%                 
-%                 if ismember(3,visual_in_or_out)
-%                     
-%                     fig=figure('Visible', 'off'); imagesc((size_box/nb)*[1:nb],(size_box/nb)*[1:nb],map_3d_slices_filt3d_depth(:,:,slice_depth_id)); colorbar; axis('image');
-%                     xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
-%                     ylabel('$Y(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
-%                     set(gca,'FontName','FixedWidth');
-%                     set(gca,'FontSize',10);
-%                     set(gca,'linewidth',2);
-%                     title(strcat('filt3d info:',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
-%                     
-%                     saveas(fig,char(strcat(path_visual_depth_3dfilt','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id*sum_depth),'.png')));
-%                                 close(fig);
-% 
-%                 end
-%             end
-%             
-%             C = fdct_wrapping(map_3d_slices_filt3d_depth(:,:,slice_depth_id),0);
-%             %     Ct = C;
-%             %     Ct2=C;
-%             
-%             
-%             aux_count=1;
-%             for s = length(C)-lev:length(C)-1
-%                 
-%                 As=0;
-%                 Bs=0;
-%                 Cs=0;
-%                 Ds=0;
-%                 
-%                 size_nt=0;
-%                 
-%                 
-%                 for w = 1:length(C{s})
-%                     
-%                     ave=mean(abs(C{s}{w}(:))/E{s}{w});
-%                     sig=std(abs(C{s}{w}(:))/E{s}{w})^2;
-%                     del=skewness(abs(C{s}{w}(:))/E{s}{w})*(sig^(3/2));
-%                     rho=kurtosis(abs(C{s}{w}(:))/E{s}{w})*(sig^(2));
-%                     
-%                     A_=ave;
-%                     B_=sig+A_^2;
-%                     C_=del+3*B_*A_-2*A_^3;
-%                     D_=rho+4*C_*A_-6*B_*A_^2+3*A_^4;
-%                     
-%                     size_n=prod(size(C{s}{w}(:)));
-%                     size_nt=size_nt+size_n;
-%                     
-%                     As=A_*size_n+As;
-%                     Bs=B_*size_n+Bs;
-%                     Cs=C_*size_n+Cs;
-%                     Ds=D_*size_n+Ds;
-%                     
-%                     
-%                     
-%                 end
-%                 %          curv2(w_nw,sample,slice_id,aux_count)=kurtosis(curv(slice_id,:,aux_count));
-%                 AT=As/size_nt;
-%                 BT=Bs/size_nt;
-%                 CT=Cs/size_nt;
-%                 DT=Ds/size_nt;
-%                 
-%                 sigma_t=BT-AT^2;
-%                 delta_t=CT-3*BT*AT+2*AT^3;
-%                 rho_t=DT-4*CT*AT+6*BT*AT^2-3*AT^4;
-%                 
-%                 var_t=sigma_t;
-%                 skew_t=delta_t/var_t^(3/2);
-%                 kurt_t=rho_t/var_t^2;
-%                 
-%                 curv2a3_1_depth(aux_count)=AT;
-%                 curv2a3_2_depth(aux_count)=var_t;
-%                 curv2a3_3_depth(aux_count)=skew_t;
-%                 curv2a3_4_depth(aux_count)=kurt_t;
-%                 curv2a3_5_depth(aux_count)=rho_t;
-%                 
-%                 aux_count=aux_count+1;
-%             end
-%             
-%             theta = 0:step_of_degree:180;
-%             [R,xp] = radon(map_3d_slices_filt3d_depth(:,:,slice_depth_id),theta);
-%             
-%             unit=ones(nb);
-%             [R_u,xp] = radon(unit,theta);
-%             
-%             frac_cut=0.5;
-%             R_nor=R;
-%             R_nor(R_u>nb*frac_cut)=R_nor(R_u>nb*frac_cut)./R_u(R_u>nb*frac_cut);
-%             R_nor(R_u<=nb*frac_cut)=0;
-%             
-%             %     boudary_removal_factor=2048/nb;
-%             
-%             n_levels=floor(log2(length(R_nor(:,1))));
-%             R_nor_filt=zeros(size(R_nor));
-%             for i=1:length(R_nor(1,:))
-%                 %                 [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
-%                 [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
-%                 D = wrcoef('d',dc_dwt,levels,'db1',lev_3drid);
-%                 %                 D(floor((2465-200)/boudary_removal_factor):end)=0;
-%                 %                 D(1:floor((448+200)/boudary_removal_factor))=0;
-%                 D(length(xp)-nb*wavel_removal_factor:end)=0;
-%                 D(1:nb*wavel_removal_factor)=0;
-%                 
-%                 R_nor_filt(:,i)=D;
-%             end
-%             %             R_nor_filt(floor((2465-200)/boudary_removal_factor):end,:)=[];
-%             %             R_nor_filt(1:floor((448+200)/boudary_removal_factor),:)=[];
-%             R_nor_filt(length(xp)-nb*wavel_removal_factor:end,:)=[];
-%             R_nor_filt(1:nb*wavel_removal_factor,:)=[];
-%             
-%             if ismember(slice_depth_id,floor(snapshot/sum_depth))&(ismember(3,visual_type))&ismember(3,visual_in_or_out)
-%                 
-%                 %                 figure; imagesc((size_mpc/nc)*[1:nc],(size_mpc/1024)*[1:nc],map_3d_slices_filt2a3d(:,:,slice_id)); colorbar; axis('image');
-%                 fig=figure('Visible', 'off'); imagesc(0:step_of_degree:180,(size_box/nb)*[1:nb],R_nor_filt);colorbar;
-%                 xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
-%                 ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
-%                 set(gca,'FontName','FixedWidth');
-%                 set(gca,'FontSize',10);
-%                 set(gca,'linewidth',2);
-%                 title(strcat('ridg filt2d for ',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
-%                 
-%                 saveas(fig,char(strcat(path_visual_rid_depth_3dfilt','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv&rid_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id*sum_depth),'.png')));
-%                             close(fig);
-% 
-%             end
-%             
-%             this=map_3d_slices_filt3d_depth(:,:,slice_depth_id);
-%             
-%             anali2a3_depth(slice_depth_id,1,:)=[max(this(:)),std(this(:)),max(this(:))/std(this(:)),kurtosis(kurtosis(this)),kurtosis(this(:))];
-%             anali2a3_depth(slice_depth_id,2,:)=[max(R(:)),std(R(:)),max(R(:))/std(R(:)),kurtosis(kurtosis(R)),kurtosis(R(:))];
-%             anali2a3_depth(slice_depth_id,3,:)=[max(R_nor(:)),std(R_nor(:)),max(R_nor(:))/std(R_nor(:)),kurtosis(kurtosis(R_nor)),kurtosis(R_nor(:))];
-%             anali2a3_depth(slice_depth_id,4,:)=[max(R_nor_filt(:)),std(R_nor_filt(:)),max(R_nor_filt(:))/std(R_nor_filt(:)),kurtosis(kurtosis(R_nor_filt)),kurtosis(R_nor_filt(:))];
-%             
-%             anali2a3_curv_depth(slice_id,1,:)=curv2a3_1_depth;
-%             anali2a3_curv_depth(slice_id,2,:)=curv2a3_2_depth;
-%             anali2a3_curv_depth(slice_id,3,:)=curv2a3_3_depth;
-%             anali2a3_curv_depth(slice_id,4,:)=curv2a3_4_depth;
-%             anali2a3_curv_depth(slice_id,5,:)=curv2a3_5_depth;
-%         end
         
-%         dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3_depth',num2str(sum_depth),'.txt'),anali2a3_depth,'delimiter','\t');
-%         dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3_kurt_depth',num2str(sum_depth),'.txt'),anali2a3_curv_depth,'delimiter','\t');
+        for slice_depth_id=1:slices_depth
+            
+            %         map_3d_slices_depth(:,:,slice_depth_id)=sum(map_3d_slices_filt2d(:,:,(slice_depth_id-1)*sum_depth+1:(slice_depth_id)*sum_depth),3);
+            map_3d_slices_filt3d_depth(:,:,slice_depth_id)=sum(map_3d_slices_filt3d(:,:,(slice_depth_id-1)*sum_depth+1:(slice_depth_id)*sum_depth),3);
+            
+            
+            if ismember(slice_depth_id,floor(snapshot/sum_depth))&(ismember(3,visual_type))
+                
+                %             if ismember(1,visual_in_or_out)
+                %
+                %                 fig=figure('Visible', 'off'); imagesc((size_box/nb)*[1:nb],(size_box/nb)*[1:nb],map_3d_slices_depth(:,:,slice_depth_id)); colorbar; axis('image');
+                %                 xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+                %                 ylabel('$Y(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+                %                 set(gca,'FontName','FixedWidth');
+                %                 set(gca,'FontSize',10);
+                %                 set(gca,'linewidth',2);
+                %                 title(strcat('filt2 info:',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
+                %
+                %                 saveas(fig,char(strcat(path_visual_depth_in','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id*sum_depth),'.png')));
+                %
+                %             end
+                
+                if ismember(3,visual_in_or_out)
+                    
+                    fig=figure('Visible', 'off'); imagesc((size_box/nb)*[1:nb],(size_box/nb)*[1:nb],map_3d_slices_filt3d_depth(:,:,slice_depth_id)); colorbar; axis('image');
+                    xlabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+                    ylabel('$Y(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+                    set(gca,'FontName','FixedWidth');
+                    set(gca,'FontSize',10);
+                    set(gca,'linewidth',2);
+                    title(strcat('filt3d info:',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
+                    
+                    saveas(fig,char(strcat(path_visual_depth_3dfilt','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id*sum_depth),'.png')));
+                                close(fig);
+
+                end
+            end
+            
+            C = fdct_wrapping(map_3d_slices_filt3d_depth(:,:,slice_depth_id),0);
+            %     Ct = C;
+            %     Ct2=C;
+            
+            
+            aux_count=1;
+            for s = length(C)-lev:length(C)-1
+                
+                As=0;
+                Bs=0;
+                Cs=0;
+                Ds=0;
+                
+                size_nt=0;
+                
+                
+                for w = 1:length(C{s})
+                    
+                    ave=mean(abs(C{s}{w}(:))/E{s}{w});
+                    sig=std(abs(C{s}{w}(:))/E{s}{w})^2;
+                    del=skewness(abs(C{s}{w}(:))/E{s}{w})*(sig^(3/2));
+                    rho=kurtosis(abs(C{s}{w}(:))/E{s}{w})*(sig^(2));
+                    
+                    A_=ave;
+                    B_=sig+A_^2;
+                    C_=del+3*B_*A_-2*A_^3;
+                    D_=rho+4*C_*A_-6*B_*A_^2+3*A_^4;
+                    
+                    size_n=prod(size(C{s}{w}(:)));
+                    size_nt=size_nt+size_n;
+                    
+                    As=A_*size_n+As;
+                    Bs=B_*size_n+Bs;
+                    Cs=C_*size_n+Cs;
+                    Ds=D_*size_n+Ds;
+                    
+                    
+                    
+                end
+                %          curv2(w_nw,sample,slice_id,aux_count)=kurtosis(curv(slice_id,:,aux_count));
+                AT=As/size_nt;
+                BT=Bs/size_nt;
+                CT=Cs/size_nt;
+                DT=Ds/size_nt;
+                
+                sigma_t=BT-AT^2;
+                delta_t=CT-3*BT*AT+2*AT^3;
+                rho_t=DT-4*CT*AT+6*BT*AT^2-3*AT^4;
+                
+                var_t=sigma_t;
+                skew_t=delta_t/var_t^(3/2);
+                kurt_t=rho_t/var_t^2;
+                
+                curv2a3_1_depth(aux_count)=AT;
+                curv2a3_2_depth(aux_count)=var_t;
+                curv2a3_3_depth(aux_count)=skew_t;
+                curv2a3_4_depth(aux_count)=kurt_t;
+                curv2a3_5_depth(aux_count)=rho_t;
+                
+                aux_count=aux_count+1;
+            end
+            
+            theta = 0:step_of_degree:180;
+            [R,xp] = radon(map_3d_slices_filt3d_depth(:,:,slice_depth_id),theta);
+            
+            unit=ones(nb);
+            [R_u,xp] = radon(unit,theta);
+            
+            frac_cut=0.5;
+            R_nor=R;
+            R_nor(R_u>nb*frac_cut)=R_nor(R_u>nb*frac_cut)./R_u(R_u>nb*frac_cut);
+            R_nor(R_u<=nb*frac_cut)=0;
+            
+            %     boudary_removal_factor=2048/nb;
+            
+            n_levels=floor(log2(length(R_nor(:,1))));
+            R_nor_filt=zeros(size(R_nor));
+            for i=1:length(R_nor(1,:))
+                %                 [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
+                [dc_dwt,levels] = wavedec(R_nor(:,i),n_levels,'db1');
+                D = wrcoef('d',dc_dwt,levels,'db1',lev_3drid);
+                %                 D(floor((2465-200)/boudary_removal_factor):end)=0;
+                %                 D(1:floor((448+200)/boudary_removal_factor))=0;
+                D(length(xp)-nb*wavel_removal_factor:end)=0;
+                D(1:nb*wavel_removal_factor)=0;
+                
+                R_nor_filt(:,i)=D;
+            end
+            %             R_nor_filt(floor((2465-200)/boudary_removal_factor):end,:)=[];
+            %             R_nor_filt(1:floor((448+200)/boudary_removal_factor),:)=[];
+            R_nor_filt(length(xp)-nb*wavel_removal_factor:end,:)=[];
+            R_nor_filt(1:nb*wavel_removal_factor,:)=[];
+            
+            if ismember(slice_depth_id,floor(snapshot/sum_depth))&(ismember(3,visual_type))&ismember(3,visual_in_or_out)
+                
+                %                 figure; imagesc((size_mpc/nc)*[1:nc],(size_mpc/1024)*[1:nc],map_3d_slices_filt2a3d(:,:,slice_id)); colorbar; axis('image');
+                fig=figure('Visible', 'off'); imagesc(0:step_of_degree:180,(size_box/nb)*[1:nb],R_nor_filt);colorbar;
+                xlabel('$\theta (degrees)$', 'interpreter', 'latex', 'fontsize', 20);
+                ylabel('$Z(Mpc/h)$', 'interpreter', 'latex', 'fontsize', 20);
+                set(gca,'FontName','FixedWidth');
+                set(gca,'FontSize',10);
+                set(gca,'linewidth',2);
+                title(strcat('ridg filt2d for ',' ',aux_path(2:11),';sliceSum',num2str(sum_depth),' =',num2str(slice_depth_id*sum_depth),';G\mu = ',num2str(Gmu)));
+                
+                saveas(fig,char(strcat(path_visual_rid_depth_3dfilt','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_3dcurv&rid_z',num2str(z_glob),'_visual_sl',num2str(slice_depth_id*sum_depth),'.png')));
+                            close(fig);
+
+            end
+            
+            this=map_3d_slices_filt3d_depth(:,:,slice_depth_id);
+            
+            anali2a3_depth(slice_depth_id,1,:)=[max(this(:)),std(this(:)),max(this(:))/std(this(:)),kurtosis(kurtosis(this)),kurtosis(this(:))];
+            anali2a3_depth(slice_depth_id,2,:)=[max(R(:)),std(R(:)),max(R(:))/std(R(:)),kurtosis(kurtosis(R)),kurtosis(R(:))];
+            anali2a3_depth(slice_depth_id,3,:)=[max(R_nor(:)),std(R_nor(:)),max(R_nor(:))/std(R_nor(:)),kurtosis(kurtosis(R_nor)),kurtosis(R_nor(:))];
+            anali2a3_depth(slice_depth_id,4,:)=[max(R_nor_filt(:)),std(R_nor_filt(:)),max(R_nor_filt(:))/std(R_nor_filt(:)),kurtosis(kurtosis(R_nor_filt)),kurtosis(R_nor_filt(:))];
+            
+            anali2a3_curv_depth(slice_id,1,:)=curv2a3_1_depth;
+            anali2a3_curv_depth(slice_id,2,:)=curv2a3_2_depth;
+            anali2a3_curv_depth(slice_id,3,:)=curv2a3_3_depth;
+            anali2a3_curv_depth(slice_id,4,:)=curv2a3_4_depth;
+            anali2a3_curv_depth(slice_id,5,:)=curv2a3_5_depth;
+        end
+        
+        dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3_depth',num2str(sum_depth),'.txt'),anali2a3_depth,'delimiter','\t');
+        dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3_kurt_depth',num2str(sum_depth),'.txt'),anali2a3_curv_depth,'delimiter','\t');
     end
 end
 
