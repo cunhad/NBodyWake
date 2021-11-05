@@ -1,0 +1,103 @@
+LSS_wake_analysis_programs
+
+
+
+
+
+
+-> scripts on graham
+
+- produce 2d slices at given angle
+
+	run_cupep3m_a_1cpu_types_hr_2dproj_cps_slices
+	
+- produce 2d curve filtered maps (using locangreal_atg method) from 2d slices at given angle
+
+	run_cupep3m_a_1cpu_types_hr_curve_locangreal_atg_2d_data_anali_out_from_2d_slices_out_many	
+	
+- produce 3d curve filtered maps (using locangreal_atg method) from 2d curve filtered maps (using locangreal_atg method) at given angle	
+
+	run_cupep3m_a_1cpu_types_hr_clar_3dpartition_canny_data_anali_out_from_2d_curv_out_many		
+	
+	
+- produce 2d slices at various hpx angles	
+
+	run_cupep3m_a_1cpu_types_hr_2dproj_part_rand_hpx_slices
+	run_cupep3m_a_1cpu_types_hr_2dproj_part_rand_hpx_slices_wake
+	
+- produce 3d curve filtered maps (using locangreal_atg method) from 2d slices at various hpx angles		
+	
+run_cupep3m_a_1cpu_types_hr_clara_2a3dpartition_rand_hpx_slices_data_anali_visual_out_from_2d_slices_out_dev2_Canny	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+-> programs
+
+- produce 2d slices at given angle
+
+	Analysis/2dproj/proj2d_cic_dm_data_out_part_slice
+	
+- produce 2d curvelet filtered maps (using locangreal_atg method) from 2d slices at given angle
+
+	Analysis/wake_detection/curvelet/curvelab/2d/curve_2d_data_anali_out_from_2d_slices_out_locangreal_atg	
+	
+	
+- produce 3d curve filtered maps (using locangreal_atg method) from 2d curve filtered maps (using locangreal_atg method) at given angle		
+	
+	Analysis/wake_detection/curvelet/curvelab/3d/claraCanny_3dpart_data_anali_out_from_2d_clocangreal_atg_out
+	
+- analyse data from 3d curve filtered maps (using locangreal_atg method) at given angle (parallel to wake)
+
+	Analysis/wake_detection/curvelet/curvelab/2d/curveCanny_3d_from_2d_slices_anali_all.m	(also without canny, but i thik this contain the others)
+	
+- perform some analysis locally at given angle (parallel to wake) from 2d curvelet filtered maps (using locangreal_atg method)
+
+	Analysis/wake_detection/curvelet/curvelab/2d/curve3d_show_3D_minimal_nor_locangreala_CanRid_dev1.m
+	
+- perform some analysis locally at given angle (parallel to wake) from 3d curvelet filtered maps (using locangreal_atg method) - to be completed
+	
+	Analysis/wake_detection/curvelet/curvelab/2d/curve3d_show_3D_locangreala_Rid_from_3d_slices_out.m
+
+- produce 2d slices at various hpx angles	
+
+	Analysis/2dproj/proj2d_cic_dm_data_out_part_rand_hpx_slices
+	Analysis/2dproj/proj2d_cic_dm_data_out_part_rand_wake_slices
+
+- produce 3d curve filtered maps (using locangreal_atg method) from 2d slices at various hpx angles		
+
+	Analysis/wake_detection/slices_curv_2d/slices_curv_2a3d_locangreala_inf
+
+- generate summary analysis for 3d curve filtered maps (using locangreal_atg method) at various hpx angles, each simulation
+
+	Analysis/wake_detection/slices_curv_2d/slices_curv_2a3d_locangreal_all.m (and variations, depth, each slice)
+	
+- generate final result from summary analysis for 3d curve filtered maps (using locangreal_atg method) at various hpx angles, each simulation
+	
+	Analysis/wake_detection/slices_curv_2d/slices_curv_2a3d_locangreal_all_groups.m (and variations, depth, each slice)
+
+
+
+
+
+
+
+
+
+
+
+		
+
+

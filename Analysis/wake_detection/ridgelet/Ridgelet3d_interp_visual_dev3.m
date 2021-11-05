@@ -1,7 +1,8 @@
-function [  ] = Ridgelet3d_interp_visual_dev3( Radon_X__,Radon_Y__,Radon_Z__,interp_X_info,interp_Y_info,interp_Z_info)
+function [  ] = Ridgelet3d_interp_visual_dev3( Radon_Z__,interp_Z_info)
+% function [  ] = Ridgelet3d_interp_visual_dev3( Radon_X__,Radon_Y__,Radon_Z__,interp_X_info,interp_Y_info,interp_Z_info)
 % 
-Radon_X__ = Radon_Z__;
-Radon_Y__ = Radon_Z__;
+% Radon_X__ = Radon_Z__;
+% Radon_Y__ = Radon_Z__;
 % Radon_Z__ = Radon_Z__;
 
 
@@ -15,14 +16,14 @@ Radon_Y__ = Radon_Z__;
 
 % sample_points_hor = Radon_hor__(2,:);
 
-ncX_r = max(interp_X_info(:));
-ncX_tz = length(interp_X_info(:,1));
-ncX_ty = length(interp_X_info(1,:));
-
-
-ncY_r = max(interp_Y_info(:));
-ncY_tx = length(interp_Y_info(:,1));
-ncY_tz = length(interp_Y_info(1,:));
+% ncX_r = max(interp_X_info(:));
+% ncX_tz = length(interp_X_info(:,1));
+% ncX_ty = length(interp_X_info(1,:));
+% 
+% 
+% ncY_r = max(interp_Y_info(:));
+% ncY_tx = length(interp_Y_info(:,1));
+% ncY_tz = length(interp_Y_info(1,:));
 
 
 ncZ_r = max(interp_Z_info(:));
@@ -31,45 +32,45 @@ ncZ_ty = length(interp_Z_info(1,:));
 
 
 
-Radon_X__vis = zeros(ncX_tz,ncX_ty,ncX_r);
-Radon_Y__vis = zeros(ncY_tx,ncY_tz,ncY_r);
+% Radon_X__vis = zeros(ncX_tz,ncX_ty,ncX_r);
+% Radon_Y__vis = zeros(ncY_tx,ncY_tz,ncY_r);
 Radon_Z__vis = zeros(ncZ_tx,ncZ_ty,ncZ_r);
 
 
-count_aux=1;
-
-for t1 = 1:ncX_tz
-    for t2 = 1:ncX_ty
-        for r=1:interp_X_info(t1,t2)
-            r_loc=(ncX_r-interp_X_info(t1,t2))/2+r;
-            Radon_X__vis(t1,t2,r_loc)=Radon_X__(1,count_aux);
-            count_aux = count_aux +1;
-            
-        end
-    end
-end
-
-volshow(real(Radon_X__vis),'Renderer','MaximumIntensityProjection');
-
-% figure; imagesc(real(Radon_X__vis(:,:,10)));colorbar;
-
-
-count_aux=1;
-
-for t1 = 1:ncY_tx
-    for t2 = 1:ncY_tz
-        for r=1:interp_Y_info(t1,t2)
-            r_loc=(ncY_r-interp_Y_info(t1,t2))/2+r;
-            Radon_Y__vis(t1,t2,r_loc)=Radon_Y__(1,count_aux);
-            count_aux = count_aux +1;
-            
-        end
-    end
-end
-
-volshow(real(Radon_Y__vis),'Renderer','MaximumIntensityProjection');
-
-% figure; imagesc(real(Radon_Y__vis(:,:,10)));colorbar;
+% count_aux=1;
+% 
+% for t1 = 1:ncX_tz
+%     for t2 = 1:ncX_ty
+%         for r=1:interp_X_info(t1,t2)
+%             r_loc=(ncX_r-interp_X_info(t1,t2))/2+r;
+%             Radon_X__vis(t1,t2,r_loc)=Radon_X__(1,count_aux);
+%             count_aux = count_aux +1;
+%             
+%         end
+%     end
+% end
+% 
+% volshow(real(Radon_X__vis),'Renderer','MaximumIntensityProjection');
+% 
+% % figure; imagesc(real(Radon_X__vis(:,:,10)));colorbar;
+% 
+% 
+% count_aux=1;
+% 
+% for t1 = 1:ncY_tx
+%     for t2 = 1:ncY_tz
+%         for r=1:interp_Y_info(t1,t2)
+%             r_loc=(ncY_r-interp_Y_info(t1,t2))/2+r;
+%             Radon_Y__vis(t1,t2,r_loc)=Radon_Y__(1,count_aux);
+%             count_aux = count_aux +1;
+%             
+%         end
+%     end
+% end
+% 
+% volshow(real(Radon_Y__vis),'Renderer','MaximumIntensityProjection');
+% 
+% % figure; imagesc(real(Radon_Y__vis(:,:,10)));colorbar;
 
 
 

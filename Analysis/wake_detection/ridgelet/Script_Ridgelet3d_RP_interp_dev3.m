@@ -162,15 +162,113 @@ toc;
 
 
 
-tic; 
 clearvars;
 nc=64;
 ncx=nc;ncy=nc;ncz=nc;
 % X=randn([ncx,ncy,ncz]);
 X=ones(ncx,ncy,ncz);
+tic; 
+[ Radon_Z_,interp_Z_info,sample_points_Z_id,ncx,ncy,ncz] = Radon3d_interp_forwards_dev3(X);
+toc;
+
+
+tic;
+[Rid_Z] = Ridgelet3d_fromRadon_dev3(Radon_Z_,sample_points_Z_id,1);
+toc;
+
+
+clearvars;
+nc=64;
+ncx=nc;ncy=nc;ncz=nc;
+% X=randn([ncx,ncy,ncz]);
+X=ones(ncx,ncy,ncz);
+tic; 
+[ Ridgelet_Z_,interp_Z_info,sample_points_Z_id,ncx,ncy,ncz] = Ridgelet3d_interp_forwards_dev3(X,1);
+toc;
+
+
+clearvars;
+nc=64;
+ncx=nc;ncy=nc;ncz=nc;
+% X=randn([ncx,ncy,ncz]);
+X=ones(ncx,ncy,ncz);
+tic; 
+[ Radon_Z_,interp_Z_info,sample_points_Z_id,ncx,ncy,ncz] = Radon3d_interp_forwards_dev3(X);
+toc;
+
+
+tic;
+[Rid_Z] = Ridgelet3d_fromRadon_dev3(Radon_Z_,sample_points_Z_id,interp_Z_info,1);
+toc;
+
+
+
+% sum(imag(Radon_Z_(1,:)))
+max(abs(Radon_Z_(:)-Ridgelet_Z_(:)))
+
+
+max(imag(Radon_Z_(1,:)))
+
+Ridgelet3d_interp_visual_dev3(Radon_Z_,interp_Z_info);
+
+
+
+x = rand([1,200]);
+
+[c,l] = wavedec(x,1,'db1');
+
+[cd1] = detcoef(c,l,[1]);
+
+[cd1,cd2,cd3] = detcoef(c,l,[1 2 3]);
+
+
+
+
+
+tic; 
+clearvars;
+nc=4;
+% ncx=nc;ncy=nc;ncz=nc;
+ncx=nc;ncy=2*nc;ncz=4*nc;
+X=randn([ncx,ncy,ncz]);
+X(:,:,ncz/2) = ones([ncx,ncy]);
+% X(:,ncy/2,:) = ones([ncx,ncz]);
+% X = permute(X,[1 3 2]); 
+% X(ncx/2,:,:) = ones([ncy,ncz]);
+% X = permute(X,[3 2 1]); 
+% X=ones(ncx,ncy,ncz);
 [ Radon_Z_,interp_Z_info,ncx,ncy,ncz] = Ridgelet3d_interp_forwards_dev3(X);
 toc;
-sum(imag(Radon_Z_(1,:)))
+% sum(imag(Radon_Z_(1,:)))
+max(imag(Radon_Z_(1,:)))
+
+% volshow(X,'Renderer','MaximumIntensityProjection');
+
+
+Ridgelet3d_interp_visual_dev3(Radon_Z_,interp_Z_info);
+
+% max(real(Radon_Z_(1,:)))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -223,6 +321,7 @@ Co_=ifft(Bo_);
 
 [ Radon_X_,Radon_Y_,Radon_Z_,interp_X_info,interp_Y_info,interp_Z_info,ncx,ncy,ncz] = Ridgelet3d_interp_forwards_dev3(X);
 
+[ Radon_X_,Radon_Y_,Radon_Z_,interp_X_info,interp_Y_info,interp_Z_info,ncx,ncy,ncz] = Ridgelet3d_interp_forwards_dev3(X);
 
 % [ Radon_hor__, Radon_vert__,RPinterp_hor_cell_info,RPinterp_vert_cell_info,ncx,ncy] = Ridgelet2d_RP_crude_forwards_dev3(X);
 

@@ -5,6 +5,8 @@ function [  ] = curveCanny_3d_from_2d_slices_anali_all(  )
 % root_anali_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurv_s5lv2_anali_all/';
 % root_visual_2d='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurv_s5lv2_visual_all/';
 % 
+
+
 %clearvars;
 lenght_factor=1;
 resol_factor=0.5;
@@ -15,10 +17,12 @@ slices=32;
 nc=512;
 sum_depth=4;
 L_box=4;
-root_anali_2d_in=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclara-l1lr1na1024_to_3dparclar-l1lr1_anali/');
+% root_anali_2d_in=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclara-l1lr1na1024_to_3dparclar-l1lr1_anali/');
+root_anali_2d_in=strcat('/home/disraelcunha/Documents/graham/cubep3m/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclara-l1lr1na1024_to_3dparclar-l1lr1_anali/');
 % root_anali_2d_in=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclara-l1lr1na1024_to_3dparclar_d2-l1lr1_anali/');
 % root_anali_2d_in=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclara-l1lr1na1024_to_3dparcurv-l1lr1_anali/');
-root='/home/asus/Dropbox/extras/storage/graham/ht/';
+% root='/home/asus/Dropbox/extras/storage/graham/ht/';
+root='/home/disraelcunha/Documents/graham/cubep3m/ht/';
 % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps16_512_2dclar-l2lr1na128_to_3dparcurv-l1lr1_anali/';
 % root_anali_2d_in=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclar-l2lr1na256_to_3dparcurv-l1lr2_anali/');
 % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcr0_l2lr1ap256_anali/';
@@ -552,8 +556,10 @@ wake_slices = reshape(wake,[slices/sum_depth,length(sample_list_wake)])'
 nowake_slices = reshape(nowake,[slices/sum_depth,length(sample_list_nowake)])'
 max_wake_slices_=sort(wake_slices')
 max_nowake_slices_=sort(nowake_slices')
-max_wake_slices=max_wake_slices_(end,:)
-max_nowake_slices=max_nowake_slices_(end,:)
+max_wake_slices=sum(max_wake_slices_)
+max_nowake_slices=sum(max_nowake_slices_)
+% max_wake_slices=max_wake_slices_(end,:)
+% max_nowake_slices=max_nowake_slices_(end,:)
 mean_wake=mean(max_wake_slices)
 mean_nowake=mean(max_nowake_slices)
 std_wake=std(max_wake_slices,1)
@@ -564,6 +570,9 @@ mean_stn=mean(stn_wake)
 std_stn=std(stn_wake,1)
 stn=mean_stn-std_stn
 significance=abs(mean_wake-mean_nowake)/(std_wake+std_nowake)
+
+
+
 % 
 % nowake=reshape(permute(anali_Canny_depth(1,1:length(sample_list_nowake),:,4,1),[1,3,2,4,5]),[1,numel(anali_depth(1,1:length(sample_list_nowake),:,2,1))])
 % wake=reshape(permute(anali_Canny_depth(2,1:length(sample_list_wake),:,4,1),[1,3,2,4,5]),[1,numel(anali_depth(1,1:length(sample_list_wake),:,2,1))])
