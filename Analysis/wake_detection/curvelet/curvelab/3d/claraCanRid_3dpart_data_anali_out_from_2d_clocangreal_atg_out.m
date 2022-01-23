@@ -1,4 +1,4 @@
-function [  ] = claraCanRid_3dpart_data_anali_out_from_2d_clocangreal_atg_out( root,root_data_2d_in,root_data_2d_out,root_anali_2d_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,slices,lev_3d,lev_3drig,sigma,step_of_degree,wavel_removal_factor,snapshot,visual_type,visual_in_or_out,partition2d,partition3rd,sum_depth)
+function [  ] = claraCanRid_3dpart_data_anali_out_from_2d_clocangreal_atg_out( root,root_data_2d_in,root_data_2d_out,root_anali_2d_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,slices,lev_3d,lev_3drig,sigma,step_of_degree,wavel_removal_factor,snapshot,visual_type,visual_in_or_out,partition2d,partition3rd,sum_depth,partition2d_dept,partition3rd_dept)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 % 
@@ -762,11 +762,11 @@ if ~ismember(1,sum_depth)
 %         map_3d_slices_filt3d_depth=map_2d_slices_filt2d_depth+map_3d_slices_filt2d;
 %         slice_depth_id=floor(slice_id/sum_depth);
 
-        for partition=0:partition3rd-1
-                for partition_x=0:partition2d-1
-                    for partition_y=0:partition2d-1 
+        for partition=0:partition3rd_dept-1
+                for partition_x=0:partition2d_dept-1
+                    for partition_y=0:partition2d_dept-1 
                         
-                        map_3d_slices_depth_ = map_3d_slices_filt3d((partition_x)*nc/partition2d+1:(partition_x)*nc/partition2d+nc/partition2d,(partition_y)*nc/partition2d+1:(partition_y)*nc/partition2d+nc/partition2d,(partition)*slices/partition3rd+1:(partition)*slices/partition3rd+slices/partition3rd);
+                        map_3d_slices_depth_ = map_3d_slices_filt3d((partition_x)*nb/partition2d_dept+1:(partition_x)*nb/partition2d_dept+nb/partition2d_dept,(partition_y)*nb/partition2d_dept+1:(partition_y)*nb/partition2d_dept+nb/partition2d_dept,(partition)*slices/partition3rd_dept+1:(partition)*slices/partition3rd_dept+slices/partition3rd_dept);
                         
                         % %                         3d ridgelet implementation
                     
@@ -791,11 +791,11 @@ if ~ismember(1,sum_depth)
 %                         data = [dataX,dataY,dataZ];
                         data = [dataX,dataY];
 
-                        anali_depth(1+partition_x+partition_y*partition2d+partition*partition2d*partition2d,:)=[max(data(:)),std(data(:)),max(data(:))/std(data(:)),kurtosis(data(:))];
+                        anali_depth(1+partition_x+partition_y*partition2d_dept+partition*partition2d_dept*partition2d_dept,:)=[max(data(:)),std(data(:)),max(data(:))/std(data(:)),kurtosis(data(:))];
 
                         
                         
-                        map_3d_slices_Canny_depth_ = map_3d_slices_filtCanny3d((partition_x)*nc/partition2d+1:(partition_x)*nc/partition2d+nc/partition2d,(partition_y)*nc/partition2d+1:(partition_y)*nc/partition2d+nc/partition2d,(partition)*slices/partition3rd+1:(partition)*slices/partition3rd+slices/partition3rd);
+                        map_3d_slices_Canny_depth_ = map_3d_slices_filtCanny3d((partition_x)*nb/partition2d_dept+1:(partition_x)*nb/partition2d_dept+nb/partition2d_dept,(partition_y)*nb/partition2d_dept+1:(partition_y)*nb/partition2d_dept+nb/partition2d_dept,(partition)*slices/partition3rd_dept+1:(partition)*slices/partition3rd_dept+slices/partition3rd_dept);
                         
                         
                         % %                         3d ridgelet implementation
@@ -821,7 +821,7 @@ if ~ismember(1,sum_depth)
 %                         data = [dataX,dataY,dataZ];
                         data = [dataX,dataY];
 
-                        analiCanny_depth(1+partition_x+partition_y*partition2d+partition*partition2d*partition2d,:)=[max(data(:)),std(data(:)),max(data(:))/std(data(:)),kurtosis(data(:))];
+                        analiCanny_depth(1+partition_x+partition_y*partition2d_dept+partition*partition2d_dept*partition2d_dept,:)=[max(data(:)),std(data(:)),max(data(:))/std(data(:)),kurtosis(data(:))];
 
                         
                     end

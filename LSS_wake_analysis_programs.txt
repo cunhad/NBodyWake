@@ -18,6 +18,7 @@ LSS_wake_analysis_programs
 - produce 3d curve filtered maps (using locangreal_atg method) from 2d curve filtered maps (using locangreal_atg method) at given angle	
 
 	run_cupep3m_a_1cpu_types_hr_clar_3dpartition_canny_data_anali_out_from_2d_curv_out_many		
+	run_cupep3m_a_1cpu_types_hr_clar_3dpartition_canRid_data_anali_out_from_2d_curv_out_many
 	
 	
 - produce 2d slices at various hpx angles	
@@ -28,7 +29,7 @@ LSS_wake_analysis_programs
 - produce 3d curve filtered maps (using locangreal_atg method) from 2d slices at various hpx angles		
 	
 run_cupep3m_a_1cpu_types_hr_clara_2a3dpartition_rand_hpx_slices_data_anali_visual_out_from_2d_slices_out_dev2_Canny	
-	
+run_cupep3m_a_1cpu_types_hr_clara_2a3dpartition_rand_hpx_slices_data_anali_visual_out_from_2d_slices_out_dev2_CanRid		
 	
 	
 	
@@ -58,7 +59,8 @@ run_cupep3m_a_1cpu_types_hr_clara_2a3dpartition_rand_hpx_slices_data_anali_visua
 - produce 3d curve filtered maps (using locangreal_atg method) from 2d curve filtered maps (using locangreal_atg method) at given angle		
 	
 	Analysis/wake_detection/curvelet/curvelab/3d/claraCanny_3dpart_data_anali_out_from_2d_clocangreal_atg_out
-	
+	Analysis/wake_detection/curvelet/curvelab/3d/claraCanRid_3dpart_data_anali_out_from_2d_clocangreal_atg_out
+		
 - analyse data from 3d curve filtered maps (using locangreal_atg method) at given angle (parallel to wake)
 
 	Analysis/wake_detection/curvelet/curvelab/2d/curveCanny_3d_from_2d_slices_anali_all.m	(also without canny, but i thik this contain the others)
@@ -79,6 +81,7 @@ run_cupep3m_a_1cpu_types_hr_clara_2a3dpartition_rand_hpx_slices_data_anali_visua
 - produce 3d curve filtered maps (using locangreal_atg method) from 2d slices at various hpx angles		
 
 	Analysis/wake_detection/slices_curv_2d/slices_curv_2a3d_locangreala_inf (and Rid_inf for Ridgelet analysis )
+	Analysis/wake_detection/slices_curv_2d/slices_curv_2a3d_locangrealaRid_inf
 
 - generate summary analysis for 3d curve filtered maps (using locangreal_atg method) at various hpx angles, each simulation
 

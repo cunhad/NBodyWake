@@ -1,4 +1,4 @@
-function [ map,anali ] = slices_curv_2a3d_locangrealaRid_inf( root,root_data_2d_in,root_data_2d_out,root_data_2d_anali_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,numb_rand,slices,lev,lev_2drid,lev_3d,lev_3drid,step_of_degree,wavel_removal_factor,NSIDE,partition2d,partition3rd,sum_depth,snapshot,visual_type,visual_in_or_out,stage)
+function [ map,anali ] = slices_curv_2a3d_locangrealaRid_inf( root,root_data_2d_in,root_data_2d_out,root_data_2d_anali_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,numb_rand,slices,lev,lev_2drid,lev_3d,lev_3drid,step_of_degree,wavel_removal_factor,NSIDE,partition2d,partition3rd,sum_depth,snapshot,visual_type,visual_in_or_out,stage,partition2d_dept,partition3rd_dept)
 
 
 % Ridgelet done in the deep analysis after 3d filter
@@ -178,7 +178,7 @@ anali2a3_curv=zeros(slices,5,lev);
 
 if ~ismember(1,sum_depth)
     anali_depth=zeros(slices/sum_depth,4,5);
-    anali2a3_depth=zeros(slices/sum_depth,4,5);
+    anali2a3_depth=zeros(partition2d_dept*partition2d_dept*partition3rd_dept,4);
     anali2a3_curv_depth=zeros(slices/sum_depth,5,lev);
 end
 
@@ -1269,12 +1269,12 @@ if ismember(3,stage)
         %         map_3d_slices_filt3d_depth=map_2d_slices_filt2d_depth+map_3d_slices_filt2d;
         %         slice_depth_id=floor(slice_id/sum_depth);
         
-        for partition=0:partition3rd-1
-                for partition_x=0:partition2d-1
-                    for partition_y=0:partition2d-1                                                
+        for partition=0:partition3rd_dept-1
+                for partition_x=0:partition2d_dept-1
+                    for partition_y=0:partition2d_dept-1                                                
                         %             C_aux=map_3d_slices_filt2d(:,:,:);
                         %             C_aux=map_3d_slices((partition_x)*nc/partition2d+1:(partition_x)*nc/partition2d+nc/partition2d,(partition_y)*nc/partition2d+1:(partition_y)*nc/partition2d+nc/partition2d,(partition)*slices/partition3rd+1:(partition)*slices/partition3rd+slices/partition3rd);
-                        map_3d_slices_filt3d_depth_=map_3d_slices_filt3d((partition_x)*nc/partition2d+1:(partition_x)*nc/partition2d+nc/partition2d,(partition_y)*nc/partition2d+1:(partition_y)*nc/partition2d+nc/partition2d,(partition)*slices/partition3rd+1:(partition)*slices/partition3rd+slices/partition3rd);
+                        map_3d_slices_filt3d_depth_=map_3d_slices_filt3d((partition_x)*nb/partition2d_dept+1:(partition_x)*nb/partition2d_dept+nb/partition2d_dept,(partition_y)*nb/partition2d_dept+1:(partition_y)*nb/partition2d_dept+nb/partition2d_dept,(partition)*slices/partition3rd_dept+1:(partition)*slices/partition3rd_dept+slices/partition3rd_dept);
                         
                         % %                         3d ridgelet implementation
 %                         
@@ -1296,7 +1296,7 @@ if ismember(3,stage)
                         [ Radon_Y_ones,interp_Y_info,sample_points_Y_id,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(ones(size(permute(map_3d_slices_filt3d_depth_,[1 3 2]))));
                         [ Radon_Y_,interp_Y_info,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(permute(map_3d_slices_filt3d_depth_,[1 3 2]));
                         Radon_Y_norm_ = real(Radon_Y_)./real(Radon_Y_ones);
-                        Ridgelet_Y = Ridgelet3d_fromRadon_dev3(Radon_Y_norm_,sample_points_Y_id,interp_Y_info,lev_3drig);
+                        Ridgelet_Y = Ridgelet3d_fromRadon_dev3(Radon_Y_norm_,sample_points_Y_id,interp_Y_info,lev_3drid);
 %                         dataY = Radon_Y_norm_(1,:);
                         Ridgelet_Y(isnan(Ridgelet_Y(:))) = [];
                         dataY = Ridgelet_Y;
@@ -1304,7 +1304,7 @@ if ismember(3,stage)
                         [ Radon_X_ones,interp_X_info,sample_points_X_id,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(ones(size(permute(map_3d_slices_filt3d_depth_,[3 2 1]))));
                         [ Radon_X_,interp_X_info,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(permute(map_3d_slices_filt3d_depth_,[3 2 1]));
                         Radon_X_norm_ = real(Radon_X_)./real(Radon_X_ones);
-                        Ridgelet_X = Ridgelet3d_fromRadon_dev3(Radon_X_norm_,sample_points_X_id,interp_X_info,lev_3drig);
+                        Ridgelet_X = Ridgelet3d_fromRadon_dev3(Radon_X_norm_,sample_points_X_id,interp_X_info,lev_3drid);
 %                         dataX = Radon_X_norm_(1,:);
                         Ridgelet_X(isnan(Ridgelet_X(:))) = [];
                         dataX = Ridgelet_X;
@@ -1316,7 +1316,7 @@ if ismember(3,stage)
 %                         anali2a3_depth(slice_depth_id,1,:)=[max(this(:)),std(this(:)),max(this(:))/std(this(:)),kurtosis(kurtosis(this)),kurtosis(this(:))];
 %                         anali2a3_depth(slice_depth_id,2,:)=[max(R(:)),std(R(:)),max(R(:))/std(R(:)),kurtosis(kurtosis(R)),kurtosis(R(:))];
 %                         anali2a3_depth(slice_depth_id,3,:)=[max(R_nor(:)),std(R_nor(:)),max(R_nor(:))/std(R_nor(:)),kurtosis(kurtosis(R_nor)),kurtosis(R_nor(:))];
-                        anali2a3_depth(1+partition_x+partition_y*partition2d+partition*partition2d*partition2d,:)=[max(data(:)),std(data(:)),max(data(:))/std(data(:)),kurtosis(data(:))];
+                        anali2a3_depth(1+partition_x+partition_y*partition2d_dept+partition*partition2d_dept*partition2d_dept,:)=[max(data(:)),std(data(:)),max(data(:))/std(data(:)),kurtosis(data(:))];
 
                         
                         
@@ -1325,7 +1325,7 @@ if ismember(3,stage)
                 end
         end
         
-                dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3_partXY',num2str(partition2d),'_partZ',num2str(partition3rd),'.txt'),anali2a3_depth,'delimiter','\t');
+                dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3_partXY',num2str(partition2d_dept),'_partZ',num2str(partition3rd_dept),'.txt'),anali2a3_depth,'delimiter','\t');
 
 
         
