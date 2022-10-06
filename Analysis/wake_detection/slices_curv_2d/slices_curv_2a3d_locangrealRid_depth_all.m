@@ -1,5 +1,5 @@
 % function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangreal_depth_all( root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type,sum_depth)
-function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangreal_depth_all( root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type,partition2d_dept,partition3rd_dept,sum_depth)
+function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangrealRid_depth_all( root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type,partition2d_dept,partition3rd_dept,sum_depth)
 
 %(example)  [ anali] = slices_curv_2a3d_all('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','/home/asus/Dropbox/extras/storage/graham/small_res/anali_hpx/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,2,2 );
 
@@ -49,16 +49,16 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangreal_depth_all( r
 % for i=3001:3010
 %     spec='4Mpc_2048c_1024p_zi63_nowakem';
 %     aux_path=strcat('/sample',num2str(i),'/');
-%     slices_curv_2a3d_locangreal_depth_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type,partition2d_dept,partition3rd_dept,sum_depth);
+%     slices_curv_2a3d_locangrealRid_depth_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type,partition2d_dept,partition3rd_dept,sum_depth);
 % end
 
 
 % for i=3001:3010
 %     spec='4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m';
 %     aux_path=strcat('/sample',num2str(i),'/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
-%     slices_curv_2a3d_locangreal_depth_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type,partition2d_dept,partition3rd_dept,sum_depth);
+%     slices_curv_2a3d_locangrealRid_depth_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type,partition2d_dept,partition3rd_dept,sum_depth);
 % end
-
+    
 
 % root='/home/asus/Dropbox/extras/storage/graham/small_res/';
 % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/small_res/anali3/';
@@ -90,11 +90,13 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangreal_depth_all( r
 % analy_type=3;
 % sum_depth=4;
 % 
-% 
-% % 
+
+
 % root='/home/asus/Dropbox/extras/storage/graham/ht/';
-% root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali/';
-% root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/';
+% root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_Rad/';
+% root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_Rad_St3_dp4/';
+% % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali/';
+% % root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/';
 % % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE8_2dclaral1lr1na1024_and_3dparclaral1lr1_anali/';
 % % root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE8_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/';
 % % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_z2p5_2dclaral1lr1na1024_and_3dparclaral1lr1_anali/';
@@ -118,11 +120,11 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangreal_depth_all( r
 % slice=32;
 % NSIDE=4;
 % % NSIDE=8;
-% analy_type=3;
+% analy_type=1;
 % sum_depth=4;
 % partition2d_dept = 1;
 % partition3rd_dept=slice/sum_depth;
-% 
+
 
 angles_hpx(1,:) = dlmread(strcat('../../../python/angles',num2str(NSIDE),'_t.cvs'));
 angles_hpx(2,:) = dlmread(strcat('../../../python/angles',num2str(NSIDE),'_p.cvs'));
@@ -155,15 +157,15 @@ for angle_id=1:N_angles
 %     if (~ismember(angle_id,[120,121,125,141,143]))
         
     path_in=string(strcat(strcat(root_anali_2d_in,spec,aux_path),'data_2d_filt_slices/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(angle_id),'/',path2,'/2dproj/dm/'))    
-    aux=dlmread(strcat(path_in,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3_depth',num2str(sum_depth),'.txt')); %old
-    display(strcat(path_in,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3_depth',num2str(sum_depth),'.txt'));
-%     display(strcat(path_in,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3_partXY',num2str(partition2d_dept),'_partZ',num2str(partition3rd_dept),'.txt'));
-%     aux=dlmread(strcat(path_in,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3_partXY',num2str(partition2d_dept),'_partZ',num2str(partition3rd_dept),'.txt')); %new
+%     aux=dlmread(strcat(path_in,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3_depth',num2str(sum_depth),'.txt')); %old
+%     display(strcat(path_in,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_partXY',num2str(partition2d_dept),'_partZ',num2str(partition3rd_dept)));
+    display(strcat(path_in,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3_partXY',num2str(partition2d_dept),'_partZ',num2str(partition3rd_dept),'.txt'));
+    aux=dlmread(strcat(path_in,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3_partXY',num2str(partition2d_dept),'_partZ',num2str(partition3rd_dept),'.txt')); %new
 %     end
     
     %old
-    anali(angle_id,:,:,:)=reshape(aux,slice/sum_depth,4,5);
-%     anali(angle_id,:,:)=reshape(aux,slice/sum_depth,4);
+%     anali(angle_id,:,:,:)=reshape(aux,slice/sum_depth,4,5);
+    anali(angle_id,:,:)=reshape(aux,slice/sum_depth,4);
 
     
 end
@@ -172,15 +174,15 @@ end
 % signal=reshape(permute(anali(:,:,2,1),[1,3,2,4,5]),[1,numel(anali(:,:,2,1))]);
 % signal = reshape(signal,[N_angles,2])';
 % signal = reshape(signal,[slice,N_angles]);
-signal=anali(:,:,4,analy_type);  %old
-% signal=anali(:,:,3);  %new
-signal=sum(signal,2);
-signal=signal';
+% signal=anali(:,:,4,analy_type);  %old
+signal=anali(:,:,3);  %new
+% signal=sum(signal,2);
+% signal=signal';
 % signal = min(signal');
-% signal = max(signal);
+signal = sum(signal');
 
-signal_det=anali(:,:,4,analy_type); %old
-% signal_det=anali(:,:,3); %new
+% signal_det=anali(:,:,4,analy_type); %old
+signal_det=anali(:,:,3); %new
 
 
 for angl=N_angles+1:N_angles_t

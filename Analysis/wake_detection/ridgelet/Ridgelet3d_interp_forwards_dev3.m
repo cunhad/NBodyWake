@@ -574,15 +574,15 @@ for i=1:length(sample_points_Z(1,:))
             Radon_Z_aux__(r)=(exp(-1i*pi*(r-1)*(1-1/ncr)))*Radon_Z_aux__(r);
         end
         
-%         n_levels=floor(log2(length(Radon_Z_aux__)));
-%         [dc_dwt,levels] = wavedec(real(Radon_Z_aux__),n_levels,'db1');
-%         D = wrcoef('d',dc_dwt,levels,'db1',lev_3drig);
-%         Radon_Z_aux2__ = D;
+        n_levels=floor(log2(length(Radon_Z_aux__)));
+        [dc_dwt,levels] = wavedec(real(Radon_Z_aux__),n_levels,'db1');
+        D = wrcoef('d',dc_dwt,levels,'db1',lev_3drig);
+        Radon_Z_aux2__ = D;
         
-        [c,l] = wavedec(real(Radon_Z_aux__),lev_3drig,'db1');
-        [D] = detcoef(c,l,[1]);        
-        Radon_Z_aux2__ = [D,D];
-        Radon_Z_aux2__(end) = [];
+%         [c,l] = wavedec(real(Radon_Z_aux__),lev_3drig,'db1');
+%         [D] = detcoef(c,l,[1]);        
+%         Radon_Z_aux2__ = [D,D];
+%         Radon_Z_aux2__(end) = [];
         
 %         Radon_Z_aux2__ = Radon_Z_aux__;
         Radon_Z__=[Radon_Z__,Radon_Z_aux2__];
@@ -596,15 +596,15 @@ for r=1:ncr
     Radon_Z_aux__(r)=(exp(-1i*pi*(r-1)*(1-1/ncr)))*Radon_Z_aux__(r);
 end
 
-%         n_levels=floor(log2(length(Radon_Z_aux__)));
-%         [dc_dwt,levels] = wavedec(real(Radon_Z_aux__),n_levels,'db1');
-%         D = wrcoef('d',dc_dwt,levels,'db1',lev_3drig);
-%         Radon_Z_aux2__ = D;
+        n_levels=floor(log2(length(Radon_Z_aux__)));
+        [dc_dwt,levels] = wavedec(real(Radon_Z_aux__),n_levels,'db1');
+        D = wrcoef('d',dc_dwt,levels,'db1',lev_3drig);
+        Radon_Z_aux2__ = D;
 
-        [c,l] = wavedec(real(Radon_Z_aux__),lev_3drig,'db1');
-        [D] = detcoef(c,l,[1]);
-        Radon_Z_aux2__ = [D,D];
-        Radon_Z_aux2__(end) = [];
+%         [c,l] = wavedec(real(Radon_Z_aux__),lev_3drig,'db1');
+%         [D] = detcoef(c,l,[1]);
+%         Radon_Z_aux2__ = [D,D];
+%         Radon_Z_aux2__(end) = [];
 
 % Radon_Z_aux2__ = Radon_Z_aux__;
 

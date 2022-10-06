@@ -32,6 +32,8 @@ end
 
 F_ = fftn(X_);
 
+% F_ = F_./abs(F_); / test if the relevant info is in the phase (not work, why?)
+
 
 % Augmentation if even, plus four axtra colums (to increase the cover of
 % the crude intrerpolation
@@ -165,7 +167,7 @@ end
 
 % 
 % figure;
-% scatter3(sample_points_Z(:,4),sample_points_Z(:,5),sample_points_Z(:,6))
+% scatter3(sample_points_Z(4,:),sample_points_Z(5,:),sample_points_Z(6,:))
 
 
 

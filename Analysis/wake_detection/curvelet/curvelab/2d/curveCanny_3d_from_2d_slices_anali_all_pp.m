@@ -537,7 +537,7 @@ end
 % stn=mean_stn-std_stn
 % significance=abs(mean_wake-mean_nowake)./(std_wake+std_nowake)
 
-% 
+
 nowake=reshape(permute(anali_depth(1,1:length(sample_list_nowake),:,4,3),[1,3,2,4,5]),[1,numel(anali_depth(1,1:length(sample_list_nowake),:,2,1))])
 wake=reshape(permute(anali_depth(2,1:length(sample_list_wake),:,4,3),[1,3,2,4,5]),[1,numel(anali_depth(1,1:length(sample_list_wake),:,2,1))])
 mean_wake=mean(wake)
@@ -552,8 +552,10 @@ wake_slices = reshape(wake,[slices/sum_depth,length(sample_list_wake)])'
 nowake_slices = reshape(nowake,[slices/sum_depth,length(sample_list_nowake)])'
 max_wake_slices_=sort(wake_slices')
 max_nowake_slices_=sort(nowake_slices')
-max_wake_slices=max_wake_slices_(end,:)
-max_nowake_slices=max_nowake_slices_(end,:)
+max_wake_slices=sum(max_wake_slices_)
+max_nowake_slices=sum(max_nowake_slices_)
+% max_wake_slices=max_wake_slices_(end,:)
+% max_nowake_slices=max_nowake_slices_(end,:)
 mean_wake=mean(max_wake_slices)
 mean_nowake=mean(max_nowake_slices)
 std_wake=std(max_wake_slices,1)
@@ -564,6 +566,38 @@ mean_stn=mean(stn_wake)
 std_stn=std(stn_wake,1)
 stn=mean_stn-std_stn
 significance=abs(mean_wake-mean_nowake)/(std_wake+std_nowake)
+
+
+
+
+
+% 
+% nowake=reshape(permute(anali_depth(1,1:length(sample_list_nowake),:,4,3),[1,3,2,4,5]),[1,numel(anali_depth(1,1:length(sample_list_nowake),:,2,1))])
+% wake=reshape(permute(anali_depth(2,1:length(sample_list_wake),:,4,3),[1,3,2,4,5]),[1,numel(anali_depth(1,1:length(sample_list_wake),:,2,1))])
+% mean_wake=mean(wake)
+% mean_nowake=mean(nowake)
+% std_nowake=std(nowake,1)
+% stn_nowake=(nowake-mean_nowake)/std_nowake
+% stn_wake=(wake-mean_nowake)/std_nowake
+% mean_stn=mean(stn_wake)
+% std_stn=std(stn_wake,1)
+% mean_stn-std_stn
+% wake_slices = reshape(wake,[slices/sum_depth,length(sample_list_wake)])'
+% nowake_slices = reshape(nowake,[slices/sum_depth,length(sample_list_nowake)])'
+% max_wake_slices_=sort(wake_slices')
+% max_nowake_slices_=sort(nowake_slices')
+% max_wake_slices=max_wake_slices_(end,:)
+% max_nowake_slices=max_nowake_slices_(end,:)
+% mean_wake=mean(max_wake_slices)
+% mean_nowake=mean(max_nowake_slices)
+% std_wake=std(max_wake_slices,1)
+% std_nowake=std(max_nowake_slices,1)
+% stn_nowake=(max_nowake_slices-mean_nowake)/std_nowake
+% stn_wake=(max_wake_slices-mean_nowake)/std_nowake
+% mean_stn=mean(stn_wake)
+% std_stn=std(stn_wake,1)
+% stn=mean_stn-std_stn
+% significance=abs(mean_wake-mean_nowake)/(std_wake+std_nowake)
 % 
 % nowake=reshape(permute(anali_Canny_depth(1,1:length(sample_list_nowake),:,4,1),[1,3,2,4,5]),[1,numel(anali_depth(1,1:length(sample_list_nowake),:,2,1))])
 % wake=reshape(permute(anali_Canny_depth(2,1:length(sample_list_wake),:,4,1),[1,3,2,4,5]),[1,numel(anali_depth(1,1:length(sample_list_wake),:,2,1))])

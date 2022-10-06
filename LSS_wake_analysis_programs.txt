@@ -18,7 +18,11 @@ LSS_wake_analysis_programs
 - produce 3d curve filtered maps (using locangreal_atg method) from 2d curve filtered maps (using locangreal_atg method) at given angle	
 
 	run_cupep3m_a_1cpu_types_hr_clar_3dpartition_canny_data_anali_out_from_2d_curv_out_many		
-	run_cupep3m_a_1cpu_types_hr_clar_3dpartition_canRid_data_anali_out_from_2d_curv_out_many
+	run_cupep3m_a_1cpu_types_hr_clar_3dpartition_canny_data_anali_out_from_2d_curv_out_many_lev3d1
+	run_cupep3m_a_1cpu_types_hr_clar_3dpartition_canny_data_anali_out_from_2d_curv_out_many_lev3d2
+	run_cupep3m_a_1cpu_types_hr_clar_3dpartition_canny_data_anali_out_from_2d_curv_out_many_lev3d3
+		
+	run_cupep3m_a_1cpu_types_hr_clar_3dpartition_canRid_data_anali_out_from_2d_curv_out_many	(with ridgelet instead)
 	
 	
 - produce 2d slices at various hpx angles	
@@ -29,7 +33,7 @@ LSS_wake_analysis_programs
 - produce 3d curve filtered maps (using locangreal_atg method) from 2d slices at various hpx angles		
 	
 run_cupep3m_a_1cpu_types_hr_clara_2a3dpartition_rand_hpx_slices_data_anali_visual_out_from_2d_slices_out_dev2_Canny	
-run_cupep3m_a_1cpu_types_hr_clara_2a3dpartition_rand_hpx_slices_data_anali_visual_out_from_2d_slices_out_dev2_CanRid		
+run_cupep3m_a_1cpu_types_hr_clara_2a3dpartition_rand_hpx_slices_data_anali_visual_out_from_2d_slices_out_dev2_CanRid	(with ridgelet instead)	
 	
 	
 	
@@ -86,6 +90,7 @@ run_cupep3m_a_1cpu_types_hr_clara_2a3dpartition_rand_hpx_slices_data_anali_visua
 - generate summary analysis for 3d curve filtered maps (using locangreal_atg method) at various hpx angles, each simulation
 
 	Analysis/wake_detection/slices_curv_2d/slices_curv_2a3d_locangreal_all.m (and variations, depth, each slice)
+	Analysis/wake_detection/slices_curv_2d/slices_curv_2a3d_locangrealRid_depth_all.m	
 	
 - generate final result from summary analysis for 3d curve filtered maps (using locangreal_atg method) at various hpx angles, each simulation
 	
@@ -94,7 +99,7 @@ run_cupep3m_a_1cpu_types_hr_clara_2a3dpartition_rand_hpx_slices_data_anali_visua
 
 
 
-
+A que deu mais certo do rad, e do Rad6, que acho que e a normalizada, com removal, Max/Std
 
 
 

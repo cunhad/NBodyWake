@@ -1281,36 +1281,63 @@ if ismember(3,stage)
 %                         
 %                         
 %                         
-%                         map_3d_slices_depth = repelem(map_3d_slices_depth,2,2,2);                        
-                        
-%                         [ Radon_Z_ones,interp_Z_info,sample_points_Z_id,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(ones(size(map_3d_slices_depth)));
-%                         [ Radon_Z_,interp_Z_info,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(map_3d_slices_depth);
-%                         Radon_Z_norm_ = real(Radon_Z_)./real(Radon_Z_ones);
-%                         Ridgelet_Z = Ridgelet3d_fromRadon_dev3(Radon_Z_norm_,sample_points_Z_id,lev_3drig);
-% %                         dataZ = Radon_Z_norm_(1,:);
-%                         Ridgelet_Z(isnan(Ridgelet_Z(:))) = [];
-%                         dataZ = Ridgelet_Z;
-
+                        map_3d_slices_filt3d_depth_ = repelem(map_3d_slices_filt3d_depth_,2,2,2);
 
                         
-                        [ Radon_Y_ones,interp_Y_info,sample_points_Y_id,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(ones(size(permute(map_3d_slices_filt3d_depth_,[1 3 2]))));
+%                         [ Radon_Y_ones,interp_Y_info,sample_points_Y_id,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(ones(size(permute(map_3d_slices_filt3d_depth_,[1 3 2]))));
                         [ Radon_Y_,interp_Y_info,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(permute(map_3d_slices_filt3d_depth_,[1 3 2]));
-                        Radon_Y_norm_ = real(Radon_Y_)./real(Radon_Y_ones);
-                        Ridgelet_Y = Ridgelet3d_fromRadon_dev3(Radon_Y_norm_,sample_points_Y_id,interp_Y_info,lev_3drid);
-%                         dataY = Radon_Y_norm_(1,:);
-                        Ridgelet_Y(isnan(Ridgelet_Y(:))) = [];
-                        dataY = Ridgelet_Y;
+%                         Radon_Y_norm_ = real(Radon_Y_)./real(Radon_Y_ones);
+%                         Ridgelet_Y = Ridgelet3d_fromRadon_dev3(Radon_Y_norm_,sample_points_Y_id,interp_Y_info,lev_3drid);
+% %                         dataY = Radon_Y_norm_(1,:);
+%                         Ridgelet_Y(isnan(Ridgelet_Y(:))) = [];
+                        [Radon_Y_] = RemoveLowVolRad_dev3(Radon_Y_,interp_Y_info,1/2);
+                        dataY = real(Radon_Y_);
                         
-                        [ Radon_X_ones,interp_X_info,sample_points_X_id,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(ones(size(permute(map_3d_slices_filt3d_depth_,[3 2 1]))));
+%                         [ Radon_X_ones,interp_X_info,sample_points_X_id,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(ones(size(permute(map_3d_slices_filt3d_depth_,[3 2 1]))));
                         [ Radon_X_,interp_X_info,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(permute(map_3d_slices_filt3d_depth_,[3 2 1]));
-                        Radon_X_norm_ = real(Radon_X_)./real(Radon_X_ones);
-                        Ridgelet_X = Ridgelet3d_fromRadon_dev3(Radon_X_norm_,sample_points_X_id,interp_X_info,lev_3drid);
-%                         dataX = Radon_X_norm_(1,:);
-                        Ridgelet_X(isnan(Ridgelet_X(:))) = [];
-                        dataX = Ridgelet_X;
+%                         Radon_X_norm_ = real(Radon_X_)./real(Radon_X_ones);
+%                         Ridgelet_X = Ridgelet3d_fromRadon_dev3(Radon_X_norm_,sample_points_X_id,interp_X_info,lev_3drid);
+% %                         dataX = Radon_X_norm_(1,:);
+%                         Ridgelet_X(isnan(Ridgelet_X(:))) = [];
+                        [Radon_X_] = RemoveLowVolRad_dev3(Radon_X_,interp_X_info,1/2);
+                        dataX = real(Radon_X_);
                         
 %                         data = [dataX,dataY,dataZ];
                         data = [dataX,dataY];
+         
+
+% % Old Rid(norm_Rad)
+% 
+% map_3d_slices_depth_ = repelem(map_3d_slices_depth_,2,2,2);                        
+%                         
+% %                         [ Radon_Z_ones,interp_Z_info,sample_points_Z_id,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(ones(size(map_3d_slices_depth)));
+% %                         [ Radon_Z_,interp_Z_info,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(map_3d_slices_depth);
+% %                         Radon_Z_norm_ = real(Radon_Z_)./real(Radon_Z_ones);
+% %                         Ridgelet_Z = Ridgelet3d_fromRadon_dev3(Radon_Z_norm_,sample_points_Z_id,lev_3drig);
+% % %                         dataZ = Radon_Z_norm_(1,:);
+% %                         Ridgelet_Z(isnan(Ridgelet_Z(:))) = [];
+% %                         dataZ = Ridgelet_Z;
+% 
+% 
+%                         
+%                         [ Radon_Y_ones,interp_Y_info,sample_points_Y_id,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(ones(size(permute(map_3d_slices_filt3d_depth_,[1 3 2]))));
+%                         [ Radon_Y_,interp_Y_info,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(permute(map_3d_slices_filt3d_depth_,[1 3 2]));
+%                         Radon_Y_norm_ = real(Radon_Y_)./real(Radon_Y_ones);
+%                         Ridgelet_Y = Ridgelet3d_fromRadon_dev3(Radon_Y_norm_,sample_points_Y_id,interp_Y_info,lev_3drid);
+% %                         dataY = Radon_Y_norm_(1,:);
+%                         Ridgelet_Y(isnan(Ridgelet_Y(:))) = [];
+%                         dataY = Ridgelet_Y;
+%                         
+%                         [ Radon_X_ones,interp_X_info,sample_points_X_id,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(ones(size(permute(map_3d_slices_filt3d_depth_,[3 2 1]))));
+%                         [ Radon_X_,interp_X_info,ncx_,ncy_,ncz_] = Radon3d_interp_forwards_dev3(permute(map_3d_slices_filt3d_depth_,[3 2 1]));
+%                         Radon_X_norm_ = real(Radon_X_)./real(Radon_X_ones);
+%                         Ridgelet_X = Ridgelet3d_fromRadon_dev3(Radon_X_norm_,sample_points_X_id,interp_X_info,lev_3drid);
+% %                         dataX = Radon_X_norm_(1,:);
+%                         Ridgelet_X(isnan(Ridgelet_X(:))) = [];
+%                         dataX = Ridgelet_X;
+%                         
+% %                         data = [dataX,dataY,dataZ];
+%                         data = [dataX,dataY];
                         
                         
 %                         anali2a3_depth(slice_depth_id,1,:)=[max(this(:)),std(this(:)),max(this(:))/std(this(:)),kurtosis(kurtosis(this)),kurtosis(this(:))];

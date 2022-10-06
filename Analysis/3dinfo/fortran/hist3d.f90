@@ -65,6 +65,7 @@ program hist3d
   real, dimension(6,max_np) :: xvp
   real, dimension(3,np_buffer) :: xp_buf
   real, dimension(3*np_buffer) :: send_buf, recv_buf
+  real, dimension(6,max_np) :: xvp_ini
 
   !! Power spectrum arrays
   real, dimension(2,nc) :: pkdm
@@ -82,7 +83,7 @@ program hist3d
 
   !! Equivalence arrays to save memory
   equivalence (den,slab_work,recv_cube,xp_buf)
-  equivalence (xvp,cube,slab)
+  equivalence (xvp,cube,slab,xvp_ini)
   equivalence (send_buf,den_buf)
   equivalence (recv_buf,pktsum,pkdm)
 
@@ -416,8 +417,12 @@ contains
 !    check_name=output_path//z_string(1:len_trim(z_string))//'den'// &
 !               rank_string(1:len_trim(rank_string))//'-rsd.dat'
 !#else 
-    check_name=output_path//z_string(1:len_trim(z_string))//'den'// &
+!    check_name=output_path//z_string(1:len_trim(z_string))//'den'// &
+!               rank_string(1:len_trim(rank_string))//'.dat'
+
+    check_name=output_rot_path//z_string(1:len_trim(z_string))//'den'// &
                rank_string(1:len_trim(rank_string))//'.dat'
+
 !#endif
 
 !! open and write density file   
@@ -503,6 +508,23 @@ open(unit=21,file=check_name,status="replace",iostat=fstat,access="stream")
     integer, dimension(mpi_status_size) :: status,sstatus,rstatus
     integer :: tag,srequest,rrequest,sierr,rierr
     real(4), parameter :: eps = 1.0e-03
+
+
+!    xvp_ini(1,:)=xvp(1,:)
+!    xvp_ini(2,:)=xvp(2,:)
+!    xvp_ini(3,:)=xvp(3,:)
+
+! here the loop will go for each angle
+
+!    xvp(1,:)=xvp_ini(1,:)
+!    xvp(2,:)=xvp_ini(2,:)
+!    xvp(3,:)=xvp_ini(3,:)
+
+! x rotation
+    xvp(2,:) = xvp_ini(2,:)*cos(phi) + xvp_ini(3,:)*sin(phi)
+    xvp(3,:) = -xvp_ini(2,:)*sin(phi) + xvp_ini(3,:)*cos(phi)
+
+! do the y and z rotation    
 
     lb=0.0
     ub=real(nc_node_dim)
@@ -970,6 +992,9 @@ open(unit=21,file=check_name,status="replace",iostat=fstat,access="stream")
 
     do k=1,max_np
        xvp(:,k)=0
+    enddo
+    do k=1,max_np
+       xvp_ini(:,k)=0
     enddo
     do k=0,nc_node_dim+1
        den(:,:,k)=0
