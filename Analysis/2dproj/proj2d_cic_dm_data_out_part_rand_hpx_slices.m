@@ -23,7 +23,8 @@ function [ count_sum] = proj2d_cic_dm_data_out_part_rand_hpx_slices( root,root_o
 
 % % root='/home/disraelcunha/Dropbox/extras/storage/graham/small_res/';
 % root='/home/asus/Dropbox/extras/storage/graham/small_res/';
-% root_out='/home/disraelcunha/Dropbox/extras/storage/graham/small_res/data_test3/';
+% %root_out='/home/disraelcunha/Dropbox/extras/storage/graham/small_res/data_test4/';
+% root_out='/home/asus/Dropbox/extras/storage/graham/small_res/data_test4/';
 % % spec='64Mpc_256c_128p_zi63_nowakem';
 % spec='64Mpc_96c_48p_zi255_nowakem';
 % % spec='64Mpc_96c_48p_zi255_wakeGmu5t10m6zi63m';
@@ -34,10 +35,10 @@ function [ count_sum] = proj2d_cic_dm_data_out_part_rand_hpx_slices( root,root_o
 % lenght_factor=1;
 % resol_factor=1;
 % % data_stream=[1,2,3,4,5,6,7,8,9,10];
-% data_stream=[5,6,9,10];
+% data_stream=[1:11];
 % particl_part=1;
 % numb_angl=1;
-% slice=4;
+% slice=8;
 % NSIDE=1;
 % 
 % 

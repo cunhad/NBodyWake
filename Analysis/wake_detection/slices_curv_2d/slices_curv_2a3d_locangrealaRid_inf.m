@@ -1,4 +1,4 @@
-function [ map,anali ] = slices_curv_2a3d_locangrealaRid_inf( root,root_data_2d_in,root_data_2d_out,root_data_2d_anali_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,numb_rand,slices,lev,lev_2drid,lev_3d,lev_3drid,step_of_degree,wavel_removal_factor,NSIDE,partition2d,partition3rd,sum_depth,snapshot,visual_type,visual_in_or_out,stage,partition2d_dept,partition3rd_dept)
+function [ map,anali ] = slices_curv_2a3d_locangrealaRid_inf( root,root_data_2d_in,root_data_2d_out,root_data_2d_anali_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,numb_rand,slices,lev,lev_2drid,lev_3d,lev_3drid,step_of_degree,wavel_removal_factor,NSIDE,partition2d,partition3rd,sum_depth,snapshot,visual_type,visual_in_or_out,stage,partition2d_dept,partition3rd_dept,data_stream_in)
 
 
 % Ridgelet done in the deep analysis after 3d filter
@@ -382,21 +382,40 @@ map_3d_slices=zeros(nb,nb,slices);
 map_3d_slices_filt2d=zeros(nb,nb,slices);
 map_3d_slices_filt3d=zeros(nb,nb,slices);
 
-% for slice_id=1:1
-for slice_id=1:slices
+if data_stream_in == 1
+    % for slice_id=1:1
+    for slice_id=1:slices
+        
+        
+        filename_2d=string(strcat(path1,path2,path3,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_sl',num2str(slice_id),'.bin'))
+        fid = fopen(filename_2d);
+        map = fread(fid,[nb nb], 'float32','l') ;
+        fclose(fid);
+        
+        %     map2=map;
+        %     map(map<=1)=1;%to remove problem with holes
+        %     map_3d_slices(:,:,slice_id)=log(map);
+        map_3d_slices_pre(:,:,slice_id)=map;
+        
+    end
+end
 
+
+if data_stream_in == 11
     
-    filename_2d=string(strcat(path1,path2,path3,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_sl',num2str(slice_id),'.bin'))
+    filename_2d=string(strcat(path1,path2,path3,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_slAll.bin'))
     fid = fopen(filename_2d);
-    map = fread(fid,[nb nb], 'float32','l') ;
+    map = fread(fid,nb*nb*slices, 'float32','l') ;
+    map = reshape(map,nb,nb,slices);
     fclose(fid);
     
-%     map2=map;
-%     map(map<=1)=1;%to remove problem with holes
-%     map_3d_slices(:,:,slice_id)=log(map);
-map_3d_slices_pre(:,:,slice_id)=map;
-
+    %     map2=map;
+    %     map(map<=1)=1;%to remove problem with holes
+    %     map_3d_slices(:,:,slice_id)=log(map);
+    map_3d_slices_pre=map;
+    
 end
+
 
 for slice_id=1:slices
     
@@ -1623,7 +1642,7 @@ end
 
 %doing the figures for ai analysis, depth
 
-if ~ismember(1,sum_depth)
+if ~ismember(1,sum_depth)&~isempty(snapshot)
     if ismember(4,visual_type)|ismember(5,visual_type)
         
         slices_depth=slices/sum_depth;
