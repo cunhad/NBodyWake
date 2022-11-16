@@ -23,7 +23,8 @@ sum_depth=4;
 
 N_angles=12*NSIDE*NSIDE/2;
 
-specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_nowakem'
+specs_path_list_nowake='~/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_nowakem'
+% specs_path_list_nowake='~/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_Rad_St3_dp4/4Mpc_2048c_1024p_zi63_nowakem'
 % specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE8_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_nowakem'
 % specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_nowakem'
 % specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_testRid_hpx_St3_dp4/4Mpc_2048c_1024p_zi63_nowakem'
@@ -36,7 +37,8 @@ sample_list_nowake=dir(strcat(specs_path_list_nowake,'/sample*'));
 sample_list_nowake={sample_list_nowake.name};
 % sample_list_nowake=sort_nat(sample_list_nowake)
 
-specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
+specs_path_list_wake='~/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
+% specs_path_list_wake='~/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_Rad_St3_dp4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
 % specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_analiFhm_hpx_Sa2t1_dp/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m'
 % specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE8_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
 % specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
@@ -58,14 +60,14 @@ for w_nw=1:2
     
     if w_nw==1
 %         [~,redshift_list,nodes_list,size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw] = preprocessing_info('/home/asus/Dropbox/extras/storage/graham/ht/old/','4Mpc_2048c_1024p_zi63_nowakem','/sample3001/');
-        [~,redshift_list,nodes_list,size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw] = preprocessing_info('/home/asus/Dropbox/extras/storage/graham/ht/','4Mpc_2048c_1024p_zi63_nowakem','/sample3001/');
+        [~,redshift_list,nodes_list,size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw] = preprocessing_info('~/Dropbox/extras/storage/graham/ht/','4Mpc_2048c_1024p_zi63_nowakem','/sample5051/');
         specs_path_list=specs_path_list_nowake;
         sample_list=sample_list_nowake;
         ch='_7';
         coul='b';
     else
 %         [~,redshift_list,nodes_list,size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw] = preprocessing_info('/home/asus/Dropbox/extras/storage/graham/ht/old/','4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m','/sample3001/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
-        [~,redshift_list,nodes_list,size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw] = preprocessing_info('/home/asus/Dropbox/extras/storage/graham/ht/','4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m','/sample3001/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
+        [~,redshift_list,nodes_list,size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw] = preprocessing_info('~/Dropbox/extras/storage/graham/ht/','4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m','/sample5051/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
         specs_path_list=specs_path_list_wake;
         sample_list=sample_list_wake;
         ch='_4';
@@ -85,7 +87,9 @@ for w_nw=1:2
         path_in=strcat(specs_path_list,'/',string(sample_list(sample)),'/data_anali/1lf_0.5rf/NSIDE_',num2str(NSIDE),'/slices_curv_2a3d/hpx/molvd/')
         
         filename=strcat(path_in,'/_',num2str(find(str2num(char(redshift_list))==z_glob)),'_molvp_hpx_slice_cuvr_2a3d_z',z,'_data.txt')
-        
+
+%         filename=strcat(path_in,'/_1_molvp_hpx_slice_cuvr_2a3d_z',z,'_data.txt')
+
         info = dlmread(filename);
         
         if w_nw==1

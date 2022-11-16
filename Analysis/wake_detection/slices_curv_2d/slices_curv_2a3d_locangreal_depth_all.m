@@ -59,6 +59,18 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangreal_depth_all( r
 %     slices_curv_2a3d_locangreal_depth_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type,partition2d_dept,partition3rd_dept,sum_depth);
 % end
 
+% for i=5051:5100
+%     spec='4Mpc_2048c_1024p_zi63_nowakem';
+%     aux_path=strcat('/sample',num2str(i),'/');
+%     slices_curv_2a3d_locangreal_depth_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type,partition2d_dept,partition3rd_dept,sum_depth);
+% end
+
+% for i=5051:5100
+%     spec='4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m';
+%     aux_path=strcat('/sample',num2str(i),'/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
+%     slices_curv_2a3d_locangreal_depth_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type,partition2d_dept,partition3rd_dept,sum_depth);
+% end
+
 
 % root='/home/asus/Dropbox/extras/storage/graham/small_res/';
 % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/small_res/anali3/';
@@ -92,9 +104,10 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangreal_depth_all( r
 % 
 % 
 % % 
-% root='/home/asus/Dropbox/extras/storage/graham/ht/';
-% root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali/';
-% root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/';
+% root='~/Dropbox/extras/storage/graham/ht/';
+% root_anali_2d_in='~/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali/';
+% root_2d_anali_hpx='~/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/';% root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali/';
+% % root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/';
 % % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE8_2dclaral1lr1na1024_and_3dparclaral1lr1_anali/';
 % % root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE8_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/';
 % % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_z2p5_2dclaral1lr1na1024_and_3dparclaral1lr1_anali/';
@@ -107,8 +120,8 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangreal_depth_all( r
 % % root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE8_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_testRid_hpx_St3_dp4/';
 % % root_2d_anali_hpx='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE8_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_testRid_hpx_mint3_dp4/';
 % spec='4Mpc_2048c_1024p_zi63_nowakem';
-% aux_path='/sample3001/';
-% % aux_path='/sample4001/';
+% % aux_path='/sample3001/';
+% aux_path='/sample5051/';
 % % spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
 % % aux_path='/sample3001/half_lin_cutoff_half_tot_pert_nvpw/';
 % aux_path_out='';
@@ -122,12 +135,14 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangreal_depth_all( r
 % sum_depth=4;
 % partition2d_dept = 1;
 % partition3rd_dept=slice/sum_depth;
-% 
+% % 
 
 angles_hpx(1,:) = dlmread(strcat('../../../python/angles',num2str(NSIDE),'_t.cvs'));
 angles_hpx(2,:) = dlmread(strcat('../../../python/angles',num2str(NSIDE),'_p.cvs'));
 
 cd('../../preprocessing');
+
+display(strcat(root,spec,aux_path))
 
 [~,redshift_list,nodes_list,size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw] = preprocessing_info(root,spec,aux_path );
 
