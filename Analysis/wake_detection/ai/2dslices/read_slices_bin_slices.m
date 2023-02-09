@@ -62,22 +62,23 @@ nc = 512;
 
 slice_aux = split(filename,'/');
 slice_aux2 = split(slice_aux{end},'All');
-slice_aux3 = split(slice_aux2{1},'sl');
-slices = str2num(slice_aux3{end});
+% slice_aux3 = split(slice_aux2{1},'sl');
+% slices = str2num(slice_aux3{end});
 slice_aux4 = split(slice_aux2{end},'.');
 sliceID = str2num(slice_aux4{1});
 
-filename_rec = join({slice_aux3{1};'slAll.bin'},'');
-
-filename_in = join({slice_aux{1:end-1},filename_rec{1}},'/');
-filename_in = filename_in{:};
+% filename_rec = join({slice_aux3{1};'slAll.bin'},'');
+% 
+% filename_in = join({slice_aux{1:end-1},filename_rec{1}},'/');
+% filename_in = filename_in{:};
 
 
 
 
 skip = 4*(nc*nc)*(sliceID-1);     %each number has 4 `bytes to skip
 
-fid = fopen(filename_in);
+% fid = fopen(filename_in);
+fid = fopen(filename);
 % slice_2d = fread(fid,nc*nc, 'float32','l') ; 
 fseek(fid,skip,'bof');
 slice_2d = fread(fid,[512 512], 'float32','l') ; 
