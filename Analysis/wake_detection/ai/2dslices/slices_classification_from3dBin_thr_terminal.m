@@ -1,27 +1,28 @@
-function [] = slices_classification_from3dBin()
+function [] = slices_classification_from3dBin_thr_terminal()
 
 
 
-clearvars;
 
-% % myCluster = parcluster('local');
-% % myCluster.NumWorkers=4;
-% % saveProfile(myCluster);
-% 
-% parpool('Processes',4);
+myCluster = parcluster('local');
+myCluster.NumWorkers=32;
+saveProfile(myCluster);
+
+parpool('local',32);
+
 
 tic;
 
 % input vars
-path_soft_links = '/home/asus/Dropbox/extras/storage/graham/ht/soft_links';
+path_soft_links = '/scratch/cunhad/soft_links';
+path_signal = '/scratch/cunhad/';
 filename='_1_2dproj_z3_data_sl32All';
 slices_sz=32;
-angle_sz=2;
+angle_sz=96;
 
 %analysis vars
-percentage_to_test = 50;
-miniBatchSize=2;
-
+percentage_to_test = 75;
+miniBatchSize=32;
+thr = 36;  %threshold
 
 
 sample_list_nowake=dir(strcat(path_soft_links,'/data_cps32_512_hpx_2d_NSIDE4/4Mpc_2048c_1024p_zi63_nowakem/sample*'));
@@ -40,6 +41,9 @@ idx_test = randperm(length(sample_list_com),floor(length(sample_list_com)*percen
 list = strings(2,length(sample_list_nowake),angle_sz,slices_sz);
 
 
+
+
+
 for w_nw=1:2
     if w_nw==1
         sample_list=sample_list_nowake;
@@ -49,8 +53,8 @@ for w_nw=1:2
         sample_list_folder = sample_list_wake_folder;
     end
     sample_list_sz = length(sample_list); %required for parfor
-%     parfor sample_id = 1:sample_list_sz
-    for sample_id = 1:sample_list_sz
+    parfor sample_id = 1:sample_list_sz
+%     for sample_id = 1:sample_list_sz
         sample = sample_list(sample_id);
         for angle_id = 1:angle_sz
             angle = char(strcat('anglid_',num2str(angle_id)));
@@ -67,11 +71,39 @@ list = list(:);
 
 toc;
 
+
+labels_deep_eachSlice_nw = dlmread(strcat(path_signal,'labels_eachSlice_nw.txt'));
+% labels_deep_eachSlice_nw=reshape(labels_deep_eachSlice_nw,100,96,32);
+labels_deep_eachSlice_nw=reshape(labels_deep_eachSlice_nw,length(sample_list_nowake),angle_sz,slices_sz);
+labels_deep_eachSlice_w = dlmread(strcat(path_signal,'labels_eachSlice_w.txt'));
+% labels_deep_eachSlice_w=reshape(labels_deep_eachSlice_w,100,96,32);
+labels_deep_eachSlice_w=reshape(labels_deep_eachSlice_w,length(sample_list_nowake),angle_sz,slices_sz);
+
+%labels_deep_eachSlice_nw(:,3:end,:)=[];
+%labels_deep_eachSlice_nw(5:end,:,:)=[];
+%labels_deep_eachSlice_w(:,3:end,:)=[];
+%labels_deep_eachSlice_w(5:end,:,:)=[];
+
+labels_deep_eachSlice_w = labels_deep_eachSlice_w>=thr;
+labels_deep_eachSlice_nw = ones(size(labels_deep_eachSlice_nw));
+
+labels_deep_eachSlice(1,:,:,:)=labels_deep_eachSlice_nw;
+labels_deep_eachSlice(2,:,:,:)=labels_deep_eachSlice_w;
+labels_deep_eachSlice = labels_deep_eachSlice(:);
+labels_deep_eachSlice(~contains(string(list'),sample_list_com(idx_test)))=1;
+
+list(~logical(labels_deep_eachSlice))=[];
+
 list_train = list(contains(string(list'),sample_list_com(idx_test)));
 list_validate = list(~contains(string(list'),sample_list_com(idx_test)));
 
+%display(list_train)
+%size(list_train)
+
 label_train= categorical(abs(double(contains(string(list_train),'nowake'))-1));
 label_validate= categorical(abs(double(contains(string(list_validate),'nowake'))-1));
+
+%sum(label_train)
 
 imds_train = imageDatastore(list_train,'ReadFcn',@read_slices_bin_slices,'FileExtensions','.bin','Labels',label_train);
 imds_validate = imageDatastore(list_validate,'ReadFcn',@read_slices_bin_slices,'FileExtensions','.bin','Labels',label_validate);
@@ -105,11 +137,11 @@ options = trainingOptions('sgdm', ...
     'MaxEpochs',2, ...
     'Shuffle','every-epoch', ...
     'ValidationData',imds_validate, ...
-    'ValidationFrequency',2);
+    'ValidationFrequency',500);
 %     'Plots','training-progress',...
 
 
-% delete(gcp('nocreate'));
+delete(gcp('nocreate'));
 
 % numGPUs = gpuDeviceCount("available");
 % parpool(numGPUs);

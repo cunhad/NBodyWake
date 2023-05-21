@@ -24,7 +24,7 @@ sum_depth=4;
 N_angles=12*NSIDE*NSIDE/2;
 
 specs_path_list_nowake='~/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_nowakem'
-% specs_path_list_nowake='~/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_Rad_St3_dp4/4Mpc_2048c_1024p_zi63_nowakem'
+% specs_path_list_nowake='~/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_Rad_St1_dp4/4Mpc_2048c_1024p_zi63_nowakem'
 % specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE8_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_nowakem'
 % specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_nowakem'
 % specs_path_list_nowake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_testRid_hpx_St3_dp4/4Mpc_2048c_1024p_zi63_nowakem'
@@ -38,7 +38,7 @@ sample_list_nowake={sample_list_nowake.name};
 % sample_list_nowake=sort_nat(sample_list_nowake)
 
 specs_path_list_wake='~/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
-% specs_path_list_wake='~/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_Rad_St3_dp4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
+% specs_path_list_wake='~/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_Rad_St1_dp4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
 % specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps128_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_analiFhm_hpx_Sa2t1_dp/4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m'
 % specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE8_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_hpx_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
 % specs_path_list_wake='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali_Sa4t3_dp4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m'
@@ -117,7 +117,7 @@ stn_nw=sort((signal_sample_nw-mean_nw)/std_nw,2);
 stn_w=sort((signal_sample_w-mean_nw)/std_nw,2);
 
 % thresh=max(signal_sample_nw(:))
-% thresh=532;
+% thresh=240;
 % outlier_w_count=sum(signal_sample_w>thresh,2)'
 % sum(sum(signal_sample_w>thresh,2))
 
@@ -144,7 +144,7 @@ N_slices_probe=N_slices;
 n_strin_per_hubble=1;
 
 thresh=max(signal_sample_nw(:))
-% thresh=532;
+% thresh=240;
 outlier_w_count=sum(signal_sample_w>thresh,2)
 sum_w=sum(outlier_w_count)
 sum_w_=floor(sum(outlier_w_count)/(24/n_strin_per_hubble))
@@ -159,6 +159,8 @@ number_wake=round(N_slices_probe*prob_w)
 
 
 cd('../wake_detection/slices_curv_2d/');
+
+
 
 
 

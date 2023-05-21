@@ -1,4 +1,4 @@
-function [] = slices_classification_from3dBin()
+function [] = slices_classification_from3dBin_DeepEacSlicThr()
 
 
 
@@ -13,9 +13,11 @@ clearvars;
 tic;
 
 % input vars
-path_soft_links = '/home/asus/Dropbox/extras/storage/graham/ht/soft_links';
-filename='_1_2dproj_z3_data_sl32All';
+path_soft_links = '/home/asus/Dropbox/extras/storage/graham/ht/soft_linksDP';
+filename='_1_2dproj_z3_data_sl32Dp4All';
 slices_sz=32;
+deep = 4;
+slices_sz_dp = slices_sz/deep;
 angle_sz=2;
 
 %analysis vars
@@ -39,6 +41,14 @@ idx_test = randperm(length(sample_list_com),floor(length(sample_list_com)*percen
 
 list = strings(2,length(sample_list_nowake),angle_sz,slices_sz);
 
+% labels_deep_eachSlice_nw = dlmread('/home/asus/Dropbox/extras/storage/graham/ht/labels_deep_eachSlice_nw.txt');
+% labels_deep_eachSlice_nw=reshape(labels_deep_eachSlice_nw,100,96,8);
+% % labels_deep_eachSlice_nw=reshape(labels_deep_eachSlice_nw,length(sample_list_nowake),angle_sz,slices_sz_dp);
+% labels_deep_eachSlice_w = dlmread('/home/asus/Dropbox/extras/storage/graham/ht/labels_deep_eachSlice_w.txt');
+% labels_deep_eachSlice_w=reshape(labels_deep_eachSlice_w,100,96,8);
+% % labels_deep_eachSlice_w=reshape(labels_deep_eachSlice_w,length(sample_list_nowake),angle_sz,slices_sz_dp);
+% labels_deep_eachSlice(:,:,3:end,:)=[];
+% labels_deep_eachSlice(:,5:end,:,:)=[];
 
 for w_nw=1:2
     if w_nw==1
@@ -54,7 +64,7 @@ for w_nw=1:2
         sample = sample_list(sample_id);
         for angle_id = 1:angle_sz
             angle = char(strcat('anglid_',num2str(angle_id)));
-            for slice_id=1:slices_sz
+            for slice_id=1:slices_sz_dp
                 file=strcat(sample_list_folder,'/',sample,'/',angle,'/',filename,num2str(slice_id),'.bin');
                 file=char(file);
                 list(w_nw,sample_id,angle_id,slice_id)=file;

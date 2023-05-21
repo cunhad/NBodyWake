@@ -1,4 +1,4 @@
-function slice_2d = read_slices_bin_slices( filename)
+function slice_2d = read_slices_bin_DP( filename)
 % function slice_2d = read_slices_binAll( filename)
 % function [slice_2d,userdata,done] = read_slices_binAll(filename,userdata)
 %UNTITLED2 Summary of this function goes here
@@ -59,10 +59,14 @@ nc = 512;
 
 
 % filename = '~/Dropbox/extras/storage/graham/ht/data_cps32_512_hpx_2d_NSIDE4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/sample5051/half_lin_cutoff_half_tot_pert_nvpw_v0p6/data/1lf_0.5rf/NSIDE_4/anglid_1/-43-113--256pv_0.20448--0.62099-0.7854ra/2dproj/dm/_1_2dproj_z3_data_sl32All3.bin'
+filename =     '/home/asus/Dropbox/extras/storage/graham/ht/soft_linksDP/data_cps32_512_hpx_2d_NSIDE4/4Mpc_2048c_1024p_zi63_nowakem/sample5001/anglid_1/_1_2dproj_z3_data_sl32Dp4All1.bin';
 
 slice_aux = split(filename,'/');
 slice_aux2 = split(slice_aux{end},'All');
-% slice_aux3 = split(slice_aux2{1},'sl');
+slice_aux3 = split(slice_aux2{1},'Dp');
+% slice_aux3_ = split(slice_aux3{1},'sl')
+dept = str2num(slice_aux3{end});
+% slices_sz_dp = str2num(slice_aux3_{end})/str2num(slice_aux3{end});
 % slices = str2num(slice_aux3{end});
 slice_aux4 = split(slice_aux2{end},'.');
 sliceID = str2num(slice_aux4{1});
@@ -75,16 +79,16 @@ sliceID = str2num(slice_aux4{1});
 
 
 
-skip = 4*(nc*nc)*(sliceID-1);     %each number has 4 `bytes to skip
+skip = 4*(nc*nc)*dept*(sliceID-1);     %each number has 4 `bytes to skip
 
 % fid = fopen(filename_in);
 fid = fopen(filename);
 % slice_2d = fread(fid,nc*nc, 'float32','l') ; 
 fseek(fid,skip,'bof');
-slice_2d = fread(fid,[512 512], 'float32','l') ; 
-slice_2d=(slice_2d-mean(slice_2d(:)))/mean(slice_2d(:));
-slice_2d=(atan((slice_2d+1)*16));
-% slice_2d = reshape(slice_2d,512,512);
+% slice_2d = fread(fid,[512 512], 'float32','l') ; 
+slice_3d = fread(fid,512*512*dept, 'float32','l') ; 
+slice_3d = reshape(slice_3d,512,512,dept);
+slice_2d = sum(slice_3d,3);
 fclose(fid);
 
 

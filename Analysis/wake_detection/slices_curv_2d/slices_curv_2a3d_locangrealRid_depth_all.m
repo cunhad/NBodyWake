@@ -62,13 +62,13 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangrealRid_depth_all
 
 
 
-% for i=5051:5100
+% for i=5001:5100
 %     spec='4Mpc_2048c_1024p_zi63_nowakem';
 %     aux_path=strcat('/sample',num2str(i),'/');
 %     slices_curv_2a3d_locangrealRid_depth_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type,partition2d_dept,partition3rd_dept,sum_depth);
 % end
 
-% for i=5051:5100
+% for i=5001:5100
 %     spec='4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m';
 %     aux_path=strcat('/sample',num2str(i),'/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
 %     slices_curv_2a3d_locangrealRid_depth_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type,partition2d_dept,partition3rd_dept,sum_depth);

@@ -32,11 +32,13 @@ LSS_wake_analysis_programs
 	
 - produce 3d curve filtered maps (using locangreal_atg method) from 2d slices at various hpx angles		
 	
-run_cupep3m_a_1cpu_types_hr_clara_2a3dpartition_rand_hpx_slices_data_anali_visual_out_from_2d_slices_out_dev2_Canny	
-run_cupep3m_a_1cpu_types_hr_clara_2a3dpartition_rand_hpx_slices_data_anali_visual_out_from_2d_slices_out_dev2_CanRid	(with ridgelet instead)	
+	run_cupep3m_a_1cpu_types_hr_clara_2a3dpartition_rand_hpx_slices_data_anali_visual_out_from_2d_slices_out_dev2_Canny	
+	run_cupep3m_a_1cpu_types_hr_clara_2a3dpartition_rand_hpx_slices_data_anali_visual_out_from_2d_slices_out_dev2_CanRid	(with ridgelet instead)	
 	
 	
-	
+- Ai analysis
+
+	an_ai_wake.sub
 	
 	
 	
@@ -96,7 +98,9 @@ run_cupep3m_a_1cpu_types_hr_clara_2a3dpartition_rand_hpx_slices_data_anali_visua
 	
 	Analysis/wake_detection/slices_curv_2d/slices_curv_2a3d_locangreal_all_groups.m (and variations, depth, each slice)
 
+- ai analysis
 
+	Analysis/wake_detection/ai/2dslices$/slices_classification_from3dBin_thr_terminal.m
 
 
 A que deu mais certo do rad, e do Rad6, que acho que e a normalizada, com removal, Max/Std

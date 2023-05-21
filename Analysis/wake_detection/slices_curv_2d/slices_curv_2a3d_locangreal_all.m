@@ -14,23 +14,29 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangreal_all( root,ro
 %     slices_curv_2a3d_locangreal_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type);
 % end
 
-% for i=3001:3010
-%     spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
-%     aux_path=strcat('/sample',num2str(i),'/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
-%     slices_curv_2a3d_locangreal_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type);
-% end
-% 
-% for i=3001:3010
-%     spec='4Mpc_2048c_1024p_zi63_nowakem';    
-%     aux_path=strcat('/sample',num2str(i),'/');
-%     slices_curv_2a3d_locangreal_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type);
-% end
-
 % for i=4001:4010
 %     spec='16Mpc_2048c_1024p_zi63_nowakem';    
 %     aux_path=strcat('/sample',num2str(i),'/');
 %     slices_curv_2a3d_locangreal_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type);
 % end
+
+
+
+% for i=5001:5100
+%     spec='4Mpc_2048c_1024p_zi63_nowakem';    
+%     aux_path=strcat('/sample',num2str(i),'/');
+%     slices_curv_2a3d_locangreal_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type);
+% end
+
+
+% for i=5001:5100
+%     spec='4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m';
+%     aux_path=strcat('/sample',num2str(i),'/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
+%     slices_curv_2a3d_locangreal_all(root,root_anali_2d_in,root_2d_anali_hpx,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,slice,NSIDE,analy_type);
+% end
+
+
+
 
 % root='/home/asus/Dropbox/extras/storage/graham/small_res/';
 % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/small_res/anali3/';
@@ -69,9 +75,9 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangreal_all( root,ro
 % spec='4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m';
 % % aux_path='/sample3001/';
 % %spec='4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m';
-% % aux_path='/sample3001/';
+% aux_path='/sample5001/';
 % %aux_path='/sample3001/half_lin_cutoff_half_tot_pert_nvpw/';
-% aux_path='/sample3001/half_lin_cutoff_half_tot_pert_nvpw_v0p6/';
+% % aux_path='/sample3001/half_lin_cutoff_half_tot_pert_nvpw_v0p6/';
 % aux_path_out='';
 % filename='3.000xv0.dat';
 % lenght_factor=1;
@@ -79,7 +85,7 @@ function [ anali,signal,equator_phi ] = slices_curv_2a3d_locangreal_all( root,ro
 % slice=32;
 % NSIDE=4;
 % analy_type=3;
-
+ 
 angles_hpx(1,:) = dlmread(strcat('../../../python/angles',num2str(NSIDE),'_t.cvs'));
 angles_hpx(2,:) = dlmread(strcat('../../../python/angles',num2str(NSIDE),'_p.cvs'));
 

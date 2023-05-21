@@ -1,26 +1,28 @@
-function [] = slices_classification_from3dBin()
+function [] = slices_classification_fromFigs_terminal()
 
 
 
-clearvars;
+myCluster = parcluster('local');
+myCluster.NumWorkers=32;
+saveProfile(myCluster);
 
-% % myCluster = parcluster('local');
-% % myCluster.NumWorkers=4;
-% % saveProfile(myCluster);
-% 
-% parpool('Processes',4);
+% parpool('Processes',32);
+
+parpool('local',32);
+
 
 tic;
 
 % input vars
-path_soft_links = '/home/asus/Dropbox/extras/storage/graham/ht/soft_links';
-filename='_1_2dproj_z3_data_sl32All';
+path_soft_links = '/scratch/cunhad/soft_links';
+% filename='_1_2dproj_z3_data_sl32All';
+filename='_1_2dproj_z3_data_slAll'; 
 slices_sz=32;
-angle_sz=2;
+angle_sz=96;
 
 %analysis vars
 percentage_to_test = 50;
-miniBatchSize=2;
+miniBatchSize=32;
 
 
 
@@ -45,17 +47,17 @@ for w_nw=1:2
         sample_list=sample_list_nowake;
         sample_list_folder = sample_list_nowake_folder;
     else
-        sample_list=sample_list_wake;
+%         sample_list=sample_list_wake;
+        sample_list=strcat(sample_list_wake,'/half_lin_cutoff_half_tot_pert_nvpw_v0p6');
         sample_list_folder = sample_list_wake_folder;
     end
     sample_list_sz = length(sample_list); %required for parfor
-%     parfor sample_id = 1:sample_list_sz
-    for sample_id = 1:sample_list_sz
+    parfor sample_id = 1:sample_list_sz
         sample = sample_list(sample_id);
         for angle_id = 1:angle_sz
             angle = char(strcat('anglid_',num2str(angle_id)));
             for slice_id=1:slices_sz
-                file=strcat(sample_list_folder,'/',sample,'/',angle,'/',filename,num2str(slice_id),'.bin');
+                file=strcat(sample_list_folder,'/',sample,'/',angle,'/',filename,num2str(slice_id),'.png');
                 file=char(file);
                 list(w_nw,sample_id,angle_id,slice_id)=file;
             end
@@ -73,14 +75,19 @@ list_validate = list(~contains(string(list'),sample_list_com(idx_test)));
 label_train= categorical(abs(double(contains(string(list_train),'nowake'))-1));
 label_validate= categorical(abs(double(contains(string(list_validate),'nowake'))-1));
 
-imds_train = imageDatastore(list_train,'ReadFcn',@read_slices_bin_slices,'FileExtensions','.bin','Labels',label_train);
-imds_validate = imageDatastore(list_validate,'ReadFcn',@read_slices_bin_slices,'FileExtensions','.bin','Labels',label_validate);
+% imds_train = imageDatastore(list_train,'ReadFcn',@read_slices_bin_slices,'FileExtensions','.bin','Labels',label_train);
+% imds_validate = imageDatastore(list_validate,'ReadFcn',@read_slices_bin_slices,'FileExtensions','.bin','Labels',label_validate);
+
+imds_train = imageDatastore(list_train,'Labels',label_train);
+imds_validate = imageDatastore(list_validate,'Labels',label_validate);
+
 
 % figure; image(readimage(imds_train,1)); colorbar;
 
 layers = [
 % imageInputLayer([1024 1024 3])
-imageInputLayer([512 512 1])
+imageInputLayer([1065 1065 3])
+% imageInputLayer([512 512 1])
 
 convolution2dLayer(2,1,'Padding','same')
 batchNormalizationLayer
@@ -102,14 +109,14 @@ options = trainingOptions('sgdm', ...
     'ExecutionEnvironment','multi-gpu', ...
     'MiniBatchSize',miniBatchSize, ...
     'InitialLearnRate',0.01, ...
-    'MaxEpochs',2, ...
+    'MaxEpochs',1, ...
     'Shuffle','every-epoch', ...
     'ValidationData',imds_validate, ...
-    'ValidationFrequency',2);
+    'ValidationFrequency',5000);
 %     'Plots','training-progress',...
 
 
-% delete(gcp('nocreate'));
+delete(gcp('nocreate'));
 
 % numGPUs = gpuDeviceCount("available");
 % parpool(numGPUs);

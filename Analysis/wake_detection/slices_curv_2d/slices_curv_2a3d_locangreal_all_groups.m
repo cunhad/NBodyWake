@@ -43,13 +43,13 @@ for w_nw=1:2
     % for w_nw=2
     
     if w_nw==1
-        [~,redshift_list,nodes_list,size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw] = preprocessing_info('/home/asus/Dropbox/extras/storage/graham/ht/','4Mpc_2048c_1024p_zi63_nowakem','/sample3001/');
+        [~,redshift_list,nodes_list,size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw] = preprocessing_info('/home/asus/Dropbox/extras/storage/graham/ht/','4Mpc_2048c_1024p_zi63_nowakem','/sample5001/');
         specs_path_list=specs_path_list_nowake;
         sample_list=sample_list_nowake;
         ch='_7';
         coul='b';
     else
-        [~,redshift_list,nodes_list,size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw] = preprocessing_info('/home/asus/Dropbox/extras/storage/graham/ht/','4Mpc_2048c_1024p_zi63_wakeGmu1t10m7zi10m','/sample3001/half_lin_cutoff_half_tot_pert_nvpw/');
+        [~,redshift_list,nodes_list,size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw] = preprocessing_info('/home/asus/Dropbox/extras/storage/graham/ht/','4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m','/sample5001/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
         specs_path_list=specs_path_list_wake;
         sample_list=sample_list_wake;
         ch='_4';
@@ -93,18 +93,12 @@ std_nw=std(signal_sample_nw(:))
 mean_w=mean(signal_sample_w(:))
 std_w=std(signal_sample_w(:))
 
-sorted_signal_sample_nw=sort((signal_sample_nw),2);
-sorted_signal_sample_w=sort((signal_sample_w),2);
-
 stn_nw=sort((signal_sample_nw-mean_nw)/std_nw,2);
 stn_w=sort((signal_sample_w-mean_nw)/std_nw,2);
 
 
-
-thresh=max(signal_sample_nw(:))
-% thresh=532;
-outlier_w_count=sum(signal_sample_w>thresh,2)
-sum(sum(signal_sample_w>thresh,2))
+sorted_signal_sample_nw=sort((signal_sample_nw),2);
+sorted_signal_sample_w=sort((signal_sample_w),2);
 
 
 
@@ -116,55 +110,19 @@ hold on
 h2 = histogram(signal_sample_w(:),'BinWidth',h1.BinWidth);
 xlabel('$S$ value', 'interpreter', 'latex', 'fontsize', 20);
 ylabel('histogram', 'interpreter', 'latex', 'fontsize', 20);
-legend('G\mu=0','G\mu=1 \times 10^{-7}','location','northeast')
+legend('G\mu=0','G\mu=4 \times 10^{-8}','location','northeast')
 set(gca, 'YScale', 'log')
+ylim ([0.9 inf]);
 
 
-% cd('../wake_detection/slices_curv_2d/');
-
-
-
-
-stn_nw_count=sum(stn_nw>4,2);
-stn_w_count=sum(stn_w>4,2);
-
-
-
-stn_w_self=sort((signal_sample_w-mean_w)/std_w,2);
-
-[h,p,ksstat,cv]  =  kstest(stn_nw(:),'Alpha',0.01)
-
-[h,p] = lillietest((signal_sample_nw(6,:)))
-
-x=signal_sample_nw([4,5],:);
-[h,p] = lillietest(x(:))
-
-x=mean(signal_sample_nw,2);
-[h,p] = lillietest(x(:))
-
-sorted_signal_sample_nw_tot=sort((signal_sample_nw(:)));
-sorted_signal_sample_w_tot=sort((signal_sample_w(:)));
-
-
-% cd('../wake_detection/slices_curv_2d/');
-
-
-
-
-% a=max(signal_sample_nw')'
-% b=max(signal_sample_w')'
-% s=std(a)
-% m=mean(a)
-% (a-m)/s
-% (b-m)/s
 
 N_slices=prod(size(signal_sample_w));
 N_slices_probe=N_slices;
 n_strin_per_hubble=1;
 
 thresh=max(signal_sample_nw(:))
-% thresh=532;
-outlier_w_count=sum(signal_sample_w>thresh,2);
+% thresh=240;
+outlier_w_count=sum(signal_sample_w>thresh,2)
 sum_w=sum(outlier_w_count)
 sum_w_=floor(sum(outlier_w_count)/(24/n_strin_per_hubble))
 prob_w=sum(outlier_w_count)/(N_slices*(24/n_strin_per_hubble))
@@ -173,8 +131,71 @@ sum_nw=sum(outlier_nw_count)
 prob_nw=sum(outlier_nw_count)/N_slices
 sum(outlier_w_count)/((24/n_strin_per_hubble)*sum(outlier_nw_count))
 
+number_nowake=round(N_slices_probe*prob_nw)
+number_wake=round(N_slices_probe*prob_w)
+
 
 cd('../wake_detection/slices_curv_2d/');
+
+
+
+% 
+% 
+% % cd('../wake_detection/slices_curv_2d/');
+% 
+% 
+% 
+% 
+% stn_nw_count=sum(stn_nw>4,2);
+% stn_w_count=sum(stn_w>4,2);
+% 
+% 
+% 
+% stn_w_self=sort((signal_sample_w-mean_w)/std_w,2);
+% 
+% [h,p,ksstat,cv]  =  kstest(stn_nw(:),'Alpha',0.01)
+% 
+% [h,p] = lillietest((signal_sample_nw(6,:)))
+% 
+% x=signal_sample_nw([4,5],:);
+% [h,p] = lillietest(x(:))
+% 
+% x=mean(signal_sample_nw,2);
+% [h,p] = lillietest(x(:))
+% 
+% sorted_signal_sample_nw_tot=sort((signal_sample_nw(:)));
+% sorted_signal_sample_w_tot=sort((signal_sample_w(:)));
+% 
+% 
+% % cd('../wake_detection/slices_curv_2d/');
+% 
+% 
+% 
+% 
+% % a=max(signal_sample_nw')'
+% % b=max(signal_sample_w')'
+% % s=std(a)
+% % m=mean(a)
+% % (a-m)/s
+% % (b-m)/s
+% 
+% N_slices=prod(size(signal_sample_w));
+% N_slices_probe=N_slices;
+% n_strin_per_hubble=1;
+% 
+% thresh=max(signal_sample_nw(:))
+% % thresh=532;
+% outlier_w_count=sum(signal_sample_w>thresh,2);
+% sum_w=sum(outlier_w_count)
+% sum_w_=floor(sum(outlier_w_count)/(24/n_strin_per_hubble))
+% prob_w=sum(outlier_w_count)/(N_slices*(24/n_strin_per_hubble))
+% outlier_nw_count=sum(signal_sample_nw>=thresh,2);
+% sum_nw=sum(outlier_nw_count)
+% prob_nw=sum(outlier_nw_count)/N_slices
+% sum(outlier_w_count)/((24/n_strin_per_hubble)*sum(outlier_nw_count))
+% 
+% 
+% cd('../wake_detection/slices_curv_2d/');
 
 
 N_slices_probe=10*N_slices;

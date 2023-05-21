@@ -1,4 +1,4 @@
-function [] = slices_classification_from3dBin()
+function [] = slices_classification_from3dBin_thr()
 
 
 
@@ -14,6 +14,7 @@ tic;
 
 % input vars
 path_soft_links = '/home/asus/Dropbox/extras/storage/graham/ht/soft_links';
+path_signal = '/home/asus/Dropbox/extras/storage/graham/ht/';
 filename='_1_2dproj_z3_data_sl32All';
 slices_sz=32;
 angle_sz=2;
@@ -21,7 +22,7 @@ angle_sz=2;
 %analysis vars
 percentage_to_test = 50;
 miniBatchSize=2;
-
+thr = 30;  %threshold
 
 
 sample_list_nowake=dir(strcat(path_soft_links,'/data_cps32_512_hpx_2d_NSIDE4/4Mpc_2048c_1024p_zi63_nowakem/sample*'));
@@ -38,6 +39,9 @@ idx_test = randperm(length(sample_list_com),floor(length(sample_list_com)*percen
 
 
 list = strings(2,length(sample_list_nowake),angle_sz,slices_sz);
+
+
+
 
 
 for w_nw=1:2
@@ -66,6 +70,29 @@ end
 list = list(:);
 
 toc;
+
+
+labels_deep_eachSlice_nw = dlmread(strcat(path_signal,'labels_eachSlice_nw.txt'));
+labels_deep_eachSlice_nw=reshape(labels_deep_eachSlice_nw,100,96,32);
+% labels_deep_eachSlice_nw=reshape(labels_deep_eachSlice_nw,length(sample_list_nowake),angle_sz,slices_sz);
+labels_deep_eachSlice_w = dlmread(strcat(path_signal,'labels_eachSlice_w.txt'));
+labels_deep_eachSlice_w=reshape(labels_deep_eachSlice_w,100,96,32);
+% labels_deep_eachSlice_w=reshape(labels_deep_eachSlice_w,length(sample_list_nowake),angle_sz,slices_sz);
+
+labels_deep_eachSlice_nw(:,3:end,:)=[];
+labels_deep_eachSlice_nw(5:end,:,:)=[];
+labels_deep_eachSlice_w(:,3:end,:)=[];
+labels_deep_eachSlice_w(5:end,:,:)=[];
+
+labels_deep_eachSlice_w = labels_deep_eachSlice_w>=thr;
+labels_deep_eachSlice_nw = ones(size(labels_deep_eachSlice_nw));
+
+labels_deep_eachSlice(1,:,:,:)=labels_deep_eachSlice_nw;
+labels_deep_eachSlice(2,:,:,:)=labels_deep_eachSlice_w;
+labels_deep_eachSlice = labels_deep_eachSlice(:);
+labels_deep_eachSlice(~contains(string(list'),sample_list_com(idx_test)))=1;
+
+list(~logical(labels_deep_eachSlice))=[];
 
 list_train = list(contains(string(list'),sample_list_com(idx_test)));
 list_validate = list(~contains(string(list'),sample_list_com(idx_test)));
