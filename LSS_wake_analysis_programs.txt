@@ -100,12 +100,15 @@ LSS_wake_analysis_programs
 
 - ai analysis
 
-	Analysis/wake_detection/ai/2dslices$/slices_classification_from3dBin_thr_terminal.m
+	Analysis/wake_detection/ai/2dslices/slices_classification_from3dBin_thr_terminal.m
 
 
 A que deu mais certo do rad, e do Rad6, que acho que e a normalizada, com removal, Max/Std
 
 
+- figure selection
+	
+	Analysis/wake_detection/slices_curv_2d/CopyRelevantFigure_eachslice_all_groups.m
 
 
 

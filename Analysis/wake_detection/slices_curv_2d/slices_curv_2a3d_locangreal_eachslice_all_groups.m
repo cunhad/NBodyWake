@@ -117,8 +117,8 @@ N_slices=prod(size(signal_sample_w));
 N_slices_probe=N_slices;
 n_strin_per_hubble=1;
 
-thresh=max(signal_sample_nw(:))
-% thresh=240;
+% thresh=max(signal_sample_nw(:))
+thresh=50;
 outlier_w_count=sum(signal_sample_w>thresh,2)
 sum_w=sum(outlier_w_count)
 sum_w_=floor(sum(outlier_w_count)/(24/n_strin_per_hubble))

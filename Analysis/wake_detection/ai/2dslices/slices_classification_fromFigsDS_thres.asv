@@ -1,29 +1,28 @@
-function [] = slices_classification_fromFigsDS_terminal()
+function [] = slices_classification_fromFigsDS_thres()
 
 
 
-myCluster = parcluster('local');
-myCluster.NumWorkers=32;
-saveProfile(myCluster);
+clearvars;
 
-% parpool('Processes',32);
-
-parpool('local',32);
-
+% % myCluster = parcluster('local');
+% % myCluster.NumWorkers=4;
+% % saveProfile(myCluster);
+% 
+% parpool('Processes',4);
 
 % tic;
 
 % input vars
-path_soft_links = '/scratch/cunhad/soft_links';
+% path_soft_links = '/home/asus/Dropbox/extras/storage/graham/ht/soft_links';
+path_soft_links = '/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpx_2d_NSIDE4_figs';
 % filename='_1_2dproj_z3_data_sl32All';
-filename='_1_2dproj_z3_data_slAll'; 
+filename='_1_2dproj_z3_data_slAll';
 slices_sz=32;
-angle_sz=96;
+angle_sz=2;
 
 %analysis vars
-percentage_to_test = 50;
-miniBatchSize=32;
-
+percentage_to_train = 80;
+miniBatchSize=2;
 
 
 % sample_list_nowake=dir(strcat(path_soft_links,'/data_cps32_512_hpx_2d_NSIDE4/4Mpc_2048c_1024p_zi63_nowakem/sample*'));
@@ -31,6 +30,7 @@ miniBatchSize=32;
 % sample_list_nowake={sample_list_nowake.name};
 % 
 % sample_list_wake=dir(strcat(path_soft_links,'/data_cps32_512_hpx_2d_NSIDE4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/sample*'));
+% % sample_list_wake=dir(strcat(path_soft_links,'/data_cps32_512_hpx_2d_NSIDE4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/sample*/half_lin_cutoff_half_tot_pert_nvpw_v0p6/'));
 % sample_list_wake_folder = sample_list_wake.folder;
 % sample_list_wake={sample_list_wake.name};
 % 
@@ -52,12 +52,18 @@ miniBatchSize=32;
 %         sample_list_folder = sample_list_wake_folder;
 %     end
 %     sample_list_sz = length(sample_list); %required for parfor
-%     parfor sample_id = 1:sample_list_sz
+% %     parfor sample_id = 1:sample_list_sz
+%     for sample_id = 1:sample_list_sz
 %         sample = sample_list(sample_id);
 %         for angle_id = 1:angle_sz
 %             angle = char(strcat('anglid_',num2str(angle_id)));
 %             for slice_id=1:slices_sz
-%                 file=strcat(sample_list_folder,'/',sample,'/',angle,'/',filename,num2str(slice_id),'.png');
+% %                 if (w_nw==1)
+%                     file=strcat(sample_list_folder,'/',sample,'/',angle,'/',filename,num2str(slice_id),'.png');
+% %                 end
+% %                 if (w_nw==2)                
+% %                     file=strcat(sample_list_folder,'/',sample,'/half_lin_cutoff_half_tot_pert_nvpw_v0p6/',angle,'/',filename,num2str(slice_id),'.png');
+% %                 end
 %                 file=char(file);
 %                 list(w_nw,sample_id,angle_id,slice_id)=file;
 %             end
@@ -82,20 +88,21 @@ miniBatchSize=32;
 % imds_validate = imageDatastore(list_validate,'Labels',label_validate);
 
 imds = imageDatastore(path_soft_links,"IncludeSubfolders",true,'LabelSource','foldernames');
-%imds = imageDatastore(path_soft_links,"IncludeSubfolders",true);
-%imds.Labels = categorical(abs(double(contains(string(imds.Files),'nowake'))-1));
-[imds_train, imds_validate] = splitEachLabel(imds, percentage_to_test/100, 'randomize');
+% imds.Labels = categorical(abs(double(contains(string(imds.Files),'nowake'))-1));
+[imds_train, imds_validate] = splitEachLabel(imds, percentage_to_train/100, 'randomize');
 
 % figure; image(readimage(imds_train,1)); colorbar;
 
 layers = [
 % imageInputLayer([1024 1024 3])
-imageInputLayer([1065 1065 3])
+% imageInputLayer([1065 1065 3])
+imageInputLayer([798 798 3])
 % imageInputLayer([512 512 1])
 
 convolution2dLayer(2,1,'Padding','same')
 batchNormalizationLayer
 reluLayer
+
 convolution2dLayer(2,2,'Padding','same')
 batchNormalizationLayer
 reluLayer
@@ -113,14 +120,14 @@ options = trainingOptions('sgdm', ...
     'ExecutionEnvironment','multi-gpu', ...
     'MiniBatchSize',miniBatchSize, ...
     'InitialLearnRate',0.01, ...
-    'MaxEpochs',1, ...
+    'MaxEpochs',2, ...
     'Shuffle','every-epoch', ...
     'ValidationData',imds_validate, ...
-    'ValidationFrequency',5000);
+    'ValidationFrequency',2);
 %     'Plots','training-progress',...
 
 
-delete(gcp('nocreate'));
+% delete(gcp('nocreate'));
 
 % numGPUs = gpuDeviceCount("available");
 % parpool(numGPUs);
