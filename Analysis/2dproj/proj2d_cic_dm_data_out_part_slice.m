@@ -272,6 +272,12 @@ if ~ismember(0,data_stream)
             dlmwrite(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_sl',num2str(count_slice),'.txt'),count_sum(:,:,count_slice),'delimiter','\t');
         end
     end
+
+    if ismember(11,data_stream)
+            fileID = fopen(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_slAll.bin'),'w');
+            fwrite(fileID,count_sum, 'float32','l');
+            fclose(fileID);
+    end
     
 end
 

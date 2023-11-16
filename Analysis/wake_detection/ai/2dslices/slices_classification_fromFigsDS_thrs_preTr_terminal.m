@@ -15,6 +15,7 @@ function [] = slices_classification_fromFigsDS_thrs_preTr_terminal()
 
 % input vars
 path_soft_links = '/scratch/cunhad/data_cps32_512_hpx_2d_NSIDE4_figs_thr40';
+% path_soft_links = '/scratch/cunhad/data_cps32_512_hpx_2d_NSIDE4_figs_thr50';
 path_soft_linksTot = '/scratch/cunhad/soft_links_Figs/data_cps32_512_hpx_2d_NSIDE4';
 % filename='_1_2dproj_z3_data_sl32All';
 % filename='_1_2dproj_z3_data_slAll'; 
@@ -372,17 +373,27 @@ augimdsValidation = augmentedImageDatastore(inputSize(1:2),imds_validate);
 
 %Specify Training Options
 
+% options = trainingOptions('sgdm', ...
+%     'ExecutionEnvironment','multi-gpu', ...
+%     'InitialLearnRate',0.01, ...
+%     'MaxEpochs',2, ...
+%     'Shuffle','every-epoch', ...
+%     'ValidationData',augimdsValidation, ...
+%     'MiniBatchSize',miniBatchSize, ...
+%     'ValidationFrequency',5);
+% %     'Plots','training-progress',...
+
 options = trainingOptions('sgdm', ...
     'ExecutionEnvironment','multi-gpu', ...
     'InitialLearnRate',0.01, ...
-    'MaxEpochs',2, ...
+    'MaxEpochs',1, ...
     'Shuffle','every-epoch', ...
     'ValidationData',augimdsValidation, ...
     'MiniBatchSize',miniBatchSize, ...
     'ValidationFrequency',5);
 %     'Plots','training-progress',...
 
-delete(gcp('nocreate'));
+% delete(gcp('nocreate'));
 
 % numGPUs = gpuDeviceCount("available");
 % parpool(numGPUs);
@@ -392,9 +403,10 @@ delete(gcp('nocreate'));
 net = trainNetwork(augimdsTrain,lgraph,options);  
 
 YPred = classify(net,augimdsValidation,'MiniBatchSize',miniBatchSize);
+YValidation = imds_validate.Labels;
 % YValidation = augimdsValidation.Labels;
-[~,info]=read(augimdsValidation)
-YValidation = info.Label;
+% [~,info]=read(augimdsValidation)
+% YValidation = info.Label;
 accuracy = sum(YPred == YValidation)/numel(YValidation)
 
 
@@ -419,9 +431,10 @@ augimdsTot = augmentedImageDatastore(inputSize(1:2),imdsTot);
 
 
 YPredTot = classify(net,augimdsTot,'MiniBatchSize',miniBatchSize);                                                                                                                                             
+YValidationTot = imdsTot.Labels;
 % YValidationTot = augimdsTot.Labels;
-[~,info]=read(augimdsTot)
-YValidationTot = info.Label;
+% [~,info]=read(augimdsTot)
+% YValidationTot = info.Label;
 accuracyTot = sum(YPredTot == YValidationTot)/numel(YValidationTot)
 
 

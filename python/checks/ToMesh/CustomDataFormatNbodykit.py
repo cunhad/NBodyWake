@@ -3,7 +3,7 @@
 """
 Created on Thu Jul 13 19:38:11 2023
 
-@author: asus
+@author: Disrael
 """
 
 from nbodykit.io.base import FileType
