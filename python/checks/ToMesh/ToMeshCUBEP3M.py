@@ -85,9 +85,9 @@ def Mesh_Wake(Nmesh,BoxSize_):
     # inititalize the mesh
     mesh = ArrayMesh(data, BoxSize=BoxSize_)
 
-
+    # mesh = RealField(mesh)
     
-    return mesh
+    return mesh.to_real_field()
 
 
 # #Example Mesh_Wake

@@ -14,6 +14,10 @@ Created on Mon Sep  4 11:04:34 2023
 
 
 def histogram_3d(mesh,save=None):
+    
+    import matplotlib
+    matplotlib.use('agg')   #deal with figures wihotut winow forwards (non iteractive, like slurm)
+    
     import numpy
     from matplotlib import pyplot as plt
 
@@ -22,6 +26,8 @@ def histogram_3d(mesh,save=None):
     # one_plus_delta = mesh.paint(mode='real')
     # one_plus_delta = mesh
     values = mesh.value.flatten()
+    
+    
     
     num_zero = numpy.count_nonzero(values == 0.)
     #remove zeroes

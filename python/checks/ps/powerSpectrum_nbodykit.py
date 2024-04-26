@@ -13,6 +13,8 @@ def powerSpectrum(mesh,save=None):
     r = FFTPower(mesh, mode='1d')
     Pk = r.power
 
+    import matplotlib
+    matplotlib.use('agg')   #deal with figures wihotut winow forwards (non iteractive, like slurm)
     
     # #print out the meta-data
     # for k in Pk.attrs:
@@ -20,13 +22,14 @@ def powerSpectrum(mesh,save=None):
     from matplotlib import pyplot as plt
     
     plt.figure()    
-    plt.loglog(Pk['k'],(pow(Pk['k'],3))*Pk['power'].real)
+    # plt.loglog(Pk['k'],(pow(Pk['k'],3))*Pk['power'].real)
     # plt.loglog(Pk['k'],Pk['power'].real)
     # or print the shot noise subtracted P(k)
-    # plt.loglog(Pk['k'], Pk['power'].real - Pk.attrs['shotnoise'])
+    plt.loglog(Pk['k'], Pk['power'].real - Pk.attrs['shotnoise'])
     plt.xlabel(r"$k$ $[h \mathrm{Mpc}^{-1}]$")
     plt.ylabel(r"$P$ $[h^{-3} \mathrm{Mpc}^{3}]$")
-    plt.title('Dimensionless Power Spectrum')
+    # plt.title('Dimensionless Power Spectrum')
+    plt.title('Power Spectrum')
     # plt.title('Gadget, Picola, CAMB and EH P(k), z=%2.f' %z)
     
     if save != None:
@@ -57,6 +60,9 @@ def powerSpectrum2d(mesh,nmu,save=None):
     #     Pk = Pkmu[:,i] # select the ith mu bin
     #     label = r'$\mu$=%.1f' % (Pkmu.coords['mu'][i])
     #     plt.loglog(Pk['k'], Pk['power'].real - Pk.attrs['shotnoise'], label=label)
+    
+    import matplotlib
+    matplotlib.use('agg')   #deal with figures wihotut winow forwards (non iteractive, like slurm)
     
     from matplotlib import pyplot as plt
 

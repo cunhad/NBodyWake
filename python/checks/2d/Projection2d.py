@@ -8,6 +8,9 @@ Created on Mon Aug 28 18:44:01 2023
 
 def plot_2d_proj(mesh,save=None):
     
+    import matplotlib
+    matplotlib.use('agg')   #deal with figures wihotut winow forwards (non iteractive, like slurm)
+
     from matplotlib import pyplot as plt
     import numpy as np
     
