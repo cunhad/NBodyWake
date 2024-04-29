@@ -26,8 +26,10 @@ import os
 #     print(sys.argv[i], end = " ")
 
 # example of argument:
+    # Input form CUBEP3M:
     # /home/asus/Dropbox/extras/storage/graham/small_res/64Mpc_96c_48p_zi255_nowakem/sample1001/ /home/asus/Dropbox/extras/storage/graham/small_res/plots/64Mpc_96c_48p_zi255_nowakem/
-    
+    # Input from Binary files:
+    # /home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512/4Mpc_2048c_1024p_zi63_nowakem/sample5001/   /home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512/plots/4Mpc_2048c_1024p_zi63_nowakem/
 
 # print(sys.argv[1].split('/')[-2])
 # splited = sys.argv[0].split('/')   
@@ -42,7 +44,6 @@ if sys.argv[1].split('/')[-2][0] == 's':
 else:
     sample = sys.argv[1].split('/')[-3]
     
-
 
 # # Input form CUBEP3M
 
@@ -109,46 +110,46 @@ proj_2d= Projection2d.plot_2d_proj(mesh,save_plot_2d_proj_fig)
 
 
 
-# histogram 3D
+# # histogram 3D
 
-# sys.path.append('/home/asus/Dropbox/Disrael/Work/Research/NBodyWake/production/python/checks/3d')
-sys.path.append(path_analy+'3d')
-# sys.path.append('/home/disraelcunha/Dropbox/Disrael/Work/Research/NBodyWake/production/python/checks/3d')
-import Analysis3d
+# # sys.path.append('/home/asus/Dropbox/Disrael/Work/Research/NBodyWake/production/python/checks/3d')
+# sys.path.append(path_analy+'3d')
+# # sys.path.append('/home/disraelcunha/Dropbox/Disrael/Work/Research/NBodyWake/production/python/checks/3d')
+# import Analysis3d
 
-# save_3Dhist_filename = '/home/asus/Dropbox/extras/storage/graham/small_res/plots/64Mpc_96c_48p_zi255_nowakem/3dhist_s1001_z0.png'
-save_3Dhist_filename = path_out+'3dhist_'+sample+'_z'+redshift_+'.png'
-
+# # save_3Dhist_filename = '/home/asus/Dropbox/extras/storage/graham/small_res/plots/64Mpc_96c_48p_zi255_nowakem/3dhist_s1001_z0.png'
 # save_3Dhist_filename = path_out+'3dhist_'+sample+'_z'+redshift_+'.png'
-Analysis3d.histogram_3d(mesh,save_3Dhist_filename)
+
+# # save_3Dhist_filename = path_out+'3dhist_'+sample+'_z'+redshift_+'.png'
+# Analysis3d.histogram_3d(mesh,save_3Dhist_filename)
 
 
 
 
-# Power Spectrum
+# # Power Spectrum
 
-# sys.path.append('/home/asus/Dropbox/Disrael/Work/Research/NBodyWake/production/python/checks/ps')
-sys.path.append(path_analy+'ps')
-import powerSpectrum_nbodykit
+# # sys.path.append('/home/asus/Dropbox/Disrael/Work/Research/NBodyWake/production/python/checks/ps')
+# sys.path.append(path_analy+'ps')
+# import powerSpectrum_nbodykit
 
-# save_PS_filename = '/home/asus/Dropbox/extras/storage/graham/small_res/plots/64Mpc_96c_48p_zi255_nowakem/PS_s1001_z0.png'
-save_PS_filename = path_out+'PS_'+sample+'_z'+redshift_+'.png'
-powerSpectrum_nbodykit.powerSpectrum(mesh,save_PS_filename)
-
-
+# # save_PS_filename = '/home/asus/Dropbox/extras/storage/graham/small_res/plots/64Mpc_96c_48p_zi255_nowakem/PS_s1001_z0.png'
+# save_PS_filename = path_out+'PS_'+sample+'_z'+redshift_+'.png'
+# powerSpectrum_nbodykit.powerSpectrum(mesh,save_PS_filename)
 
 
-# compute the 2D power
 
-# sys.path.append('/home/asus/Dropbox/Disrael/Work/Research/NBodyWake/production/python/checks/ps')
-sys.path.append(path_analy+'ps')
-import powerSpectrum_nbodykit
 
-nmu=5
-# Pkmu = powerSpectrum_nbodykit.powerSpectrum2d(mesh,nmu)
-save_PS2D_filename = path_out+'PS2D_'+sample+'_z'+redshift_+'.png'
-# Pkmu = powerSpectrum_nbodykit.powerSpectrum2d(mesh,nmu)
-Pkmu = powerSpectrum_nbodykit.powerSpectrum2d(mesh,nmu,save_PS2D_filename)
+# # compute the 2D power
+
+# # sys.path.append('/home/asus/Dropbox/Disrael/Work/Research/NBodyWake/production/python/checks/ps')
+# sys.path.append(path_analy+'ps')
+# import powerSpectrum_nbodykit
+
+# nmu=5
+# # Pkmu = powerSpectrum_nbodykit.powerSpectrum2d(mesh,nmu)
+# save_PS2D_filename = path_out+'PS2D_'+sample+'_z'+redshift_+'.png'
+# # Pkmu = powerSpectrum_nbodykit.powerSpectrum2d(mesh,nmu)
+# Pkmu = powerSpectrum_nbodykit.powerSpectrum2d(mesh,nmu,save_PS2D_filename)
 
 
 
