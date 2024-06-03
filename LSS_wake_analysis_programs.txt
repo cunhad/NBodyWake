@@ -34,9 +34,29 @@ LSS_wake_analysis_programs
 	
 	run_cupep3m_a_1cpu_types_hr_clara_2a3dpartition_rand_hpx_slices_data_anali_visual_out_from_2d_slices_out_dev2_Canny	
 	run_cupep3m_a_1cpu_types_hr_clara_2a3dpartition_rand_hpx_slices_data_anali_visual_out_from_2d_slices_out_dev2_CanRid	(with ridgelet instead)	
+
+- analysis Python (ps, hist)
 	
+	python/nbodykit-env/script_analysis.sub
+
+- Ai figure generation
+
+	an_ai_producFigs.sub
+
+- Ai figure decompression
+
+	sub_decompressSoftLinksFigs.sub
 	
-- Ai analysis
+- Ai threshold fig selection
+	
+	cd /home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht
+	cp labels_eachSlice_* /scratch/cunhad/.
+	cd /scratch/cunhad
+	for i in $(cat labels_eachSlice_nw_thr70.txt); do cp soft_links_Figs/data_cps32_512_hpx_2d_NSIDE4/4Mpc_2048c_1024p_zi63_nowakem/$i.png  data_cps32_512_hpx_2d_NSIDE4_figs_thr70/4Mpc_2048c_1024p_zi63_nowakem/.; done
+	for i in $(cat labels_eachSlice_w_thr70.txt); do cp soft_links_Figs/data_cps32_512_hpx_2d_NSIDE4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/$i.png  data_cps32_512_hpx_2d_NSIDE4_figs_thr70/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/.; done
+
+	
+- Ai analysis Matlab
 
 	an_ai_wake.sub
 	
@@ -98,18 +118,29 @@ LSS_wake_analysis_programs
 	
 	Analysis/wake_detection/slices_curv_2d/slices_curv_2a3d_locangreal_all_groups.m (and variations, depth, each slice)
 
-- ai analysis
+- analysis Python (ps, hist)
 
-	Analysis/wake_detection/ai/2dslices/slices_classification_from3dBin_thr_terminal.m
+	python/checks/Analysis_terminal.py
 
-
-A que deu mais certo do rad, e do Rad6, que acho que e a normalizada, com removal, Max/Std
-
-
-- figure selection
+- AI - Generate labels for each slice
 	
 	Analysis/wake_detection/slices_curv_2d/CopyRelevantFigure_eachslice_all_groups.m
 
+
+- Ai figure generation
+
+	/home/cunhad/project/cunhad/production/NBodyWake/Analysis/wake_detection/ai/2dslices/Produce_fig_from3dbin_terminal.m
+
+	
+- ai analysis Matlab (old)
+
+	Analysis/wake_detection/ai/2dslices/slices_classification_from3dBin_thr_terminal.m
+	
+	A que deu mais certo do rad, e do Rad6, que acho que e a normalizada, com removal, Max/Std	
+	
+- Ai analysis Matlab
+
+	/home/cunhad/project/cunhad/production/NBodyWake/Analysis/wake_detection/ai/2dslices/slices_classification_fromFigsDS_thrs_preTr_terminal.m
 
 
 
