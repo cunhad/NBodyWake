@@ -21,6 +21,7 @@ parser = argparse.ArgumentParser(description='efficientnet_b7 wake classificatio
 # parser.add_argument('--lr', default=0.1, help='')
 parser.add_argument('--batch_size', type=int, default=32, help='')
 parser.add_argument('--num_workers', type=int, default=0, help='')
+parser.add_argument('--num_epochs', type=int, default=10, help='')
 
 args = parser.parse_args()
 
@@ -61,6 +62,7 @@ import copy
 # data load
 
 import os
+from PIL import Image
 
 # set the random seeds
 
@@ -70,7 +72,8 @@ import random
 
 import numpy as np
 
-
+# Import the spliter function from DataCleaning.py'
+from DataCleaning import file_list
 
 
 
@@ -106,41 +109,99 @@ test_transforms = transforms.Compose([
 
 #%%
 
+# Define the Custom Dataset Class
+
+class CustomImageDataset(Dataset):
+    def __init__(self, file_list, transform=None):
+        """
+        Args:
+            file_list (list): List of file paths to be included in the dataset.
+            transform (callable, optional): Optional transform to be applied
+                on a sample.
+        """
+        self.file_list = file_list
+        self.transform = transform
+
+        # Extract classes from folder structure
+        self.classes = list(set([os.path.basename(os.path.dirname(file_path)) for file_path in file_list]))
+        self.class_to_idx = {cls_name: idx for idx, cls_name in enumerate(self.classes)}
+
+    def __len__(self):
+        return len(self.file_list)
+
+    def __getitem__(self, idx):
+        img_path = self.file_list[idx]
+        image = Image.open(img_path).convert("RGB")
+        class_name = os.path.basename(os.path.dirname(img_path))
+        label = self.class_to_idx[class_name]
+
+        if self.transform:
+            image = self.transform(image)
+
+        return image, label
+
+
+
+# # Load datasets
+
+# data_dir = os.path.expanduser("/scratch/cunhad/data_cps32_512_hpx_2d_NSIDE4_figs_thr50")
+
+# dataset = datasets.ImageFolder(data_dir)
+# print(dataset.class_to_idx)   # this is the label dictionary
+
+# # Define the proportion or number of items in each set
+# train_size = int(TRAIN_RATIO * len(dataset))
+# test_size = len(dataset) - train_size
+
+# # set the random seeds, for shufle
+# random.seed(SEED)
+# np.random.seed(SEED)
+# torch.manual_seed(SEED)
+# torch.cuda.manual_seed(SEED)
+# torch.backends.cudnn.deterministic = True
+
+# # Randomly split the dataset into train and test datasets
+# train_data, test_data = random_split(dataset, [train_size, test_size])
+# test_data.dataset.transform = test_transforms
+# train_data.dataset.transform = train_transforms
+
+# # Randomly split the train+validation
+
+# n_train_examples = int(len(train_data) * VALID_RATIO)
+# n_valid_examples = len(train_data) - n_train_examples
+
+# train_data, valid_data = data.random_split(train_data,
+#                                            [n_train_examples, n_valid_examples])
+
 # Load datasets
 
-data_dir = os.path.expanduser("/scratch/cunhad/data_cps32_512_hpx_2d_NSIDE4_figs_thr50")
+folder_path = "/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpx_2d_NSIDE4_figs_thr50/"
 
-dataset = datasets.ImageFolder(data_dir)
-print(dataset.class_to_idx)   # this is the label dictionary
+# Randomly split the dataset into train, test and validation datasets
 
-# Define the proportion or number of items in each set
-train_size = int(TRAIN_RATIO * len(dataset))
-test_size = len(dataset) - train_size
 
-# set the random seeds, for shufle
-random.seed(SEED)
-np.random.seed(SEED)
-torch.manual_seed(SEED)
-torch.cuda.manual_seed(SEED)
-torch.backends.cudnn.deterministic = True
+valid_data_, test_train_data_ = file_list(folder_path,VALID_RATIO)
+valid_data__ = CustomImageDataset(file_list=valid_data_, transform=test_transforms)
+test_train_data__ = CustomImageDataset(file_list=test_train_data_, transform=test_transforms)
 
-# Randomly split the dataset into train and test datasets
-train_data, test_data = random_split(dataset, [train_size, test_size])
-test_data.dataset.transform = test_transforms
-train_data.dataset.transform = train_transforms
 
-# Randomly split the train+validation
+n_train_examples = int(len(test_train_data__) * TRAIN_RATIO)
+n_test_examples = len(test_train_data__) - n_train_examples
 
-n_train_examples = int(len(train_data) * VALID_RATIO)
-n_valid_examples = len(train_data) - n_train_examples
+train_data_, test_data_ = data.random_split(test_train_data__,
+                                           [n_train_examples, n_test_examples])
 
-train_data, valid_data = data.random_split(train_data,
-                                           [n_train_examples, n_valid_examples])
+
+# # Create data loaders.
+# train_dataloader = DataLoader(train_data, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+# test_dataloader = DataLoader(test_data, batch_size=batch_size, shuffle=False, num_workers=num_workers)
+# valid_dataloader = DataLoader(valid_data, batch_size=batch_size, shuffle=False, num_workers=num_workers)
 
 # Create data loaders.
-train_dataloader = DataLoader(train_data, batch_size=batch_size, shuffle=True, num_workers=num_workers)
-test_dataloader = DataLoader(test_data, batch_size=batch_size, shuffle=False, num_workers=num_workers)
-valid_dataloader = DataLoader(valid_data, batch_size=batch_size, shuffle=False, num_workers=num_workers)
+
+valid_dataloader = DataLoader(valid_data__, batch_size=batch_size, shuffle=False, num_workers=num_workers)
+test_dataloader = DataLoader(test_data_, batch_size=batch_size, shuffle=False, num_workers=num_workers)
+train_dataloader = DataLoader(train_data_, batch_size=batch_size, shuffle=False, num_workers=num_workers)
 
 for X, y in train_dataloader:
     print(f"Shape of X [N, C, H, W]: {X.shape}")
