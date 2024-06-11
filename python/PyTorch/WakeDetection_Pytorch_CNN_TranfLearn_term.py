@@ -32,6 +32,8 @@ print("Batch size = "+ str(batch_size))
 num_workers=args.num_workers
 print("Num of CPU workers = "+ str(num_workers))
 
+num_epochs=args.num_epochs
+print("Num epochs = "+ str(num_epochs))
 
 # batch_size = 32
 TRAIN_RATIO = 0.8       #fraction of total dataset that will go to train+validation
@@ -175,7 +177,7 @@ class CustomImageDataset(Dataset):
 
 # Load datasets
 
-folder_path = "/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpx_2d_NSIDE4_figs_thr50/"
+folder_path = "/scratch/cunhad/data_cps32_512_hpx_2d_NSIDE4_figs_thr50/"
 
 # Randomly split the dataset into train, test and validation datasets
 
@@ -434,7 +436,7 @@ def train_model(model, train_dataloader, valid_dataloader, criterion, optimizer,
 
 
 # Call the training function
-trained_model = train_model(model, train_dataloader, valid_dataloader, criterion, optimizer, num_epochs=10)
+trained_model = train_model(model, train_dataloader, valid_dataloader, criterion, optimizer, num_epochs=num_epochs)
 
 
 #%%

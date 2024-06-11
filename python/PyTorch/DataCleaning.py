@@ -6,10 +6,6 @@ Created on Thu May 23 16:43:51 2024
 @author: asus
 """
 
-VALID_RATIO = 0.9       #fraction of train+validation dataset that will *NOT* go to validation
-
-#root directory
-folder_path = "/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpx_2d_NSIDE4_figs_thr50/"
 
 
 
@@ -173,3 +169,15 @@ def file_list(folder_path,VALID_RATIO):
 
     
     return val_files,test_files
+
+#%%
+
+
+# VALID_RATIO = 0.9       #fraction of train+validation dataset that will *NOT* go to validation
+
+#root directory
+folder_path = "/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpx_2d_NSIDE4_figs_thr50/"
+
+files_list = list_all_files(folder_path)
+filtered_filenames,filtered_filenames_dic = number_of_outliers(files_list)
+# classes_dict = classify_files(filtered_filenames)
