@@ -61,8 +61,8 @@ from DataCleaning import file_list
 # keep track of true positives, false positives, true negatives, and false negatives for each class
 from sklearn.metrics import confusion_matrix
 
-
-
+# To count the number of images in each label
+from collections import Counter
 
 
 
@@ -114,6 +114,8 @@ class CustomImageDataset(Dataset):
         # Extract classes from folder structure
         self.classes = list(set([os.path.basename(os.path.dirname(file_path)) for file_path in file_list]))
         self.class_to_idx = {cls_name: idx for idx, cls_name in enumerate(self.classes)}
+        self.labels = [self.class_to_idx[os.path.basename(os.path.dirname(file_path))] for file_path in file_list]
+
 
     def __len__(self):
         return len(self.file_list)
@@ -132,38 +134,6 @@ class CustomImageDataset(Dataset):
 # Load datasets
 
 folder_path = "/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpx_2d_NSIDE4_figs_thr50_test/"
-# data_dir_ = os.path.expanduser(folder_path)
-# data_dir = os.path.expanduser("/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpx_2d_NSIDE4_figs_thr50")
-
-# dataset = datasets.ImageFolder(data_dir)
-# print(dataset.class_to_idx)   # this is the label dictionary
-
-# # Define the proportion or number of items in each set
-# train_size = int(TRAIN_RATIO * len(dataset))
-# test_size = len(dataset) - train_size
-
-# # set the random seeds, for shufle
-# random.seed(SEED)
-# np.random.seed(SEED)
-# torch.manual_seed(SEED)
-# torch.cuda.manual_seed(SEED)
-# torch.backends.cudnn.deterministic = True
-
-# # Randomly split the dataset into train and test datasets
-# train_data, test_data = random_split(dataset, [train_size, test_size])
-# test_data.dataset.transform = test_transforms
-# train_data.dataset.transform = train_transforms
-
-# # Randomly split the train+validation
-
-# n_train_examples = int(len(train_data) * VALID_RATIO)
-# n_valid_examples = len(train_data) - n_train_examples
-
-# train_data, valid_data = data.random_split(train_data,
-#                                            [n_train_examples, n_valid_examples])
-
-
-# Randomly split the dataset into train, test and validation datasets
 
 
 valid_data_, test_train_data_ = file_list(folder_path,VALID_RATIO)
@@ -205,10 +175,41 @@ for X, y in valid_dataloader:
     break  
 
 
-# image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x), data_transforms[x]) for x in ['train', 'val']}
-# dataloaders = {x: DataLoader(image_datasets[x], batch_size=16, shuffle=True, num_workers=4) for x in ['train', 'val']}
-# dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'val']}
-# class_names = image_datasets['train'].classes
+
+
+#%%
+
+print(test_train_data__.class_to_idx)   # this is the label dictionary
+
+
+
+# Display the number of images in each class for train and test datasets
+def count_class_images(subset, original_dataset):
+    labels = [original_dataset.labels[i] for i in subset.indices]
+    class_counts = Counter(labels)
+    class_names = original_dataset.classes
+    for class_idx, count in class_counts.items():
+        class_name = class_names[class_idx]
+        print(f"Class: {class_name}, Number of images: {count}")
+
+print("\nTraining Data:")
+count_class_images(train_data_, test_train_data__)
+
+print("\nTesting Data:")
+count_class_images(test_data_, test_train_data__)
+
+
+
+# Count the number of images in each class
+class_counts = Counter(valid_data__.labels)
+# Get the class names
+class_names = valid_data__.classes
+
+# Display the number of images in each class
+print("\nValidation Data:")
+for class_idx, count in class_counts.items():
+    class_name = class_names[class_idx]
+    print(f"Class: {class_name}, Number of images: {count}")
 
 #%%
 
