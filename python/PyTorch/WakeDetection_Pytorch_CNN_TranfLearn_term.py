@@ -74,8 +74,14 @@ import random
 
 import numpy as np
 
+
 # Import the spliter function from DataCleaning.py'
+
 from DataCleaning import file_list
+
+# keep track of true positives, false positives, true negatives, and false negatives for each class
+from sklearn.metrics import confusion_matrix
+
 
 
 
@@ -341,44 +347,28 @@ def train_model(model, train_dataloader, valid_dataloader, criterion, optimizer,
 
         running_loss = 0.0
         running_corrects = 0
+        all_labels = []
+        all_preds = []
 
         # Iterate over data.
         for inputs, labels in train_dataloader:
             inputs = inputs.to(device)
             labels = labels.to(device).float()
-            # labels = labels.to(device).float().view(-1, 1)  # Ensure labels are the correct shape
-            # labels = labels.to(device).float().view(-1, 1).squeeze()  # Ensure labels are the correct shape
-
-                     
 
             # Zero the parameter gradients
             optimizer.zero_grad()
 
             # Forward
             outputs = model(inputs)
-            
-            # print(outputs.shape)
-            
-            if outputs.shape == torch.Size([1, 1]):  # outputs is a scalar
-                # print("this")
-                # outputs = outputs.squeeze()    # Reshape scalar to [1]                
+            # outputs = outputs.squeeze()
+            if outputs.shape == torch.Size([1, 1]):  # outputs is a scalar           
                 outputs = outputs.squeeze().unsqueeze(0)   # Reshape scalar to [1]                
             else:
-                # print("that")
-                # outputs = torch.tensor([outputs.item()], device='cuda:0')
                 outputs = outputs.squeeze()    # Squeeze the output if necessary
-            
-            # if outputs.dim() != 0:  # outputs is a scalar
-            #     outputs = outputs.squeeze()  # Squeeze the output if necessary
-            
-            # outputs = outputs.squeeze()  # Squeeze the output if necessary
-            # print(labels)   
-            # print(outputs) 
-            
-            # outputs = outputs.squeeze()  # Squeeze the output if necessary
-            # outputs = outputs.view(-1, 1).squeeze()   # Ensure outputs are also [batch_size, 1] if not already
+
             loss = criterion(outputs, labels)
             preds = outputs.sigmoid() > 0.5
+
             # Backward + optimize
             loss.backward()
             optimizer.step()
@@ -386,45 +376,62 @@ def train_model(model, train_dataloader, valid_dataloader, criterion, optimizer,
             # Statistics
             running_loss += loss.item() * inputs.size(0)
             running_corrects += torch.sum(preds == labels.data)
+            all_labels.append(labels.cpu().numpy())
+            all_preds.append(preds.cpu().numpy())
 
         epoch_loss = running_loss / len(train_dataloader.dataset)
         epoch_acc = running_corrects.double() / len(train_dataloader.dataset)
 
+        all_labels = np.concatenate(all_labels)
+        all_preds = np.concatenate(all_preds)
+        cm = confusion_matrix(all_labels, all_preds)
+        tn, fp, fn, tp = cm.ravel()
+        class_0_accuracy = tn / (tn + fp)
+        class_1_accuracy = tp / (tp + fn)
+
         print(f'Epoch {epoch + 1}/{num_epochs} - Training Loss: {epoch_loss:.4f} Acc: {epoch_acc:.4f}')
+        print(f'Class 0 Accuracy: {class_0_accuracy:.4f}, Class 1 Accuracy: {class_1_accuracy:.4f}')
 
         # Validation phase
         model.eval()  # Set model to evaluate mode
         valid_loss = 0.0
         valid_corrects = 0
+        valid_labels = []
+        valid_preds = []
 
         for inputs, labels in valid_dataloader:
             inputs = inputs.to(device)
-            # labels = labels.to(device)
             labels = labels.to(device).float()
 
             with torch.no_grad():
                 outputs = model(inputs)
+                # outputs = outputs.squeeze()
                 
                 if outputs.shape == torch.Size([1, 1]):  # outputs is a scalar
-                    # print("this")
-                    # outputs = outputs.squeeze()    # Reshape scalar to [1]                
                     outputs = outputs.squeeze().unsqueeze(0)   # Reshape scalar to [1]                
                 else:
-                    # print("that")
-                    # outputs = torch.tensor([outputs.item()], device='cuda:0')
                     outputs = outputs.squeeze()    # Squeeze the output if necessary
-                
-                loss = criterion(outputs, labels)
 
+                loss = criterion(outputs, labels)
                 preds = outputs.sigmoid() > 0.5
 
             valid_loss += loss.item() * inputs.size(0)
             valid_corrects += torch.sum(preds == labels.data)
+            valid_labels.append(labels.cpu().numpy())
+            valid_preds.append(preds.cpu().numpy())
 
         valid_epoch_loss = valid_loss / len(valid_dataloader.dataset)
         valid_epoch_acc = valid_corrects.double() / len(valid_dataloader.dataset)
 
+        valid_labels = np.concatenate(valid_labels)
+        valid_preds = np.concatenate(valid_preds)
+        cm = confusion_matrix(valid_labels, valid_preds)
+        tn, fp, fn, tp = cm.ravel()
+        valid_class_0_accuracy = tn / (tn + fp)
+        valid_class_1_accuracy = tp / (tp + fn)
+
         print(f'Epoch {epoch + 1}/{num_epochs} - Validation Loss: {valid_epoch_loss:.4f} Acc: {valid_epoch_acc:.4f}')
+        print(f'Validation Class 0 Accuracy: {valid_class_0_accuracy:.4f}, Validation Class 1 Accuracy: {valid_class_1_accuracy:.4f}')
 
     return model
 
