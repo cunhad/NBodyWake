@@ -1,27 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu May 23 16:43:51 2024
+Created on Fri Jul 26 09:42:19 2024
 
 @author: asus
 """
 
-
-
-
-# load data 
 import os
-from PIL import Image
-import numpy as np
 
-
-import random
-
-import re
-
-
-# #just to debug
-# import matplotlib.pyplot as plt
 
 #function returns all figures paths inside folder_path including subfolders
 def list_all_files(folder_path):
@@ -38,12 +24,17 @@ def list_all_files(folder_path):
 
 
 
+# Load datasets
+
+# folder_path = "/scratch/cunhad/data_cps32_512_hpx_2d_NSIDE4_figs_thr50/"
+# folder_path = "/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpx_2d_NSIDE4_figs_thr50_test2/"
+folder_path = "/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpx_2d_NSIDE4_figs_thr50_test2/"
+files_list = list_all_files(folder_path)
 
 
-#%%
 
-
-
+from PIL import Image
+import numpy as np
 
 # Function that returns the number of outliers (empty cell)
 
@@ -80,12 +71,6 @@ def number_of_outliers(files_list):
         
     return filtered_filenames,filtered_filenames_dic
 
-
-#%%
-
-
-
-
 def classify_files(file_list):
     import re
     from collections import defaultdict
@@ -105,12 +90,7 @@ def classify_files(file_list):
     
     return classes
 
-
-
-
-
-#%%
-
+import random
 
 
 def select_valid_classes(classes_dict,threshold):
@@ -149,12 +129,6 @@ def select_valid_classes(classes_dict,threshold):
     return selected_samples,current_sum,selected_samples_complement
 
 
-
-
-
-# val_files = classes_dict[selected_indices]['count']
-
-
 def file_list(folder_path,VALID_RATIO):
     files_list = list_all_files(folder_path)
     filtered_filenames,filtered_filenames_dic = number_of_outliers(files_list)
@@ -181,9 +155,13 @@ def file_list(folder_path,VALID_RATIO):
     
     return val_files,test_files,selected_indices,selected_indices_complement
 
+
+VALID_RATIO = 0.9       #fraction of train+validation dataset that will *NOT* go to validation
+
+valid_data_, test_train_data_,selected_indices_val,selected_indices_test_train = file_list(folder_path,VALID_RATIO)
+
+
 #%%
-
-
 def count_files_by_subdirectory(file_list, subdirectories):
     counts = {subdir: 0 for subdir in subdirectories}
     
@@ -193,6 +171,24 @@ def count_files_by_subdirectory(file_list, subdirectories):
                 counts[subdir] += 1
     
     return counts
+
+# count the excess
+subdirectories = sorted(list(set([os.path.basename(os.path.dirname(file_path)) for file_path in valid_data_])))
+counts = count_files_by_subdirectory(valid_data_, subdirectories)
+print("Valid")
+print(counts)
+
+# count the excess
+subdirectories = sorted(list(set([os.path.basename(os.path.dirname(file_path)) for file_path in test_train_data_])))
+counts = count_files_by_subdirectory(test_train_data_, subdirectories)
+print("Test and Train")
+print(counts)
+
+
+
+#%%
+
+
 
 
 def isClean(filename):
@@ -214,106 +210,11 @@ def isClean(filename):
         if num_out<=4:
             return True
         else:
-            return False        
+            return False     
 
 
+import re
 
-
-#%%
-
-
-
-
-
-
-
-
-
-
-
-
-# files_list_only_names = [file.split("/")[-1] for file in files_list]
-
-
-# files_list_to_balance = valid_data_
-# selected_indices = selected_indices_val
-
-
-# # count the excess
-# subdirectories = sorted(list(set([os.path.basename(os.path.dirname(file_path)) for file_path in files_list_to_balance])))
-# counts = count_files_by_subdirectory(files_list_to_balance, subdirectories)
-# wake_excess = counts[subdirectories[1]]-counts[subdirectories[0]]
-
-# # if wake_excess> 0:
-
-# # Obtain the elements of the complementar list
-# files_list_balance_ = [file for file in files_list_balance if subdirectories[1] not in file]
-# files_list_balance__ = [file for file in files_list_balance_ if file.split("/")[-1] not in files_list_only_names]
-# files_list_balance___ = [element for element in files_list_balance__ if any(substring in element for substring in selected_indices)]
-
-
-
-# # For each missing smaple, test if pass the noise test. if yes, add it
-
-# files_list_balance____ = []
-
-# for i in range(wake_excess):
-    
-#     # Choose a random element from the list
-#     random_element = random.choice(files_list_balance___)
-#     # Remove the chosen element from the list
-#     files_list_balance___.remove(random_element)
-#     if isClean(random_element):
-#         files_list_balance____.append(random_element)
-
-# files_list_balanced = files_list_to_balance + files_list_balance____
-
-
-
-# def balanced_list_of_files(files_list_original,files_list_complement,files_list_to_balance,selected_indices):
-#     files_list_only_names = [file.split("/")[-1] for file in files_list_original]
-    
-#     # count the excess
-#     subdirectories = sorted(list(set([os.path.basename(os.path.dirname(file_path)) for file_path in files_list_to_balance])))
-#     counts = count_files_by_subdirectory(files_list_to_balance, subdirectories)
-#     wake_excess = counts[subdirectories[1]]-counts[subdirectories[0]]
-    
-#     # If there are more wakes, add no wakes
-#     if wake_excess> 0:
-    
-#         # Obtain the elements of the complementar list
-#         files_list_balance_ = [file for file in files_list_complement if subdirectories[1] not in file]
-#         files_list_balance__ = [file for file in files_list_balance_ if file.split("/")[-1] not in files_list_only_names]
-#         files_list_balance___ = [element for element in files_list_balance__ if any(substring in element for substring in selected_indices)]
-        
-#         # For each missing smaple, test if pass the noise test. if yes, add it
-#         files_list_balance____ = []
-#         for i in range(wake_excess):
-            
-#             # Choose a random element from the list
-#             random_element = random.choice(files_list_balance___)
-            
-#             # Remove the chosen element from the list
-#             files_list_balance___.remove(random_element)
-#             if isClean(random_element):
-#                 files_list_balance____.append(random_element)
-
-#         files_list_balanced = files_list_to_balance + files_list_balance____
-        
-#     else:
-#         for i in range(abs(wake_excess)):
-            
-#             # Obtain the list of no wake files
-#             files_list_no_wake = [file for file in files_list_to_balance if subdirectories[1] not in file]
-#             # Choose a random element from the list
-#             random_element = random.choice(files_list_no_wake)
-#             # Remove the chosen element from the list
-#             files_list_to_balance.remove(random_element)
-            
-        
-#         files_list_balanced = files_list_to_balance
-        
-#     return files_list_balanced
 
 def balanced_list_of_files(files_list_original,files_list_complement,files_list_to_balance,selected_indices):
     files_list_only_names = [file.split("/")[-1] for file in files_list_original]
@@ -369,61 +270,99 @@ def balanced_list_of_files(files_list_original,files_list_complement,files_list_
 
 
 
+# folder_path_balance = "/scratch/cunhad/data_cps32_512_hpx_2d_NSIDE4_figs_thr40/"
+folder_path_balance = "/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpx_2d_NSIDE4_figs_thr50/"
+files_list_balance  = list_all_files(folder_path_balance)
+
+
+files_list_balanced_val = balanced_list_of_files(files_list,files_list_balance,valid_data_,selected_indices_val)
+files_list_balanced_test_train = balanced_list_of_files(files_list,files_list_balance,test_train_data_,selected_indices_test_train)
 
 #%%
+
+
+# import re
+
+
+# # folder_path_balance = "/scratch/cunhad/data_cps32_512_hpx_2d_NSIDE4_figs_thr40/"
+# folder_path_balance = "/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpx_2d_NSIDE4_figs_thr50/"
+# files_list_balance  = list_all_files(folder_path_balance)
 
 
 
 # files_list_original = files_list
 # files_list_complement = files_list_balance
-# files_list_to_balance = valid_data_
-# selected_indices = selected_indices_val
+# files_list_to_balance = test_train_data_
+# selected_indices = selected_indices_test_train
+
+# files_list_only_names = [file.split("/")[-1] for file in files_list_original]
+
+# # count the excess
+# subdirectories = sorted(list(set([os.path.basename(os.path.dirname(file_path)) for file_path in files_list_to_balance])))
+# counts = count_files_by_subdirectory(files_list_to_balance, subdirectories)
+# wake_excess = counts[subdirectories[1]]-counts[subdirectories[0]]
+
+
+# pattern = re.compile(r'sample(\d+)-anglid_\d+-2dproj_z3_ts\d+_sl\d+\.png')
+
+
+# # If there are more wakes, add no wakes
+# if wake_excess> 0:
+#     # Obtain the elements of the complementar list
+#     files_list_balance_ = [file for file in files_list_complement if subdirectories[1] not in file]
+#     files_list_balance__ = [file for file in files_list_balance_ if file.split("/")[-1] not in files_list_only_names]
+#     files_list_balance___ = [element for element in files_list_balance__ if pattern.search(element).group(1) in selected_indices]
+
+
+#     # For each missing smaple, test if pass the noise test. if yes, add it
+#     files_list_balance____ = []
+#     for i in range(len(files_list_balance___)):
+#         print(wake_excess, " try")
+#         # Choose a random element from the list
+#         random_element = random.choice(files_list_balance___)
+        
+#         # Remove the chosen element from the list
+#         files_list_balance___.remove(random_element)
+#         if isClean(random_element):
+#             files_list_balance____.append(random_element)
+#             wake_excess -= 1
+#             if wake_excess == 0:
+#                 break
+#             print( "add")
+#         else:
+#             print("no add")
+    
+#     files_list_balanced = files_list_to_balance + files_list_balance____
 
 
 
+# # count the excess
+# subdirectories = sorted(list(set([os.path.basename(os.path.dirname(file_path)) for file_path in files_list_balanced])))
+# counts = count_files_by_subdirectory(files_list_balanced, subdirectories)
+# print("Test and Train")
+# print(counts)
 
 
-# # for i in range(abs(-3)):
-# #     print(-i)
+# # count the excess
+# subdirectories = sorted(list(set([os.path.basename(os.path.dirname(file_path)) for file_path in files_list_balance____])))
+# counts = count_files_by_subdirectory(files_list_balance____, subdirectories)
+# print("Test and Train")
+# print(counts)
 
 
-# # VALID_RATIO = 0.9       #fraction of train+validation dataset that will *NOT* go to validation
+#%%
 
-# #root directory
-# folder_path = "/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpx_2d_NSIDE4_figs_thr50_test2/"
+# count the excess
+subdirectories = sorted(list(set([os.path.basename(os.path.dirname(file_path)) for file_path in files_list_balanced_val])))
+counts = count_files_by_subdirectory(files_list_balanced_val, subdirectories)
+print("Valid")
+print(counts)
 
-# files_list = list_all_files(folder_path)
-# # filtered_filenames,filtered_filenames_dic = number_of_outliers(files_list)
-# # classes_dict = classify_files(filtered_filenames)
-
-# VALID_RATIO = 0.5       #fraction of train+validation dataset that will *NOT* go to validation
-# # n_train_examples = int(len(filtered_filenames) * VALID_RATIO)
-# # n_valid_examples = len(filtered_filenames) - n_train_examples
-
-# # selected_indices,current_sum=select_valid_classes(classes_dict,n_valid_examples)
-
-
-# # val_files,test_files = file_list(folder_path,VALID_RATIO)
-# valid_data_, test_train_data_,selected_indices_val,selected_indices_test_train = file_list(folder_path,VALID_RATIO)
-
-
-# folder_path_balance = "/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpx_2d_NSIDE4_figs_thr50_test/"
-# files_list_balance  = list_all_files(folder_path_balance)
-
-
-# """
-# first we need to know how many no wakes (or wakes) we should add
-# if no wake is higher, remove then, otherwise add the no wakes
-# once we have the valid and test, with the classes dict, we list all files on the 
-# folder_path_balance  that are not in folder_path, and are of the wake type, then 
-# we randomly add, this time chaking for the outlier (no wrap), until # no wakes = #wakes
-
-
-# """
-
-
-# files_list_balanced_val = balanced_list_of_files(files_list,files_list_balance,valid_data_,selected_indices_val)
-# files_list_balanced_test_train = balanced_list_of_files(files_list,files_list_balance,test_train_data_,selected_indices_test_train)
+# count the excess
+subdirectories = sorted(list(set([os.path.basename(os.path.dirname(file_path)) for file_path in files_list_balanced_test_train])))
+counts = count_files_by_subdirectory(files_list_balanced_test_train, subdirectories)
+print("Test and Train")
+print(counts)
 
 
 

@@ -56,7 +56,7 @@ import numpy as np
 # import sys
 # path_analy = os.getcwd() +'/' 
 # sys.path.append(path_analy)
-from DataCleaning import file_list
+from DataCleaning import file_list,list_all_files,balanced_list_of_files
 
 # keep track of true positives, false positives, true negatives, and false negatives for each class
 from sklearn.metrics import confusion_matrix
@@ -134,11 +134,27 @@ class CustomImageDataset(Dataset):
 # Load datasets
 
 folder_path = "/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpx_2d_NSIDE4_figs_thr50_test/"
+files_list = list_all_files(folder_path)
+
+valid_data_, test_train_data_,selected_indices_val,selected_indices_test_train = file_list(folder_path,VALID_RATIO)
 
 
-valid_data_, test_train_data_ = file_list(folder_path,VALID_RATIO)
-valid_data__ = CustomImageDataset(file_list=valid_data_, transform=test_transforms)
-test_train_data__ = CustomImageDataset(file_list=test_train_data_, transform=test_transforms)
+folder_path_balance = "/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpx_2d_NSIDE4_figs_thr50/"
+files_list_balance  = list_all_files(folder_path_balance)
+
+
+files_list_balanced_val = balanced_list_of_files(files_list,files_list_balance,valid_data_,selected_indices_val)
+files_list_balanced_test_train = balanced_list_of_files(files_list,files_list_balance,test_train_data_,selected_indices_test_train)
+
+
+# valid_data_, test_train_data_,_ = file_list(folder_path,VALID_RATIO)
+valid_data__ = CustomImageDataset(file_list=files_list_balanced_val, transform=test_transforms)
+test_train_data__ = CustomImageDataset(file_list=files_list_balanced_test_train, transform=test_transforms)
+
+
+# valid_data_, test_train_data_,_ = file_list(folder_path,VALID_RATIO)
+# valid_data__ = CustomImageDataset(file_list=valid_data_, transform=test_transforms)
+# test_train_data__ = CustomImageDataset(file_list=test_train_data_, transform=test_transforms)
 
 
 n_train_examples = int(len(test_train_data__) * TRAIN_RATIO)
@@ -217,6 +233,9 @@ for class_idx, count in class_counts.items():
 
 model = models.efficientnet_b7(pretrained=True)
 
+# Print the model architecture
+print(model)
+
 # Freeze all layers
 for param in model.parameters():
     param.requires_grad = False
@@ -234,7 +253,13 @@ for param in model.classifier[-1].parameters():
 criterion = nn.BCEWithLogitsLoss()  # Binary Cross Entropy with Logits Loss
 optimizer = optim.Adam(model.classifier[-1].parameters(), lr=0.001)
 
-    
+
+#%%
+
+# Print the model architecture
+print(model)    
+
+
 #%%
 
 # # Training and validation functions
