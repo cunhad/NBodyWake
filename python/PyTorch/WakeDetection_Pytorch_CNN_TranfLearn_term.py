@@ -155,12 +155,12 @@ class CustomImageDataset(Dataset):
 
 # Load datasets
 
-folder_path = "/scratch/cunhad/data_cps32_512_hpx_2d_NSIDE4_figs_thr50/"
+folder_path = "/scratch/cunhad/data_cps32_512_hpx_2d_NSIDE4_figs_thr40/"
 files_list = list_all_files(folder_path)
 
 valid_data_, test_train_data_,selected_indices_val,selected_indices_test_train = file_list(folder_path,VALID_RATIO)
 
-folder_path_balance = "/scratch/cunhad/data_cps32_512_hpx_2d_NSIDE4_figs_thr40/"
+folder_path_balance = "/scratch/cunhad/soft_links_Figs/data_cps32_512_hpx_2d_NSIDE4/"
 files_list_balance  = list_all_files(folder_path_balance)
 
 
@@ -264,9 +264,17 @@ model.classifier[-1] = nn.Linear(IN_FEATURES, OUTPUT_DIM)
 for param in model.classifier[-1].parameters():
     param.requires_grad = True 
     
+# Unfreeze the last-to-last layer
+for param in model.classifier[-2].parameters():
+    param.requires_grad = True    
+    
 # Define the loss function and optimizer
 criterion = nn.BCEWithLogitsLoss()  # Binary Cross Entropy with Logits Loss
-optimizer = optim.Adam(model.classifier[-1].parameters(), lr=0.001)
+optimizer = optim.Adam(
+    [{'params': model.classifier[-1].parameters()}, 
+     {'params': model.classifier[-2].parameters()}], 
+    lr=0.001
+)
 
     
 #%%
