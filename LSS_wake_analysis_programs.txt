@@ -7,6 +7,10 @@ LSS_wake_analysis_programs
 
 -> scripts on graham
 
+- wake insertion:
+
+	run_cupep3m_wit_hr_wakeinsertion
+
 - produce 2d slices at given angle
 
 	run_cupep3m_a_1cpu_types_hr_2dproj_cps_slices
@@ -61,7 +65,8 @@ LSS_wake_analysis_programs
 	an_ai_wake.sub
 	
 	
-	
+	path_to_matlab_wake_insertion=/home/cunhad/project/cunhad/production/NBodyWake/wake_insertion
+
 	
 	
 	
@@ -72,6 +77,10 @@ LSS_wake_analysis_programs
 	
 	
 -> programs
+
+- wake insertion:
+
+	Analysis/NBodyWake/wake_insertion/wake_insertion_types
 
 - produce 2d slices at given angle
 
