@@ -16,14 +16,14 @@ slices=32;
 nc=512;
 sum_depth=4;
 L_box=4;
-% root_anali_2d_in=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclara-l1lr1na1024_to_3dparclar-l1lr1_anali/');
-root_anali_2d_in=strcat('/home/disraelcunha/Documents/graham/cubep3m/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclara-l1lr1na1024_to_3dparclar-l1lr1_anali/');
+root_anali_2d_in=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclara-l1lr1na1024_to_3dparclar-l1lr1_anali/');
+% root_anali_2d_in=strcat('/home/asus/Documents/graham/cubep3m/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclara-l1lr1na1024_to_3dparclar-l1lr1_anali/');
 % root_anali_2d_in=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclara-l1lr1na1024_to_3dparclar-l1lr1_anali_testRid/');
 % root_anali_2d_in=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclara-l1lr1na1024_to_3dparclar-l1lr1_anali_testRidAug/');
 % root_anali_2d_in=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclara-l1lr1na1024_to_3dparclar_d2-l1lr1_anali/');
 % root_anali_2d_in=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclara-l1lr1na1024_to_3dparcurv-l1lr1_anali/');
-% root='/home/asus/Dropbox/extras/storage/graham/ht/';
-root='/home/disraelcunha/Documents/graham/cubep3m/ht/';
+root='/home/asus/Dropbox/extras/storage/graham/ht/';
+% root='/home/asus/Documents/graham/cubep3m/ht/';
 % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps16_512_2dclar-l2lr1na128_to_3dparcurv-l1lr1_anali/';
 % root_anali_2d_in=strcat('/home/asus/Dropbox/extras/storage/graham/ht/data_cps',num2str(slices),'_',num2str(nc),'_2dclar-l2lr1na256_to_3dparcurv-l1lr2_anali/');
 % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcr0_l2lr1ap256_anali/';
@@ -45,11 +45,11 @@ root='/home/disraelcunha/Documents/graham/cubep3m/ht/';
 % visual_type=[1:2]; %if 1, shows the 2d proj; if 2 shows the ridgelet transformation
 %  visual_in_or_out=[1,2]; %if 1 do visualization of the input, if 2 of the output
 
-nowake_samples_ids=[11:60];
-wake_samples_ids=[11:60];
+% nowake_samples_ids=[11:60];
+% wake_samples_ids=[11:60];
 
-% nowake_samples_ids=[1:10];
-% wake_samples_ids=[1:10];
+nowake_samples_ids=[1:10];
+wake_samples_ids=[1:10];
 
 
 % wake_samples_ids=[1:10];

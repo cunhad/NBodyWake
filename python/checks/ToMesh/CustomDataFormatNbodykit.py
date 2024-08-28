@@ -15,7 +15,7 @@ class CUBEP3MFile(FileType):
     """
     A file-like object to read numpy ``.npy`` files
     """
-    def __init__(self, path,nc,nnodes):
+    def __init__(self, path,Nmesh,nc,nnodes):
         self.path = path
         self.attrs = {}
         # load the data and set size and dtype
@@ -27,6 +27,8 @@ class CUBEP3MFile(FileType):
         # self.dtype = np.dtype(np.float32) # data dtype    
         self.dtype = np.dtype([('Position', ('f4', 3)),('Velocity', ('f4', 3))])
         # self.np = np #number of particles per dimension
+        # self.resolfac = nc/Nmesh
+        self.resolfac = 1
 
     def read(self, columns, start, stop, step=1):
         """
@@ -43,13 +45,17 @@ class CUBEP3MFile(FileType):
         
         
         data = np.fromfile(self.path, dtype=np.float32, count=(stop-start)*6 , offset=4*(12+start*6)).reshape((-1,6))
+        
+        
 
         if 'Position' in columns:
             aux=0
-            data[:,0] = data[:,0] + (self.nc/number_node_dim)*i_node
-            data[:,1] = data[:,1] + (self.nc/number_node_dim)*j_node
-            data[:,2] = data[:,2] + (self.nc/number_node_dim)*k_node
+            data[:,0] = (data[:,0] + (self.nc/number_node_dim)*i_node)/self.resolfac
+            data[:,1] = (data[:,1] + (self.nc/number_node_dim)*j_node)/self.resolfac
+            data[:,2] = (data[:,2] + (self.nc/number_node_dim)*k_node)/self.resolfac
             
+            print(node)
+            print(data[0,0:3])
 
 
         if 'Velocity' in columns:

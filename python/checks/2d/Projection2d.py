@@ -9,14 +9,15 @@ Created on Mon Aug 28 18:44:01 2023
 def plot_2d_proj(mesh,save=None):
     
     import matplotlib
-    matplotlib.use('agg')   #deal with figures wihotut window forwards (non iteractive, like slurm)
+    # matplotlib.use('agg')   #deal with figures wihotut window forwards (non iteractive, like slurm)
+    matplotlib.use('Qt5Agg')    # to show figures on desktop
 
     from matplotlib import pyplot as plt
     import numpy as np
     
-    # plt.figure()    
+    plt.figure()    
     # plt.imshow(mesh.preview(axes=[0,2]))
-    plt.imshow(np.log10(mesh.preview(axes=[0,2])))
+    plt.imshow(np.log10(mesh.preview(axes=[1,2])))
     plt.title('2d projection (cell units)')
     # plt.xlabel(r"$k$ [$h \ \mathrm{Mpc}^{-1}$]")
     # plt.ylabel(r"$P(k)$ [$h^{-3}\mathrm{Mpc}^3$]")
@@ -29,7 +30,7 @@ def plot_2d_proj(mesh,save=None):
         plt.savefig(save, bbox_inches = "tight",dpi=300)
         plt.close()
         
-        return np.log10(mesh.preview(axes=[0,2]))
+        return np.log10(mesh.preview(axes=[1,2]))
     
 def plot_2d_proj_eachSlice(mesh,slice_list,dept,save=None):
     
