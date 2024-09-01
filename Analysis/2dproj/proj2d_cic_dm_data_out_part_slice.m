@@ -6,6 +6,20 @@ function [ count_sum] = proj2d_cic_dm_data_out_part_slice( root,root_out,spec,au
 %   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_cic_dm_data_out_part_slice('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/data/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','10.000xv0.dat',1,1,[0,0,0],[0,0],[1,2],64,4);
 
 
+% root = '/home/asus/Dropbox/extras/storage/graham/small_res/'
+% root_out = '/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48/'
+% spec = '64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m'
+% aux_path = '/sample1001/'
+% aux_path_out = ''
+% filename = '5.000xv0.dat'
+% lenght_factor = 1
+% resol_factor = 0.5
+% pivot = [0,0,0]
+% rot_angle = [pi/2,0,0]
+% data_stream = [11]
+% particl_part = 1
+% slice = 12
+
 % NBody output should be stored as root+spec+aux_path (root directory, specification in the form size_numberofcellsperdimension_number_particlesperdimension_initialredshift_wakespecification&multiplicity, aux_path is the sample number )
 
 % if specified, data will be stored in  root_out+spec+aux_path+aux_path_out

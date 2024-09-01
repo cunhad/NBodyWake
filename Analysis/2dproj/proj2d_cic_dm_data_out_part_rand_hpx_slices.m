@@ -6,7 +6,7 @@ function [ count_sum] = proj2d_cic_dm_data_out_part_rand_hpx_slices( root,root_o
 %   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_cic_dm_data_out_part_rand_nowake('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/data/','64Mpc_1024c_512p_zi63_wakeGmu5t10m6zi63m','/sample0001/','','10.000xv0.dat',1,1,[0,0,0],[0,0],[1,2],64);
 
 
-
+% 
 % root='/home/asus/Dropbox/extras/storage/graham/small_res/';
 % root_out='/home/asus/Dropbox/extras/storage/graham/small_res/data_test2_/';
 % spec='64Mpc_256c_128p_zi63_nowakem';

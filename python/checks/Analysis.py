@@ -11,9 +11,6 @@ Created on Tue Aug 15 15:07:14 2023
 import sys
 import os
 
-# sys.path.append('/home/asus/Dropbox/Disrael/Work/Research/NBodyWake/production/python/checks/ToMesh')
-# sys.path.append('/home/disraelcunha/Dropbox/Disrael/Work/Research/NBodyWake/production/python/checks/ToMesh')
-# sys.path.insert(0, "/home/asus/Dropbox/Disrael/Work/Research/NBodyWake/production/python/checks/ToMesh")
 path_analy = os.getcwd() +'/' 
 sys.path.append(path_analy+'ToMesh')
 import ToMeshCUBEP3M
@@ -24,7 +21,7 @@ filepath = '/home/asus/Dropbox/extras/storage/graham/small_res/64Mpc_96c_48p_zi2
 # path_out = "/home/asus/Dropbox/extras/storage/graham/small_res/data_cps48_48/plots/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/"
 redshift = '5.000'
 redshift_ = '5'
-Nmesh = 48
+Nmesh = [12,48,48]
 BoxSize = 96
 nfiles = 8
 ncells = 96
@@ -32,22 +29,22 @@ npart = 48
 sample = "sample1001"
 
 
-# mesh = ToMeshCUBEP3M.readCUBEP3M(Nmesh,BoxSize,nfiles,ncells,filepath,redshift)
+# # mesh = ToMeshCUBEP3M.readCUBEP3M(Nmesh,BoxSize,nfiles,ncells,filepath,redshift)
 mesh, _, _ = ToMeshCUBEP3M.readCUBEP3M2(Nmesh,BoxSize,nfiles,ncells,filepath,redshift)
-# mesh = ToMeshCUBEP3M.Mesh_Wake(Nmesh,BoxSize)
+# # mesh = ToMeshCUBEP3M.Mesh_Wake(Nmesh,BoxSize)
+
+
+#%%
+# Input from grid3d Binary files
+
+import sys
+import os
 
 
 
-# # Input from grid3d Binary files
-
-# import sys
-# import os
-
-
-
-# path_analy = os.getcwd() +'/' 
-# sys.path.append(path_analy+'read')
-# import Read_slices
+path_analy = os.getcwd() +'/' 
+sys.path.append(path_analy+'read')
+import Read_slices
 
 
 # From grid3d grid3d Binary files at an angle from folder
@@ -66,6 +63,25 @@ mesh, _, _ = ToMeshCUBEP3M.readCUBEP3M2(Nmesh,BoxSize,nfiles,ncells,filepath,red
 # nfiles = 32
 # depth = 32
 
+
+path_input =  "/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/sample1001/data/1lf_1rf_0-0-0pv_1.5708-0-0ra/2dproj/dm/"
+path_out = "/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48/plots/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/"
+sample = "sample1001"
+
+filepath = path_input
+redshift = '5'
+redshift_ = '5'
+# Nmesh = 48
+Nmesh = [12,48,48]
+BoxSize = 4
+nfiles = 1
+
+mesh2 = Read_slices.read_slices_bin(Nmesh,BoxSize,nfiles,filepath,redshift)
+
+# pos_wake = PIDs.extract_pos_wake(Nmesh_o,nfiles,ncells,filepath,redshift,npart)
+
+
+#%%
 
 # # From grid3d grid3d Binary files at an angle anglid helpix
 
@@ -102,19 +118,104 @@ mesh, _, _ = ToMeshCUBEP3M.readCUBEP3M2(Nmesh,BoxSize,nfiles,ncells,filepath,red
 
 
 
-# # # Plot Projection
 
-# # sys.path.append('/home/asus/Dropbox/Disrael/Work/Research/NBodyWake/production/python/checks/2d')
-# sys.path.append(path_analy+'2d')
-# # sys.path.append('/home/disraelcunha/Dropbox/Disrael/Work/Research/NBodyWake/production/python/checks/2d')
-# import Projection2d
+# path_input =  "/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48_hpx_2d_NSIDE8/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/sample1001/data/1lf_1rf/NSIDE_8/anglid_1/-4-11--24pv_0.10211--0.62099-0.7854ra/2dproj/dm/"
+path_input =  "/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48_hpx_2d_NSIDE8/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/sample1001/data/1lf_1rf/NSIDE_8/anglid_384/14--11-11pv_1.5708-0.84153-3.0434ra/2dproj/dm/"
+sample = "sample1001"
+
+filepath = path_input
+redshift = '5'
+redshift_ = '5'
+# Nmesh = 48
+Nmesh = [12,48,48]
+BoxSize = 4
+nfiles = 1
+
+mesh2 = Read_slices.read_slices_bin(Nmesh,BoxSize,nfiles,filepath,redshift)
+
+
+
+
+#%%
+
+
+# plot the wake particles alongside density contrast
+
+import sys
+import os
+
+
+
+path_analy = os.getcwd() +'/' 
+sys.path.append(path_analy+'read')
+import Read_slices
+
+
+# path_input_bin =  "/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/sample1001/data/1lf_1rf_0-0-0pv_1.5708-0-0ra/2dproj/dm/"
+# path_input_bin =  "/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48_hpx_2d_NSIDE8/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/sample1001/data/1lf_1rf/NSIDE_8/anglid_1/-4-11--24pv_0.10211--0.62099-0.7854ra/2dproj/dm/"
+path_input_bin =  "/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48_hpx_2d_NSIDE8/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/sample1001/data/1lf_1rf/NSIDE_8/anglid_384/14--11-11pv_1.5708-0.84153-3.0434ra/2dproj/dm/"
+# path_input =  "/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48_hpx_2d_NSIDE8/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/sample1001/data/1lf_1rf/NSIDE_8/anglid_1/-4-11--24pv_0.10211--0.62099-0.7854ra/2dproj/dm/"
+
+# extract the pivot and the rotation angles
+pv, ra = Read_slices.extract_pv_ra(path_input_bin)
+
+# extract the position of the wake particles
+
+sys.path.append(path_analy+'wake_disruption')
+import PIDs
+
+path_input = '/home/asus/Dropbox/extras/storage/graham/small_res/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/sample1001/'
+filepath = path_input
+redshift = '5.000'
+redshift_ = '5'
+Nmesh_o = [96,96,96]
+BoxSize = 4
+nfiles = 8
+ncells = 96
+npart = 48
+sample = "sample1001"
+
+pos_wake = PIDs.extract_pos_wake(Nmesh_o,nfiles,ncells,filepath,redshift,npart)
+
+
+nc = ncells
+nup = npart
+resol_factor = 1
+Pos = pos_wake
+pivot = pv
+rot_angle = ra
+
+
+pos_wake_rot = PIDs.rotate_pos_wake(pos_wake, ra, pv, ncells, npart, resol_factor)
+
+pos_wake_rot[:, [1, 2]] = pos_wake_rot[:, [2, 1]]
+
+pos_wake_rot[:, [0, 1, 2]] = pos_wake_rot[:, [1, 0, 2]]
+
+
+#%%
+
+grid_points_wake = PIDs.obtain_wake_grid_points(Nmesh,pos_wake_rot)
+
+PIDs.plot_2d_proj_wake_colInfo3d(mesh2,grid_points_wake,save=None)
+
+
+
+#%%
+
+# # Plot Projection
+
+# sys.path.append('/home/asus/Dropbox/Disrael/Work/Research/NBodyWake/production/python/checks/2d')
+sys.path.append(path_analy+'2d')
+# sys.path.append('/home/disraelcunha/Dropbox/Disrael/Work/Research/NBodyWake/production/python/checks/2d')
+import Projection2d
 
 # # save_plot_2d_proj_fig = path_out+'2dproj_'+sample+'_z'+redshift_+anglid+'.png'
 # # # save_plot_2d_proj_fig = path_out+'2dproj_'+sample+'_z'+redshift_+'.png'
 # Projection2d.plot_2d_proj(mesh)
 # # proj_2d= Projection2d.plot_2d_proj(mesh,save_plot_2d_proj_fig)
 
-
+Projection2d.plot_2d_proj(mesh2)
 
 
 # # # Plot Projection slices
@@ -216,31 +317,70 @@ mesh, _, _ = ToMeshCUBEP3M.readCUBEP3M2(Nmesh,BoxSize,nfiles,ncells,filepath,red
 # Pkmu = powerSpectrum_nbodykit.powerSpectrum2d(mesh,nmu,save_PS2D_filename)
 
 
+#%%
 
-
-# # Obtain the PIDs
-
-# sys.path.append(path_analy+'wake_disruption')
-# import PIDs
+# Obtain the PIDs
 
 
 
-# pos_wake = PIDs.extract_xv_wake(Nmesh,nfiles,ncells,filepath,redshift,npart)
 
 
 
-# # PIDs.plot_2d_proj_wake(mesh,pos_wake,save=None)
+sys.path.append(path_analy+'wake_disruption')
+import PIDs
 
-# PIDs.plot_2d_proj_wake_colInfo(mesh,pos_wake,save=None)
 
 
-# # grid_points_2d = PIDs.obtain_wake_2dgrid_points(mesh,pos_wake)
+pos_wake = PIDs.extract_pos_wake(Nmesh,nfiles,ncells,filepath,redshift,npart)
 
-# grid_points_wake = PIDs.obtain_wake_grid_points(mesh,pos_wake)
+grid_points_wake = PIDs.obtain_wake_grid_points(Nmesh,pos_wake)
+
+PIDs.plot_2d_proj_wake_colInfo3d(mesh,grid_points_wake,save=None)
+
+
+
+
+# PIDs.plot_2d_proj_wake(mesh,pos_wake,save=None)
+
+
+
+
+
+
+
+# grid_points_wake_eachSlice = PIDs.obtain_wake_grid_points_eachslice(Nmesh,pos_wake)
+
+
+# i=11
+# PIDs.plot_2d_slice_wake_colInfo2d(mesh[i,:,:],grid_points_wake_eachSlice[i],save=None)
+
+
+
+
+
+
+
 
 
 
 #%%
+
+# grid_points_wake2 = PIDs.obtain_wake_grid_points(Nmesh,pos_wake)
+
+
+# grid_points_wake3 = PIDs.obtain_wake_grid_points_eachslice(Nmesh,pos_wake)
+# PIDs.plot_2d_proj_wake_colInfo(mesh,pos_wake,save=None)
+# PIDs.plot_2d_proj_wake_colInfo3d(mesh,pos_wake,save=None)
+
+# grid_points_wake_eachSlice = PIDs.obtain_wake_grid_points_eachslice(Nmesh,pos_wake)
+
+#%%
+
+# PIDs.plot_2d_proj_wake_colInfo3d(mesh,grid_points_wake,save=None)
+
+
+# i=11
+# PIDs.plot_2d_slice_wake_colInfo2d(mesh[i,:,:],grid_points_wake_eachSlice[i],save=None)
 
 
 
