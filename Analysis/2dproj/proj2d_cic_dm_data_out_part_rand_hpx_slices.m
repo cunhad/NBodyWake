@@ -5,6 +5,34 @@ function [ count_sum] = proj2d_cic_dm_data_out_part_rand_hpx_slices( root,root_o
 %   (example) [ count_sum] = proj2d_cic_dm_data_out_part_rand_hpx_slices('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data_test2_/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,1,1,1,4,8);
 %   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_cic_dm_data_out_part_rand_nowake('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/data/','64Mpc_1024c_512p_zi63_wakeGmu5t10m6zi63m','/sample0001/','','10.000xv0.dat',1,1,[0,0,0],[0,0],[1,2],64);
 
+% root='/home/asus/Dropbox/extras/storage/graham/small_res/';
+% root_out='/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48_hpx_2d_NSIDE8_tst/';
+% spec='64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m';
+% aux_path='/sample1001/half_lin_cutoff_half_tot_pert_nvpw/';
+% aux_path_out='';
+% filename='63.000xv0.dat';
+% lenght_factor=1;
+% resol_factor=1;
+% data_stream=[11];
+% particl_part=1;
+% numb_angl=1;
+% slice=12;
+% NSIDE=8;
+
+% root='/home/asus/Dropbox/extras/storage/graham/small_res/';
+% root_out='/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48_hpx_2d_NSIDE4_tst/';
+% spec='64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m';
+% aux_path='/sample1001/half_lin_cutoff_half_tot_pert_nvpw/';
+% aux_path_out='';
+% filename='63.000xv0.dat';
+% lenght_factor=1;
+% resol_factor=1;
+% data_stream=[11];
+% particl_part=1;
+% numb_angl=86;
+% slice=12;
+% NSIDE=4;
+
 
 % 
 % root='/home/asus/Dropbox/extras/storage/graham/small_res/';
@@ -347,6 +375,8 @@ for node = 1 : particl_part
             end
         end
     end
+
+
     %     [count edges mid loc] = histcn(Pos,1,cell_bins1d_y,cell_bins1d_z);
     %     count=count(1:1,1:numel(cell_bins1d_y)-1,1:numel(cell_bins1d_z)-1);
     %     %     average=mean2(count);

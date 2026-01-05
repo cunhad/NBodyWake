@@ -1,4 +1,7 @@
 function [  ] = curve_2d_from_2d_slices_anali_all(  )
+
+%clearvars
+
 % 
 % root='/home/asus/Dropbox/extras/storage/graham/ht/';
 % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurv_s5lv2_anali/';
@@ -7,14 +10,15 @@ function [  ] = curve_2d_from_2d_slices_anali_all(  )
 % 
 
 root='/home/asus/Dropbox/extras/storage/graham/ht/';
-root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dclar_l2lr1na256_anali/';
+root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_2dclara_l1lr1na128_anali/';
+% root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dclar_l2lr1na256_anali/';
 % root_anali_2d_in='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcr0_l2lr1ap256_anali/';
 %root_anali_2d_out='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurv_s5lv2_anali_all/';
 %root_visual_2d='/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_1024_2dcurv_s5lv2_visual_all/';
 
 filename='3.000xv0.dat';
 lenght_factor=1;
-resol_factor=1;
+resol_factor=0.5;
 pivot=[0,0,0];
 rot_angle=[1.5708,0,0];
 slices=32;
@@ -28,6 +32,12 @@ sum_depth=4;
 % snapshot=[9,29]*(128/32);
 % visual_type=[1:2]; %if 1, shows the 2d proj; if 2 shows the ridgelet transformation
 %  visual_in_or_out=[1,2]; %if 1 do visualization of the input, if 2 of the output
+
+nowake_samples_ids=[11:110];
+wake_samples_ids=[11:110];
+% nowake_samples_ids=[1:10];
+% wake_samples_ids=[1:10];
+
 
 addpath('../../../../processing');
 % addpath('../../../../preprocessing');
@@ -51,14 +61,16 @@ display(specs_list);
 spec_nowake=specs_nowake{1};
 path_samples_in=strcat(root_anali_2d_in,spec_nowake);
 sample_list=dir(strcat(path_samples_in,'/sample*'));
+sample_list=sample_list(nowake_samples_ids);
 sample_list=strcat('/',{sample_list.name},'/');
 sample_list_nowake=sort_nat(sample_list)
 
 spec_wake=specs_wake{1};
 path_samples_in=strcat(root_anali_2d_in,spec_wake);
 sample_list=dir(strcat(path_samples_in,'/sample*'));
+sample_list=sample_list(wake_samples_ids);
 sample_list_short=strcat('/',{sample_list.name},'/');
-sample_list=strcat('/',{sample_list.name},'/half_lin_cutoff_half_tot_pert_nvpw/');
+sample_list=strcat('/',{sample_list.name},'/half_lin_cutoff_half_tot_pert_nvpw_v0p6/');
 sample_list_wake=sort_nat(sample_list)
 sample_list_wake_short=sort_nat(sample_list_short);
 
@@ -126,7 +138,9 @@ end
 
 cd('../../../../preprocessing')
 % [xv_files_list,redshift_list,nodes_list,size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw] = preprocessing_info(root,spec,sample_list_wake{1} );
-[~,redshift_list,~,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec_wake,sample_list_wake_short{1} );
+% [~,redshift_list,~,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec_wake,sample_list_wake_short{1} );
+[~,redshift_list,~,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec_wake,sample_list_wake{1} );
+
 
 z_string=char(filename);
 z_string=z_string(1:end-7);
@@ -140,13 +154,16 @@ for w_nw=1:2
     
     if w_nw==1
         % [xv_files_list,redshift_list,nodes_list,size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw] = preprocessing_info(root,spec,sample_list_wake{1} );
-        [~,redshift_list,~,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec_nowake,sample_list_nowake{1} );
+%         [~,redshift_list,~,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec_nowake,sample_list_nowake{1} );
+        redshift_list={'3.000'};
         spec=specs_nowake{1};
         sample_list=sample_list_nowake;
         coul='b';
     else
         % [xv_files_list,redshift_list,nodes_list,size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw] = preprocessing_info(root,spec,sample_list_wake{1} );
-        [~,redshift_list,~,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec_wake,sample_list_wake{1} );
+%         [~,redshift_list,~,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec_wake,sample_list_wake{1} );
+%         redshift_list={'10.000','5.000','4.000','3.000'};      
+        redshift_list={'3.000'};      
         spec=specs_wake{1};
         sample_list=sample_list_wake;
         coul='r';
@@ -307,8 +324,8 @@ if ~ismember(1,sum_depth)
     
 end
 
-nowake=reshape(permute(anali(1,1:length(sample_list_nowake),:,4,1),[1,3,2,4,5]),[1,numel(anali(1,1:length(sample_list_nowake),:,2,1))])
-wake=reshape(permute(anali(2,1:length(sample_list_wake),:,4,1),[1,3,2,4,5]),[1,numel(anali(1,1:length(sample_list_wake),:,2,1))])
+nowake=reshape(permute(anali(1,1:length(sample_list_nowake),:,4,3),[1,3,2,4,5]),[1,numel(anali(1,1:length(sample_list_nowake),:,2,1))])
+wake=reshape(permute(anali(2,1:length(sample_list_wake),:,4,3),[1,3,2,4,5]),[1,numel(anali(1,1:length(sample_list_wake),:,2,1))])
 mean_wake=mean(wake)
 mean_nowake=mean(nowake)
 std_nowake=std(nowake,1)
@@ -321,8 +338,10 @@ wake_slices = reshape(wake,[slices,length(sample_list_wake)])'
 nowake_slices = reshape(nowake,[slices,length(sample_list_nowake)])'
 max_wake_slices_=sort(wake_slices')
 max_nowake_slices_=sort(nowake_slices')
-max_wake_slices=max_wake_slices_(end,:)
-max_nowake_slices=max_nowake_slices_(end,:)
+max_wake_slices=sum(max_wake_slices_)
+max_nowake_slices=sum(max_nowake_slices_)
+% max_wake_slices=max_wake_slices_(end,:)
+% max_nowake_slices=max_nowake_slices_(end,:)
 mean_wake=mean(max_wake_slices)
 mean_nowake=mean(max_nowake_slices)
 std_wake=std(max_wake_slices,1)
@@ -334,8 +353,9 @@ std_stn=std(stn_wake,1)
 stn=mean_stn-std_stn
 significance=abs(mean_wake-mean_nowake)/(std_wake+std_nowake)
 % 
-% nowake=reshape(permute(anali_depth(1,1:length(sample_list_nowake),:,4,1),[1,3,2,4,5]),[1,numel(anali_depth(1,1:length(sample_list_nowake),:,2,1))])
-% wake=reshape(permute(anali_depth(2,1:length(sample_list_wake),:,4,1),[1,3,2,4,5]),[1,numel(anali_depth(1,1:length(sample_list_wake),:,2,1))])
+
+% nowake=reshape(permute(anali_depth(1,1:length(sample_list_nowake),:,4,3),[1,3,2,4,5]),[1,numel(anali_depth(1,1:length(sample_list_nowake),:,2,1))])
+% wake=reshape(permute(anali_depth(2,1:length(sample_list_wake),:,4,3),[1,3,2,4,5]),[1,numel(anali_depth(1,1:length(sample_list_wake),:,2,1))])
 % mean_wake=mean(wake)
 % mean_nowake=mean(nowake)
 % std_nowake=std(nowake,1)
@@ -348,8 +368,10 @@ significance=abs(mean_wake-mean_nowake)/(std_wake+std_nowake)
 % nowake_slices = reshape(nowake,[slices/sum_depth,length(sample_list_nowake)])'
 % max_wake_slices_=sort(wake_slices')
 % max_nowake_slices_=sort(nowake_slices')
-% max_wake_slices=max_wake_slices_(end,:)
-% max_nowake_slices=max_nowake_slices_(end,:)
+% max_wake_slices=sum(max_wake_slices_)
+% max_nowake_slices=sum(max_nowake_slices_)
+% % max_wake_slices=max_wake_slices_(end,:)
+% % max_nowake_slices=max_nowake_slices_(end,:)
 % mean_wake=mean(max_wake_slices)
 % mean_nowake=mean(max_nowake_slices)
 % std_wake=std(max_wake_slices,1)

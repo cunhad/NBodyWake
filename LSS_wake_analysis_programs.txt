@@ -54,10 +54,18 @@ LSS_wake_analysis_programs
 	run_cupep3m_a_1cpu_types_hr_clara_2a3dpartition_rand_hpx_slices_data_anali_visual_out_from_2d_slices_out_dev2_CanRid	(with ridgelet instead - the own made radon transformation)	
 	
 	data out = data_cps32_512_hpxNSIDE4_2dclaral1lr1na1024_and_3dparclaral1lr1_anali
+	data out_txt_onlyWakeignal: data_cps32_512_hpxNSIDE4_stat_2dc1l1_3dc1l1
 
 - analysis Python (ps, hist)
 	
 	python/nbodykit-env/script_analysis.sub
+	
+- void analysis
+	
+	python/nbodykit-env/python_analysis_Void_exp.sub
+	
+	path_out=/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512_hpx_2d_NSIDE4_stat/void/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/
+	
 
 - Ai figure generation
 
@@ -140,12 +148,16 @@ LSS_wake_analysis_programs
 - produce 2d slices at various hpx angles	
 
 	Analysis/2dproj/proj2d_cic_dm_data_out_part_rand_hpx_slices
+	Analysis/2dproj/proj2d_cic_dm_data_out_part_rand_hpx_slices_out
 	Analysis/2dproj/proj2d_cic_dm_data_out_part_rand_wake_slices
 
 - produce 3d curve filtered maps (using locangreal_atg method) from 2d slices at various hpx angles		
 
 	Analysis/wake_detection/slices_curv_2d/slices_curv_2a3d_locangreala_inf (and Rid_inf for Ridgelet analysis )
+	Analysis/wake_detection/slices_curv_2d/slices_curv_2a3d_locangreala_inf_out (one file for each sample)	
 	Analysis/wake_detection/slices_curv_2d/slices_curv_2a3d_locangrealaRid_inf  (this uses the own-made radon 3d fast transformation)
+	
+	data out_txt_onlyWakeignal: data_cps32_512_hpxNSIDE4_stat_2dc1l1_3dc1l1
 
 - generate summary analysis for 3d curve filtered maps (using locangreal_atg method) at various hpx angles, each simulation
 
@@ -166,6 +178,10 @@ LSS_wake_analysis_programs
 - analysis Python (ps, hist)
 
 	python/checks/Analysis_terminal.py
+	
+- void analysis
+
+	preprocessing/VoidRegions.py
 
 - AI - Generate labels for each slice
 	

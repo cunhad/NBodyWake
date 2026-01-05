@@ -2,8 +2,16 @@ function [  ] = wake_insertion_types( path,spec,aux_path ,z_insert,Gmu_insert,ty
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
 
-%(example ) wake_insertion_types('/home/asus/Dropbox/extras/storage/graham/small_res/','64Mpc_96c_48p_zi255_nowakem','/sample1001/',10,6E-6,1,half_lin_cutoff_half_tot_pert_nvpwh);
 
+% wake_insertion_types('/home/asus/Dropbox/extras/storage/graham/small_res/','64Mpc_96c_48p_zi255_nowakem','/sample1001/',63,5E-5,8,'half_lin_cutoff_half_tot_pert_nvpw/');
+% 
+% path = '/home/asus/Dropbox/extras/storage/graham/small_res/'
+% spec = '64Mpc_96c_48p_zi255_nowakem'
+% aux_path = '/sample1001/'
+% z_insert = 63
+% Gmu_insert = 5E-5
+% type = 8
+% type_folder = 'half_lin_cutoff_half_tot_pert_nvpw/'
 
 %
 %hard: only particles that were intially within one cell receive will not receive velocity kick,

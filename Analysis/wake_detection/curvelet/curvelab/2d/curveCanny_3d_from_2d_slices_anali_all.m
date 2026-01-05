@@ -48,8 +48,11 @@ root='/home/asus/Dropbox/extras/storage/graham/ht/';
 % nowake_samples_ids=[11:60];
 % wake_samples_ids=[11:60];
 
-nowake_samples_ids=[1:10];
-wake_samples_ids=[1:10];
+% nowake_samples_ids=[1:10];
+% wake_samples_ids=[1:10];
+
+nowake_samples_ids=[11:110];
+wake_samples_ids=[11:110];
 
 
 % wake_samples_ids=[1:10];
@@ -205,14 +208,17 @@ for w_nw=1:2
     
     if w_nw==1
         % [xv_files_list,redshift_list,nodes_list,size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw] = preprocessing_info(root,spec,sample_list_wake{1} );
-        [~,redshift_list,~,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec_nowake,sample_list_nowake{1} );
+%         [~,redshift_list,~,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec_nowake,sample_list_nowake{1} );
+        redshift_list={'3.000'};
         spec=specs_nowake{1};
         sample_list=sample_list_nowake;
         coul='b';
     else
         display(strcat(root,spec_wake,sample_list_wake{1} ))
         % [xv_files_list,redshift_list,nodes_list,size_box,nc,np,zi,wake_or_no_wake,multiplicity_of_files,Gmu,ziw] = preprocessing_info(root,spec,sample_list_wake{1} );
-        [~,redshift_list,~,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec_wake,sample_list_wake{1} );
+%         [~,redshift_list,~,~,~,~,~,~,~,~,~] = preprocessing_info(root,spec_wake,sample_list_wake{1} );
+%         redshift_list={'10.000','5.000','4.000','3.000'};      
+        redshift_list={'3.000'};
         spec=specs_wake{1};
         sample_list=sample_list_wake;
         coul='r';

@@ -1,0 +1,32 @@
+
+
+
+
+
+
+do 3d NN analisis
+
+
+-> no comp
+
+export PATH="/home/asus/anaconda3/bin:$PATH"
+source activate nbodykit-env
+
+
+
+-> void characterization
+
+do the analisis for 512³
+
+
+-> wake signal
+
+explore 
+
+
+
+-> ai analisis
+
+use disra signal for now 
+
+compare figs with bins

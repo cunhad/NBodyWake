@@ -5,15 +5,15 @@ function [ count_sum] = proj2d_cic_dm_data_out_part_slice( root,root_out,spec,au
 %   (example) [ count_sum] = proj2d_cic_dm_data_out_part_slice('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,[0,0,0],[0,0,0],[1,2],64,4);
 %   (example) [ cell_bins1d_y,cell_bins1d_z,count_sum] = proj2d_cic_dm_data_out_part_slice('/home/asus/Dropbox/extras/storage/guillimin/','/home/asus/Dropbox/extras/storage/guillimin/data/','64Mpc_1024c_512p_zi63_wakeGmu1t10m7zi31m','/sample0001/','','10.000xv0.dat',1,1,[0,0,0],[0,0],[1,2],64,4);
 
-
+% 
 % root = '/home/asus/Dropbox/extras/storage/graham/small_res/'
 % root_out = '/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48/'
 % spec = '64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m'
-% aux_path = '/sample1001/'
+% aux_path = '/sample1001/half_lin_cutoff_half_tot_pert_nvpw/'
 % aux_path_out = ''
 % filename = '5.000xv0.dat'
 % lenght_factor = 1
-% resol_factor = 0.5
+% resol_factor = 1
 % pivot = [0,0,0]
 % rot_angle = [pi/2,0,0]
 % data_stream = [11]

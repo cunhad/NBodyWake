@@ -1,4 +1,4 @@
-function [  ] = claraCanny_3dpart_data_anali_out_from_2d_clocangreal_atg_out( root,root_data_2d_in,root_data_2d_out,root_anali_2d_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,slices,lev_3d,lev_3drig,sigma,step_of_degree,wavel_removal_factor,snapshot,visual_type,visual_in_or_out,partition2d,partition3rd,sum_depth)
+function [  ] = claraCanny_3dpart_data_anali_out_from_2d_clocangreal_atg_out( root,root_data_2d_in,root_data_2d_out,root_anali_2d_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,slices,lev_3d,lev_3drig,sigma,step_of_degree,wavel_removal_factor,snapshot,visual_type,visual_in_or_out,partition2d,partition3rd,sum_depth,data_stream_in)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 % 
@@ -278,8 +278,8 @@ map_3d_slices=zeros(nb,nb,slices);
 map_3d_slices_filt3d=zeros(nb,nb,slices);
 map_3d_slices_filtCanny3d=zeros(nb,nb,slices);
 
-
-for slice_id=1:slices
+if data_stream_in == 1
+    for slice_id=1:slices
     
     
     
@@ -295,6 +295,21 @@ for slice_id=1:slices
     
     map_3d_slices(:,:,slice_id)=map;
     
+    end
+end
+
+if data_stream_in == 11
+%     filename_read_path=strcat(strcat(root_data_2d_in,spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/',filename_read,num2str(slice_id),'.bin')
+%                                                                                                                                                                                                                                                                                                   fileID = fopen(strcat(path_data_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_data_slAll.bin'),'w');
+
+    filename_2d=string(strcat(strcat(root_data_2d_in,spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_data_slAll.bin'))
+    fid = fopen(filename_2d);
+    map = fread(fid,nb*nb*slices, 'float32','l') ;
+    map = reshape(map,nb,nb,slices);
+    fclose(fid);
+    
+
+    map_3d_slices=map;
     
 end
 

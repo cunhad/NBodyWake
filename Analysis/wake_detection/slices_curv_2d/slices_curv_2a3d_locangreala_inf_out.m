@@ -1,4 +1,4 @@
-function [ map,anali ] = slices_curv_2a3d_locangreala_inf( root,root_data_2d_in,root_data_2d_out,root_data_2d_anali_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,numb_rand,slices,lev,lev_2drid,lev_3d,lev_3drid,step_of_degree,wavel_removal_factor,NSIDE,partition2d,partition3rd,sum_depth,snapshot,visual_type,visual_in_or_out,stage,data_stream_in)
+function [ map,anali ] = slices_curv_2a3d_locangreala_inf_out( root,root_data_2d_in,root_data_2d_out,root_data_2d_anali_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,numb_rand,slices,lev,lev_2drid,lev_3d,lev_3drid,step_of_degree,wavel_removal_factor,NSIDE,partition2d,partition3rd,sum_depth,snapshot,visual_type,visual_in_or_out,stage,data_stream_in)
 
 % (example) [ map ] = slices_curv_2d('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data_test2/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,8,4,8,2,5 );
 
@@ -7,6 +7,38 @@ function [ map,anali ] = slices_curv_2a3d_locangreala_inf( root,root_data_2d_in,
 %(example) for i=1:24; [ map ,anali] = slices_curv_2a3d('/home/asus/Dropbox/extras/storage/graham/small_res/','/home/asus/Dropbox/extras/storage/graham/small_res/data_test2/','/home/asus/Dropbox/extras/storage/graham/small_res/anali/','64Mpc_256c_128p_zi63_nowakem','/sample2001/','','10.000xv0.dat',1,1,i,2,2,2,5 ); end;
 %  
 % % 
+
+% root = '/home/asus/Dropbox/extras/storage/graham/small_res/';
+% root_data_2d_in = '/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48_hpx_2d_NSIDE4/';
+% % root_data_2d_out = '/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48_hpx_2d_NSIDE4_data/';
+% root_data_2d_out = '';
+% root_data_2d_anali_out = '/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48_hpx_2d_NSIDE4_stat/';
+% root_visual_2d = '';
+% spec = '64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m';
+% aux_path = '/sample1001/half_lin_cutoff_half_tot_pert_nvpw/';
+% aux_path_out = '';
+% filename = '63.000xv0.dat';
+% lenght_factor = 1;
+% resol_factor = 1;
+% numb_rand = 86;
+% slices = 12;
+% lev = 1;
+% lev_2drid = 1;
+% lev_3d = 1;
+% lev_3drid = 1 ;
+% step_of_degree = 1*(180/256);
+% wavel_removal_factor = 1/2;
+% NSIDE = 4;
+% partition2d = 1;
+% partition3rd = 1;
+% sum_depth = 4;
+% snapshot = [];
+% visual_type = [1:5];
+% visual_in_or_out = [1:3];
+% stage = [3];
+% data_stream_in = 11
+
+
 % root='/home/asus/Dropbox/extras/storage/graham/small_res/';
 % root_data_2d_in='/home/asus/Dropbox/extras/storage/graham/small_res/data_test3/';
 % root_data_2d_out='/home/asus/Dropbox/extras/storage/graham/small_res/data3/';
@@ -86,7 +118,7 @@ function [ map,anali ] = slices_curv_2a3d_locangreala_inf( root,root_data_2d_in,
 %                             %1 with minimal information
 %                             %2 with some information
 %                             %3 for maximal information
-% data_stream_in=11               #1 for slices, 11 for whole                           
+                           
 
 %%%%Problems
 
@@ -94,14 +126,14 @@ function [ map,anali ] = slices_curv_2a3d_locangreala_inf( root,root_data_2d_in,
 
 % 
 % 
-% addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_cpp/mex/'));
-% addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_matlab'));
-% addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct3d'));
+addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_cpp/mex/'));
+addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_matlab'));
+addpath(genpath('/home/asus/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct3d'));
 
-% % 
- addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_cpp/mex/'));
- addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_matlab'));
- addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct3d'));
+% % % 
+%  addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_cpp/mex/'));
+%  addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct_wrapping_matlab'));
+%  addpath(genpath('/home/cunhad/projects/rrg-rhb/cunhad/Programs/CurveLab_matlab_3d-0.1-2.1.3/fdct3d'));
 
 
 cd('../../preprocessing');
@@ -177,8 +209,8 @@ if ~ismember(1,sum_depth)
     anali2a3_curv_depth=zeros(slices/sum_depth,5,lev);
 end
 
-mkdir(root_data_2d_anali_out);
-mkdir(root_data_2d_anali_out,strcat(spec,aux_path));
+% mkdir(root_data_2d_anali_out);
+% mkdir(root_data_2d_anali_out,strcat(spec,aux_path));
 
 
 path1=strcat(root_data_2d_in,spec,aux_path,'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/');
@@ -191,9 +223,17 @@ path3='/2dproj/dm/';
 
 %making path to analisis out
 
-path_data_2d_anali_out=string(strcat(strcat(root_data_2d_anali_out,spec,aux_path),'data_2d_filt_slices/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'));
-mkdir(char(strcat(root_data_2d_anali_out,spec,aux_path)),char(strcat('data_2d_filt_slices/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/')));
+% path_data_2d_anali_out=string(strcat(strcat(root_data_2d_anali_out,spec,aux_path),'data_2d_filt_slices/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/'));
+% mkdir(char(strcat(root_data_2d_anali_out,spec,aux_path)),char(strcat('data_2d_filt_slices/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf','/NSIDE_',num2str(NSIDE),'/anglid_',num2str(numb_rand),'/',path2,'/2dproj/dm/')));
 
+
+pattern = '\/(sample\d+)\/';  % Looks for 'sample' followed by one or more digits, enclosed by slashes
+% Apply the regular expression
+matches = regexp(aux_path, pattern, 'tokens');
+sample_part = matches{1}{1};  % Get the first match
+
+path_data_2d_anali_out_simple = string(strcat(strcat(root_data_2d_anali_out,spec),'/'));
+mkdir(char(strcat(path_data_2d_anali_out_simple)));
 %making path to data out
 
 if ~isempty(root_data_2d_out)
@@ -754,10 +794,23 @@ for slice_id=1:slices
     
 end
 
-dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali.txt'),anali,'delimiter','\t');
-dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali_kurt.txt'),anali_curv,'delimiter','\t');
+% dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali.txt'),anali,'delimiter','\t');
+% dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali_kurt.txt'),anali_curv,'delimiter','\t');
+
+% dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali.txt'),anali,'delimiter','\t');
 
 
+
+
+
+
+% Now write to the output file as per your original code
+output_file = strcat(path_data_2d_anali_out_simple, sample_part, '_2ds4t3_curv_z', num2str(z_glob), '_stat.txt');
+write_to_file(output_file, anali(:,4,3), numb_rand);
+
+
+
+% write_to_file(strcat(path_data_2d_anali_out_simple,sample_part,'_2ds4t3_curv_z',num2str(z_glob),'_stat.txt'), anali(:,4,3), numb_rand);
 
 % now we do the depth analysis of the in and 2dfilter types
 
@@ -932,8 +985,8 @@ if ~ismember(1,sum_depth)
         anali_curv_depth(slice_id,5,:)=curv2_5_depth;
     end
 
-    dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali_depth',num2str(sum_depth),'.txt'),anali_depth,'delimiter','\t');
-    dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali_kurt_depth',num2str(sum_depth),'.txt'),anali_curv_depth,'delimiter','\t');
+%     dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali_depth',num2str(sum_depth),'.txt'),anali_depth,'delimiter','\t');
+%     dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali_kurt_depth',num2str(sum_depth),'.txt'),anali_curv_depth,'delimiter','\t');
     
 end
 
@@ -1102,7 +1155,7 @@ if ismember(3,stage)
     anali3_curv(5,:)=anali3_curv5;
     
     
-    dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali3_kurt.txt'),anali3_curv,'delimiter','\t');
+%     dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali3_kurt.txt'),anali3_curv,'delimiter','\t');
     
     
     %now the analysis of the 3d filtered slices
@@ -1269,8 +1322,8 @@ if ismember(3,stage)
         
     end
     
-    dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3.txt'),anali2a3,'delimiter','\t');
-    dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3_kurt.txt'),anali2a3_curv,'delimiter','\t');
+%     dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3.txt'),anali2a3,'delimiter','\t');
+%     dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3_kurt.txt'),anali2a3_curv,'delimiter','\t');
     
     
     % now we do the depth analysis
@@ -1445,8 +1498,11 @@ if ismember(3,stage)
             anali2a3_curv_depth(slice_id,5,:)=curv2a3_5_depth;
         end
         
-        dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3_depth',num2str(sum_depth),'.txt'),anali2a3_depth,'delimiter','\t');
-        dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3_kurt_depth',num2str(sum_depth),'.txt'),anali2a3_curv_depth,'delimiter','\t');
+%         dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3_depth',num2str(sum_depth),'.txt'),anali2a3_depth,'delimiter','\t');
+%         dlmwrite(strcat(path_data_2d_anali_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_anali2a3_kurt_depth',num2str(sum_depth),'.txt'),anali2a3_curv_depth,'delimiter','\t');
+        write_to_file(strcat(path_data_2d_anali_out_simple,sample_part,'_2ds4t3dp_curv_z',num2str(z_glob),'_stat.txt'), anali2a3_depth(:,4,3), numb_rand);
+
+
     end
 end
 
@@ -1666,3 +1722,126 @@ cd('../wake_detection/slices_curv_2d/');
 
 end
 
+
+
+
+% 
+% function write_to_file(filename, anali, l)
+%     % Convert array to tab-delimited string
+%     data_str = sprintf('%g\t', anali); % Using '%g' for general number formatting
+%     data_str = data_str(1:end-1);  % Remove the last tab character
+%     
+%     % Create label "sampleX" where X is the line number
+%     label = strcat("sample", num2str(l));
+%     
+%     % Combine label and data string with a tab in between
+%     full_line = strcat(label, '\t', data_str);
+%     
+%     % Create a lock file to ensure only one process writes at a time
+%     lockfile = [filename, '.lock'];
+%     
+%     % Wait until lockfile is available
+%     while exist(lockfile, 'file')
+%         pause(0.1); % Wait for a short time before checking again
+%     end
+% 
+%     
+%     
+%     % Create the lock file to indicate the file is in use
+%     fid = fopen(lockfile, 'w');
+%     fclose(fid);
+%     
+%     % Check if the file exists, if not, create it
+%     if ~exist(filename, 'file')
+%         fid = fopen(filename, 'w');
+%         fclose(fid);
+%     end
+%     
+%     % Read the existing file content
+%     fid = fopen(filename, 'r');
+%     lines = {};
+%     tline = fgetl(fid);
+%     while ischar(tline)
+%         lines{end+1} = tline;
+%         tline = fgetl(fid);
+%     end
+%     fclose(fid);
+%     
+%     % Ensure the file has at least 'l' lines, add empty lines if necessary
+%     while length(lines) < l
+%         lines{end+1} = '';
+%     end
+%     
+%     % Replace the content of the 'l'th line with the new data and label
+%     lines{l} = data_str;
+% %     lines{l} = full_line;
+%     
+%     % Write the modified content back to the file, using tab delimiter
+%     fid = fopen(filename, 'w');
+%     for i = 1:length(lines)
+%         fprintf(fid, '%s\n', lines{i});
+%     end
+%     fclose(fid);
+%     
+%     % Remove the lock file after writing is done
+%     delete(lockfile);
+% end
+
+function write_to_file(filename, anali, l)
+    % Convert array to tab-delimited string
+    data_str = sprintf('%g\t', anali); % Using '%g' for general number formatting
+    data_str = data_str(1:end-1);  % Remove the last tab character
+    
+%     % Create label "sampleX" where X is the line number
+%     label = strcat("sample", num2str(l));
+%     
+%     % Combine label and data string with a tab in between
+%     full_line = strcat(label, '\t', data_str);
+    
+    % Create a lock file to ensure only one process writes at a time
+    lockfile = char(strcat(filename, '.lock'));  % Ensure lockfile is a valid character array
+    
+    % Wait until lockfile is available
+    while exist(lockfile, 'file') == 2
+        pause(0.1); % Wait for a short time before checking again
+    end
+    
+    % Create the lock file to indicate the file is in use
+    fid = fopen(lockfile, 'w');
+    fclose(fid);
+    
+    % Check if the file exists, if not, create it
+    if ~exist(filename, 'file')
+        fid = fopen(filename, 'w');
+        fclose(fid);
+    end
+    
+    % Read the existing file content
+    fid = fopen(filename, 'r');
+    lines = {};
+    tline = fgetl(fid);
+    while ischar(tline)
+        lines{end+1} = tline;
+        tline = fgetl(fid);
+    end
+    fclose(fid);
+    
+    % Ensure the file has at least 'l' lines, add empty lines if necessary
+    while length(lines) < l
+        lines{end+1} = '';
+    end
+    
+    % Replace the content of the 'l'th line with the new data and label
+      lines{l} = data_str;
+%     lines{l} = full_line;  % Insert the full line with the label and data
+    
+    % Write the modified content back to the file, using tab delimiter
+    fid = fopen(filename, 'w');
+    for i = 1:length(lines)
+        fprintf(fid, '%s\n', lines{i});
+    end
+    fclose(fid);
+    
+    % Remove the lock file after writing is done
+    delete(lockfile);
+end

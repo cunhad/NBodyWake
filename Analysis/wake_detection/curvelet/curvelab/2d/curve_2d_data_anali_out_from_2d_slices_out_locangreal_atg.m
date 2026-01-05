@@ -1,4 +1,4 @@
-function [  ] = curve_2d_data_anali_out_from_2d_slices_out_locangreal_atg( root,root_data_2d_in,root_data_2d_out,root_anali_2d_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,slices,lev,lev_rid,sigma,step_of_degree,wavel_removal_factor,snapshot,visual_type,visual_in_or_out,sum_depth)
+function [  ] = curve_2d_data_anali_out_from_2d_slices_out_locangreal_atg( root,root_data_2d_in,root_data_2d_out,root_anali_2d_out,root_visual_2d,spec,aux_path,aux_path_out,filename,lenght_factor,resol_factor,pivot,rot_angle,slices,lev,lev_rid,sigma,step_of_degree,wavel_removal_factor,snapshot,visual_type,visual_in_or_out,sum_depth, data_stream_in, data_stream_out)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 % 
@@ -31,7 +31,7 @@ function [  ] = curve_2d_data_anali_out_from_2d_slices_out_locangreal_atg( root,
 % visual_in_or_out=[1,2]; %if 1 do visualization of the input, if 2 of the output
 % %  sum_depth=1;
 % sum_depth=4;
-
+% data_stream_in
 
 % filename_read_path=_2dproj_z3_data_sl;
 % 
@@ -225,7 +225,9 @@ map_3d_slices_pre=zeros(nb,nb,slices);
 map_2d_slices_depth=zeros(nb,nb);
 map_2d_slices_filt2d_depth=zeros(nb,nb);
 
-for slice_id=1:slices
+
+if data_stream_in == 1
+    for slice_id=1:slices
     
     
     
@@ -242,8 +244,26 @@ for slice_id=1:slices
 
 %                 map_3d_slices(:,:,slice_id)=log(map+1);
             map_3d_slices_pre(:,:,slice_id)=map;
-
+    end
 end
+
+
+if data_stream_in == 11
+
+    filename_2d=string(strcat(strcat(root_data_2d_in,spec,aux_path),'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/','_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_slAll.bin'))
+    fid = fopen(filename_2d);
+    map = fread(fid,nb*nb*slices, 'float32','l') ;
+    map = reshape(map,nb,nb,slices);
+    fclose(fid);
+    
+    %     map2=map;
+    %     map(map<=1)=1;%to remove problem with holes
+    %     map_3d_slices(:,:,slice_id)=log(map);
+    map_3d_slices_pre=map;
+    
+end
+
+map_3d_slices_filt3d=zeros(nb,nb,slices);
 
 for slice_id=1:slices
     
@@ -516,7 +536,7 @@ for slice_id=1:slices
     
     map_3d_slices_filt2d = real(ifdct_wrapping(Ct2,0));
     
-    
+    map_3d_slices_filt3d(:,:,slice_id) = map_3d_slices_filt2d;
     %     strcat(root_data_2d_in,'data/',aux_path_out,num2str(lenght_factor),'lf_',num2str(resol_factor),'rf_',strcat(num2str(pivot(1)),'-',num2str(pivot(2)),'-',num2str(pivot(3))),'pv_',strcat(num2str(rot_angle(1)),'-',num2str(rot_angle(2)),'-',num2str(rot_angle(3))),'ra','/','2dproj/dm/',filename_read,num2str(slice_id),'.bin')
     
     
@@ -649,7 +669,7 @@ for slice_id=1:slices
     
     % dlmwrite(strcat(path_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_z',num2str(z_glob),'_data_curv_sl',num2str(count_slice),'.txt'),anali,'delimiter','\t');
     
-    if ~isempty(root_data_2d_out)
+    if ~isempty(root_data_2d_out) & (data_stream_out == 1)
         
         fileID = fopen(strcat(path_data_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_data_sl',num2str(slice_id),'.bin'),'w');
         fwrite(fileID,map_3d_slices_filt2d, 'float32','l');
@@ -1021,6 +1041,18 @@ for slice_id=1:slices
         
     end
     
+end
+
+if (data_stream_out == 11)
+
+%      fileID = fopen(strcat(path_data_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_data_sl',num2str(slice_id),'.bin'),'w');
+%         fwrite(fileID,map_3d_slices_filt2d, 'float32','l');
+%         fclose(fileID);
+    
+%     fileID = fopen(strcat(path_data_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_data_sl',num2str(slice_id),'.bin'),'w');
+    fileID = fopen(strcat(path_data_out,'_',num2str(find(str2num(char(redshift_list))==z_glob)),'_2dproj_curv_z',num2str(z_glob),'_data_slAll.bin'),'w');
+    fwrite(fileID,map_3d_slices_filt3d, 'float32','l');
+    fclose(fileID);
 end
 
 if ~ismember(1,sum_depth)
