@@ -15,8 +15,8 @@ import numpy as np
 path = "/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_stat_2dc1l1_3dc1l1/"
 wake_spec = ["4Mpc_2048c_1024p_zi63_nowakem/","4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/"]
 
-# rang=range(3001,3010+1)
-rang=range(5001,5100+1)
+rang=range(3001,3010+1)
+# rang=range(5001,5100+1)
 
 
 n_angle = 96
@@ -184,5 +184,42 @@ plt.title('Histogram of 3D Array Values wake no wake Diff')
 plt.show()
 
 
+#%%
 
+
+# max_value = np.max(all_data_wake)
+# max_index_flat = np.argmax(all_data_wake)
+# max_indices = np.unravel_index(max_index_flat, all_data_wake.shape)
+
+# flat = all_data_wake.ravel()
+# flat = flat[~np.isnan(flat)]
+
+# top2 = np.partition(flat, -2)[-2:]
+# second_max = top2.min()
+
+# print the k highest
+k = 200
+# threshold = 3
+threshold = np.inf
+
+flat = all_data_wake.ravel()
+# flat = all_data_nowake.ravel()
+# flat = all_data_difference.ravel()
+# Mask invalid values
+mask = (~np.isnan(flat)) & (flat < threshold)
+if np.count_nonzero(mask) < k:
+        raise ValueError("Not enough values below threshold to extract top-k.")
+flat_masked = np.where(mask, flat, -np.inf)
+
+# # Handle NaNs
+# flat_clean = np.where(np.isnan(flat), -np.inf, flat)
+
+idxs = np.argpartition(flat_masked, -k)[-k:]
+idxs = idxs[np.argsort(flat_masked[idxs])[::-1]]
+
+values = flat_masked[idxs]
+indices = [np.unravel_index(i, all_data_wake.shape) for i in idxs]
+
+print(values)
+print(indices)
         

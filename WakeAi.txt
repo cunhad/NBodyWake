@@ -1,16 +1,66 @@
 
 
 
+python -u ./preprocessing/VoidRegions.py --folderpath=$folderpath --sample=sample"$sample_number" --path_out=$path_out --sampleC="$sampleC" --nfiles=1 --Nmesh=$Nmesh --Nside="$Nside" --rangeAng="$rangeAng"
 
+
+filepath =  "/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/sample1001/half_lin_cutoff_half_tot_pert_nvpw/data/1lf_1rf_0-0-0pv_1.5708-0-0ra/2dproj/dm/"
+# filepath =  "/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48_hpx_2d_NSIDE8/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/sample1001/data/1lf_1rf/NSIDE_8/anglid_384/14--11-11pv_1.5708-0.84153-3.0434ra/2dproj/dm/"
+# filepath =  '/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48_hpx_2d_NSIDE8/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/sample1001/data/1lf_1rf/NSIDE_8/anglid_1/-4-11--24pv_0.10211--0.62099-0.7854ra/2dproj/dm/'
+# filepath =  '/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48_hpx_2d_NSIDE4_tst/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/sample1001/half_lin_cutoff_half_tot_pert_nvpw/data/1lf_1rf/NSIDE_4/anglid_86/-15--14--17pv_1.4033-0.79983-5.1051ra/2dproj/dm/'
+# filepath =  '/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/sample5001/half_lin_cutoff_half_tot_pert_nvpw_v0p6/data/1lf_0.5rf_0-0-0pv_1.5708-0-0ra/2dproj/dm/'
+# filepath =  '/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512_hpx_2d_NSIDE4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/sample5029/half_lin_cutoff_half_tot_pert_nvpw_v0p6/data/1lf_0.5rf/NSIDE_4/anglid_21/-232--108-113pv_0.62237--1.5029-4.4506ra/2dproj/dm/'
+# filepath =  '/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512_hpx_2d_NSIDE4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/sample5001/half_lin_cutoff_half_tot_pert_nvpw_v0p6/data/1lf_0.5rf/NSIDE_4/anglid_86/-153--150--178pv_1.4033-0.79983-5.1051ra/2dproj/dm/'
+
+
+
+mesh = Read_slices.read_slices_bin(Nmesh,BoxSize,nfiles,filepath,redshift)
+
+read_slices_bin(Nmesh,BoxSize_,nfiles,filepath,redshift):
+
+/home/asus/Dropbox/extras/storage/graham/ht/data_cps512_512/4Mpc_2048c_1024p_zi63_nowakem/sample5001/data/1lf_0.5rf_0-0-0pv_1.5708-0-0ra/2dproj/dm/
+
+    folder_path = folderpath + sample + sampleC + '/data/' + "1lf_"+ str(resol_factor) + 'rf_0-0-0pv_1.5708-0-0ra' + '/2dproj/dm/' 
 
 
 do 3d NN analisis
 
 
--> no comp
+------------------------------------------------------------------------------------------------------------------------------------------------
+usage
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+-> no comp   (nbodykit)
 
 export PATH="/home/asus/anaconda3/bin:$PATH"
 source activate nbodykit-env
+cd ~/Dropbox/Disrael/Work/Research/NBodyWake/production/python/checks
+spyder
+
+no spyder do
+
+import os
+os.chdir("/home/asus/Dropbox/Disrael/Work/Research/NBodyWake/production/python/checks")
+
+
+-> no comp   (pytorch)
+
+export PATH="/home/asus/anaconda3/bin:$PATH"
+source activate PyTorch
+cd ~/Dropbox/Disrael/Work/Research/NBodyWake/production/python/checks
+spyder
+
+
+
+no spyder do
+
+import os
+os.chdir("/home/asus/Dropbox/Disrael/Work/Research/NBodyWake/production/python/checks")
+
+
+
 
 
 
@@ -21,7 +71,40 @@ do the analisis for 512³
 
 -> wake signal
 
-explore 
+## verify if everuthing in python have the same scheme as matlab (cic only on xy) ##
+
+explore: maybe only consider the wake particles (the rest can be neglected)? then any dc>1 is set to 1, and we simply count the number of cells with dc=1?
+
+
+what we have (verify afterwards, both normal proj and hpx):
+from the wake maps, both projection bin file, and raw xv and PId at insertion  (maybe xv is not needed?), (I have z=3,10 for xv and  PID)
+if no wake is computed, it needs the projection bin file, and ? (I have z=3,10 for xv and z=10 for PID)
+
+nc3d = fraction of colapsed (in the wake cells, compute the fraction which has density contrast higher that fidutial 0.5)
+dcw = density contrast inside the wake region
+
+for the comparizon woth the wake we have (for the map obtained by the difference between the cliped wake and the cliped no wake) clip return the mesh the every cell set to 1 if the dc is higher than 1
+nc3dd = fraction of colapsed (in the wake cells, compute the fraction which has density contrast higher that fidutial 0.5) in the difference clipped
+dcwd = not the cliped, density contrast inside the wake region for the difference map
+dcwdc = density contrast inside the wake region for the difference map for the cliped
+
+
+porque 
+    Pos_expand[:,2] = np.floor(Pos_expand[:,2]/(lim/depth))
+tem que fazer o floor? (em rotate_pos_wake do arquivo PID)
+
+this sems to be not working
+
+    wake_grid_z_start = np.floor(-3+(Nmesh_z)/2)
+    wake_grid_z_end   = np.ceil(-1+(Nmesh_z)/2)
+
+
+
+sims have  npart³ particles
+mesh has Nmeshx x Nmeshy x Nmeshz particles
+so we will have Nmeshx x Nmeshy x Nmeshz / npart³ parcicles per cell
+
+
 
 
 
@@ -30,3 +113,109 @@ explore
 use disra signal for now 
 
 compare figs with bins
+
+train on data without void
+fill the void with spline? (something that's smooth as póssible, given the boundary of the void)
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+organize
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+contar o numero de celulas com wakeid. quanto menos melhor, menos aglomeracao. ee dividir oelo numero de celulas de uma projecao idealizada, quanto mais proximo de 1 melhor
+
+remover os nos antes de contar materia nos filamantos
+
+descobrir a origem do mimatch da posicao do wake. testar com z=10.	
+
+
+uma coisa e o estudo do colapsom e outra da caraterizacao do wake
+
+
+
+wake talvez nao estaja colapsado. sinal muito fraco. mas importante
+
+quando somamos tudo, como no calculo do dc, estamos somando as regioes nao bem orientadas, e no final vai dar no mesmo!. NEste sentido, talvez seja melhor mesmo usar o dc, e nao o dc_wake
+
+Acho que o melhor eh tirar o halos, depois somente no lugas dos wakes, comparar com sem wake
+
+talevez adicionar criterios de orientacao, como se o numero de partiulas projetadas for acima de tanto, a projecao e boa. mascarar os outros pixels
+
+
+talvez colocar uma mascara que so considera o dc_w de lugars com dc_nw < 0. 
+
+
+
+
+
+
+acho que vai ter que envolver ridgeler=t, nao?. 
+
+
+ah eh verdade, quando divide pelo numero de celulas, o problema acima nao aparece? ou aparece? materia total dividido por celunao e ruim, contraste de denisdade dividido por celula ta ok.
+
+o teste nao saberia diferenciar objetoque quando projetados tem a mesma densidade. talvez tudo bem
+
+
+talvez usar o tgh(dc/16), depoiso ridgelet ?
+
+
+
+
+
+-> tenha 4 exemplos (do Nside=4): 
+- sinal muito forte do wake (sample5015, id 55, slice 0). pegar um maximo mais tipico: +214
+(sample5040, id 75, slice 0)
+
+- sinal tipico forte do wake: +30
+(sample5035, id 21, slice 20)
+
+- sinal tipico medio do wake (0.5 do forte): +15
+(sample5004, id 41, slice 31)
+
+- sinal beirando a deteccao (0.1 do forte): +3
+(sample5013, id 6, slice 26)
+
+
+
+
+-> tenha 3 exemplos (sem void) e (do Nside=4): 
+
+- sinal tipico forte do wake: +50
+(sample5009, id 91, slice 30)
+
+- sinal tipico medio do wake (0.5 do forte): +25
+(sample5010, id 69, slice 13)
+
+- sinal beirando a deteccao (0.1 do forte): +7
+(sample5005, id 16, slice 5)
+
+
+
+
+
+,  e sinal que quer detectar. trabalhar com esses exemplos
+
+
+depois testar os paraleles, depois os 96s so depois os 384
+
+
+
+ver qual codigo replica melhor o power spectrum na escala que usamos
+
+rodar o wake para o melhor
+
+
+ser rigoroso
+eg
+considerar efeito de borda
+
+
+

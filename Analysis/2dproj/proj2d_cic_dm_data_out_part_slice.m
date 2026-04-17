@@ -8,10 +8,12 @@ function [ count_sum] = proj2d_cic_dm_data_out_part_slice( root,root_out,spec,au
 % 
 % root = '/home/asus/Dropbox/extras/storage/graham/small_res/'
 % root_out = '/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48/'
+% % spec = '64Mpc_96c_48p_zi255_nowakem'
 % spec = '64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m'
+% % aux_path = '/sample1001/'
 % aux_path = '/sample1001/half_lin_cutoff_half_tot_pert_nvpw/'
 % aux_path_out = ''
-% filename = '5.000xv0.dat'
+% filename = '15.000xv0.dat'
 % lenght_factor = 1
 % resol_factor = 1
 % pivot = [0,0,0]

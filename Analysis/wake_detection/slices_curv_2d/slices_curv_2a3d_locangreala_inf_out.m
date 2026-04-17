@@ -109,8 +109,8 @@ function [ map,anali ] = slices_curv_2a3d_locangreala_inf_out( root,root_data_2d
 % % snapshot=[13,28]*(256/32);
 % % snapshot=[9,29]*(128/32);
 % visual_type=[1:5];        %if 1, shows the 2d proj; %if 2 shows the ridgelet transformation    %if 3 does everything above also for the depth % 
-                            %if 4 produce figures to be used in nn analysis
-                            %if 5 produce figures to be used in nn analysis
+%                             if 4 produce figures to be used in nn analysis
+%                             if 5 produce figures to be used in nn analysis
 % visual_in_or_out=[1:3]; %if 1 do visualization of the input,%  if 2 of the 2d_filtered    %  if 3 of the 3d filtered                            
 % %  visual_in_or_out=[2];
 % stage=[3];              % for doing the 3d

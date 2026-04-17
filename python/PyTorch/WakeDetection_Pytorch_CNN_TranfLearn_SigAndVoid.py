@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Created on Mon May 27 14:41:50 2024
@@ -70,7 +69,7 @@ parser.add_argument('--rangeSampl', type=parse_range, default='5001-5100', help=
 
 parser.add_argument('--slices_void', type=int, default=33, help='')
 parser.add_argument('--slices_signal', type=int, default=32, help='')
-parser.add_argument('--percentage_positiveWakeSig', type=float, default=10, help='')
+# parser.add_argument('--percentage_positiveWakeSig', type=float, default=10, help='')
 parser.add_argument('--validation_fraction', type=float, default=0.1, help='')
 parser.add_argument('--train_tt_fraction', type=float, default=0.8, help='')
 parser.add_argument('--wake_top_percentage', type=float, default=20, help='')
@@ -85,78 +84,137 @@ parser.add_argument('--num_epochs', type=int, default=10, help='')
 
 args = parser.parse_args()
 
+
 # parameters
 
 path_data = args.path_data
-path_data = "/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpx_2d_NSIDE4_figs/"
 print("File Path in = "+ str(path_data))
 
 path_void = args.path_void
-path_void = "/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpx_2d_NSIDE4_stat/void/"
 print("File Path Void in = "+ str(path_void))
 
 path_WakeSignal = args.path_WakeSignal
-path_WakeSignal = "/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_stat_2dc1l1_3dc1l1/"
 print("File Path Wake Signal in = "+ str(path_WakeSignal))
 
 
-
-
 n_angle = args.n_angle
-# num_epochs = 1
 print("angles each sample = "+ str(n_angle))
 
 # Access the parsed values
 rang = args.rangeSampl
-# rangeAng = parse_range('5001-5101')
 print("Samples = ", rang)
 
 
 
 
 slices_void = args.slices_void
-# slices_signal = 33
 print("Slices for void = "+ str(slices_void))
 
 slices_signal = args.slices_signal
-# slices_signal = 32
 print("Slices for wake signal = ", slices_signal)
 
-percentage_positiveWakeSig = args.percentage_positiveWakeSig
-# percentage_positiveWakeSig = 10
-print("Percentage positive Wake Signal = ", percentage_positiveWakeSig)
-
 validation_fraction = args.validation_fraction
-# validation_fraction = 0.1
 print("Validation fraction of total data = ", validation_fraction)
 
 train_tt_fraction = args.train_tt_fraction
-# train_tt_fraction = 0.1
 print("Train fraction of train + test data = ", train_tt_fraction)
 
 
 wake_top_percentage = args.wake_top_percentage
-# wake_top_percentage = 10
 print("Percentage top signal wake = ", wake_top_percentage)
 
 void_percentage = args.void_percentage
-# void_percentage = 0.1
 print("Percentage lower voids wake = ", void_percentage)
 
 
 
 
 batch_size =  args.batch_size
-batch_size =  4
 print("Batch size = "+ str(batch_size))
 
 num_workers = args.num_workers
-# num_workers = 0
 print("Num of CPU workers = "+ str(num_workers))
 
 num_epochs = args.num_epochs
-# num_epochs = 1
 print("Num epochs = "+ str(num_epochs))
+
+
+
+
+
+
+# # parameters
+
+# path_data = args.path_data
+# path_data = "/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpx_2d_NSIDE4_figs/"
+# print("File Path in = "+ str(path_data))
+
+# path_void = args.path_void
+# path_void = "/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpx_2d_NSIDE4_stat/void/"
+# print("File Path Void in = "+ str(path_void))
+
+# path_WakeSignal = args.path_WakeSignal
+# path_WakeSignal = "/home/asus/Dropbox/extras/storage/graham/ht/data_cps32_512_hpxNSIDE4_stat_2dc1l1_3dc1l1/"
+# print("File Path Wake Signal in = "+ str(path_WakeSignal))
+
+
+
+
+# n_angle = args.n_angle
+# # num_epochs = 1
+# print("angles each sample = "+ str(n_angle))
+
+# # Access the parsed values
+# rang = args.rangeSampl
+# # rangeAng = parse_range('5001-5101')
+# print("Samples = ", rang)
+
+
+
+
+# slices_void = args.slices_void
+# # slices_signal = 33
+# print("Slices for void = "+ str(slices_void))
+
+# slices_signal = args.slices_signal
+# # slices_signal = 32
+# print("Slices for wake signal = ", slices_signal)
+
+# # percentage_positiveWakeSig = args.percentage_positiveWakeSig
+# # # percentage_positiveWakeSig = 10
+# # print("Percentage positive Wake Signal = ", percentage_positiveWakeSig)
+
+# validation_fraction = args.validation_fraction
+# # validation_fraction = 0.1
+# print("Validation fraction of total data = ", validation_fraction)
+
+# train_tt_fraction = args.train_tt_fraction
+# # train_tt_fraction = 0.1
+# print("Train fraction of train + test data = ", train_tt_fraction)
+
+
+# wake_top_percentage = args.wake_top_percentage
+# # wake_top_percentage = 10
+# print("Percentage top signal wake = ", wake_top_percentage)
+
+# void_percentage = args.void_percentage
+# # void_percentage = 0.1
+# print("Percentage lower voids wake = ", void_percentage)
+
+
+
+
+# batch_size =  args.batch_size
+# batch_size =  1
+# print("Batch size = "+ str(batch_size))
+
+# num_workers = args.num_workers
+# # num_workers = 0
+# print("Num of CPU workers = "+ str(num_workers))
+
+# num_epochs = args.num_epochs
+# # num_epochs = 1
+# print("Num epochs = "+ str(num_epochs))
 
 
 # # batch_size = 32
@@ -165,6 +223,7 @@ print("Num epochs = "+ str(num_epochs))
 OUTPUT_DIM = 1          # 2 classes for classification labels
 # SEED = 1234
 pretrained_size = 512
+# pretrained_size = 160
 
 
 wake_spec = ["4Mpc_2048c_1024p_zi63_nowakem/","4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/"]
@@ -180,7 +239,7 @@ wake_spec = ["4Mpc_2048c_1024p_zi63_nowakem/","4Mpc_2048c_1024p_zi63_wakeGmu4t10
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.data import DataLoader, Dataset,random_split
+from torch.utils.data import DataLoader, Dataset, random_split, Subset
 from torchvision import transforms, datasets
 import torch.utils.data as data
 
@@ -205,13 +264,17 @@ import numpy as np
 
 
 # Import the spliter function from DataCleaning.py'
+import sys
 
 # from DataCleaning import file_list,list_all_files,balanced_list_of_files
-
+path_analy = os.getcwd() +'/' 
+# path_analy = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(path_analy)
 from Data_preSelection  import  *
 
 # keep track of true positives, false positives, true negatives, and false negatives for each class
 from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import StratifiedShuffleSplit
 
 
 # To count the number of images in each label
@@ -231,9 +294,9 @@ pretrained_stds = [0.229, 0.224, 0.225]
 
 train_transforms = transforms.Compose([
                            transforms.Resize(pretrained_size),
-                           transforms.RandomRotation(5),
+                           # transforms.RandomRotation(5),
                            transforms.RandomHorizontalFlip(0.5),
-                           transforms.RandomCrop(pretrained_size, padding=10),
+                           # transforms.RandomCrop(pretrained_size, padding=10),
                            transforms.ToTensor(),
                            transforms.Normalize(mean=pretrained_means,
                                                 std=pretrained_stds)
@@ -295,29 +358,35 @@ class CustomImageDataset(Dataset):
 all_data_nowake_void, all_data_wake_void = data_void_out(rang, n_angle, slices_void, wake_spec, path_void)
 all_data_nowake_signal, all_data_wake_signal = data_signal_out(rang, n_angle, slices_signal, wake_spec, path_WakeSignal)
 
-files_list_all = list_all_files(path_data)
+files_list_all = list_all_files(path_data,rang)
 samples_all, anglids_all, tilesizes_all, sliceids_all, wake_infos_all = extract_info(files_list_all)
 
-range_start = rang[0]
-data_void = extract_stat(samples_all, anglids_all, sliceids_all, wake_infos_all, all_data_nowake_void, all_data_wake_void, range_start)
-data_signal = extract_stat(samples_all, anglids_all, sliceids_all, wake_infos_all, all_data_nowake_signal, all_data_wake_signal, range_start)
-data_signal_diff = extract_stat_diff(samples_all, anglids_all, sliceids_all, wake_infos_all, all_data_nowake_signal, all_data_wake_signal, range_start)
+# range_start = rang[0]
+data_void = extract_stat(samples_all, anglids_all, sliceids_all, wake_infos_all, all_data_nowake_void, all_data_wake_void, rang)
+data_signal = extract_stat(samples_all, anglids_all, sliceids_all, wake_infos_all, all_data_nowake_signal, all_data_wake_signal, rang)
+data_signal_diff = extract_stat_diff(samples_all, anglids_all, sliceids_all, wake_infos_all, all_data_nowake_signal, all_data_wake_signal, rang)
 
 # split val and trainTest
 
-files_list_validation, files_list_trainTest = split_unique_samples(samples_all, files_list_all, validation_fraction)
+# first split per sample (so the validation is independent)
+
+# files_list_validation, files_list_trainTest = split_unique_samples(samples_all, files_list_all, validation_fraction)
+validation_indices, train_test_indices = split_unique_samples(samples_all, validation_fraction)
+files_list_validation = [files_list_all[i] for i in validation_indices]
+files_list_trainTest = [files_list_all[i] for i in train_test_indices]
+
 
 samples_val, anglids_val, tilesizes_val, sliceids_val, wake_infos_val = extract_info(files_list_validation)
-range_start = rang[0]
-data_void_val = extract_stat(samples_val, anglids_val, sliceids_val, wake_infos_val, all_data_nowake_void, all_data_wake_void, range_start)
-data_signal_val = extract_stat(samples_val, anglids_val, sliceids_val, wake_infos_val, all_data_nowake_signal, all_data_wake_signal, range_start)
-data_signal_diff_val = extract_stat_diff(samples_val, anglids_val, sliceids_val, wake_infos_val, all_data_nowake_signal, all_data_wake_signal, range_start)
+# range_start = rang[0]
+data_void_val = extract_stat(samples_val, anglids_val, sliceids_val, wake_infos_val, all_data_nowake_void, all_data_wake_void, rang)
+data_signal_val = extract_stat(samples_val, anglids_val, sliceids_val, wake_infos_val, all_data_nowake_signal, all_data_wake_signal, rang)
+data_signal_diff_val = extract_stat_diff(samples_val, anglids_val, sliceids_val, wake_infos_val, all_data_nowake_signal, all_data_wake_signal, rang)
 
 samples_tt, anglids_tt, tilesizes_tt, sliceids_tt, wake_infos_tt = extract_info(files_list_trainTest)
-range_start = rang[0]
-data_void_tt = extract_stat(samples_tt, anglids_tt, sliceids_tt, wake_infos_tt, all_data_nowake_void, all_data_wake_void, range_start)
-data_signal_tt = extract_stat(samples_tt, anglids_tt, sliceids_tt, wake_infos_tt, all_data_nowake_signal, all_data_wake_signal, range_start)
-data_signal_diff_tt = extract_stat_diff(samples_tt, anglids_tt, sliceids_tt, wake_infos_tt, all_data_nowake_signal, all_data_wake_signal, range_start)
+# range_start = rang[0]
+data_void_tt = extract_stat(samples_tt, anglids_tt, sliceids_tt, wake_infos_tt, all_data_nowake_void, all_data_wake_void, rang)
+data_signal_tt = extract_stat(samples_tt, anglids_tt, sliceids_tt, wake_infos_tt, all_data_nowake_signal, all_data_wake_signal, rang)
+data_signal_diff_tt = extract_stat_diff(samples_tt, anglids_tt, sliceids_tt, wake_infos_tt, all_data_nowake_signal, all_data_wake_signal, rang)
 
 
 
@@ -332,7 +401,7 @@ data_signal_diff_tt = extract_stat_diff(samples_tt, anglids_tt, sliceids_tt, wak
 
 # validation
 
-# Select top 50% wake values, keep void_percentage = 50%
+# Select top 50% wake values, keep void_percentage 
 selected_files_val, selected_positions_val, selected_signal_diff_val = select_extreme_files(
     data_signal_diff_val, wake_infos_val, files_list_validation, data_void_val,
     wake_top_percentage, void_percentage
@@ -344,7 +413,7 @@ find_extreme_files(selected_signal_diff_val, selected_files_val)
 
 # train and test
 
-# Select top 50% wake values, keep void_percentage = 50%
+# Select top 50% wake values, keep void_percentage 
 selected_files_tt, selected_positions_tt, selected_signal_diff_tt = select_extreme_files(
     data_signal_diff_tt, wake_infos_tt, files_list_trainTest, data_void_tt,
     wake_top_percentage, void_percentage
@@ -363,8 +432,21 @@ test_train_data__ = CustomImageDataset(file_list=selected_files_tt, transform=te
 n_train_examples = int(len(test_train_data__) * train_tt_fraction)
 n_test_examples = len(test_train_data__) - n_train_examples
 
-train_data_, test_data_ = data.random_split(test_train_data__,
-                                            [n_train_examples, n_test_examples])
+labels_tt = test_train_data__.labels
+sss = StratifiedShuffleSplit(
+    n_splits=1,
+    test_size=n_test_examples,
+    train_size=n_train_examples,
+    random_state=42
+)
+
+train_idx, test_idx = next(sss.split(range(len(labels_tt)), labels_tt))
+
+train_data_ = Subset(test_train_data__, train_idx)
+test_data_  = Subset(test_train_data__, test_idx)
+
+# train_data_, test_data_ = data.random_split(test_train_data__,
+#                                             [n_train_examples, n_test_examples])
 
 
 

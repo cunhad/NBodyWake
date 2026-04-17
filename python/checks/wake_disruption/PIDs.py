@@ -62,7 +62,7 @@ def read_pids_xvs(nfiles,ncells,filepath,redshift):
 
 def extract_pid_wake(Nmesh, nfiles, ncells, filepath, redshift, npart):
     
-    import Read_slices
+    # import Read_slices
     import numpy as np
 
     
@@ -70,6 +70,8 @@ def extract_pid_wake(Nmesh, nfiles, ncells, filepath, redshift, npart):
     # grid_spacing_x = ncells / Nmesh_x
     # grid_spacing_y = ncells / Nmesh_y
     # grid_spacing_z = ncells / Nmesh_z
+    # wake_grid_z_start = np.floor(-1+(Nmesh_z)/2)
+    # wake_grid_z_end   = np.ceil(+1+(Nmesh_z)/2)
     wake_grid_z_start = np.floor(-3+(Nmesh_z)/2)
     wake_grid_z_end   = np.ceil(-1+(Nmesh_z)/2)
     
@@ -233,30 +235,90 @@ def plot_2d_proj_wake(mesh,grid_points_wake,save=None):
 #     return grid_points_wake
 
 
-def obtain_wake_grid_points_chunks(Nmesh, x_wake, chunk_size=10000):
+def obtain_wake_grid_points_chunks(Nmesh, pos, chunk_size=10000):
+    
+    """
+    Return unique mesh cells touched by particles using:
+      - CIC in X,Y
+      - single-slice binning in Z
+      - periodic boundaries in X,Y
+    """
     import numpy as np
     
-    # Initialize an empty set to store unique grid points
-    unique_grid_points = set()
     
-    # Process x_wake in chunks
-    for i in range(0, len(x_wake), chunk_size):
-        chunk = x_wake[i:i+chunk_size]
+    Nx, Ny, Nz = map(int, Nmesh)
+    unique_cells = set()
+    
+    for i in range(0, len(pos), chunk_size):
+        chunk = pos[i:i+chunk_size]
+    
+        # CIC shift (as in your MATLAB)
+        x = chunk[:, 0] - 0.5
+        y = chunk[:, 1] - 0.5
+    
+        # Z slice (1-based → 0-based)
+        z_slice = np.ceil(chunk[:, 2]).astype(int) - 1
+        valid = (z_slice >= 0) & (z_slice < Nz)
+    
+        if not np.any(valid):
+            continue
+    
+        x = x[valid]
+        y = y[valid]
+        z = z_slice[valid]
+    
+        # Base and neighbor cells
+        i1 = np.floor(x).astype(int) + 1
+        j1 = np.floor(y).astype(int) + 1
+        i2 = i1 + 1
+        j2 = j1 + 1
+    
+        # Periodic wrapping
+        I1 = np.mod(i1, Nx)
+        I2 = np.mod(i2, Nx)
+        J1 = np.mod(j1, Ny)
+        J2 = np.mod(j2, Ny)
+    
+        # Collect the 4 CIC cells per particle
+        cells = np.stack([
+            np.stack([I1, J1, z], axis=1),
+            np.stack([I2, J1, z], axis=1),
+            np.stack([I1, J2, z], axis=1),
+            np.stack([I2, J2, z], axis=1),
+        ], axis=1).reshape(-1, 3)
+    
+        unique_cells.update(map(tuple, cells))
+
+    return np.array(list(unique_cells), dtype=int)
+
+    #previous code#
+    
+    # # Initialize an empty set to store unique grid points
+    # unique_grid_points = set()
+    
+    # # Process x_wake in chunks
+    # for i in range(0, len(x_wake), chunk_size):
+    #     chunk = x_wake[i:i+chunk_size]
         
-        # Compute the grid points for the chunk
-        grid_points_chunk = np.vstack([
-            (np.round(chunk[:, 0]) % Nmesh[0]).astype(int),
-            (np.round(chunk[:, 1]) % Nmesh[1]).astype(int),
-            (np.round(chunk[:, 2]) % Nmesh[2]).astype(int)
-        ]).T
+    #     # Compute the grid points for the chunk
+    #     grid_points_chunk = np.vstack([
+    #         (np.round(chunk[:, 0]) % Nmesh[0]).astype(int),
+    #         (np.round(chunk[:, 1]) % Nmesh[1]).astype(int),
+    #         (np.round(chunk[:, 2]) % Nmesh[2]).astype(int)
+    #     ]).T
         
-        # Add the unique grid points to the set
-        unique_grid_points.update(map(tuple, grid_points_chunk))
+    #     # Add the unique grid points to the set
+    #     unique_grid_points.update(map(tuple, grid_points_chunk))
     
-    # Convert the set of unique grid points back to a numpy array
-    grid_points_wake = np.array(list(unique_grid_points))
+    # # Convert the set of unique grid points back to a numpy array
+    # grid_points_wake = np.array(list(unique_grid_points))
     
-    return grid_points_wake
+    # return grid_points_wake
+    
+    
+    
+    
+    
 
 # def obtain_wake_grid_points_eachslice(Nmesh,x_wake):
     
@@ -622,7 +684,94 @@ def rotate_pos_wake(Pos, rot_angle, pivot, nc, nup, resol_factor, depth, lenght_
     # return Pos_expand, shift, lim, Pos
     return Pos_expand
 
-
+def plot_2d_proj_onlywake_eachSlice(mesh, grid_points_wake, slice_list,save=None):
+    
+    threshold = 0.5
+    
+    import matplotlib
+    from matplotlib import pyplot as plt
+    import numpy as np
+    
+    # 
+    if save is None:
+        matplotlib.use('Qt5Agg')    # to show figures on desktop
+    else:
+        matplotlib.use('agg')   #deal with figures wihotut window forwards (non iteractive, like slurm)
+    
+    # Nmesh = [mesh.shape[0],mesh.shape[1],mesh.shape[2]]
+    # grid_points_wake = obtain_wake_grid_points(Nmesh,pos_wake)
+    
+    if save != None:
+        splited = save[0].split('/')   
+        folder = "/".join(splited[0:-1])
+        import os
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+    
+    # print(list(slice_list))
+    for i ,ls in enumerate(slice_list):
+        
+        # print(i)
+        
+        if len(slice_list) == 1:
+            mesh_2d = mesh.squeeze()
+            # grid_points_wake_2d = grid_points_wake.squeeze()
+        else:
+            mesh_2d = mesh[:,:,i]
+        
+        # print(mesh_2d.shape)
+        
+        # grid_points_wake_2d = grid_points_wake[i]
+        
+        meshaux = np.asarray(mesh_2d)
+        
+        nonzero = meshaux != 0
+        N_nonzero = np.count_nonzero(nonzero)
+        
+        above = meshaux > threshold
+        
+        # 1) Fraction of non-zero cells above threshold
+        frac_collaps = np.count_nonzero(above & nonzero) / N_nonzero
+        
+        # 2) Sum of above-threshold values normalized by non-zero count
+        dcw = meshaux[above].sum() / N_nonzero
+    
+        # frac_collaps = fraction_of_colapsed_in2d(mesh_2d, grid_points_wake_2d)
+        # dcw = density_contrast_inside_wake_in2d(mesh_2d, grid_points_wake_2d)
+        
+        
+        
+        plt.figure()    
+        # plt.imshow(mesh.preview(axes=[0,2]))
+        plt.imshow(np.minimum(mesh_2d, 1))
+        # plt.title(f'2d projection, nc3d = {frac_collaps:.2f}, dcw = {dcw:.2f}')
+        plt.title('2d projection, nc3d = {:.2f}, dcw = {:.2f}'.format(frac_collaps, dcw))
+        # plt.xlabel(r"$k$ [$h \ \mathrm{Mpc}^{-1}$]")
+        # plt.ylabel(r"$P(k)$ [$h^{-3}\mathrm{Mpc}^3$]")
+        
+        # (no overlay)
+        # # Create an overlay with zeros (same shape as arr, with 3 color channels for RGB), 4th channel is for alpha
+        # overlay = np.zeros((mesh_2d.shape[0], mesh_2d.shape[1], 4))
+        
+        # alpha=0.3
+        # # Set the pixels at the positions in pos to red (1, 0, 0)
+        # for position in grid_points_wake_2d:
+        #     x, y = int(round(position[0]) % mesh_2d.shape[0]), int(round(position[1]) %  mesh_2d.shape[1])
+        #     overlay[x, y] = [1, 0, 0,alpha]  # Red color
+            
+        # # Overlay the red pixels with 50% transparency
+        # plt.imshow(overlay)
+        
+        
+        
+        # # Overlay the positions on the plot
+        # plt.scatter(xv_wake[:,2], xv_wake[:,1], color='red', alpha=0.1)  # alpha=0.5 for 50% transparency
+    
+        if save is not None:            
+            plt.savefig(save[i], bbox_inches = "tight",dpi=300)
+            plt.close()
+        
+    return 
 
 
 def plot_2d_proj_wake_colInfo3d_eachSlice(mesh, grid_points_wake, slice_list,save=None):
@@ -998,3 +1147,166 @@ def plot_2d_proj_curveletFilt_eachSlice(mesh,mesh_nowake, grid_points_wake, slic
             plt.close()
         
     return         
+
+
+
+
+
+import numpy as np
+
+
+def cic_deposit_cell_units(pos, Nmesh, weights=None, dtype=np.float64):
+    """
+    CIC deposit onto a 3D mesh with periodic boundaries.
+    Positions are in *cell units*: x in [0, Nx), y in [0, Ny), z in [0, Nz).
+
+    Parameters
+    ----------
+    pos : (n,3) float array
+        Particle positions in cell units.
+    Nmesh : (3,) iterable of int
+        (Nx, Ny, Nz)
+    weights : None or (n,) float array
+        Optional particle weights (mass). If None, weight=1 for each particle.
+    dtype : numpy dtype
+        Output mesh dtype.
+
+    Returns
+    -------
+    mesh : (Nx,Ny,Nz) array
+        CIC-deposited mesh.
+    """
+    
+    pos = np.asarray(pos, dtype=np.float64)
+    Nx, Ny, Nz = map(int, Nmesh)
+
+    n = pos.shape[0]
+    if weights is None:
+        w = np.ones(n, dtype=np.float64)
+    else:
+        w = np.asarray(weights, dtype=np.float64)
+        if w.shape != (n,):
+            raise ValueError("weights must have shape (n,)")
+
+    # Wrap periodic boundaries (handles negatives and pos == Nx, etc.)
+    gx = np.mod(pos[:, 0], Nx)
+    gy = np.mod(pos[:, 1], Ny)
+    gz = np.mod(pos[:, 2], Nz)
+
+    # Base (left/lower/back) cell
+    ix0 = np.floor(gx).astype(np.int64)
+    iy0 = np.floor(gy).astype(np.int64)
+    iz0 = np.floor(gz).astype(np.int64)
+
+    # Fractional part inside the cell
+    tx = gx - ix0
+    ty = gy - iy0
+    tz = gz - iz0
+
+    # Neighbor cell (right/upper/front) with periodic wrap
+    ix1 = (ix0 + 1) % Nx
+    iy1 = (iy0 + 1) % Ny
+    iz1 = (iz0 + 1) % Nz
+
+    # 1D CIC weights
+    wx0, wx1 = (1.0 - tx), tx
+    wy0, wy1 = (1.0 - ty), ty
+    wz0, wz1 = (1.0 - tz), tz
+
+    mesh = np.zeros((Nx, Ny, Nz), dtype=dtype)
+
+    # Deposit into 8 corners
+    np.add.at(mesh, (ix0, iy0, iz0), w * wx0 * wy0 * wz0)
+    np.add.at(mesh, (ix0, iy0, iz1), w * wx0 * wy0 * wz1)
+    np.add.at(mesh, (ix0, iy1, iz0), w * wx0 * wy1 * wz0)
+    np.add.at(mesh, (ix0, iy1, iz1), w * wx0 * wy1 * wz1)
+
+    np.add.at(mesh, (ix1, iy0, iz0), w * wx1 * wy0 * wz0)
+    np.add.at(mesh, (ix1, iy0, iz1), w * wx1 * wy0 * wz1)
+    np.add.at(mesh, (ix1, iy1, iz0), w * wx1 * wy1 * wz0)
+    np.add.at(mesh, (ix1, iy1, iz1), w * wx1 * wy1 * wz1)
+
+    return mesh
+
+def cic_xy_with_zslice(pos, Nmesh, weights=None, shift_xy=0.5, dtype=np.float64):
+    """
+    Match MATLAB scheme:
+      x,y: CIC onto 4 neighbors with x = pos_x - 0.5, y = pos_y - 0.5
+      z: choose ONE slice via z_slice = ceil(pos_z)  (1..Nz)
+      periodic wrap in x,y via mod
+      z is NOT periodic; particles outside (0, Nz] are ignored
+
+    Parameters
+    ----------
+    pos : (n,3) float array
+        Positions in cell units. Example: x=2.5 is inside 3rd cell (index 2).
+    Nmesh : (3,) iterable of int
+        (Nx, Ny, Nz)
+    weights : None or (n,) float array
+        Optional particle weights. If None, each particle has weight 1.
+    shift_xy : float
+        The "-0.5" shift used in your MATLAB.
+    dtype : numpy dtype
+
+    Returns
+    -------
+    mesh : (Nx, Ny, Nz) array
+    """
+    pos = np.asarray(pos, dtype=np.float64)
+    Nx, Ny, Nz = map(int, Nmesh)
+    n = pos.shape[0]
+
+    if weights is None:
+        w = np.ones(n, dtype=np.float64)
+    else:
+        w = np.asarray(weights, dtype=np.float64)
+        if w.shape != (n,):
+            raise ValueError("weights must have shape (n,)")
+
+    # MATLAB: x = Pos(:,1)-0.5; y = Pos(:,2)-0.5
+    x = pos[:, 0] - shift_xy
+    y = pos[:, 1] - shift_xy
+
+    # MATLAB equivalent with lim=Nz and slice=Nz => dz = 1:
+    # z_slice = ceil(z)  (1-based)
+    z_slice_1based = np.ceil(pos[:, 2]).astype(np.int64)
+
+    # Keep only valid z slices: (z_slice>0 && z_slice<=Nz)
+    m = (z_slice_1based > 0) & (z_slice_1based <= Nz)
+    if not np.any(m):
+        return np.zeros((Nx, Ny, Nz), dtype=dtype)
+
+    x = x[m]; y = y[m]
+    z0 = z_slice_1based[m] - 1  # convert to 0-based
+    w = w[m]
+
+    # MATLAB: i1=floor(x)+1; j1=floor(y)+1; i2=i1+1; j2=j1+1
+    i1 = np.floor(x).astype(np.int64) + 1
+    j1 = np.floor(y).astype(np.int64) + 1
+    i2 = i1 + 1
+    j2 = j1 + 1
+
+    # MATLAB: dx1=i1-x; dy1=j1-y; dx2=1-dx1; dy2=1-dy1
+    dx1 = i1 - x
+    dy1 = j1 - y
+    dx2 = 1.0 - dx1
+    dy2 = 1.0 - dy1
+
+    # Periodic wrap in x,y (MATLAB: mod(i,nb)+1)
+    I1 = np.mod(i1, Nx)
+    I2 = np.mod(i2, Nx)
+    J1 = np.mod(j1, Ny)
+    J2 = np.mod(j2, Ny)
+
+    mesh = np.zeros((Nx, Ny, Nz), dtype=dtype)
+
+    # Deposit into 4 neighbors in xy, fixed z slice
+    np.add.at(mesh, (I1, J1, z0), w * dx1 * dy1)
+    np.add.at(mesh, (I2, J1, z0), w * dx2 * dy1)
+    np.add.at(mesh, (I1, J2, z0), w * dx1 * dy2)
+    np.add.at(mesh, (I2, J2, z0), w * dx2 * dy2)
+
+    return mesh
+
+
+

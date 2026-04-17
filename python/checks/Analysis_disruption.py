@@ -45,59 +45,29 @@ args = parser.parse_args()
 # parameters
 
 filepath = args.filepath
-filepath =  "/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/sample1001/half_lin_cutoff_half_tot_pert_nvpw/data/1lf_1rf_0-0-0pv_1.5708-0-0ra/2dproj/dm/"
-# filepath =  "/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48_hpx_2d_NSIDE8/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/sample1001/data/1lf_1rf/NSIDE_8/anglid_384/14--11-11pv_1.5708-0.84153-3.0434ra/2dproj/dm/"
-# filepath =  '/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48_hpx_2d_NSIDE8/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/sample1001/data/1lf_1rf/NSIDE_8/anglid_1/-4-11--24pv_0.10211--0.62099-0.7854ra/2dproj/dm/'
-# filepath =  '/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48_hpx_2d_NSIDE4_tst/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/sample1001/half_lin_cutoff_half_tot_pert_nvpw/data/1lf_1rf/NSIDE_4/anglid_86/-15--14--17pv_1.4033-0.79983-5.1051ra/2dproj/dm/'
-# filepath =  '/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/sample5001/half_lin_cutoff_half_tot_pert_nvpw_v0p6/data/1lf_0.5rf_0-0-0pv_1.5708-0-0ra/2dproj/dm/'
-# filepath =  '/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512_hpx_2d_NSIDE4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/sample5029/half_lin_cutoff_half_tot_pert_nvpw_v0p6/data/1lf_0.5rf/NSIDE_4/anglid_21/-232--108-113pv_0.62237--1.5029-4.4506ra/2dproj/dm/'
-# filepath =  '/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512_hpx_2d_NSIDE4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/sample5001/half_lin_cutoff_half_tot_pert_nvpw_v0p6/data/1lf_0.5rf/NSIDE_4/anglid_86/-153--150--178pv_1.4033-0.79983-5.1051ra/2dproj/dm/'
 print("File Path in = "+ str(filepath))
 
 filepath_CP3M = args.filepath_CP3M
-filepath_CP3M =  '/home/asus/Dropbox/extras/storage/graham/small_res/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/sample1001/half_lin_cutoff_half_tot_pert_nvpw/'
-# filepath_CP3M =  '/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/sample5029/half_lin_cutoff_half_tot_pert_nvpw_v0p6/'
-# filepath_CP3M =  '/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/sample5001/half_lin_cutoff_half_tot_pert_nvpw_v0p6/'
 print("File Path CUBEP3M in = "+ str(filepath_CP3M))
 
 
 sample = args.sample
-sample =  'sample1001'
-# sample =  'sample5001'
-# sample =  'sample5029'
 print("sample = "+ str(sample))
 
 path_out = args.path_out
-path_out = "/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48/plots/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/"
-# path_out = "/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48_hpx_2d_NSIDE4_tst/plots/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/"
-# path_out = '/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512/plots_4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/'
-# path_out = '/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512_hpx_2d_NSIDE4_tst/plots_1/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/'
-# path_out = '/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512_hpx_2d_NSIDE4/plots_3/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/'
 print("Path out = "+ str(path_out))
 
 redshift = args.redshift
-redshift = '63'
-# redshift = '5'
-# redshift = '10'
-# redshift = '3'
 print("redshift= "+ str(redshift))
 
 
 
 redshift_CP3M = args.redshift_CP3M
-redshift_CP3M = '63.000'
-# redshift_CP3M = '5.000'
-# redshift_CP3M = '10.000'
-# redshift_CP3M = '3.000'
 print("redshift_CP3M= "+ str(redshift_CP3M))
 
 
 
 redshift_CP3M_insertion = args.redshift_CP3M_insertion
-redshift_CP3M_insertion = '63.000'
-# redshift_CP3M_insertion = '5.000'
-# redshift_CP3M_insertion = '10.000'
-# redshift_CP3M_insertion = '3.000'
 print("redshift_CP3M_insertion = "+ str(redshift_CP3M_insertion))
 
 
@@ -105,13 +75,9 @@ print("redshift_CP3M_insertion = "+ str(redshift_CP3M_insertion))
 
 
 Nmesh =  ast.literal_eval(args.Nmesh)
-# Nmesh = [48,48,48]
-Nmesh = [48,48,12]
-# Nmesh = [512,512,32]
 print("Nmesh= "+ str(Nmesh))
 
 Nmesh_CP3M =  ast.literal_eval(args.Nmesh_CP3M)
-Nmesh_CP3M = [96,96,96]
 print("Nmesh_CP3M= "+ str(Nmesh_CP3M))
 
 
@@ -123,35 +89,154 @@ nfiles = args.nfiles
 print("nfiles= "+ str(nfiles))
 
 nfiles_CP3M = args.nfiles_CP3M
-nfiles_CP3M = 8
 print("nfiles_CP3M= "+ str(nfiles_CP3M))
 
 ncells = args.ncells
-ncells = 96
 print("ncells= "+ str(ncells))
 
 npart = args.npart
-npart = 48
 print("npart= "+ str(npart))
 
 resol_factor = args.resol_factor
-resol_factor = 1
-# resol_factor = 2
 print("resol_factor= "+ str(resol_factor))
 
 Nside_id = args.Nside_id
-# Nside_id = 384
-# Nside_id = 1
-# Nside_id = 21
-Nside_id = 86
 print("Nside_id= "+ str(Nside_id))
 
 do_no_wake = args.do_no_wake
-do_no_wake = True
 print("do_no_wake = "+ str(do_no_wake))
 
 # num_epochs=args.num_epochs
 # print("Num epochs = "+ str(num_epochs))
+
+
+
+
+
+
+
+
+
+
+# # parameters
+
+# filepath = args.filepath
+# filepath =  "/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/sample1001/half_lin_cutoff_half_tot_pert_nvpw/data/1lf_1rf_0-0-0pv_1.5708-0-0ra/2dproj/dm/"
+# # filepath =  "/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48_hpx_2d_NSIDE4/64Mpc_96c_48p_zi255_nowakem/sample1001/data/1lf_1rf/NSIDE_4/anglid_1/-4-11--24pv_0.20448--0.62099-0.7854ra/2dproj/dm/"
+# # filepath =  "/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48_hpx_2d_NSIDE4/64Mpc_96c_48p_zi255_nowakem/sample1001/data/1lf_1rf/NSIDE_4/anglid_96/-14-20-16pv_1.5708-1.2688-2.9452ra/2dproj/dm/"
+# # filepath =  '/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48_hpx_2d_NSIDE8/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/sample1001/data/1lf_1rf/NSIDE_8/anglid_1/-4-11--24pv_0.10211--0.62099-0.7854ra/2dproj/dm/'
+
+# # filepath =  '/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48_hpx_2d_NSIDE4_tst/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/sample1001/half_lin_cutoff_half_tot_pert_nvpw/data/1lf_1rf/NSIDE_4/anglid_86/-15--14--17pv_1.4033-0.79983-5.1051ra/2dproj/dm/'
+# # filepath =  '/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/sample5001/half_lin_cutoff_half_tot_pert_nvpw_v0p6/data/1lf_0.5rf_0-0-0pv_1.5708-0-0ra/2dproj/dm/'
+# # filepath =  '/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512_hpx_2d_NSIDE4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/sample5029/half_lin_cutoff_half_tot_pert_nvpw_v0p6/data/1lf_0.5rf/NSIDE_4/anglid_21/-232--108-113pv_0.62237--1.5029-4.4506ra/2dproj/dm/'
+# # filepath =  '/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512_hpx_2d_NSIDE4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/sample5001/half_lin_cutoff_half_tot_pert_nvpw_v0p6/data/1lf_0.5rf/NSIDE_4/anglid_86/-153--150--178pv_1.4033-0.79983-5.1051ra/2dproj/dm/'
+# print("File Path in = "+ str(filepath))
+
+# filepath_CP3M = args.filepath_CP3M
+# filepath_CP3M =  '/home/asus/Dropbox/extras/storage/graham/small_res/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/sample1001/half_lin_cutoff_half_tot_pert_nvpw/'
+# # filepath_CP3M =  '/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/sample5029/half_lin_cutoff_half_tot_pert_nvpw_v0p6/'
+# # filepath_CP3M =  '/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/sample5001/half_lin_cutoff_half_tot_pert_nvpw_v0p6/'
+# print("File Path CUBEP3M in = "+ str(filepath_CP3M))
+
+
+# sample = args.sample
+# sample =  'sample1001'
+# # sample =  'sample5001'
+# # sample =  'sample5029'
+# print("sample = "+ str(sample))
+
+# path_out = args.path_out
+# path_out = "/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48/plots/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/"
+# # path_out = "/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48_hpx_2d_NSIDE4_tst/plots/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/"
+# # path_out = "/home/asus/Dropbox/extras/storage/graham/small_res/data_cps12_48_hpx_2d_NSIDE8_tst/plots/64Mpc_96c_48p_zi255_wakeGmu5t10m5zi63m/"
+
+# # path_out = '/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512/plots_4/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/'
+# # path_out = '/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512_hpx_2d_NSIDE4_tst/plots_1/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/'
+# # path_out = '/home/cunhad/projects/rrg-rhb/cunhad/simulations/cubep3m/ht/data_cps32_512_hpx_2d_NSIDE4/plots_3/4Mpc_2048c_1024p_zi63_wakeGmu4t10m8zi10m/'
+# print("Path out = "+ str(path_out))
+
+# redshift = args.redshift
+# # redshift = '63'
+# # redshift = '31'
+# # redshift = '15'
+# redshift = '5'
+# # redshift = '10'
+# # redshift = '3'
+# print("redshift= "+ str(redshift))
+
+
+
+# redshift_CP3M = args.redshift_CP3M
+# # redshift_CP3M = '63.000'
+# # redshift_CP3M = '31.000'
+# # redshift_CP3M = '15.000'
+# redshift_CP3M = '5.000'
+# # redshift_CP3M = '10.000'
+# # redshift_CP3M = '3.000'
+# print("redshift_CP3M= "+ str(redshift_CP3M))
+
+
+
+# redshift_CP3M_insertion = args.redshift_CP3M_insertion
+# redshift_CP3M_insertion = '63.000'
+# # redshift_CP3M_insertion = '5.000'
+# # redshift_CP3M_insertion = '10.000'
+# # redshift_CP3M_insertion = '3.000'
+# print("redshift_CP3M_insertion = "+ str(redshift_CP3M_insertion))
+
+
+
+
+
+# Nmesh =  ast.literal_eval(args.Nmesh)
+# # Nmesh = [48,48,48]
+# Nmesh = [48,48,12]
+# # Nmesh = [512,512,32]
+# print("Nmesh= "+ str(Nmesh))
+
+# Nmesh_CP3M =  ast.literal_eval(args.Nmesh_CP3M)
+# Nmesh_CP3M = [96,96,96]
+# print("Nmesh_CP3M= "+ str(Nmesh_CP3M))
+
+
+
+# BoxSize = args.BoxSize
+# print("BoxSize= "+ str(BoxSize))
+
+# nfiles = args.nfiles
+# print("nfiles= "+ str(nfiles))
+
+# nfiles_CP3M = args.nfiles_CP3M
+# nfiles_CP3M = 8
+# print("nfiles_CP3M= "+ str(nfiles_CP3M))
+
+# ncells = args.ncells
+# ncells = 96
+# print("ncells= "+ str(ncells))
+
+# npart = args.npart
+# npart = 48
+# print("npart= "+ str(npart))
+
+# resol_factor = args.resol_factor
+# resol_factor = 1
+# # resol_factor = 2
+# print("resol_factor= "+ str(resol_factor))
+
+# Nside_id = args.Nside_id
+# # Nside_id = 1
+# # Nside_id = 96
+# # Nside_id = 384
+# # Nside_id = 21
+# # Nside_id = 86
+# print("Nside_id= "+ str(Nside_id))
+
+# do_no_wake = args.do_no_wake
+# # do_no_wake = True
+# print("do_no_wake = "+ str(do_no_wake))
+
+# # num_epochs=args.num_epochs
+# # print("Num epochs = "+ str(num_epochs))
 
 
 
@@ -256,18 +341,24 @@ grid_points_wake = PIDs.obtain_wake_grid_points_chunks(Nmesh,pos_wake_rot,chunk_
 
 #%%
 
+
+# this is the 2d projection of the whole volume
+
+# verify and label the hpx case
 if Nside_id is not None:
     ns_id = '_nsid' + str(Nside_id)
 else:
     ns_id = ''
 
+# plot map, with coloured places where the wake is (wid=wake id)
 save_plot_2d_proj_fig = path_out+'2dproj_'+sample+'_z'+redshift+ns_id+'wid.png'
 PIDs.plot_2d_proj_wake_colInfo3d(mesh,grid_points_wake,save_plot_2d_proj_fig)
 # # PIDs.plot_2d_proj_wake_colInfo3d(mesh,grid_points_wake,save=None)
+# plot just the map
 save_plot_2d_proj_fig = path_out+'2dproj_'+sample+'_z'+redshift+ns_id+'.png'
 Projection2d.plot_2d_proj(mesh,save_plot_2d_proj_fig)
 
-# print("until here?")
+# compare map with and without wake (and colour the wake position, widd=wake id difference)
 
 if do_no_wake:
     
@@ -317,22 +408,43 @@ if do_no_wake:
 
 
 
+
+
 #%%
-# sys.path.append(path_analy+'pycurvelab')
-# import pycurvelab
-
-
-slice_list = [1]
-sliceId =  ["_sl" + str(i)  for i in slice_list]
-grid_points_wake_eachslice_list = [grid_points_wake_eachslice[i] for i in slice_list]
-save_plot_2d_proj_fig_list = [ path_out+'2dproj_'+sample+'_z'+redshift+ns_id+sliceId[i]+'widdc.png' for i,_ in enumerate(slice_list)]
-PIDs.plot_2d_proj_curveletFilt_eachSlice(mesh[:,:,slice_list],mesh_nowake[:,:,slice_list], grid_points_wake_eachslice, slice_list,save_plot_2d_proj_fig_list)
-# PIDs.plot_2d_proj_curveletFilt_eachSlice(mesh[:,:,slice_list],mesh_nowake[:,:,slice_list], grid_points_wake_eachslice, slice_list)
 
 
 
+expected_average_cell_in_onlywake =  (npart ** 3) /  (Nmesh[0] * Nmesh[1] * Nmesh[2] )
+mesh_justwake = PIDs.cic_xy_with_zslice(pos_wake_rot,Nmesh) / expected_average_cell_in_onlywake
 
-# pos_wake_rot, shift, lim,Pos = PIDs.rotate_pos_wake(pos_wake, ra, pv, ncells, npart, resol_factor,depth)
+#wake particle only analysis
+save_plot_2d_proj_fig_list = [ path_out+'2dproj_'+sample+'_z'+redshift+ns_id+sliceId[i]+'wido.png' for i,_ in enumerate(slice_list)]
+PIDs.plot_2d_proj_wake_colInfo3d_eachSlice(mesh_justwake[:,:,slice_list], grid_points_wake_eachslice, slice_list,save_plot_2d_proj_fig_list)
+#exploration stat
+save_plot_2d_proj_fig_list = [ path_out+'2dproj_'+sample+'_z'+redshift+ns_id+sliceId[i]+'wide.png' for i,_ in enumerate(slice_list)]
+PIDs.plot_2d_proj_onlywake_eachSlice(mesh_justwake[:,:,slice_list], grid_points_wake_eachslice, slice_list,save_plot_2d_proj_fig_list)
+
+
+
+#%%
+
+# # working
+
+# # sys.path.append(path_analy+'pycurvelab')
+# # import pycurvelab
+
+
+# slice_list = [1]
+# sliceId =  ["_sl" + str(i)  for i in slice_list]
+# grid_points_wake_eachslice_list = [grid_points_wake_eachslice[i] for i in slice_list]
+# save_plot_2d_proj_fig_list = [ path_out+'2dproj_'+sample+'_z'+redshift+ns_id+sliceId[i]+'widdc.png' for i,_ in enumerate(slice_list)]
+# PIDs.plot_2d_proj_curveletFilt_eachSlice(mesh[:,:,slice_list],mesh_nowake[:,:,slice_list], grid_points_wake_eachslice, slice_list,save_plot_2d_proj_fig_list)
+# # PIDs.plot_2d_proj_curveletFilt_eachSlice(mesh[:,:,slice_list],mesh_nowake[:,:,slice_list], grid_points_wake_eachslice, slice_list)
+
+
+
+
+# # pos_wake_rot, shift, lim,Pos = PIDs.rotate_pos_wake(pos_wake, ra, pv, ncells, npart, resol_factor,depth)
 
 
 #%%
