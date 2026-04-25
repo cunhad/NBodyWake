@@ -79,7 +79,7 @@ parser.add_argument('--wake_top_percentage', type=float, default=10, help='')
 parser.add_argument('--void_percentage', type=float, default=0, help='')
 
 
-parser.add_argument('--batch_size', type=int, default=1, help='')
+parser.add_argument('--batch_size', type=int, default=4, help='')
 parser.add_argument('--num_workers', type=int, default=0, help='')
 parser.add_argument('--num_epochs', type=int, default=50, help='')
 
@@ -309,9 +309,9 @@ from collections import Counter
 #%%
 
 # prioritize wake recall
-POS_WEIGHT = 0.5          
+POS_WEIGHT = 0.7  # try 0.7, 0.8, 1.0 — never below 0.5
 # THRESH_GRID = np.linspace(0.05, 0.95, 37)
-THRESH_GRID = np.arange(0.35, 0.51, 0.01)
+THRESH_GRID = np.arange(0.30, 0.80, 0.01)
 DEFAULT_THRESHOLD = 0.50
 
 #%%
@@ -680,7 +680,7 @@ test_data_  = Subset(test_train_data__, test_idx)
 
 valid_dataloader = DataLoader(valid_data__, batch_size=batch_size, shuffle=False, num_workers=num_workers)
 test_dataloader = DataLoader(test_data_, batch_size=batch_size, shuffle=False, num_workers=num_workers)
-train_dataloader = DataLoader(train_data_, batch_size=batch_size, shuffle=False, num_workers=num_workers)
+train_dataloader = DataLoader(train_data_, batch_size=batch_size, shuffle=True, num_workers=num_workers)
 
 
 # # this should be uncommented (if on debug)
@@ -1038,8 +1038,8 @@ class WholeVolumeWakeNet(nn.Module):
             nn.Dropout(dropout),
             nn.Linear(base * 8, 1),
         )
-        # with torch.no_grad():
-        #     self.classifier[-1].bias.fill_(-1.0)
+        with torch.no_grad():
+            self.classifier[-1].bias.fill_(-1.0)
 
     def forward(self, x):
         x = self.stem(x)
@@ -1137,11 +1137,11 @@ class WholeVolumeWakeNet(nn.Module):
 #%%
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-model = WholeVolumeWakeNet(in_channels=2, base=16, dropout=0.3).to(device)
+model = WholeVolumeWakeNet(in_channels=2, base=16, dropout=0.5).to(device)
 optimizer = torch.optim.AdamW(
     model.parameters(),
     lr=1e-4,
-    weight_decay=3e-4
+    weight_decay=1e-4
 )
 # # criterion = nn.BCEWithLogitsLoss()
 criterion = nn.BCEWithLogitsLoss(
@@ -1279,6 +1279,9 @@ def train_one_epoch(model, dataloader, criterion, optimizer, device, accum_steps
         grad_norm = total_grad_sq ** 0.5
         grad_norm_sum += grad_norm
         grad_steps += 1
+        
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+
 
         if ((step + 1) % accum_steps == 0) or ((step + 1) == len(dataloader)):
             optimizer.step()
@@ -1399,7 +1402,7 @@ def find_best_threshold_for_precision_priority(
     y_true,
     probs,
     thresholds=THRESH_GRID,
-    min_recall=0.10
+    min_recall=0.05
 ):
     best_thr = DEFAULT_THRESHOLD
     best_stats = None
