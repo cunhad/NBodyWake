@@ -400,6 +400,36 @@ def data_signal_out3d(rang, n_angle, slices, wake_spec, path):
 
     return all_data_nowake, all_data_wake
 
+def data_signal_subvol_out3d(rang, n_angle, slices, wake_spec, path):
+    import numpy as np
+
+    all_data_nowake = np.full((len(rang), n_angle, slices), np.nan, dtype=float)
+    all_data_wake   = np.full((len(rang), n_angle, slices), np.nan, dtype=float)
+
+    for i, simul in enumerate(rang):
+        filename_nowake = path + wake_spec[0] + f"sample{simul}_2ds4t3dp_curv_z3_stat.txt"
+        filename_wake   = path + wake_spec[1] + f"sample{simul}_2ds4t3dp_curv_z3_stat.txt"
+
+        try:
+            arr_nowake = np.loadtxt(filename_nowake, delimiter="\t")
+            if arr_nowake.shape == (n_angle, slices):
+                all_data_nowake[i, :, :] = arr_nowake
+            else:
+                print(f"Bad no-wake subvol shape for sample {simul}: {arr_nowake.shape}")
+        except Exception as e:
+            print(f"Error loading subvol no-wake file {filename_nowake}: {e}")
+
+        try:
+            arr_wake = np.loadtxt(filename_wake, delimiter="\t")
+            if arr_wake.shape == (n_angle, slices):
+                all_data_wake[i, :, :] = arr_wake
+            else:
+                print(f"Bad wake subvol shape for sample {simul}: {arr_wake.shape}")
+        except Exception as e:
+            print(f"Error loading subvol wake file {filename_wake}: {e}")
+
+    return all_data_nowake, all_data_wake
+
 #%%
 
 # Other functions

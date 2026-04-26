@@ -229,6 +229,16 @@ print("Nmesh= "+ str(Nmesh))
 # print("Nmesh= "+ str(Nmesh))
 
 
+
+
+
+
+
+
+
+
+
+
 # # batch_size = 32
 # TRAIN_RATIO = 0.8       #fraction of total dataset that will go to train+validation
 # VALID_RATIO = 0.9       #fraction of train+validation dataset that will *NOT* go to validation
@@ -401,6 +411,7 @@ class BinVolumeDataset(Dataset):
         bin_paths: list[str],
         wake_infos: list[str],
         grid_shape: tuple[int, int, int],
+        subvol_labels=None,
         dtype: np.dtype = np.float32,
     ):
         assert len(bin_paths) == len(wake_infos), \
@@ -410,6 +421,11 @@ class BinVolumeDataset(Dataset):
         self.wake_infos = wake_infos
         self.grid_shape = tuple(grid_shape)
         self.dtype      = dtype
+        self.subvol_labels = subvol_labels
+
+        if self.subvol_labels is not None:
+            assert len(self.subvol_labels) == len(self.bin_paths), \
+                "subvol_labels must have same length as bin_paths."
 
         self.class_to_idx = {
             NOWAKE_NAME: 0,
@@ -472,24 +488,19 @@ class BinVolumeDataset(Dataset):
         vol_2ch = np.stack([vol, high], axis=0).astype(np.float32, copy=False)
         vol_tensor = torch.from_numpy(np.ascontiguousarray(vol_2ch))
 
-        # if self.split == "train":
-        #     # flip along H
-        #     if np.random.rand() < 0.5:
-        #         vol_tensor = torch.flip(vol_tensor, dims=[2])  # D,H,W if channel-first stack? adjust if needed
-        
-        #     # flip along W
-        #     if np.random.rand() < 0.5:
-        #         vol_tensor = torch.flip(vol_tensor, dims=[3])
-        
-        #     # small Gaussian noise
-        #     if np.random.rand() < 0.5:
-        #         vol_tensor = vol_tensor + 0.03 * torch.randn_like(vol_tensor)
-        
-        #     # mild intensity scaling
-        #     scale = 1.0 + 0.05 * np.random.randn()
-        #     vol_tensor = vol_tensor * scale
 
-        return vol_tensor, label
+        # return vol_tensor, label
+
+        vol_label = torch.tensor(label, dtype=torch.float32)
+
+        if self.subvol_labels is None:
+            subvol_label = torch.zeros(slices_signal, dtype=torch.float32)
+        else:
+            subvol_label = torch.tensor(self.subvol_labels[idx], dtype=torch.float32)
+        
+        return vol_tensor, vol_label, subvol_label
+
+
 
 #%%
 
@@ -518,6 +529,12 @@ wake_infos_all = [x[3] for x in filtered]
 
 all_data_nowake_void, all_data_wake_void = data_void_out3d(rang, n_angle, slices_void, wake_spec, path_void)
 all_data_nowake_signal, all_data_wake_signal = data_signal_out3d(rang, n_angle, slices_signal, wake_spec, path_WakeSignal)
+
+all_data_nowake_signal_subvol, all_data_wake_signal_subvol = data_signal_subvol_out3d(
+    rang, n_angle, slices_signal, wake_spec, path_WakeSignal
+)
+
+
 
 data_void = extract_stat3d(samples_all, anglids_all, wake_infos_all, all_data_nowake_void, all_data_wake_void, rang)
 data_signal = extract_stat3d(samples_all, anglids_all, wake_infos_all, all_data_nowake_signal, all_data_wake_signal, rang)
@@ -568,6 +585,65 @@ selected_wake_infos_val = [wake_infos_val[i] for i in selected_positions_val]
 
 
 
+#%%
+
+# for subvolumes
+
+selected_samples_val = [samples_val[i] for i in selected_positions_val]
+selected_anglids_val = [anglids_val[i] for i in selected_positions_val]
+
+def build_subvol_labels(
+    samples,
+    anglids,
+    wake_infos,
+    all_data_nowake_signal_subvol,
+    all_data_wake_signal_subvol,
+    rang,
+    slices_signal,
+    eps=1e-6,
+):
+    sample_to_idx = {s: i for i, s in enumerate(rang)}
+    subvol_labels = []
+
+    for sample, anglid, wake_info in zip(samples, anglids, wake_infos):
+        sample_id = sample_to_idx[sample]
+        angle_id = anglid - 1
+
+        if wake_info == WAKE_NAME:
+            diff = (
+                all_data_wake_signal_subvol[sample_id, angle_id, :]
+                - all_data_nowake_signal_subvol[sample_id, angle_id, :]
+            )
+
+            diff = np.nan_to_num(diff, nan=0.0)
+            diff = np.maximum(diff, 0.0)
+
+            maxval = diff.max()
+            if maxval > eps:
+                label8 = diff / maxval
+            else:
+                label8 = np.zeros(slices_signal, dtype=np.float32)
+
+        elif wake_info == NOWAKE_NAME:
+            label8 = np.zeros(slices_signal, dtype=np.float32)
+
+        else:
+            raise ValueError(f"Unknown wake_info: {wake_info}")
+
+        subvol_labels.append(label8.astype(np.float32))
+
+    return subvol_labels
+
+selected_subvol_labels_val = build_subvol_labels(
+    selected_samples_val,
+    selected_anglids_val,
+    selected_wake_infos_val,
+    all_data_nowake_signal_subvol,
+    all_data_wake_signal_subvol,
+    rang,
+    slices_signal,
+)
+
 
 
 
@@ -591,6 +667,23 @@ selected_wake_infos_tt = [wake_infos_tt[i] for i in selected_positions_tt]
 
 find_extreme_files(selected_signal_diff_tt, selected_files_tt)
 
+#%%
+
+# for subvoumes:
+
+selected_samples_tt = [samples_tt[i] for i in selected_positions_tt]
+selected_anglids_tt = [anglids_tt[i] for i in selected_positions_tt]
+
+selected_subvol_labels_tt = build_subvol_labels(
+    selected_samples_tt,
+    selected_anglids_tt,
+    selected_wake_infos_tt,
+    all_data_nowake_signal_subvol,
+    all_data_wake_signal_subvol,
+    rang,
+    slices_signal,
+)
+
 
 #%%
 
@@ -599,16 +692,30 @@ find_extreme_files(selected_signal_diff_tt, selected_files_tt)
 # e.g. if you know it's 32x512x512:
 # grid_shape = (slices_signal, 512, 512)
 
+# valid_data__ = BinVolumeDataset(
+#     bin_paths=selected_files_val,
+#     wake_infos=selected_wake_infos_val,
+#     grid_shape=Nmesh,
+# )
+
+# test_train_data__ = BinVolumeDataset(
+#     bin_paths=selected_files_tt,
+#     wake_infos=selected_wake_infos_tt,
+#     grid_shape=Nmesh,
+# )
+
 valid_data__ = BinVolumeDataset(
     bin_paths=selected_files_val,
     wake_infos=selected_wake_infos_val,
     grid_shape=Nmesh,
+    subvol_labels=selected_subvol_labels_val,
 )
 
 test_train_data__ = BinVolumeDataset(
     bin_paths=selected_files_tt,
     wake_infos=selected_wake_infos_tt,
     grid_shape=Nmesh,
+    subvol_labels=selected_subvol_labels_tt,
 )
 
 #%%
@@ -690,19 +797,22 @@ train_dataloader = DataLoader(train_data_, batch_size=batch_size, shuffle=True, 
 # test_dataloader  = DataLoader(test_data_, batch_size=batch_size, shuffle=False, num_workers=num_workers)
 # train_dataloader = DataLoader(train_data_, batch_size=batch_size, shuffle=True,  num_workers=num_workers)
 
-for X, y in train_dataloader:
+for X, vol_label, subvol_label in train_dataloader:
     print(f"Shape of X [B, C, D, H, W]: {X.shape}")
-    print(f"Shape of y: {y.shape} {y.dtype}")
+    print(f"Shape of vol_label: {vol_label.shape} {vol_label.dtype}")
+    print(f"Shape of subvol_label: {subvol_label.shape} {subvol_label.dtype}")
     break
     
-for X, y in test_dataloader:
+for X, vol_label, subvol_label  in test_dataloader:
     print(f"Shape of X [B, C, D, H, W]: {X.shape}")
-    print(f"Shape of y: {y.shape} {y.dtype}")
+    print(f"Shape of vol_label: {vol_label.shape} {vol_label.dtype}")
+    print(f"Shape of subvol_label: {subvol_label.shape} {subvol_label.dtype}")
     break  
 
-for X, y in valid_dataloader:
+for X, vol_label, subvol_label  in valid_dataloader:
     print(f"Shape of X [B, C, D, H, W]: {X.shape}")
-    print(f"Shape of y: {y.shape} {y.dtype}")
+    print(f"Shape of vol_label: {vol_label.shape} {vol_label.dtype}")
+    print(f"Shape of subvol_label: {subvol_label.shape} {subvol_label.dtype}")
     break  
 
 
@@ -934,148 +1044,287 @@ for class_idx, count in class_counts.items():
 
 #%%
 
-class ResidualBlock3D(nn.Module):
-    def __init__(self, in_ch, out_ch, stride=1, groups=8):
+# class ResidualBlock3D(nn.Module):
+#     def __init__(self, in_ch, out_ch, stride=1, groups=8):
+#         super().__init__()
+
+#         def gn(c):
+#             g = min(groups, c)
+#             while c % g != 0 and g > 1:
+#                 g -= 1
+#             return nn.GroupNorm(g, c)
+
+#         self.conv1 = nn.Conv3d(in_ch, out_ch, kernel_size=3, stride=stride, padding=1, bias=False)
+#         self.norm1 = gn(out_ch)
+#         self.act1 = nn.SiLU(inplace=True)
+
+#         self.conv2 = nn.Conv3d(out_ch, out_ch, kernel_size=3, padding=1, bias=False)
+#         self.norm2 = gn(out_ch)
+
+#         if in_ch != out_ch or stride != 1:
+#             self.skip = nn.Sequential(
+#                 nn.Conv3d(in_ch, out_ch, kernel_size=1, stride=stride, bias=False),
+#                 gn(out_ch),
+#             )
+#         else:
+#             self.skip = nn.Identity()
+
+#         self.act2 = nn.SiLU(inplace=True)
+
+#     def forward(self, x):
+#         identity = self.skip(x)
+
+#         out = self.conv1(x)
+#         out = self.norm1(out)
+#         out = self.act1(out)
+
+#         out = self.conv2(out)
+#         out = self.norm2(out)
+
+#         out = out + identity
+#         out = self.act2(out)
+#         return out
+
+
+# class ProjectionHead2D(nn.Module):
+#     def __init__(self, in_ch, mid_ch=64):
+#         super().__init__()
+#         self.net = nn.Sequential(
+#             nn.Conv2d(in_ch, mid_ch, kernel_size=3, padding=1, bias=False),
+#             nn.GroupNorm(8 if mid_ch >= 8 else 1, mid_ch),
+#             nn.SiLU(inplace=True),
+
+#             nn.Conv2d(mid_ch, mid_ch, kernel_size=3, padding=1, bias=False),
+#             nn.GroupNorm(8 if mid_ch >= 8 else 1, mid_ch),
+#             nn.SiLU(inplace=True),
+#         )
+#         self.avg = nn.AdaptiveAvgPool2d(1)
+#         self.max = nn.AdaptiveMaxPool2d(1)
+
+#     def forward(self, x2d):
+#         x2d = self.net(x2d)
+#         a = self.avg(x2d).flatten(1)
+#         m = self.max(x2d).flatten(1)
+#         return torch.cat([a, m], dim=1)
+
+
+# class WholeVolumeWakeNet(nn.Module):
+#     def __init__(self, in_channels=2, base=16, dropout=0.25):
+#         super().__init__()
+
+#         self.stem = nn.Sequential(
+#             nn.Conv3d(in_channels, base, kernel_size=3, padding=1, bias=False),
+#             nn.GroupNorm(4 if base >= 4 else 1, base),
+#             nn.SiLU(inplace=True),
+#         )
+
+#         self.block1 = ResidualBlock3D(base, base)
+#         self.down1  = nn.Conv3d(base, base * 2, kernel_size=3, stride=(1, 2, 2), padding=1, bias=False)
+
+#         self.block2 = ResidualBlock3D(base * 2, base * 2)
+#         self.down2  = nn.Conv3d(base * 2, base * 4, kernel_size=3, stride=(2, 2, 2), padding=1, bias=False)
+
+#         self.block3 = ResidualBlock3D(base * 4, base * 4)
+#         self.down3  = nn.Conv3d(base * 4, base * 8, kernel_size=3, stride=(2, 2, 2), padding=1, bias=False)
+
+#         self.block4 = ResidualBlock3D(base * 8, base * 8)
+        
+#         self.drop3d_1 = nn.Dropout3d(p=0.05)
+#         self.drop3d_2 = nn.Dropout3d(p=0.10)
+
+#         # 3D pooled branch
+#         self.avg3d = nn.AdaptiveAvgPool3d(1)
+#         self.max3d = nn.AdaptiveMaxPool3d(1)
+
+#         # projection-aware 2D branch
+#         self.proj_head = ProjectionHead2D(in_ch=base * 16, mid_ch=base * 4)
+
+#         # final classifier
+#         feat_3d = base * 8 * 2
+#         feat_2d = base * 4 * 2
+#         self.classifier = nn.Sequential(
+#             nn.Linear(feat_3d + feat_2d, base * 8),
+#             nn.SiLU(inplace=True),
+#             nn.Dropout(dropout),
+#             nn.Linear(base * 8, 1),
+#         )
+#         with torch.no_grad():
+#             self.classifier[-1].bias.fill_(-1.0)
+
+#     def forward(self, x):
+#         x = self.stem(x)
+
+#         x = self.block1(x)
+#         x = self.down1(x)
+
+#         x = self.block2(x)
+#         x = self.down2(x)
+
+#         # x = self.block3(x)
+#         # x = self.down3(x)
+
+#         # x = self.block4(x)
+        
+#         x = self.block3(x)
+#         x = self.drop3d_1(x)
+#         x = self.down3(x)
+        
+#         x = self.block4(x)
+#         x = self.drop3d_2(x)
+
+#         # 3D branch
+#         f3a = self.avg3d(x).flatten(1)
+#         f3m = self.max3d(x).flatten(1)
+#         f3 = torch.cat([f3a, f3m], dim=1)
+
+#         # projection-aware branch: use learned feature projections
+#         x_mean = x.mean(dim=2)           # mean over depth
+#         x_max  = x.max(dim=2).values     # max over depth
+#         x2d = torch.cat([x_mean, x_max], dim=1)
+#         f2 = self.proj_head(x2d)
+
+#         out = self.classifier(torch.cat([f3, f2], dim=1)).squeeze(1)
+#         return out 
+
+
+class SubvolumeEncoder3D(nn.Module):
+    """
+    Shared encoder applied to each subvolume.
+    Input:  (B*8, C, 4, H, W)
+    Output: (B*8, feat_dim)
+    """
+
+    def __init__(self, in_channels=2, base=16, feat_dim=128):
         super().__init__()
 
-        def gn(c):
-            g = min(groups, c)
-            while c % g != 0 and g > 1:
-                g -= 1
-            return nn.GroupNorm(g, c)
-
-        self.conv1 = nn.Conv3d(in_ch, out_ch, kernel_size=3, stride=stride, padding=1, bias=False)
-        self.norm1 = gn(out_ch)
-        self.act1 = nn.SiLU(inplace=True)
-
-        self.conv2 = nn.Conv3d(out_ch, out_ch, kernel_size=3, padding=1, bias=False)
-        self.norm2 = gn(out_ch)
-
-        if in_ch != out_ch or stride != 1:
-            self.skip = nn.Sequential(
-                nn.Conv3d(in_ch, out_ch, kernel_size=1, stride=stride, bias=False),
-                gn(out_ch),
-            )
-        else:
-            self.skip = nn.Identity()
-
-        self.act2 = nn.SiLU(inplace=True)
-
-    def forward(self, x):
-        identity = self.skip(x)
-
-        out = self.conv1(x)
-        out = self.norm1(out)
-        out = self.act1(out)
-
-        out = self.conv2(out)
-        out = self.norm2(out)
-
-        out = out + identity
-        out = self.act2(out)
-        return out
-
-
-class ProjectionHead2D(nn.Module):
-    def __init__(self, in_ch, mid_ch=64):
-        super().__init__()
         self.net = nn.Sequential(
-            nn.Conv2d(in_ch, mid_ch, kernel_size=3, padding=1, bias=False),
-            nn.GroupNorm(8 if mid_ch >= 8 else 1, mid_ch),
-            nn.SiLU(inplace=True),
-
-            nn.Conv2d(mid_ch, mid_ch, kernel_size=3, padding=1, bias=False),
-            nn.GroupNorm(8 if mid_ch >= 8 else 1, mid_ch),
-            nn.SiLU(inplace=True),
-        )
-        self.avg = nn.AdaptiveAvgPool2d(1)
-        self.max = nn.AdaptiveMaxPool2d(1)
-
-    def forward(self, x2d):
-        x2d = self.net(x2d)
-        a = self.avg(x2d).flatten(1)
-        m = self.max(x2d).flatten(1)
-        return torch.cat([a, m], dim=1)
-
-
-class WholeVolumeWakeNet(nn.Module):
-    def __init__(self, in_channels=2, base=16, dropout=0.25):
-        super().__init__()
-
-        self.stem = nn.Sequential(
             nn.Conv3d(in_channels, base, kernel_size=3, padding=1, bias=False),
             nn.GroupNorm(4 if base >= 4 else 1, base),
             nn.SiLU(inplace=True),
-        )
 
-        self.block1 = ResidualBlock3D(base, base)
-        self.down1  = nn.Conv3d(base, base * 2, kernel_size=3, stride=(1, 2, 2), padding=1, bias=False)
-
-        self.block2 = ResidualBlock3D(base * 2, base * 2)
-        self.down2  = nn.Conv3d(base * 2, base * 4, kernel_size=3, stride=(2, 2, 2), padding=1, bias=False)
-
-        self.block3 = ResidualBlock3D(base * 4, base * 4)
-        self.down3  = nn.Conv3d(base * 4, base * 8, kernel_size=3, stride=(2, 2, 2), padding=1, bias=False)
-
-        self.block4 = ResidualBlock3D(base * 8, base * 8)
-        
-        self.drop3d_1 = nn.Dropout3d(p=0.05)
-        self.drop3d_2 = nn.Dropout3d(p=0.10)
-
-        # 3D pooled branch
-        self.avg3d = nn.AdaptiveAvgPool3d(1)
-        self.max3d = nn.AdaptiveMaxPool3d(1)
-
-        # projection-aware 2D branch
-        self.proj_head = ProjectionHead2D(in_ch=base * 16, mid_ch=base * 4)
-
-        # final classifier
-        feat_3d = base * 8 * 2
-        feat_2d = base * 4 * 2
-        self.classifier = nn.Sequential(
-            nn.Linear(feat_3d + feat_2d, base * 8),
+            nn.Conv3d(base, base * 2, kernel_size=3, stride=(1, 2, 2), padding=1, bias=False),
+            nn.GroupNorm(8 if base * 2 >= 8 else 1, base * 2),
             nn.SiLU(inplace=True),
-            nn.Dropout(dropout),
-            nn.Linear(base * 8, 1),
+
+            nn.Conv3d(base * 2, base * 4, kernel_size=3, stride=(2, 2, 2), padding=1, bias=False),
+            nn.GroupNorm(8 if base * 4 >= 8 else 1, base * 4),
+            nn.SiLU(inplace=True),
+
+            nn.Conv3d(base * 4, base * 4, kernel_size=3, padding=1, bias=False),
+            nn.GroupNorm(8 if base * 4 >= 8 else 1, base * 4),
+            nn.SiLU(inplace=True),
         )
-        with torch.no_grad():
-            self.classifier[-1].bias.fill_(-1.0)
+
+        self.avg_pool = nn.AdaptiveAvgPool3d(1)
+        self.max_pool = nn.AdaptiveMaxPool3d(1)
+
+        self.proj = nn.Sequential(
+            nn.Linear(base * 4 * 2, feat_dim),
+            nn.SiLU(inplace=True),
+        )
 
     def forward(self, x):
-        x = self.stem(x)
+        x = self.net(x)
+        x_avg = self.avg_pool(x).flatten(1)
+        x_max = self.max_pool(x).flatten(1)
+        x = torch.cat([x_avg, x_max], dim=1)
+        x = self.proj(x)
+        return x
 
-        x = self.block1(x)
-        x = self.down1(x)
 
-        x = self.block2(x)
-        x = self.down2(x)
+class MILSubvolumeWakeNet(nn.Module):
+    """
+    Stage-1 MIL/attention model.
 
-        # x = self.block3(x)
-        # x = self.down3(x)
+    Input:
+        X: (B, C, 32, H, W)
 
-        # x = self.block4(x)
-        
-        x = self.block3(x)
-        x = self.drop3d_1(x)
-        x = self.down3(x)
-        
-        x = self.block4(x)
-        x = self.drop3d_2(x)
+    Output:
+        vol_logit:     (B,)
+        subvol_logits: (B, 8)
+        attn_weights:  (B, 8)
+    """
 
-        # 3D branch
-        f3a = self.avg3d(x).flatten(1)
-        f3m = self.max3d(x).flatten(1)
-        f3 = torch.cat([f3a, f3m], dim=1)
+    def __init__(
+        self,
+        in_channels=2,
+        n_subvolumes=8,
+        subvol_depth=4,
+        base=16,
+        feat_dim=128,
+        dropout=0.3,
+    ):
+        super().__init__()
 
-        # projection-aware branch: use learned feature projections
-        x_mean = x.mean(dim=2)           # mean over depth
-        x_max  = x.max(dim=2).values     # max over depth
-        x2d = torch.cat([x_mean, x_max], dim=1)
-        f2 = self.proj_head(x2d)
+        self.n_subvolumes = n_subvolumes
+        self.subvol_depth = subvol_depth
 
-        out = self.classifier(torch.cat([f3, f2], dim=1)).squeeze(1)
-        return out 
+        self.encoder = SubvolumeEncoder3D(
+            in_channels=in_channels,
+            base=base,
+            feat_dim=feat_dim,
+        )
 
+        self.subvol_head = nn.Sequential(
+            nn.Linear(feat_dim, 64),
+            nn.SiLU(inplace=True),
+            nn.Dropout(dropout),
+            nn.Linear(64, 1),
+        )
+
+        self.attention = nn.Sequential(
+            nn.Linear(feat_dim, 64),
+            nn.Tanh(),
+            nn.Linear(64, 1, bias=False),
+        )
+
+        self.vol_classifier = nn.Sequential(
+            nn.Linear(feat_dim, 128),
+            nn.SiLU(inplace=True),
+            nn.Dropout(dropout),
+            nn.Linear(128, 1),
+        )
+
+        with torch.no_grad():
+            self.subvol_head[-1].bias.fill_(-1.0)
+            self.vol_classifier[-1].bias.fill_(-1.0)
+
+    def forward(self, x):
+        B, C, D, H, W = x.shape
+
+        expected_D = self.n_subvolumes * self.subvol_depth
+        assert D == expected_D, f"Expected D={expected_D}, got D={D}"
+
+        # (B, C, 32, H, W) -> (B, 8, C, 4, H, W)
+        x = x.view(B, C, self.n_subvolumes, self.subvol_depth, H, W)
+        x = x.permute(0, 2, 1, 3, 4, 5).contiguous()
+
+        # (B, 8, C, 4, H, W) -> (B*8, C, 4, H, W)
+        x = x.view(B * self.n_subvolumes, C, self.subvol_depth, H, W)
+
+        # shared encoder
+        feats = self.encoder(x)  # (B*8, feat_dim)
+
+        # local subvolume logits
+        subvol_logits = self.subvol_head(feats).view(B, self.n_subvolumes)
+
+        # reshape features back to volume structure
+        feats = feats.view(B, self.n_subvolumes, -1)  # (B, 8, feat_dim)
+
+        # attention over subvolumes
+        attn_logits = self.attention(feats).squeeze(-1)  # (B, 8)
+        attn_weights = torch.softmax(attn_logits, dim=1)
+
+        # weighted feature aggregation
+        vol_feat = torch.sum(attn_weights.unsqueeze(-1) * feats, dim=1)
+
+        # global volume logit
+        vol_logit = self.vol_classifier(vol_feat).squeeze(1)
+
+        return vol_logit, subvol_logits, attn_weights
+    
+    
+    
 #%%
 
 
@@ -1137,16 +1386,37 @@ class WholeVolumeWakeNet(nn.Module):
 #%%
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-model = WholeVolumeWakeNet(in_channels=2, base=16, dropout=0.5).to(device)
+# model = WholeVolumeWakeNet(in_channels=2, base=16, dropout=0.5).to(device)
+# optimizer = torch.optim.AdamW(
+#     model.parameters(),
+#     lr=1e-4,
+#     weight_decay=1e-4
+# )
+
+
+model = MILSubvolumeWakeNet(
+    in_channels=2,
+    n_subvolumes=8,
+    subvol_depth=4,
+    base=16,
+    feat_dim=128,
+    dropout=0.3,
+).to(device)
+
+
+
 optimizer = torch.optim.AdamW(
     model.parameters(),
     lr=1e-4,
     weight_decay=1e-4
 )
+
 # # criterion = nn.BCEWithLogitsLoss()
 criterion = nn.BCEWithLogitsLoss(
     pos_weight=torch.tensor([POS_WEIGHT], device=device)
 )
+lambda_sub = 0.3
+
 
 # criterion = AsymmetricFPLoss(
 #     gamma_pos=0.0,
@@ -1159,21 +1429,44 @@ criterion = nn.BCEWithLogitsLoss(
 #%%
 model.eval()
 
-for X, y in train_dataloader:
+# for X, y in train_dataloader:
+#     X = X.to(device)
+#     y = y.to(device).float()
+
+#     with torch.no_grad():
+#         logits = model(X)
+#         probs = torch.sigmoid(logits)
+
+#     print("\n--- Sanity check ---")
+#     print("X shape:", X.shape)
+#     print("y shape:", y.shape, y.dtype)
+#     print("logits shape:", logits.shape)
+#     print("logits:", logits)
+#     print("probs:", probs)
+#     break
+
+for X, vol_label, subvol_label in train_dataloader:
     X = X.to(device)
-    y = y.to(device).float()
+    vol_label = vol_label.to(device).float()
+    subvol_label = subvol_label.to(device).float()
 
     with torch.no_grad():
-        logits = model(X)
-        probs = torch.sigmoid(logits)
+        vol_logit, subvol_logits, attn_weights = model(X)
+        probs = torch.sigmoid(vol_logit)
 
     print("\n--- Sanity check ---")
     print("X shape:", X.shape)
-    print("y shape:", y.shape, y.dtype)
-    print("logits shape:", logits.shape)
-    print("logits:", logits)
-    print("probs:", probs)
+    print("vol_label shape:", vol_label.shape, vol_label.dtype)
+    print("subvol_label shape:", subvol_label.shape, subvol_label.dtype)
+    print("vol_logit shape:", vol_logit.shape)
+    print("subvol_logits shape:", subvol_logits.shape)
+    print("attn_weights shape:", attn_weights.shape)
+    print("vol probs:", probs)
+    print("attention weights:", attn_weights)
+
     break
+
+
 
 
 #%%
@@ -1238,9 +1531,81 @@ scheduler = torch.optim.lr_scheduler.OneCycleLR(
 
 #     return epoch_loss, epoch_acc, mean_grad_norm
 
-def train_one_epoch(model, dataloader, criterion, optimizer, device, accum_steps=4):
+# def train_one_epoch(model, dataloader, criterion, optimizer, device, accum_steps=4):
+#     model.train()
+#     running_loss = 0.0
+#     running_correct = 0
+#     total = 0
+
+#     grad_norm_sum = 0.0
+#     grad_steps = 0
+
+#     optimizer.zero_grad()
+
+#     for step, (X, y) in enumerate(dataloader):
+#         X = X.to(device)
+#         y = y.to(device).float()
+
+#         # ---- train-time augmentation: flips only ----
+#         # X shape is [B, C, D, H, W]
+#         if torch.rand(1).item() < 0.5:
+#             X = torch.flip(X, dims=[3])   # flip H
+#         if torch.rand(1).item() < 0.5:
+#             X = torch.flip(X, dims=[4])   # flip W
+
+#         logits = model(X)
+#         loss = criterion(logits, y)
+
+#         # keep full loss value for logging
+#         running_loss += loss.item() * X.size(0)
+
+#         # gradient accumulation
+#         loss = loss / accum_steps
+#         loss.backward()
+
+#         # gradient norm diagnostic
+#         total_grad_sq = 0.0
+#         for p in model.parameters():
+#             if p.grad is not None:
+#                 g = p.grad.detach()
+#                 total_grad_sq += g.norm(2).item() ** 2
+#         grad_norm = total_grad_sq ** 0.5
+#         grad_norm_sum += grad_norm
+#         grad_steps += 1
+        
+#         torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+
+
+#         if ((step + 1) % accum_steps == 0) or ((step + 1) == len(dataloader)):
+#             optimizer.step()
+#             optimizer.zero_grad()
+
+#         probs = torch.sigmoid(logits)
+#         preds = (probs > 0.5).float()
+
+#         running_correct += (preds == y).sum().item()
+#         total += X.size(0)
+
+#     epoch_loss = running_loss / total if total > 0 else float("nan")
+#     epoch_acc = running_correct / total if total > 0 else float("nan")
+#     mean_grad_norm = grad_norm_sum / grad_steps if grad_steps > 0 else float("nan")
+
+#     return epoch_loss, epoch_acc, mean_grad_norm
+
+def train_one_epoch(
+    model,
+    dataloader,
+    criterion,
+    optimizer,
+    device,
+    lambda_sub=0.3,
+    accum_steps=4,
+):
     model.train()
+
     running_loss = 0.0
+    running_vol_loss = 0.0
+    running_sub_loss = 0.0
     running_correct = 0
     total = 0
 
@@ -1249,55 +1614,62 @@ def train_one_epoch(model, dataloader, criterion, optimizer, device, accum_steps
 
     optimizer.zero_grad()
 
-    for step, (X, y) in enumerate(dataloader):
+    for step, (X, vol_label, subvol_label) in enumerate(dataloader):
         X = X.to(device)
-        y = y.to(device).float()
+        vol_label = vol_label.to(device).float()
+        subvol_label = subvol_label.to(device).float()
 
-        # ---- train-time augmentation: flips only ----
-        # X shape is [B, C, D, H, W]
+        # train-time augmentation: flips only
         if torch.rand(1).item() < 0.5:
-            X = torch.flip(X, dims=[3])   # flip H
+            X = torch.flip(X, dims=[3])
         if torch.rand(1).item() < 0.5:
-            X = torch.flip(X, dims=[4])   # flip W
+            X = torch.flip(X, dims=[4])
 
-        logits = model(X)
-        loss = criterion(logits, y)
+        vol_logit, subvol_logits, attn_weights = model(X)
 
-        # keep full loss value for logging
+        loss_vol = criterion(vol_logit, vol_label)
+        loss_sub = criterion(subvol_logits, subvol_label)
+
+        loss = loss_vol + lambda_sub * loss_sub
+
         running_loss += loss.item() * X.size(0)
+        running_vol_loss += loss_vol.item() * X.size(0)
+        running_sub_loss += loss_sub.item() * X.size(0)
 
-        # gradient accumulation
         loss = loss / accum_steps
         loss.backward()
 
-        # gradient norm diagnostic
         total_grad_sq = 0.0
         for p in model.parameters():
             if p.grad is not None:
                 g = p.grad.detach()
                 total_grad_sq += g.norm(2).item() ** 2
+
         grad_norm = total_grad_sq ** 0.5
         grad_norm_sum += grad_norm
         grad_steps += 1
-        
-        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
 
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
 
         if ((step + 1) % accum_steps == 0) or ((step + 1) == len(dataloader)):
             optimizer.step()
             optimizer.zero_grad()
 
-        probs = torch.sigmoid(logits)
+        probs = torch.sigmoid(vol_logit)
         preds = (probs > 0.5).float()
 
-        running_correct += (preds == y).sum().item()
+        running_correct += (preds == vol_label).sum().item()
         total += X.size(0)
 
     epoch_loss = running_loss / total if total > 0 else float("nan")
+    epoch_vol_loss = running_vol_loss / total if total > 0 else float("nan")
+    epoch_sub_loss = running_sub_loss / total if total > 0 else float("nan")
     epoch_acc = running_correct / total if total > 0 else float("nan")
     mean_grad_norm = grad_norm_sum / grad_steps if grad_steps > 0 else float("nan")
 
-    return epoch_loss, epoch_acc, mean_grad_norm
+    return epoch_loss, epoch_vol_loss, epoch_sub_loss, epoch_acc, mean_grad_norm
+
+
 
 
 
@@ -1326,48 +1698,115 @@ def train_one_epoch(model, dataloader, criterion, optimizer, device, accum_steps
 #     epoch_acc = running_correct / total if total > 0 else float("nan")
 #     return epoch_loss, epoch_acc
 
-def evaluate(model, dataloader, criterion, device, return_details=False):
+# def evaluate(model, dataloader, criterion, device, return_details=False):
+#     model.eval()
+#     running_loss = 0.0
+#     running_correct = 0
+#     total = 0
+
+#     all_probs = []
+#     all_logits = []
+#     all_y = []
+
+#     with torch.no_grad():
+#         for X, y in dataloader:
+#             X = X.to(device)
+#             y = y.to(device).float()
+
+#             logits = model(X)
+#             loss = criterion(logits, y)
+
+#             probs = torch.sigmoid(logits)
+#             preds = (probs > 0.5).float()
+
+#             running_loss += loss.item() * X.size(0)
+#             running_correct += (preds == y).sum().item()
+#             total += X.size(0)
+
+#             all_probs.extend(probs.detach().cpu().numpy().tolist())
+#             all_logits.extend(logits.detach().cpu().numpy().tolist())
+#             all_y.extend(y.detach().cpu().numpy().tolist())
+
+#     epoch_loss = running_loss / total if total > 0 else float("nan")
+#     epoch_acc = running_correct / total if total > 0 else float("nan")
+
+#     if return_details:
+#         return (
+#             epoch_loss,
+#             epoch_acc,
+#             np.array(all_probs),
+#             np.array(all_logits),
+#             np.array(all_y),
+#         )
+
+#     return epoch_loss, epoch_acc
+
+
+def evaluate(
+    model,
+    dataloader,
+    criterion,
+    device,
+    lambda_sub=0.3,
+    return_details=False,
+):
     model.eval()
+
     running_loss = 0.0
+    running_vol_loss = 0.0
+    running_sub_loss = 0.0
     running_correct = 0
     total = 0
 
     all_probs = []
     all_logits = []
     all_y = []
+    all_attn = []
 
     with torch.no_grad():
-        for X, y in dataloader:
+        for X, vol_label, subvol_label in dataloader:
             X = X.to(device)
-            y = y.to(device).float()
+            vol_label = vol_label.to(device).float()
+            subvol_label = subvol_label.to(device).float()
 
-            logits = model(X)
-            loss = criterion(logits, y)
+            vol_logit, subvol_logits, attn_weights = model(X)
 
-            probs = torch.sigmoid(logits)
+            loss_vol = criterion(vol_logit, vol_label)
+            loss_sub = criterion(subvol_logits, subvol_label)
+            loss = loss_vol + lambda_sub * loss_sub
+
+            probs = torch.sigmoid(vol_logit)
             preds = (probs > 0.5).float()
 
             running_loss += loss.item() * X.size(0)
-            running_correct += (preds == y).sum().item()
+            running_vol_loss += loss_vol.item() * X.size(0)
+            running_sub_loss += loss_sub.item() * X.size(0)
+            running_correct += (preds == vol_label).sum().item()
             total += X.size(0)
 
             all_probs.extend(probs.detach().cpu().numpy().tolist())
-            all_logits.extend(logits.detach().cpu().numpy().tolist())
-            all_y.extend(y.detach().cpu().numpy().tolist())
+            all_logits.extend(vol_logit.detach().cpu().numpy().tolist())
+            all_y.extend(vol_label.detach().cpu().numpy().tolist())
+            all_attn.extend(attn_weights.detach().cpu().numpy().tolist())
 
     epoch_loss = running_loss / total if total > 0 else float("nan")
+    epoch_vol_loss = running_vol_loss / total if total > 0 else float("nan")
+    epoch_sub_loss = running_sub_loss / total if total > 0 else float("nan")
     epoch_acc = running_correct / total if total > 0 else float("nan")
 
     if return_details:
         return (
             epoch_loss,
+            epoch_vol_loss,
+            epoch_sub_loss,
             epoch_acc,
             np.array(all_probs),
             np.array(all_logits),
             np.array(all_y),
+            np.array(all_attn),
         )
 
-    return epoch_loss, epoch_acc
+    return epoch_loss, epoch_vol_loss, epoch_sub_loss, epoch_acc
 
 
 def threshold_stats(y_true, probs, thr):
@@ -1482,12 +1921,30 @@ best_path = "best_model_precision.pt"
 
 
 for epoch in range(num_epochs):
-    train_loss, train_acc, mean_grad_norm = train_one_epoch(
-    model, train_dataloader, criterion, optimizer, device, accum_steps=4
+    # train_loss, train_acc, mean_grad_norm = train_one_epoch(
+    # model, train_dataloader, criterion, optimizer, device, accum_steps=4
+    # )
+    
+    # val_loss, val_acc, val_probs, val_logits, val_y = evaluate(
+    #     model, valid_dataloader, criterion, device, return_details=True
+    # )
+    train_loss, train_vol_loss, train_sub_loss, train_acc, mean_grad_norm = train_one_epoch(
+    model,
+    train_dataloader,
+    criterion,
+    optimizer,
+    device,
+    lambda_sub=lambda_sub,
+    accum_steps=4,
     )
     
-    val_loss, val_acc, val_probs, val_logits, val_y = evaluate(
-        model, valid_dataloader, criterion, device, return_details=True
+    val_loss, val_vol_loss, val_sub_loss, val_acc, val_probs, val_logits, val_y, val_attn = evaluate(
+        model,
+        valid_dataloader,
+        criterion,
+        device,
+        lambda_sub=lambda_sub,
+        return_details=True,
     )
 
     try:
@@ -1555,8 +2012,11 @@ for epoch in range(num_epochs):
     current_fp_over_tp = thr_stats["fp"] / (thr_stats["tp"] + 1e-12)
 
     print(f"Epoch {epoch+1}/{num_epochs}")
-    print(f"  Train loss: {train_loss:.4f} | Train acc: {train_acc:.4f}")
-    print(f"  Val   loss: {val_loss:.4f} | Val   acc@0.5: {val_acc:.4f}")
+    # print(f"  Train loss: {train_loss:.4f} | Train acc: {train_acc:.4f}")
+    # print(f"  Val   loss: {val_loss:.4f} | Val   acc@0.5: {val_acc:.4f}")
+    print(f"  Train total loss: {train_loss:.4f} | vol: {train_vol_loss:.4f} | subvol: {train_sub_loss:.4f} | acc: {train_acc:.4f}")
+    print(f"  Val   total loss: {val_loss:.4f} | vol: {val_vol_loss:.4f} | subvol: {val_sub_loss:.4f} | acc@0.5: {val_acc:.4f}")
+    print("  Mean attention weights:", np.mean(val_attn, axis=0))
     print(f"  Val AUC: {val_auc:.4f}")
     print(f"  Mean grad norm: {mean_grad_norm:.6f}")
     print(f"  Best precision-priority threshold this epoch: {thr_epoch:.2f}")
