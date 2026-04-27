@@ -1289,7 +1289,7 @@ class MILSubvolumeWakeNet(nn.Module):
             self.subvol_head[-1].bias.fill_(-1.0)
             self.vol_classifier[-1].bias.fill_(-1.0)
 
-    def forward(self, x):
+    def forward(self, x, subvol_prior):
         B, C, D, H, W = x.shape
 
         expected_D = self.n_subvolumes * self.subvol_depth
@@ -1311,9 +1311,12 @@ class MILSubvolumeWakeNet(nn.Module):
         # reshape features back to volume structure
         feats = feats.view(B, self.n_subvolumes, -1)  # (B, 8, feat_dim)
 
-        # attention over subvolumes
-        attn_logits = self.attention(feats).squeeze(-1)  # (B, 8)
-        attn_weights = torch.softmax(attn_logits, dim=1)
+        # # attention over subvolumes
+        # attn_logits = self.attention(feats).squeeze(-1)  # (B, 8)
+        # attn_weights = torch.softmax(attn_logits, dim=1)
+        attn_logits = self.attention(feats).squeeze(-1)          # (B, 8)
+        prior_logits = torch.log(subvol_prior.clamp(min=1e-8))  # (B, 8)
+        attn_weights = torch.softmax(attn_logits + prior_logits, dim=1)
 
         # weighted feature aggregation
         vol_feat = torch.sum(attn_weights.unsqueeze(-1) * feats, dim=1)
@@ -1451,7 +1454,13 @@ for X, vol_label, subvol_label in train_dataloader:
     subvol_label = subvol_label.to(device).float()
 
     with torch.no_grad():
-        vol_logit, subvol_logits, attn_weights = model(X)
+        # vol_logit, subvol_logits, attn_weights = model(X)
+        subvol_prior = subvol_label.clone()
+        subvol_prior = subvol_prior.clamp(min=0)
+        subvol_prior = subvol_prior / (subvol_prior.sum(dim=1, keepdim=True) + 1e-8)
+        subvol_prior = subvol_prior.to(device)
+        
+        vol_logit, subvol_logits, attn_weights = model(X, subvol_prior)
         probs = torch.sigmoid(vol_logit)
 
     print("\n--- Sanity check ---")
@@ -1625,7 +1634,11 @@ def train_one_epoch(
         if torch.rand(1).item() < 0.5:
             X = torch.flip(X, dims=[4])
 
-        vol_logit, subvol_logits, attn_weights = model(X)
+        # vol_logit, subvol_logits, attn_weights = model(X)
+        # Build prior from subvol_label before calling model
+        subvol_prior = subvol_label.clone().clamp(min=0)
+        subvol_prior = subvol_prior / (subvol_prior.sum(dim=1, keepdim=True) + 1e-8)        
+        vol_logit, subvol_logits, attn_weights = model(X, subvol_prior)
 
         loss_vol = criterion(vol_logit, vol_label)
         loss_sub = criterion(subvol_logits, subvol_label)
@@ -1649,11 +1662,11 @@ def train_one_epoch(
         grad_norm_sum += grad_norm
         grad_steps += 1
 
-        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
-
         if ((step + 1) % accum_steps == 0) or ((step + 1) == len(dataloader)):
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
             optimizer.step()
             optimizer.zero_grad()
+            scheduler.step()
 
         probs = torch.sigmoid(vol_logit)
         preds = (probs > 0.5).float()
@@ -1769,7 +1782,11 @@ def evaluate(
             vol_label = vol_label.to(device).float()
             subvol_label = subvol_label.to(device).float()
 
-            vol_logit, subvol_logits, attn_weights = model(X)
+            # vol_logit, subvol_logits, attn_weights = model(X)
+            subvol_prior = subvol_label.clone().clamp(min=0)
+            subvol_prior = subvol_prior / (subvol_prior.sum(dim=1, keepdim=True) + 1e-8)
+            
+            vol_logit, subvol_logits, attn_weights = model(X, subvol_prior)
 
             loss_vol = criterion(vol_logit, vol_label)
             loss_sub = criterion(subvol_logits, subvol_label)
