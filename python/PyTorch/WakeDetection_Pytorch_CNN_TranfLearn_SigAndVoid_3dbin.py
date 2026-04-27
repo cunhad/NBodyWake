@@ -323,6 +323,7 @@ POS_WEIGHT = 0.7  # try 0.7, 0.8, 1.0 — never below 0.5
 # THRESH_GRID = np.linspace(0.05, 0.95, 37)
 THRESH_GRID = np.arange(0.30, 0.80, 0.01)
 DEFAULT_THRESHOLD = 0.50
+FULL_VAL_EVERY = 5   # evaluate full samples_val every 5 epochs
 
 #%%
 
