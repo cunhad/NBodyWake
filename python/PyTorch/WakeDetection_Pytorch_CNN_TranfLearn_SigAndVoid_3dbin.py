@@ -323,7 +323,11 @@ POS_WEIGHT = 0.7  # try 0.7, 0.8, 1.0 — never below 0.5
 # THRESH_GRID = np.linspace(0.05, 0.95, 37)
 THRESH_GRID = np.arange(0.30, 0.80, 0.01)
 DEFAULT_THRESHOLD = 0.50
-FULL_VAL_EVERY = 5   # evaluate full samples_val every 5 epochs
+  
+
+FULL_VAL_EVERY = 25 # evaluate full samples_val every 5 epochs
+CHECKPOINT_EVERY = 5
+RESUME_PATH = None  # or "checkpoint_latest.pt" if resuming
 
 #%%
 
@@ -645,7 +649,16 @@ selected_subvol_labels_val = build_subvol_labels(
     slices_signal,
 )
 
-
+# Labels for the complete validation set, before select_extreme_files
+full_subvol_labels_val = build_subvol_labels(
+    samples_val,
+    anglids_val,
+    wake_infos_val,
+    all_data_nowake_signal_subvol,
+    all_data_wake_signal_subvol,
+    rang,
+    slices_signal,
+)
 
 
 
@@ -719,6 +732,13 @@ test_train_data__ = BinVolumeDataset(
     subvol_labels=selected_subvol_labels_tt,
 )
 
+full_valid_data__ = BinVolumeDataset(
+    bin_paths=files_list_validation,
+    wake_infos=wake_infos_val,
+    grid_shape=Nmesh,
+    subvol_labels=full_subvol_labels_val,
+)
+
 #%%
 
 
@@ -790,6 +810,12 @@ valid_dataloader = DataLoader(valid_data__, batch_size=batch_size, shuffle=False
 test_dataloader = DataLoader(test_data_, batch_size=batch_size, shuffle=False, num_workers=num_workers)
 train_dataloader = DataLoader(train_data_, batch_size=batch_size, shuffle=True, num_workers=num_workers)
 
+full_valid_dataloader = DataLoader(
+    full_valid_data__,
+    batch_size=batch_size,
+    shuffle=False,
+    num_workers=num_workers,
+)
 
 # # this should be uncommented (if on debug)
 
@@ -1936,9 +1962,40 @@ best_epoch = -1
 best_threshold = DEFAULT_THRESHOLD
 best_path = "best_model_precision.pt"
 
+def save_checkpoint(path, epoch):
+    torch.save({
+        "epoch": epoch,
+        "model_state_dict": model.state_dict(),
+        "optimizer_state_dict": optimizer.state_dict(),
+        "scheduler_state_dict": scheduler.state_dict(),
+        "best_fp_over_tp": best_fp_over_tp,
+        "best_precision": best_precision,
+        "best_tp": best_tp,
+        "best_epoch": best_epoch,
+        "best_threshold": best_threshold,
+    }, path)
 
 
-for epoch in range(num_epochs):
+start_epoch = 0
+
+if RESUME_PATH is not None and os.path.isfile(RESUME_PATH):
+    checkpoint = torch.load(RESUME_PATH, map_location=device)
+
+    model.load_state_dict(checkpoint["model_state_dict"])
+    optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+    scheduler.load_state_dict(checkpoint["scheduler_state_dict"])
+
+    start_epoch = checkpoint["epoch"] + 1
+
+    best_fp_over_tp = checkpoint["best_fp_over_tp"]
+    best_precision = checkpoint["best_precision"]
+    best_tp = checkpoint["best_tp"]
+    best_epoch = checkpoint["best_epoch"]
+    best_threshold = checkpoint["best_threshold"]
+
+    print(f"Resuming from epoch {start_epoch}")
+
+for epoch in range(start_epoch, num_epochs):
     # train_loss, train_acc, mean_grad_norm = train_one_epoch(
     # model, train_dataloader, criterion, optimizer, device, accum_steps=4
     # )
@@ -1969,6 +2026,39 @@ for epoch in range(num_epochs):
         val_auc = roc_auc_score(val_y, val_probs)
     except Exception:
         val_auc = float("nan")
+        
+    do_full_val = ((epoch + 1) % FULL_VAL_EVERY == 0) or ((epoch + 1) == num_epochs)
+    if do_full_val:
+        (
+            full_val_loss,
+            full_val_vol_loss,
+            full_val_sub_loss,
+            full_val_acc,
+            full_val_probs,
+            full_val_logits,
+            full_val_y,
+            full_val_attn,
+        ) = evaluate(
+            model,
+            full_valid_dataloader,
+            criterion,
+            device,
+            lambda_sub=lambda_sub,
+            return_details=True,
+        )
+
+        try:
+            full_val_auc = roc_auc_score(full_val_y, full_val_probs)
+        except Exception:
+            full_val_auc = float("nan")
+    
+        full_stats = threshold_stats(
+            full_val_y,
+            full_val_probs,
+            DEFAULT_THRESHOLD,
+        )
+    
+        full_fp_over_tp = full_stats["fp"] / (full_stats["tp"] + 1e-12)
         
     # improved = False
 
@@ -2020,7 +2110,7 @@ for epoch in range(num_epochs):
         best_threshold = thr_epoch
         torch.save(model.state_dict(), best_path)
 
-        
+    torch.save(model.state_dict(), best_path)    
 
     train_losses.append(train_loss)
     train_accs.append(train_acc)
@@ -2047,7 +2137,26 @@ for epoch in range(num_epochs):
         f"Precision={thr_stats['precision']:.4f} | "
         f"FP/TP={current_fp_over_tp:.4f}"
     )
-    
+    if do_full_val:
+        print("  --- Full validation: all samples_val before extreme selection ---")
+        print(
+            f"  Full Val total loss: {full_val_loss:.4f} | "
+            f"vol: {full_val_vol_loss:.4f} | "
+            f"subvol: {full_val_sub_loss:.4f} | "
+            f"acc@0.5: {full_val_acc:.4f}"
+        )
+        print(f"  Full Val AUC: {full_val_auc:.4f}")
+        print(
+            f"  Full TP={full_stats['tp']} "
+            f"FN={full_stats['fn']} "
+            f"FP={full_stats['fp']} "
+            f"TN={full_stats['tn']}"
+        )
+        print(
+            f"  Full Recall={full_stats['recall']:.4f} | "
+            f"Full Precision={full_stats['precision']:.4f} | "
+            f"Full FP/TP={full_fp_over_tp:.4f}"
+        )
     
 #%%
 current_fp_over_tp = thr_stats["fp"] / (thr_stats["tp"] + 1e-12)
