@@ -806,9 +806,9 @@ test_data_  = Subset(test_train_data__, test_idx)
 # this should be uncommented (if not on debug)
 
 
-valid_dataloader = DataLoader(valid_data__, batch_size=batch_size, shuffle=False, num_workers=num_workers)
-test_dataloader = DataLoader(test_data_, batch_size=batch_size, shuffle=False, num_workers=num_workers)
-train_dataloader = DataLoader(train_data_, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+valid_dataloader = DataLoader(valid_data__, batch_size=batch_size, shuffle=False, num_workers=num_workers,pin_memory=True,persistent_workers=(num_workers > 0))
+test_dataloader = DataLoader(test_data_, batch_size=batch_size, shuffle=False, num_workers=num_workers,pin_memory=True,persistent_workers=(num_workers > 0))
+train_dataloader = DataLoader(train_data_, batch_size=batch_size, shuffle=True, num_workers=num_workers,pin_memory=True,persistent_workers=(num_workers > 0))
 
 full_valid_dataloader = DataLoader(
     full_valid_data__,
@@ -2028,6 +2028,7 @@ for epoch in range(start_epoch, num_epochs):
         val_auc = float("nan")
         
     do_full_val = ((epoch + 1) % FULL_VAL_EVERY == 0) or ((epoch + 1) == num_epochs)
+    
     if do_full_val:
         (
             full_val_loss,
