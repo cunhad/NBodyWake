@@ -59,6 +59,7 @@ def parse_range(value):
 
 import argparse
 import ast
+from pathlib import Path
 
 
 parser = argparse.ArgumentParser(description='efficientnet_b7 wake classification model')
@@ -84,6 +85,37 @@ parser.add_argument('--num_workers', type=int, default=0, help='')
 parser.add_argument('--num_epochs', type=int, default=50, help='')
 
 parser.add_argument('--Nmesh', default='[512,512,32]', help='')
+
+parser.add_argument(
+    '--output_dir',
+    type=str,
+    default='runs/default_run',
+    help=(
+        'Directory where this run will save its outputs. '
+        'Default output directory: runs/default_run. '
+        'Files currently saved there include: '
+        'best_model_selected_precision.pt, '
+        'best_model_full_precision.pt, '
+        'checkpoint_latest.pt, '
+        'and epoch checkpoints named checkpoint_epoch_XXX.pt '
+        'for example checkpoint_epoch_005.pt, checkpoint_epoch_010.pt, etc. '
+        'Example: --output_dir runs/fix_validation_annotations_leakage'
+    )
+)
+
+parser.add_argument(
+    '--resume_path',
+    type=str,
+    default=None,
+    help=(
+        'Optional checkpoint path to resume from. '
+        'If you want to resume from the latest default checkpoint of a run, '
+        'use: --resume_path <output_dir>/checkpoint_latest.pt '
+        'for example: --resume_path runs/default_run/checkpoint_latest.pt'
+    )
+)
+
+
 
 
 args = parser.parse_args()
@@ -145,9 +177,21 @@ print("Num epochs = "+ str(num_epochs))
 Nmesh =  ast.literal_eval(args.Nmesh)
 print("Nmesh= "+ str(Nmesh))
 
+# Output directory for this run
+output_dir = Path(args.output_dir)
+output_dir.mkdir(parents=True, exist_ok=True)
+print("Output directory = ", output_dir.resolve())
 
+# Optional checkpoint path for resuming
+RESUME_PATH = Path(args.resume_path) if args.resume_path is not None else None
 
-
+if RESUME_PATH is None:
+    print("Resume checkpoint path = None. Starting from scratch.")
+else:
+    print("Resume checkpoint path = ", RESUME_PATH.resolve())
+    
+    
+    
 # # parameters
 
 # path_data = args.path_data
@@ -227,8 +271,18 @@ print("Nmesh= "+ str(Nmesh))
 # # Nmesh = [512,512,512]
 # print("Nmesh= "+ str(Nmesh))
 
+# # Output directory for this run
+# output_dir = Path(args.output_dir)
+# output_dir.mkdir(parents=True, exist_ok=True)
+# print("Output directory = ", output_dir.resolve())
 
+# # Optional checkpoint path for resuming
+# RESUME_PATH = Path(args.resume_path) if args.resume_path is not None else None
 
+# if RESUME_PATH is None:
+#     print("Resume checkpoint path = None. Starting from scratch.")
+# else:
+#     print("Resume checkpoint path = ", RESUME_PATH.resolve())
 
 
 
@@ -330,7 +384,13 @@ DEFAULT_THRESHOLD = 0.50
 FULL_VAL_EVERY = 25 # evaluate full samples_val every 5 epochs
 CHECKPOINT_EVERY = 5
 FULL_MIN_RECALL = 0.15    # avoids trivial all-negative full-validation solution
-RESUME_PATH = None  # or "checkpoint_latest.pt" if resuming
+# RESUME_PATH = None  # or "checkpoint_latest.pt" if resuming
+# RESUME_PATH = Path(args.resume_path) if args.resume_path is not None else None
+
+if RESUME_PATH is not None and os.path.isfile(RESUME_PATH):
+    checkpoint = torch.load(RESUME_PATH, map_location=device)
+    
+    
 
 #%%
 
@@ -2088,7 +2148,9 @@ best_precision = -1.0
 best_tp = -1
 best_epoch = -1
 best_threshold = DEFAULT_THRESHOLD
-best_path = "best_model_selected_precision.pt"
+# best_path = "best_model_selected_precision.pt"
+best_path = output_dir / "best_model_selected_precision.pt"
+
 
 # Best model according to full validation
 best_full_fp_over_tp = float("inf")
@@ -2096,7 +2158,8 @@ best_full_precision = -1.0
 best_full_tp = -1
 best_full_epoch = -1
 best_full_threshold = DEFAULT_THRESHOLD
-best_full_path = "best_model_full_precision.pt"
+# best_full_path = "best_model_full_precision.pt"
+best_full_path = output_dir / "best_model_full_precision.pt"
 
 # def save_checkpoint(path, epoch):
 #     torch.save({
@@ -2317,9 +2380,13 @@ for epoch in range(start_epoch, num_epochs):
         best_threshold = thr_epoch
         torch.save(model.state_dict(), best_path)
         
+    # if ((epoch + 1) % CHECKPOINT_EVERY == 0) or ((epoch + 1) == num_epochs):
+    #     save_checkpoint("checkpoint_latest.pt", epoch)
+    #     save_checkpoint(f"checkpoint_epoch_{epoch+1:03d}.pt", epoch)
+    
     if ((epoch + 1) % CHECKPOINT_EVERY == 0) or ((epoch + 1) == num_epochs):
-        save_checkpoint("checkpoint_latest.pt", epoch)
-        save_checkpoint(f"checkpoint_epoch_{epoch+1:03d}.pt", epoch)
+        save_checkpoint(output_dir / "checkpoint_latest.pt", epoch)
+        save_checkpoint(output_dir / f"checkpoint_epoch_{epoch+1:03d}.pt", epoch)
  
 
     train_losses.append(train_loss)
