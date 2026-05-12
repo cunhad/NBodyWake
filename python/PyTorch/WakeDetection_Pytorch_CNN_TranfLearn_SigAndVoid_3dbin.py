@@ -74,7 +74,7 @@ parser.add_argument('--slices_void', type=int, default=33, help='')
 parser.add_argument('--slices_signal', type=int, default=8, help='')
 # parser.add_argument('--percentage_positiveWakeSig', type=float, default=10, help='')
 parser.add_argument('--validation_fraction', type=float, default=0.1, help='')
-parser.add_argument('--train_tt_fraction', type=float, default=0.8, help='')
+parser.add_argument('--test_fraction', type=float, default=0.1, help='')
 parser.add_argument('--wake_top_percentage', type=float, default=10, help='')
 parser.add_argument('--void_percentage', type=float, default=0, help='')
 
@@ -120,8 +120,8 @@ print("Slices for wake signal = ", slices_signal)
 validation_fraction = args.validation_fraction
 print("Validation fraction of total data = ", validation_fraction)
 
-train_tt_fraction = args.train_tt_fraction
-print("Train fraction of train + test data = ", train_tt_fraction)
+test_fraction = args.test_fraction
+print("Test fraction of total data = ", test_fraction)
 
 
 wake_top_percentage = args.wake_top_percentage
@@ -193,9 +193,8 @@ print("Nmesh= "+ str(Nmesh))
 # # validation_fraction = 0.1
 # print("Validation fraction of total data = ", validation_fraction)
 
-# train_tt_fraction = args.train_tt_fraction
-# # train_tt_fraction = 0.1
-# print("Train fraction of train + test data = ", train_tt_fraction)
+# test_fraction = args.test_fraction
+# print("Test fraction of total data = ", test_fraction)
 
 
 # wake_top_percentage = args.wake_top_percentage
@@ -557,10 +556,26 @@ data_signal_diff = extract_stat_diff3d(samples_all, anglids_all, wake_infos_all,
 
 # first split per sample (so the validation is independent)
 
-validation_indices, train_test_indices = split_unique_samples(samples_all, wake_infos_all, validation_fraction)
+# validation_indices, train_test_indices = split_unique_samples(samples_all, wake_infos_all, validation_fraction)
+train_indices, validation_indices, test_indices = split_unique_samples(
+    samples_all,
+    wake_infos_all,
+    validation_fraction,
+    test_fraction,
+)
 
+
+
+files_list_train = [files_list_all[i] for i in train_indices]
 files_list_validation = [files_list_all[i] for i in validation_indices]
-files_list_trainTest = [files_list_all[i] for i in train_test_indices]
+files_list_test = [files_list_all[i] for i in test_indices]
+
+samples_train = [samples_all[i] for i in train_indices]
+anglids_train = [anglids_all[i] for i in train_indices]
+wake_infos_train = [wake_infos_all[i] for i in train_indices]
+data_void_train = [data_void[i] for i in train_indices]
+data_signal_train = [data_signal[i] for i in train_indices]
+data_signal_diff_train = [data_signal_diff[i] for i in train_indices]
 
 samples_val    = [samples_all[i] for i in validation_indices]
 anglids_val    = [anglids_all[i] for i in validation_indices]
@@ -569,12 +584,12 @@ data_void_val =  [data_void[i] for i in validation_indices]
 data_signal_val =  [data_signal[i] for i in validation_indices]
 data_signal_diff_val = [data_signal_diff[i] for i in validation_indices]
 
-samples_tt    = [samples_all[i] for i in train_test_indices]
-anglids_tt    = [anglids_all[i] for i in train_test_indices]
-wake_infos_tt = [wake_infos_all[i] for i in train_test_indices]
-data_void_tt    = [data_void[i] for i in train_test_indices]
-data_signal_tt = [data_signal[i] for i in train_test_indices]
-data_signal_diff_tt = [data_signal_diff[i] for i in train_test_indices]
+samples_test = [samples_all[i] for i in test_indices]
+anglids_test = [anglids_all[i] for i in test_indices]
+wake_infos_test = [wake_infos_all[i] for i in test_indices]
+data_void_test = [data_void[i] for i in test_indices]
+data_signal_test = [data_signal[i] for i in test_indices]
+data_signal_diff_test = [data_signal_diff[i] for i in test_indices]
 
 #%%
 
@@ -583,23 +598,60 @@ data_signal_diff_tt = [data_signal_diff[i] for i in train_test_indices]
 
 # validation
 
-# Select top 50% wake values, keep void_percentage 
+# Select top  wake values, keep void_percentage 
 selected_files_val, selected_positions_val, selected_signal_diff_val = select_extreme_files(
     data_signal_diff_val, wake_infos_val, files_list_validation, data_void_val,
     wake_top_percentage, void_percentage
 )
 
 find_extreme_files(selected_signal_diff_val, selected_files_val)
-selected_wake_infos_val = [wake_infos_val[i] for i in selected_positions_val]
 
+selected_wake_infos_val = [wake_infos_val[i] for i in selected_positions_val]
+selected_samples_val = [samples_val[i] for i in selected_positions_val]
+selected_anglids_val = [anglids_val[i] for i in selected_positions_val]
+
+
+# Select extreme wake/no-wake files only from the training samples
+selected_files_train, selected_positions_train, selected_signal_diff_train = select_extreme_files(
+    data_signal_diff_train,
+    wake_infos_train,
+    files_list_train,
+    data_void_train,
+    wake_top_percentage,
+    void_percentage,
+)
+
+find_extreme_files(selected_signal_diff_train, selected_files_train)
+
+
+selected_wake_infos_train = [wake_infos_train[i] for i in selected_positions_train]
+selected_samples_train    = [samples_train[i] for i in selected_positions_train]
+selected_anglids_train    = [anglids_train[i] for i in selected_positions_train]
+
+
+# Select extreme wake/no-wake files only from the test samples
+# This is optional: useful for comparison/debug, but not the final paper-level test.
+selected_files_test, selected_positions_test, selected_signal_diff_test = select_extreme_files(
+    data_signal_diff_test,
+    wake_infos_test,
+    files_list_test,
+    data_void_test,
+    wake_top_percentage,
+    void_percentage,
+)
+
+find_extreme_files(selected_signal_diff_test, selected_files_test)
+
+selected_wake_infos_test = [wake_infos_test[i] for i in selected_positions_test]
+selected_samples_test    = [samples_test[i] for i in selected_positions_test]
+selected_anglids_test    = [anglids_test[i] for i in selected_positions_test]
 
 
 #%%
 
 # for subvolumes
 
-selected_samples_val = [samples_val[i] for i in selected_positions_val]
-selected_anglids_val = [anglids_val[i] for i in selected_positions_val]
+
 
 def build_subvol_labels(
     samples,
@@ -643,6 +695,9 @@ def build_subvol_labels(
 
     return subvol_labels
 
+
+
+
 selected_subvol_labels_val = build_subvol_labels(
     selected_samples_val,
     selected_anglids_val,
@@ -671,31 +726,52 @@ full_subvol_labels_val = build_subvol_labels(
 
 
 
-# train and test
 
-# Select top 50% wake values, keep void_percentage 
-selected_files_tt, selected_positions_tt, selected_signal_diff_tt = select_extreme_files(
-    data_signal_diff_tt, wake_infos_tt, files_list_trainTest, data_void_tt,
-    wake_top_percentage, void_percentage
+
+# # for subvoumes:
+
+
+# selected_subvol_labels_tt = build_subvol_labels(
+#     selected_samples_tt,
+#     selected_anglids_tt,
+#     selected_wake_infos_tt,
+#     all_data_nowake_signal_subvol,
+#     all_data_wake_signal_subvol,
+#     rang,
+#     slices_signal,
+# )
+
+
+# Subvolume labels for selected training set
+selected_subvol_labels_train = build_subvol_labels(
+    selected_samples_train,
+    selected_anglids_train,
+    selected_wake_infos_train,
+    all_data_nowake_signal_subvol,
+    all_data_wake_signal_subvol,
+    rang,
+    slices_signal,
 )
 
-# selected_sliceids_tt   = [sliceids_tt[i] for i in selected_positions_tt]
-selected_wake_infos_tt = [wake_infos_tt[i] for i in selected_positions_tt]
+# Subvolume labels for selected test set
+# Use only if you intentionally create a selected/extreme test subset
+selected_subvol_labels_test = build_subvol_labels(
+    selected_samples_test,
+    selected_anglids_test,
+    selected_wake_infos_test,
+    all_data_nowake_signal_subvol,
+    all_data_wake_signal_subvol,
+    rang,
+    slices_signal,
+)
 
 
-find_extreme_files(selected_signal_diff_tt, selected_files_tt)
-
-#%%
-
-# for subvoumes:
-
-selected_samples_tt = [samples_tt[i] for i in selected_positions_tt]
-selected_anglids_tt = [anglids_tt[i] for i in selected_positions_tt]
-
-selected_subvol_labels_tt = build_subvol_labels(
-    selected_samples_tt,
-    selected_anglids_tt,
-    selected_wake_infos_tt,
+# Subvolume labels for complete unfiltered test set
+# This is the important paper-level test set
+full_subvol_labels_test = build_subvol_labels(
+    samples_test,
+    anglids_test,
+    wake_infos_test,
     all_data_nowake_signal_subvol,
     all_data_wake_signal_subvol,
     rang,
@@ -729,11 +805,37 @@ valid_data__ = BinVolumeDataset(
     subvol_labels=selected_subvol_labels_val,
 )
 
-test_train_data__ = BinVolumeDataset(
-    bin_paths=selected_files_tt,
-    wake_infos=selected_wake_infos_tt,
+# test_train_data__ = BinVolumeDataset(
+#     bin_paths=selected_files_tt,
+#     wake_infos=selected_wake_infos_tt,
+#     grid_shape=Nmesh,
+#     subvol_labels=selected_subvol_labels_tt,
+# )
+
+# Selected/extreme training dataset
+train_data__ = BinVolumeDataset(
+    bin_paths=selected_files_train,
+    wake_infos=selected_wake_infos_train,
     grid_shape=Nmesh,
-    subvol_labels=selected_subvol_labels_tt,
+    subvol_labels=selected_subvol_labels_train,
+)
+
+# Selected/extreme test dataset
+# Optional: useful for comparison/debug
+test_data__ = BinVolumeDataset(
+    bin_paths=selected_files_test,
+    wake_infos=selected_wake_infos_test,
+    grid_shape=Nmesh,
+    subvol_labels=selected_subvol_labels_test,
+)
+
+# Full unfiltered test dataset
+# Important for final paper-level evaluation
+full_test_data__ = BinVolumeDataset(
+    bin_paths=files_list_test,
+    wake_infos=wake_infos_test,
+    grid_shape=Nmesh,
+    subvol_labels=full_subvol_labels_test,
 )
 
 full_valid_data__ = BinVolumeDataset(
@@ -747,24 +849,24 @@ full_valid_data__ = BinVolumeDataset(
 
 
 
-# this should be uncommented (if not on debug)
+# # this should be uncommented (if not on debug)
 
 
-n_train_examples = min(int(len(test_train_data__) * train_tt_fraction),int(len(test_train_data__)) - 2)
-n_test_examples = len(test_train_data__) - n_train_examples
+# n_train_examples = min(int(len(test_train_data__) * train_tt_fraction),int(len(test_train_data__)) - 2)
+# n_test_examples = len(test_train_data__) - n_train_examples
 
-labels_tt = test_train_data__.labels
-sss = StratifiedShuffleSplit(
-    n_splits=1,
-    test_size=n_test_examples,
-    train_size=n_train_examples,
-    random_state=42
-)
+# labels_tt = test_train_data__.labels
+# sss = StratifiedShuffleSplit(
+#     n_splits=1,
+#     test_size=n_test_examples,
+#     train_size=n_train_examples,
+#     random_state=42
+# )
 
-train_idx, test_idx = next(sss.split(range(len(labels_tt)), labels_tt))
+# train_idx, test_idx = next(sss.split(range(len(labels_tt)), labels_tt))
 
-train_data_ = Subset(test_train_data__, train_idx)
-test_data_  = Subset(test_train_data__, test_idx)
+# train_data_ = Subset(test_train_data__, train_idx)
+# test_data_  = Subset(test_train_data__, test_idx)
 
 
 
@@ -811,11 +913,21 @@ test_data_  = Subset(test_train_data__, test_idx)
 
 
 valid_dataloader = DataLoader(valid_data__, batch_size=batch_size, shuffle=False, num_workers=num_workers,pin_memory=True,persistent_workers=(num_workers > 0))
-test_dataloader = DataLoader(test_data_, batch_size=batch_size, shuffle=False, num_workers=num_workers,pin_memory=True,persistent_workers=(num_workers > 0))
-train_dataloader = DataLoader(train_data_, batch_size=batch_size, shuffle=True, num_workers=num_workers,pin_memory=True,persistent_workers=(num_workers > 0))
+test_dataloader = DataLoader(test_data__, batch_size=batch_size, shuffle=False, num_workers=num_workers,pin_memory=True,persistent_workers=(num_workers > 0))
+train_dataloader = DataLoader(train_data__, batch_size=batch_size, shuffle=True, num_workers=num_workers,pin_memory=True,persistent_workers=(num_workers > 0))
 
 full_valid_dataloader = DataLoader(
     full_valid_data__,
+    batch_size=batch_size,
+    shuffle=False,
+    num_workers=num_workers,
+    pin_memory=True,
+    persistent_workers=(num_workers > 0)
+)
+
+
+full_test_dataloader = DataLoader(
+    full_test_data__,
     batch_size=batch_size,
     shuffle=False,
     num_workers=num_workers,
@@ -850,7 +962,7 @@ for X, vol_label, subvol_label  in valid_dataloader:
 
 
 
-print(test_train_data__.class_to_idx)   # this is the label dictionary
+print(train_data__.class_to_idx)   # this is the label dictionary
 
 
 
@@ -863,32 +975,21 @@ print(test_train_data__.class_to_idx)   # this is the label dictionary
 #%%
 
 
-def count_class_volumes(subset, original_dataset):
-    labels = [original_dataset.labels[i] for i in subset.indices]
-    class_counts = Counter(labels)
-    class_names = original_dataset.classes
+def count_class_dataset(dataset, name):
+    class_counts = Counter(dataset.labels)
+    class_names = dataset.classes
+
+    print(f"\n{name}:")
     for class_idx, count in class_counts.items():
         class_name = class_names[class_idx]
         print(f"Class: {class_name}, Number of volumes: {count}")
 
-print("\nTraining Data:")
-count_class_volumes(train_data_, test_train_data__)
 
-print("\nTesting Data:")
-count_class_volumes(test_data_, test_train_data__)
-
-
-
-# Count the number of images in each class
-class_counts = Counter(valid_data__.labels)
-# Get the class names
-class_names = valid_data__.classes
-
-# Display the number of images in each class
-print("\nValidation Data:")
-for class_idx, count in class_counts.items():
-    class_name = class_names[class_idx]
-    print(f"Class: {class_name}, Number of volumes: {count}")
+count_class_dataset(train_data__, "Selected Training Data")
+count_class_dataset(valid_data__, "Selected Validation Data")
+count_class_dataset(test_data__, "Selected Test Data")
+count_class_dataset(full_valid_data__, "Full Validation Data")
+count_class_dataset(full_test_data__, "Full Test Data")
 
 
 #%%
@@ -2267,6 +2368,68 @@ for epoch in range(start_epoch, num_epochs):
             f"Full Precision={full_stats['precision']:.4f} | "
             f"Full FP/TP={full_fp_over_tp:.4f}"
         )
+
+#%%
+
+print("\n==============================")
+print("FINAL FULL TEST EVALUATION")
+print("==============================")
+
+if os.path.isfile(best_full_path):
+    print(f"Loading best full-validation model: {best_full_path}")
+    model.load_state_dict(torch.load(best_full_path, map_location=device))
+else:
+    print("Best full-validation model not found. Using current model.")
+
+(
+    full_test_loss,
+    full_test_vol_loss,
+    full_test_sub_loss,
+    full_test_acc,
+    full_test_probs,
+    full_test_logits,
+    full_test_y,
+    full_test_attn,
+) = evaluate(
+    model,
+    full_test_dataloader,
+    criterion,
+    device,
+    lambda_sub=lambda_sub,
+    return_details=True,
+)
+
+try:
+    full_test_auc = roc_auc_score(full_test_y, full_test_probs)
+except Exception:
+    full_test_auc = float("nan")
+
+full_test_stats = threshold_stats(
+    full_test_y,
+    full_test_probs,
+    best_full_threshold,
+)
+
+full_test_fp_over_tp = full_test_stats["fp"] / (full_test_stats["tp"] + 1e-12)
+
+print(f"Full Test loss: {full_test_loss:.4f}")
+print(f"Full Test vol loss: {full_test_vol_loss:.4f}")
+print(f"Full Test subvol loss: {full_test_sub_loss:.4f}")
+print(f"Full Test acc@0.5: {full_test_acc:.4f}")
+print(f"Full Test AUC: {full_test_auc:.4f}")
+print(f"Full Test threshold from full validation: {best_full_threshold:.2f}")
+print(
+    f"Full Test TP={full_test_stats['tp']} "
+    f"FN={full_test_stats['fn']} "
+    f"FP={full_test_stats['fp']} "
+    f"TN={full_test_stats['tn']}"
+)
+print(
+    f"Full Test Recall={full_test_stats['recall']:.4f} | "
+    f"Precision={full_test_stats['precision']:.4f} | "
+    f"FP/TP={full_test_fp_over_tp:.4f}"
+)
+
     
 #%%
 current_fp_over_tp = thr_stats["fp"] / (thr_stats["tp"] + 1e-12)

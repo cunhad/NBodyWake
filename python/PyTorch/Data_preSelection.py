@@ -1356,18 +1356,78 @@ def find_extreme_files(selected_signal_diff, selected_files):
 #     # return files_list_validation, files_list_trainTest
 #     return validation_indices, train_test_indices
 
-def split_unique_samples(samples: list[int], wake_infos_all: list[str], validation_fraction: float) -> tuple:
+# def split_unique_samples(samples: list[int], wake_infos_all: list[str], validation_fraction: float) -> tuple:
+#     """
+#     Splits samples into validation and train_test sets, but only keeps samples
+#     that contain both wake and no-wake entries.
+
+#     Args:
+#         samples (list[int]): List of sample IDs.
+#         wake_infos_all (list[str]): Wake labels for each entry.
+#         validation_fraction (float): Fraction of unique samples for validation.
+
+#     Returns:
+#         tuple: (validation_indices, train_test_indices)
+#     """
+
+#     import numpy as np
+#     from collections import defaultdict
+
+#     # Group wake labels by sample
+#     sample_wake_map = defaultdict(set)
+
+#     for s, w in zip(samples, wake_infos_all):
+#         sample_wake_map[s].add(w)
+
+#     # Keep only samples that contain BOTH wake and no-wake
+#     unique_samples = [
+#         s for s, wakes in sample_wake_map.items()
+#         if len(wakes) >= 2
+#     ]
+
+#     if len(unique_samples) == 0:
+#         raise ValueError("No samples contain both wake and no-wake entries.")
+
+#     # Determine number of validation samples
+#     num_validation = max(1, int(len(unique_samples) * validation_fraction))
+
+#     # Shuffle for randomness
+#     np.random.shuffle(unique_samples)
+
+#     # Split
+#     validation_samples = unique_samples[:num_validation]
+#     train_test_samples = unique_samples[num_validation:]
+
+#     print(f"Validation Samples ({len(validation_samples)}): {validation_samples}")
+#     print(f"Train_Test Samples ({len(train_test_samples)}): {train_test_samples}")
+
+#     # Retrieve indices
+#     validation_indices = [i for i, s in enumerate(samples) if s in validation_samples]
+#     train_test_indices = [i for i, s in enumerate(samples) if s in train_test_samples]
+
+#     return validation_indices, train_test_indices
+
+def split_unique_samples(
+    samples: list[int],
+    wake_infos_all: list[str],
+    validation_fraction: float,
+    test_fraction: float,
+    seed: int = 42,
+) -> tuple:
     """
-    Splits samples into validation and train_test sets, but only keeps samples
-    that contain both wake and no-wake entries.
+    Splits unique samples into train, validation, and test sets.
+
+    Only keeps samples that contain both wake and no-wake entries.
 
     Args:
-        samples (list[int]): List of sample IDs.
-        wake_infos_all (list[str]): Wake labels for each entry.
-        validation_fraction (float): Fraction of unique samples for validation.
+        samples: List of sample IDs.
+        wake_infos_all: Wake labels for each entry.
+        validation_fraction: Fraction of unique samples for validation.
+        test_fraction: Fraction of unique samples for test.
+        seed: Random seed for reproducibility.
 
     Returns:
-        tuple: (validation_indices, train_test_indices)
+        tuple: (train_indices, validation_indices, test_indices)
     """
 
     import numpy as np
@@ -1388,24 +1448,36 @@ def split_unique_samples(samples: list[int], wake_infos_all: list[str], validati
     if len(unique_samples) == 0:
         raise ValueError("No samples contain both wake and no-wake entries.")
 
-    # Determine number of validation samples
-    num_validation = max(1, int(len(unique_samples) * validation_fraction))
+    if validation_fraction + test_fraction >= 1.0:
+        raise ValueError("validation_fraction + test_fraction must be < 1.0")
 
-    # Shuffle for randomness
-    np.random.shuffle(unique_samples)
+    # Reproducible shuffle
+    rng = np.random.RandomState(seed)
+    rng.shuffle(unique_samples)
 
-    # Split
-    validation_samples = unique_samples[:num_validation]
-    train_test_samples = unique_samples[num_validation:]
+    n_total = len(unique_samples)
 
+    num_validation = max(1, int(n_total * validation_fraction))
+    num_test = max(1, int(n_total * test_fraction))
+
+    test_samples = unique_samples[:num_test]
+    validation_samples = unique_samples[num_test:num_test + num_validation]
+    train_samples = unique_samples[num_test + num_validation:]
+
+    if len(train_samples) == 0:
+        raise ValueError(
+            "No training samples left. Reduce validation_fraction or test_fraction."
+        )
+
+    print(f"Train Samples ({len(train_samples)}): {train_samples}")
     print(f"Validation Samples ({len(validation_samples)}): {validation_samples}")
-    print(f"Train_Test Samples ({len(train_test_samples)}): {train_test_samples}")
+    print(f"Test Samples ({len(test_samples)}): {test_samples}")
 
-    # Retrieve indices
+    train_indices = [i for i, s in enumerate(samples) if s in train_samples]
     validation_indices = [i for i, s in enumerate(samples) if s in validation_samples]
-    train_test_indices = [i for i, s in enumerate(samples) if s in train_test_samples]
+    test_indices = [i for i, s in enumerate(samples) if s in test_samples]
 
-    return validation_indices, train_test_indices
+    return train_indices, validation_indices, test_indices
 
 # # Example usage
 # samples = [1, 2, 3, 2, 4, 5, 6, 3, 7, 8, 9, 10, 1, 6, 7, 5]
