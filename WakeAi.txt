@@ -49,7 +49,7 @@ os.chdir("/home/asus/Dropbox/Disrael/Work/Research/NBodyWake/production/python/c
 
 export PATH="/home/asus/anaconda3/bin:$PATH"
 source activate PyTorch
-cd ~/Dropbox/Disrael/Work/Research/NBodyWake/production/python/checks
+cd ~/Dropbox/Disrael/Work/Research/NBodyWake/production/python/PyTorch/
 spyder
 
 
@@ -60,7 +60,15 @@ import os
 os.chdir("/home/asus/Dropbox/Disrael/Work/Research/NBodyWake/production/python/checks")
 
 
+-> git
 
+git switch -c fix-validation-annotations-leakage
+
+
+After the fix is tested and you are happy with the result:
+
+git switch main
+git merge fix-validation-annotations-leakage
 
 
 
@@ -217,5 +225,378 @@ ser rigoroso
 eg
 considerar efeito de borda
 
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+roadmap - gpt
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+Roadmap Before Submission
+
+Given your current results, I think the project is genuinely promising. But before submission, I would organize the next steps into four stages.
+
+1. Absolutely essential before submission
+
+These are the things I think you really should do.
+
+A. Repeatability across seeds/splits
+
+Right now you essentially have one successful split.
+
+You should run something like 5 independent runs with different:
+
+random seeds
+train/validation/test sample splits
+
+Then report:
+
+mean ± std of AUC
+accuracy
+recall
+precision
+FP/TP
+
+This is probably the single most important next step.
+
+B. Proper held-out test set
+
+Right now the validation set is doing too many jobs simultaneously.
+
+You should separate:
+
+training set
+validation set
+test set
+
+where:
+
+validation = used for threshold/model selection
+test = untouched until final evaluation
+
+Even if all simulations still come from the same family, this is very important scientifically.
+
+C. Baseline comparison
+
+This is critical.
+
+You should compare your network against simpler methods.
+
+At minimum:
+
+wake signal statistic alone
+wake statistic + thresholding
+your CNN/MIL method
+
+Otherwise referees may ask:
+
+“Why is deep learning necessary here?”
+
+Your paper becomes much stronger if you can show that the CNN/MIL approach significantly outperforms the handcrafted wake statistic, especially on difficult or unfiltered samples.
+
+D. Keep the “full validation on all samples” evaluation
+
+This was a very important improvement.
+
+You should emphasize in the paper that:
+
+training uses selected/high-confidence samples
+evaluation is performed on the complete unfiltered validation population
+
+This is actually a good scientific story and makes the results much more convincing.
+
+2. Very important (strongly recommended)
+
+These are not strictly mandatory, but they would strengthen the paper a lot.
+
+E. Ablation studies
+
+Very important for ML papers.
+
+Examples:
+
+compare with and without subvolume auxiliary loss
+compare attention pooling vs simple global pooling
+compare different wake-selection strictnesses:
+wake_top_percentage = 5%
+10%
+20%
+
+This helps demonstrate that the method is robust and not overly fragile.
+
+F. Add diagnostic plots
+
+You should include:
+
+ROC curves
+precision-recall curves
+confusion matrices
+probability histograms
+
+Especially useful:
+
+probability distributions for wake vs no-wake samples
+
+These plots are often very persuasive visually.
+
+G. Visualize the attention/subvolume behavior
+
+This could become one of the most interesting aspects of the paper.
+
+You already compute:
+
+attention weights
+subvolume predictions
+
+You should investigate:
+
+which subvolumes receive the highest attention
+whether they correspond to visible wake regions
+
+This helps answer an important scientific question:
+
+Is the network learning physically meaningful structures, or simulation artifacts?
+
+3. Nice-to-have (future extensions)
+
+These are valuable, but I do not think they are mandatory for a first paper.
+
+H. Different Gμ values
+
+Very valuable if available.
+
+Even a few additional tensions would help show robustness.
+
+I. Independent simulation families
+
+You already identified this limitation correctly.
+
+Since generating simulations is extremely expensive and time-consuming, I think it is acceptable to state clearly in the paper that:
+
+independent simulation-family validation is left for future work due to computational cost.
+
+That is a defensible limitation.
+
+J. Observational degradation tests
+
+Later, you could test robustness under:
+
+noise
+smoothing
+lower resolution
+missing slices
+
+This would make the work much more observationally relevant.
+
+4. How I would position the paper
+
+I would avoid framing the paper as:
+
+“Deep learning achieves high accuracy”
+
+That framing is scientifically weak.
+
+Instead, I would frame it more like:
+
+A 3D multiple-instance learning framework can identify thin planar cosmic-string wake signatures in large-scale structure simulations while maintaining extremely low false-positive rates on unfiltered validation data.
+
+Your strongest points are actually:
+
+full 3D treatment
+MIL / attention-based aggregation
+very low false-positive rate
+evaluation on unfiltered samples
+physically difficult signal (thin planar structures)
+My practical recommendation
+Phase 1 (highest priority)
+
+I would do these first:
+
+proper held-out test set
+repeated runs across random seeds/splits
+baseline comparison
+ROC and precision-recall plots
+save representative predictions/examples
+
+If the results remain strong after that, then I think the work becomes genuinely publishable.
+
+Phase 2
+
+Then:
+6. attention visualization
+7. ablation studies
+
+At that point:
+
+Astronomy and Computing becomes a realistic target
+JCAP becomes plausible if the cosmology framing is strong enough.
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+roadmap - cloude
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Phase 0: Immediate (before any new experiments, 1–2 weeks)
+These cost almost no compute time and should be done now.
+0.1 Save the best model checkpoint properly
+Make sure the best model from the last run is saved with full optimizer state so you can resume or evaluate it. Do not lose this.
+0.2 Run the test set
+Apply the saved best model to the held-out test set right now. This is one forward pass — it takes minutes. Report AUC, precision, recall, FP/TP. This single number tells you whether everything you have done is real.
+0.3 Generate diagnostic plots from existing results
+From the training logs you already have, generate:
+
+ROC curve for the best model on validation
+Precision-recall curve
+Probability histogram separating wake vs no-wake predictions
+Confusion matrix at the best threshold
+
+These require no new training — just post-processing of existing outputs.
+
+Phase 1: Core Validation (1–2 months)
+This is your supervisor's Phase 1, which must be completed before submission.
+1.1 Repeatability across seeds (supervisor's priority A)
+Run 5 independent training runs with different random seeds controlling:
+
+The train/val/test sample split
+The network weight initialization
+
+Report mean ± std of AUC, recall, precision, FP/TP across all 5 runs. If the mean AUC stays above 0.90 and the standard deviation is small (< 0.03), your result is robust. If it varies wildly, you have a problem to fix before submission.
+This is the single most important experiment remaining.
+1.2 Proper three-way split (supervisor's priority B)
+Verify that your test set has genuinely never been used for any decision — not for threshold selection, not for architecture choices, not for hyperparameter tuning. If it has been compromised in any way, generate a new held-out set from samples not used in any previous run.
+1.3 Baseline comparison (supervisor's priority C)
+Implement two baselines using infrastructure you already have:
+Baseline 1 — Wake signal statistic alone: use your existing per-volume integrated signal score as the classifier. Apply a threshold sweep and report the best ROC curve. This is essentially what a human analyst would do.
+Baseline 2 — Simple 3D CNN: your original architecture from the first runs. You already have results from those — compile them into a fair comparison table.
+Your MIL classifier should significantly outperform both, especially on the full unfiltered validation set. If it does, this answers the referee question "why is deep learning necessary?" definitively.
+1.4 Full validation emphasis (supervisor's priority D)
+Make the full unfiltered validation evaluation a central result, not a footnote. Your full validation numbers (AUC=0.971, FP/TP=0.008) are actually more impressive than the selected validation numbers and more scientifically honest. Structure the results section around these.
+
+Phase 2: Strengthening the ML Case (2–4 months)
+This is your supervisor's Phase 2, which makes the paper much stronger.
+2.1 Ablation studies (supervisor's priority E)
+Run the following comparisons, each requiring one full training run:
+
+With vs without subvolume auxiliary loss
+Attention pooling vs simple mean pooling vs max pooling
+wake_top_percentage = 5%, 10%, 15%, 20% — show how performance scales with training data quantity
+With vs without the annotation prior in attention
+
+Present these in a table. Each ablation justifies one architectural or training decision you made. This is standard practice in ML papers and makes reviewers much more confident in your choices.
+2.2 Diagnostic plots (supervisor's priority F)
+For the paper figures, produce:
+
+ROC curves comparing your MIL classifier vs both baselines
+Precision-recall curves — especially important because this space directly captures your FP/TP tradeoff goal
+Probability score histograms: two overlapping distributions (wake vs no-wake) showing how well separated they are
+Training curves showing loss and AUC convergence — the rapid convergence after adding the annotation prior is a compelling story
+
+2.3 Attention and subvolume visualization (supervisor's priority G)
+For a representative sample of 5–10 correctly classified wake volumes, produce figures showing:
+
+The volume projected along depth with the wake visible
+The 8 attention weights shown as a bar chart alongside
+The sub-volume predictions shown alongside
+Whether the high-attention sub-volumes correspond to where the wake physically crosses
+
+This is potentially the most visually compelling figure in the paper and directly answers whether the network is learning physics or artifacts.
+
+Phase 3: Physical Framing and Submission (1–2 months)
+3.1 Frame the paper correctly (supervisor's framing advice)
+The title and abstract should emphasize:
+
+The physical problem: cosmic string wake detection
+The key technical contribution: 3D MIL with supervised attention
+The key result: very low false-positive rate on unfiltered data
+The physical significance: the classifier identifies physically thin planar structures
+
+Do not lead with accuracy numbers. Lead with the physical question and the FP/TP result.
+3.2 State limitations honestly
+Single Gmu, simulation only, no observational noise. These are all acceptable limitations for a first paper if stated clearly with a path to future work. Your supervisor's framing is correct — computational cost of simulations is a completely defensible reason.
+3.3 Journal targeting
+Submit in this order based on results:
+If mean AUC across seeds > 0.93 and baselines are clearly beaten:
+→ Try MNRAS first, then A&A if rejected
+If results are solid but more modest:
+→ Start with Astronomy and Computing — your supervisor's suggestion is smart, this journal specifically targets computational methods in astronomy and has a readership that will appreciate both the ML and the physics
+If the attention visualization reveals something physically surprising:
+→ Consider JCAP which has stronger cosmology readership
+
+Phase 4: High-Impact Extensions (6–18 months, post-submission)
+This is my original Phase 2–4, now positioned correctly as follow-up work rather than first-paper requirements.
+4.1 Observational noise robustness
+Add realistic instrument noise, beam smoothing, and foreground contamination to existing simulation volumes in post-processing. No new simulations required. Retrain and show the detection threshold as a function of SNR. This is the most important extension and directly determines observational relevance.
+Output: Second paper, PRD or ApJ, significantly higher impact.
+4.2 Sensitivity comparison to power spectrum
+Show quantitatively that your classifier detects individual wakes that are below the power spectrum detection threshold at the same Gmu. If true, this is a major result — it means your method can extend current constraints on cosmic string tension.
+Output: Potentially Nature Astronomy or PRL. This is the high-impact target.
+4.3 Physical interpretation
+Saliency maps, activation maximization, systematic analysis of what the network has learned about wake morphology. Does it discover anything a human analyst had not appreciated? This is scientifically novel.
+4.4 Community pipeline
+Public code release with documentation, pretrained weights, and a tutorial notebook. This is what generates long-term citations regardless of journal tier.
+
+Summary Table
+Phase 0  (weeks 1-2):   Test set, diagnostic plots from existing results
+Phase 1  (months 1-2):  5-seed repeatability, baselines, proper split
+Phase 2  (months 2-4):  Ablations, visualization, full diagnostic suite  
+Phase 3  (months 4-6):  Framing, writing, submission
+Phase 4  (months 6-18): Noise robustness → PRD/ApJ
+                         Power spectrum comparison → Nature Astronomy/PRL
+                         Code release → long-term citation base
+The key insight from integrating both roadmaps is that your supervisor's roadmap gets you to publication, and my roadmap gets you to high impact after publication. Both are necessary and they are complementary, not competing.
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+doing now
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+But for a final paper result, the cleanest final number should come from the test samples, evaluated in the same full way. (I was using validation)
+
+1. Add a full test evaluation, not only full validation
+
+2. Use validation for decisions, test only once at the end
+
+3. Choose the threshold using full validation, not selected validation
+
+4. Report selected and full results separately
+
+->
+
+I realized there may be an important methodological issue in the current MIL/attention implementation.
+
+Right now, during validation/test, the network is not only receiving the input volume X, but also a subvolume prior (subvol_prior) derived from subvol_label.
+
+The problem is that subvol_label is constructed using the known wake/no-wake signal difference:
+
+wake_subvolume_signal - no_wake_subvolume_signal
+
+So during evaluation, the model is effectively being told which subvolumes are more wake-like according to a statistic computed using ground-truth paired information.
+
+This can create target leakage / optimistic evaluation, because in a real detection scenario we would only have the unknown volume itself, not the paired no-wake information.
+
+Conceptually, the current evaluation is closer to:
+“Here is the volume, and here is a hint about where the wake may be.”
+
+instead of:
+“Here is the volume; detect the wake from the data alone.”
+
+I think the safest solution is:
+
+during training: optionally keep the prior as supervision/guidance
+during validation/test: replace the prior with a uniform prior (all subvolumes equally likely)
+
+Then we can compare:
+
+performance with informed prior
+performance with uniform prior
+
+If the performance remains strong with the uniform prior, the result becomes much more trustworthy and publishable.
+
+
+-> maybe delete selected_subvol_labels_val, and # Select extreme wake/no-wake files only from the test samples,# Selected/extreme test dataset
 
 

@@ -387,8 +387,8 @@ FULL_MIN_RECALL = 0.15    # avoids trivial all-negative full-validation solution
 # RESUME_PATH = None  # or "checkpoint_latest.pt" if resuming
 # RESUME_PATH = Path(args.resume_path) if args.resume_path is not None else None
 
-if RESUME_PATH is not None and os.path.isfile(RESUME_PATH):
-    checkpoint = torch.load(RESUME_PATH, map_location=device)
+# if RESUME_PATH is not None and os.path.isfile(RESUME_PATH):
+#     checkpoint = torch.load(RESUME_PATH, map_location=device)
     
     
 
@@ -1989,9 +1989,9 @@ def evaluate(
             vol_label = vol_label.to(device).float()
             subvol_label = subvol_label.to(device).float()
 
-            # vol_logit, subvol_logits, attn_weights = model(X)
-            subvol_prior = subvol_label.clone().clamp(min=0)
-            subvol_prior = subvol_prior / (subvol_prior.sum(dim=1, keepdim=True) + 1e-8)
+            B = X.size(0)
+            n_sub = subvol_label.size(1)
+            subvol_prior = torch.ones(B, n_sub, device=device, dtype=torch.float32) / n_sub
             
             vol_logit, subvol_logits, attn_weights = model(X, subvol_prior)
 
