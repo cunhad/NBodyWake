@@ -9,6 +9,13 @@ Created on Mon May 27 14:41:50 2024
 #%%
 
 
+print("\n=== Current subvolume-label setup ===")
+print("global training-set subvolume threshold")
+print("hard 0/1 local labels")
+print("uniform prior in training/evaluation")
+print("subvolume labels used only through loss_sub")
+print("====================================\n")
+
 # parser
 # Run example:
 # python WakeDetection_Pytorch_CNN_TranfLearn_term --batch_size=32 --num_workers=0
@@ -77,6 +84,16 @@ parser.add_argument('--slices_signal', type=int, default=8, help='')
 parser.add_argument('--validation_fraction', type=float, default=0.1, help='')
 parser.add_argument('--test_fraction', type=float, default=0.1, help='')
 parser.add_argument('--wake_top_percentage', type=float, default=10, help='')
+parser.add_argument(
+    '--subvol_top_percentage',
+    type=float,
+    default=None,
+    help=(
+        'Percentage of highest raw wake-minus-nowake subvolume signals '
+        'to label as local visible-wake subvolumes. '
+        'If None, uses wake_top_percentage.'
+    )
+)
 parser.add_argument('--void_percentage', type=float, default=0, help='')
 
 
@@ -162,6 +179,12 @@ print("Percentage top signal wake = ", wake_top_percentage)
 void_percentage = args.void_percentage
 print("Percentage lower voids wake = ", void_percentage)
 
+subvol_top_percentage = (
+    args.subvol_top_percentage
+    if args.subvol_top_percentage is not None
+    else wake_top_percentage
+)
+print("Percentage top subvolume wake signal = ", subvol_top_percentage)
 
 
 
@@ -249,7 +272,12 @@ else:
 # # void_percentage = 0.1
 # print("Percentage lower voids wake = ", void_percentage)
 
-
+# subvol_top_percentage = (
+#     args.subvol_top_percentage
+#     if args.subvol_top_percentage is not None
+#     else wake_top_percentage
+# )
+# print("Percentage top subvolume wake signal = ", subvol_top_percentage)
 
 
 # batch_size =  args.batch_size
@@ -713,6 +741,157 @@ selected_anglids_test    = [anglids_test[i] for i in selected_positions_test]
 
 
 
+# def build_subvol_labels(
+#     samples,
+#     anglids,
+#     wake_infos,
+#     all_data_nowake_signal_subvol,
+#     all_data_wake_signal_subvol,
+#     rang,
+#     slices_signal,
+#     eps=1e-6,
+# ):
+#     sample_to_idx = {s: i for i, s in enumerate(rang)}
+#     subvol_labels = []
+
+#     for sample, anglid, wake_info in zip(samples, anglids, wake_infos):
+#         sample_id = sample_to_idx[sample]
+#         angle_id = anglid - 1
+
+#         if wake_info == WAKE_NAME:
+#             diff = (
+#                 all_data_wake_signal_subvol[sample_id, angle_id, :]
+#                 - all_data_nowake_signal_subvol[sample_id, angle_id, :]
+#             )
+
+#             diff = np.nan_to_num(diff, nan=0.0)
+#             diff = np.maximum(diff, 0.0)
+
+#             maxval = diff.max()
+#             if maxval > eps:
+#                 label8 = diff / maxval
+#             else:
+#                 label8 = np.zeros(slices_signal, dtype=np.float32)
+
+#         elif wake_info == NOWAKE_NAME:
+#             label8 = np.zeros(slices_signal, dtype=np.float32)
+
+#         else:
+#             raise ValueError(f"Unknown wake_info: {wake_info}")
+
+#         subvol_labels.append(label8.astype(np.float32))
+
+#     return subvol_labels
+
+def raw_subvol_signal_diff(
+    sample,
+    anglid,
+    wake_info,
+    all_data_nowake_signal_subvol,
+    all_data_wake_signal_subvol,
+    sample_to_idx,
+    slices_signal,
+):
+    """
+    Raw local wake signal for one volume/angle.
+
+    For wake simulations:
+        diff_i = wake_subvol_signal_i - nowake_subvol_signal_i
+
+    For no-wake simulations:
+        diff_i = 0
+
+    Returns an array with shape (slices_signal,).
+    """
+
+    if NOWAKE_NAME in wake_info:
+        return np.zeros(slices_signal, dtype=np.float32)
+
+    if WAKE_NAME not in wake_info:
+        raise ValueError(f"Unknown wake_info: {wake_info}")
+
+    sample_id = sample_to_idx[sample]
+    angle_id = anglid - 1
+
+    diff = (
+        all_data_wake_signal_subvol[sample_id, angle_id, :]
+        - all_data_nowake_signal_subvol[sample_id, angle_id, :]
+    )
+
+    diff = np.nan_to_num(diff, nan=0.0, posinf=0.0, neginf=0.0)
+    diff = np.maximum(diff, 0.0)
+
+    return diff.astype(np.float32)
+
+
+def compute_subvol_threshold_from_training(
+    samples,
+    anglids,
+    wake_infos,
+    all_data_nowake_signal_subvol,
+    all_data_wake_signal_subvol,
+    rang,
+    slices_signal,
+    subvol_top_percentage,
+):
+    """
+    Compute the global threshold for Option A.
+
+    The threshold is computed only from wake simulations in the training split.
+    It is the percentile corresponding to the top subvol_top_percentage
+    of raw positive subvolume wake signals.
+    """
+
+    sample_to_idx = {s: i for i, s in enumerate(rang)}
+
+    all_train_wake_subvol_signals = []
+
+    for sample, anglid, wake_info in zip(samples, anglids, wake_infos):
+        if WAKE_NAME not in wake_info:
+            continue
+
+        diff = raw_subvol_signal_diff(
+            sample,
+            anglid,
+            wake_info,
+            all_data_nowake_signal_subvol,
+            all_data_wake_signal_subvol,
+            sample_to_idx,
+            slices_signal,
+        )
+
+        all_train_wake_subvol_signals.append(diff)
+
+    if len(all_train_wake_subvol_signals) == 0:
+        raise ValueError("No wake subvolumes found in training split.")
+
+    all_train_wake_subvol_signals = np.concatenate(all_train_wake_subvol_signals)
+    all_train_wake_subvol_signals = all_train_wake_subvol_signals[
+        np.isfinite(all_train_wake_subvol_signals)
+    ]
+
+    if all_train_wake_subvol_signals.size == 0:
+        raise ValueError("No finite wake subvolume signals found in training split.")
+
+    percentile = 100.0 - subvol_top_percentage
+    threshold = np.percentile(all_train_wake_subvol_signals, percentile)
+
+    print("\n=== Subvolume-label threshold ===")
+    print(f"Subvolume top percentage: {subvol_top_percentage:.2f}%")
+    print(f"Percentile used: {percentile:.2f}")
+    print(f"Raw subvolume signal threshold: {threshold:.6e}")
+    print(f"Number of training wake subvolumes used: {all_train_wake_subvol_signals.size}")
+
+    if threshold <= 0.0:
+        print(
+            "WARNING: subvolume threshold is <= 0. "
+            "This may happen if most raw subvolume signals are zero. "
+            "Labels will still require diff > 0."
+        )
+
+    return float(threshold)
+
+
 def build_subvol_labels(
     samples,
     anglids,
@@ -721,33 +900,38 @@ def build_subvol_labels(
     all_data_wake_signal_subvol,
     rang,
     slices_signal,
-    eps=1e-6,
+    subvol_threshold,
 ):
+    """
+    Build hard Option-A subvolume labels.
+
+    For wake simulations:
+        label_i = 1 if raw local signal_i >= global training threshold
+                  and raw local signal_i > 0
+        label_i = 0 otherwise
+
+    For no-wake simulations:
+        all labels are 0
+    """
+
     sample_to_idx = {s: i for i, s in enumerate(rang)}
     subvol_labels = []
 
     for sample, anglid, wake_info in zip(samples, anglids, wake_infos):
-        sample_id = sample_to_idx[sample]
-        angle_id = anglid - 1
+        diff = raw_subvol_signal_diff(
+            sample,
+            anglid,
+            wake_info,
+            all_data_nowake_signal_subvol,
+            all_data_wake_signal_subvol,
+            sample_to_idx,
+            slices_signal,
+        )
 
-        if wake_info == WAKE_NAME:
-            diff = (
-                all_data_wake_signal_subvol[sample_id, angle_id, :]
-                - all_data_nowake_signal_subvol[sample_id, angle_id, :]
-            )
-
-            diff = np.nan_to_num(diff, nan=0.0)
-            diff = np.maximum(diff, 0.0)
-
-            maxval = diff.max()
-            if maxval > eps:
-                label8 = diff / maxval
-            else:
-                label8 = np.zeros(slices_signal, dtype=np.float32)
-
-        elif wake_info == NOWAKE_NAME:
+        if WAKE_NAME in wake_info:
+            label8 = ((diff >= subvol_threshold) & (diff > 0.0)).astype(np.float32)
+        elif NOWAKE_NAME in wake_info:
             label8 = np.zeros(slices_signal, dtype=np.float32)
-
         else:
             raise ValueError(f"Unknown wake_info: {wake_info}")
 
@@ -756,6 +940,36 @@ def build_subvol_labels(
     return subvol_labels
 
 
+def print_subvol_label_summary(subvol_labels, name):
+    labels = np.asarray(subvol_labels, dtype=np.float32)
+
+    if labels.size == 0:
+        print(f"{name}: empty subvolume-label array")
+        return
+
+    n_total = labels.size
+    n_pos = int(labels.sum())
+    frac_pos = n_pos / max(n_total, 1)
+
+    per_volume_pos = labels.sum(axis=1)
+
+    print(f"\n{name}:")
+    print(f"  Total subvolumes: {n_total}")
+    print(f"  Positive subvolumes: {n_pos}")
+    print(f"  Positive fraction: {frac_pos:.4f}")
+    print(f"  Volumes with >=1 positive subvolume: {np.sum(per_volume_pos > 0)} / {labels.shape[0]}")
+    print(f"  Mean positive subvolumes per volume: {per_volume_pos.mean():.4f}")
+
+subvol_threshold = compute_subvol_threshold_from_training(
+    samples_train,
+    anglids_train,
+    wake_infos_train,
+    all_data_nowake_signal_subvol,
+    all_data_wake_signal_subvol,
+    rang,
+    slices_signal,
+    subvol_top_percentage,
+)
 
 
 selected_subvol_labels_val = build_subvol_labels(
@@ -766,6 +980,7 @@ selected_subvol_labels_val = build_subvol_labels(
     all_data_wake_signal_subvol,
     rang,
     slices_signal,
+    subvol_threshold,
 )
 
 # Labels for the complete validation set, before select_extreme_files
@@ -777,6 +992,7 @@ full_subvol_labels_val = build_subvol_labels(
     all_data_wake_signal_subvol,
     rang,
     slices_signal,
+    subvol_threshold,
 )
 
 
@@ -811,6 +1027,7 @@ selected_subvol_labels_train = build_subvol_labels(
     all_data_wake_signal_subvol,
     rang,
     slices_signal,
+    subvol_threshold,
 )
 
 # Subvolume labels for selected test set
@@ -823,6 +1040,7 @@ selected_subvol_labels_test = build_subvol_labels(
     all_data_wake_signal_subvol,
     rang,
     slices_signal,
+    subvol_threshold,
 )
 
 
@@ -836,7 +1054,14 @@ full_subvol_labels_test = build_subvol_labels(
     all_data_wake_signal_subvol,
     rang,
     slices_signal,
+    subvol_threshold,
 )
+
+print_subvol_label_summary(selected_subvol_labels_train, "Selected train subvolume labels")
+print_subvol_label_summary(selected_subvol_labels_val, "Selected validation subvolume labels")
+print_subvol_label_summary(full_subvol_labels_val, "Full validation subvolume labels")
+print_subvol_label_summary(selected_subvol_labels_test, "Selected test subvolume labels")
+print_subvol_label_summary(full_subvol_labels_test, "Full test subvolume labels")
 
 
 #%%
@@ -1649,9 +1874,12 @@ for X, vol_label, subvol_label in train_dataloader:
 
     with torch.no_grad():
         # vol_logit, subvol_logits, attn_weights = model(X)
-        subvol_prior = subvol_label.clone()
-        subvol_prior = subvol_prior.clamp(min=0)
-        subvol_prior = subvol_prior / (subvol_prior.sum(dim=1, keepdim=True) + 1e-8)
+        # subvol_prior = subvol_label.clone()
+        # subvol_prior = subvol_prior.clamp(min=0)
+        # subvol_prior = subvol_prior / (subvol_prior.sum(dim=1, keepdim=True) + 1e-8)
+        B = X.size(0)
+        n_sub = subvol_label.size(1)
+        subvol_prior = torch.ones(B, n_sub, device=device, dtype=torch.float32) / n_sub
         subvol_prior = subvol_prior.to(device)
         
         vol_logit, subvol_logits, attn_weights = model(X, subvol_prior)
@@ -1843,8 +2071,11 @@ def train_one_epoch(
 
         # vol_logit, subvol_logits, attn_weights = model(X)
         # Build prior from subvol_label before calling model
-        subvol_prior = subvol_label.clone().clamp(min=0)
-        subvol_prior = subvol_prior / (subvol_prior.sum(dim=1, keepdim=True) + 1e-8)        
+        # subvol_prior = subvol_label.clone().clamp(min=0)
+        # subvol_prior = subvol_prior / (subvol_prior.sum(dim=1, keepdim=True) + 1e-8)        
+        B = X.size(0)
+        n_sub = subvol_label.size(1)
+        subvol_prior = torch.ones(B, n_sub, device=device, dtype=torch.float32) / n_sub
         vol_logit, subvol_logits, attn_weights = model(X, subvol_prior)
 
         loss_vol = criterion(vol_logit, vol_label)
