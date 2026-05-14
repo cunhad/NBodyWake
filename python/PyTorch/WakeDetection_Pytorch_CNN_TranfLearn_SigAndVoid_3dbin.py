@@ -13,11 +13,13 @@ print("\n=== Current run setup ===")
 print("global training-set subvolume threshold")
 print("hard 0/1 local subvolume labels")
 print("uniform prior in training/evaluation")
-print("subvolume labels used only through loss_sub")
-print("POS_WEIGHT = 1.0: neutral BCE for balanced selected train set")
+print("DIRECT aggregation: volume score comes from subvolume logits")
+print("aggregation mode: noisy-or")
+print("separate BCE losses: criterion_vol and criterion_sub")
+print("criterion_vol POS_WEIGHT = 1.0")
+print("criterion_sub POS_WEIGHT computed from selected train subvolume labels")
 print("extra diagnostics: wake/no-wake probs and subvolume pos/neg probs")
 print("=========================\n")
-
 # parser
 # Run example:
 # python WakeDetection_Pytorch_CNN_TranfLearn_term --batch_size=32 --num_workers=0
@@ -405,7 +407,8 @@ from collections import Counter
 #%%
 
 # prioritize wake recall
-POS_WEIGHT = 1.0  # try 0.7, 0.8, 1.0 — never below 0.5
+# POS_WEIGHT = 1.0  # try 0.7, 0.8, 1.0 — never below 0.5
+POS_WEIGHT_VOL = 1.0
 # THRESH_GRID = np.linspace(0.05, 0.95, 37)
 THRESH_GRID = np.arange(0.30, 0.80, 0.01)
 DEFAULT_THRESHOLD = 0.50
@@ -1066,6 +1069,35 @@ print_subvol_label_summary(selected_subvol_labels_test, "Selected test subvolume
 print_subvol_label_summary(full_subvol_labels_test, "Full test subvolume labels")
 
 
+def compute_subvol_pos_weight_from_labels(subvol_labels, name="subvolume labels"):
+    labels = np.asarray(subvol_labels, dtype=np.float32).reshape(-1)
+
+    n_pos = float(labels.sum())
+    n_total = float(labels.size)
+    n_neg = n_total - n_pos
+
+    if n_pos <= 0:
+        print(f"WARNING: no positive labels found in {name}. Using pos_weight=1.0.")
+        return 1.0
+
+    pos_weight = n_neg / n_pos
+
+    print(f"\n=== Subvolume loss positive weight ===")
+    print(f"Source: {name}")
+    print(f"Positive subvolumes: {int(n_pos)}")
+    print(f"Negative subvolumes: {int(n_neg)}")
+    print(f"criterion_sub pos_weight = {pos_weight:.4f}")
+    print("=====================================\n")
+
+    return float(pos_weight)
+
+
+POS_WEIGHT_SUBVOL = compute_subvol_pos_weight_from_labels(
+    selected_subvol_labels_train,
+    name="selected train subvolume labels",
+)
+
+
 #%%
 
 # shape of your 3D grid in each bin file:
@@ -1707,8 +1739,11 @@ class MILSubvolumeWakeNet(nn.Module):
         )
 
         with torch.no_grad():
-            self.subvol_head[-1].bias.fill_(-1.0)
-            self.vol_classifier[-1].bias.fill_(-1.0)
+            # For noisy-or aggregation over 8 subvolumes:
+            # if all subvolume probabilities start near ~0.083,
+            # then volume probability starts near ~0.5:
+            # 1 - (1 - 0.083)^8 ≈ 0.5
+            self.subvol_head[-1].bias.fill_(-2.4)
 
     def forward(self, x, subvol_prior):
         B, C, D, H, W = x.shape
@@ -1730,21 +1765,47 @@ class MILSubvolumeWakeNet(nn.Module):
         subvol_logits = self.subvol_head(feats).view(B, self.n_subvolumes)
 
         # reshape features back to volume structure
-        feats = feats.view(B, self.n_subvolumes, -1)  # (B, 8, feat_dim)
+        # feats = feats.view(B, self.n_subvolumes, -1)  # (B, 8, feat_dim)
 
-        # # attention over subvolumes
-        # attn_logits = self.attention(feats).squeeze(-1)  # (B, 8)
-        # attn_weights = torch.softmax(attn_logits, dim=1)
-        attn_logits = self.attention(feats).squeeze(-1)          # (B, 8)
-        prior_logits = torch.log(subvol_prior.clamp(min=1e-8))  # (B, 8)
-        attn_weights = torch.softmax(attn_logits + prior_logits, dim=1)
+        # # # attention over subvolumes
+        # # attn_logits = self.attention(feats).squeeze(-1)  # (B, 8)
+        # # attn_weights = torch.softmax(attn_logits, dim=1)
+        # attn_logits = self.attention(feats).squeeze(-1)          # (B, 8)
+        # prior_logits = torch.log(subvol_prior.clamp(min=1e-8))  # (B, 8)
+        # attn_weights = torch.softmax(attn_logits + prior_logits, dim=1)
 
-        # weighted feature aggregation
-        vol_feat = torch.sum(attn_weights.unsqueeze(-1) * feats, dim=1)
+        # # weighted feature aggregation
+        # vol_feat = torch.sum(attn_weights.unsqueeze(-1) * feats, dim=1)
 
-        # global volume logit
-        vol_logit = self.vol_classifier(vol_feat).squeeze(1)
+        # # global volume logit
+        # vol_logit = self.vol_classifier(vol_feat).squeeze(1)
 
+        # return vol_logit, subvol_logits, attn_weights
+        
+        # Direct volume aggregation from subvolume probabilities.
+        #
+        # This makes the scientific logic explicit:
+        # a volume is wake-like if one or more subvolumes are wake-like.
+        #
+        # The input subvol_prior is intentionally ignored here.
+        _ = subvol_prior
+        
+        eps = 1e-6
+        subvol_probs = torch.sigmoid(subvol_logits).clamp(min=eps, max=1.0 - eps)
+        
+        # noisy-or:
+        # P(volume wake) = 1 - product_i [1 - P(subvolume_i wake)]
+        vol_prob = 1.0 - torch.prod(1.0 - subvol_probs, dim=1)
+        vol_prob = vol_prob.clamp(min=eps, max=1.0 - eps)
+        
+        # Convert probability back to logit because the rest of the code
+        # uses BCEWithLogitsLoss and thresholding on sigmoid(vol_logit).
+        vol_logit = torch.log(vol_prob / (1.0 - vol_prob))
+        
+        # Diagnostic only: where does the model place local evidence?
+        # This replaces the old attention weights for printing.
+        attn_weights = torch.softmax(subvol_logits, dim=1)
+        
         return vol_logit, subvol_logits, attn_weights
     
     
@@ -1835,20 +1896,34 @@ optimizer = torch.optim.AdamW(
     weight_decay=1e-4
 )
 
-# # criterion = nn.BCEWithLogitsLoss()
-criterion = nn.BCEWithLogitsLoss(
-    pos_weight=torch.tensor([POS_WEIGHT], device=device)
+# # # criterion = nn.BCEWithLogitsLoss()
+# criterion = nn.BCEWithLogitsLoss(
+#     pos_weight=torch.tensor([POS_WEIGHT], device=device)
+# )
+# lambda_sub = 0.3
+
+
+# # criterion = AsymmetricFPLoss(
+# #     gamma_pos=0.0,
+# #     gamma_neg=3.0,
+# #     clip=0.05
+# # )
+
+criterion_vol = nn.BCEWithLogitsLoss(
+    pos_weight=torch.tensor([POS_WEIGHT_VOL], device=device)
 )
+
+criterion_sub = nn.BCEWithLogitsLoss(
+    pos_weight=torch.tensor([POS_WEIGHT_SUBVOL], device=device)
+)
+
 lambda_sub = 0.3
 
-
-# criterion = AsymmetricFPLoss(
-#     gamma_pos=0.0,
-#     gamma_neg=3.0,
-#     clip=0.05
-# )
-
-
+print("\n=== Loss setup ===")
+print(f"criterion_vol pos_weight = {POS_WEIGHT_VOL:.4f}")
+print(f"criterion_sub pos_weight = {POS_WEIGHT_SUBVOL:.4f}")
+print(f"lambda_sub = {lambda_sub:.4f}")
+print("==================\n")
 
 #%%
 model.eval()
@@ -2041,7 +2116,8 @@ scheduler = torch.optim.lr_scheduler.OneCycleLR(
 def train_one_epoch(
     model,
     dataloader,
-    criterion,
+    criterion_vol,
+    criterion_sub,
     optimizer,
     device,
     lambda_sub=0.3,
@@ -2080,8 +2156,8 @@ def train_one_epoch(
         subvol_prior = torch.ones(B, n_sub, device=device, dtype=torch.float32) / n_sub
         vol_logit, subvol_logits, attn_weights = model(X, subvol_prior)
 
-        loss_vol = criterion(vol_logit, vol_label)
-        loss_sub = criterion(subvol_logits, subvol_label)
+        loss_vol = criterion_vol(vol_logit, vol_label)
+        loss_sub = criterion_sub(subvol_logits, subvol_label)
 
         loss = loss_vol + lambda_sub * loss_sub
 
@@ -2198,10 +2274,11 @@ def train_one_epoch(
 def evaluate(
     model,
     dataloader,
-    criterion,
+    criterion_vol,
+    criterion_sub,
     device,
-    lambda_sub=0.3,
-    return_details=False,
+    lambda_sub=lambda_sub,
+    return_details=True,
 ):
     model.eval()
 
@@ -2232,8 +2309,8 @@ def evaluate(
             
             vol_logit, subvol_logits, attn_weights = model(X, subvol_prior)
 
-            loss_vol = criterion(vol_logit, vol_label)
-            loss_sub = criterion(subvol_logits, subvol_label)
+            loss_vol = criterion_vol(vol_logit, vol_label)
+            loss_sub = criterion_sub(subvol_logits, subvol_label)
             loss = loss_vol + lambda_sub * loss_sub
 
             probs = torch.sigmoid(vol_logit)
@@ -2547,13 +2624,13 @@ for epoch in range(start_epoch, num_epochs):
     train_loss, train_vol_loss, train_sub_loss, train_acc, mean_grad_norm = train_one_epoch(
     model,
     train_dataloader,
-    criterion,
+    criterion_vol,
+    criterion_sub,
     optimizer,
     device,
     lambda_sub=lambda_sub,
     accum_steps=ACCUM_STEPS,
     )
-    
     # val_loss, val_vol_loss, val_sub_loss, val_acc, val_probs, val_logits, val_y, val_attn = evaluate(
     #     model,
     #     valid_dataloader,
@@ -2577,7 +2654,8 @@ for epoch in range(start_epoch, num_epochs):
     ) = evaluate(
         model,
         valid_dataloader,
-        criterion,
+        criterion_vol,
+        criterion_sub,
         device,
         lambda_sub=lambda_sub,
         return_details=True,
@@ -2611,12 +2689,12 @@ for epoch in range(start_epoch, num_epochs):
         ) = evaluate(
             model,
             full_valid_dataloader,
-            criterion,
+            criterion_vol,
+            criterion_sub,
             device,
             lambda_sub=lambda_sub,
             return_details=True,
         )
-
         try:
             full_val_auc = roc_auc_score(full_val_y, full_val_probs)
         except Exception:
@@ -2828,7 +2906,8 @@ else:
 ) = evaluate(
     model,
     full_test_dataloader,
-    criterion,
+    criterion_vol,
+    criterion_sub,
     device,
     lambda_sub=lambda_sub,
     return_details=True,
@@ -2877,21 +2956,21 @@ print_subvolume_probability_diagnostics(
 )
     
 #%%
-current_fp_over_tp = thr_stats["fp"] / (thr_stats["tp"] + 1e-12)
+# current_fp_over_tp = thr_stats["fp"] / (thr_stats["tp"] + 1e-12)
 
-print(f"Epoch {epoch+1}/{num_epochs}")
-print(f"  Train loss: {train_loss:.4f} | Train acc: {train_acc:.4f}")
-print(f"  Val   loss: {val_loss:.4f} | Val   acc@0.5: {val_acc:.4f}")
-print(f"  Val AUC: {val_auc:.4f}")
-print(f"  Mean grad norm: {mean_grad_norm:.6f}")
-print(f"  Best precision-priority threshold this epoch: {thr_epoch:.2f}")
-print(
-    f"  TP={thr_stats['tp']} FN={thr_stats['fn']} "
-    f"FP={thr_stats['fp']} TN={thr_stats['tn']}"
-)
-print(
-    f"  Recall={thr_stats['recall']:.4f} | "
-    f"Precision={thr_stats['precision']:.4f} | "
-    f"FP/TP={current_fp_over_tp:.4f}"
-)
+# print(f"Epoch {epoch+1}/{num_epochs}")
+# print(f"  Train loss: {train_loss:.4f} | Train acc: {train_acc:.4f}")
+# print(f"  Val   loss: {val_loss:.4f} | Val   acc@0.5: {val_acc:.4f}")
+# print(f"  Val AUC: {val_auc:.4f}")
+# print(f"  Mean grad norm: {mean_grad_norm:.6f}")
+# print(f"  Best precision-priority threshold this epoch: {thr_epoch:.2f}")
+# print(
+#     f"  TP={thr_stats['tp']} FN={thr_stats['fn']} "
+#     f"FP={thr_stats['fp']} TN={thr_stats['tn']}"
+# )
+# print(
+#     f"  Recall={thr_stats['recall']:.4f} | "
+#     f"Precision={thr_stats['precision']:.4f} | "
+#     f"FP/TP={current_fp_over_tp:.4f}"
+# )
 
