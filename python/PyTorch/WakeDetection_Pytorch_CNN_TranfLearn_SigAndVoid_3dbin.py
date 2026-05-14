@@ -405,7 +405,7 @@ from collections import Counter
 #%%
 
 # prioritize wake recall
-POS_WEIGHT = 0.7  # try 0.7, 0.8, 1.0 — never below 0.5
+POS_WEIGHT = 1.0  # try 0.7, 0.8, 1.0 — never below 0.5
 # THRESH_GRID = np.linspace(0.05, 0.95, 37)
 THRESH_GRID = np.arange(0.30, 0.80, 0.01)
 DEFAULT_THRESHOLD = 0.50
@@ -2215,6 +2215,10 @@ def evaluate(
     all_logits = []
     all_y = []
     all_attn = []
+    
+        
+    all_subvol_probs = []
+    all_subvol_y = []
 
     with torch.no_grad():
         for X, vol_label, subvol_label in dataloader:
@@ -2245,6 +2249,15 @@ def evaluate(
             all_logits.extend(vol_logit.detach().cpu().numpy().tolist())
             all_y.extend(vol_label.detach().cpu().numpy().tolist())
             all_attn.extend(attn_weights.detach().cpu().numpy().tolist())
+            
+            subvol_probs = torch.sigmoid(subvol_logits)
+
+            all_subvol_probs.extend(
+                subvol_probs.detach().cpu().reshape(-1).numpy().tolist()
+            )
+            all_subvol_y.extend(
+                subvol_label.detach().cpu().reshape(-1).numpy().tolist()
+            )
 
     epoch_loss = running_loss / total if total > 0 else float("nan")
     epoch_vol_loss = running_vol_loss / total if total > 0 else float("nan")
@@ -2261,10 +2274,80 @@ def evaluate(
             np.array(all_logits),
             np.array(all_y),
             np.array(all_attn),
+            np.array(all_subvol_probs),
+            np.array(all_subvol_y),
         )
 
     return epoch_loss, epoch_vol_loss, epoch_sub_loss, epoch_acc
 
+def print_volume_probability_diagnostics(name, y_true, probs):
+    y_true = np.asarray(y_true).astype(int)
+    probs = np.asarray(probs, dtype=np.float64)
+
+    print(f"\n  --- {name} volume probability diagnostics ---")
+
+    for label_value, label_name in [(1, "wake"), (0, "no-wake")]:
+        p = probs[y_true == label_value]
+
+        if p.size == 0:
+            print(f"  {label_name}: no examples")
+            continue
+
+        print(
+            f"  {label_name}: "
+            f"n={p.size} | "
+            f"mean={p.mean():.4f} | "
+            f"std={p.std():.4f} | "
+            f"min={p.min():.4f} | "
+            f"p25={np.percentile(p, 25):.4f} | "
+            f"median={np.median(p):.4f} | "
+            f"p75={np.percentile(p, 75):.4f} | "
+            f"max={p.max():.4f}"
+        )
+
+    wake_probs = probs[y_true == 1]
+    nowake_probs = probs[y_true == 0]
+
+    if wake_probs.size > 0 and nowake_probs.size > 0:
+        print(
+            f"  separation mean(wake)-mean(no-wake) = "
+            f"{wake_probs.mean() - nowake_probs.mean():.6f}"
+        )
+
+
+def print_subvolume_probability_diagnostics(name, subvol_y, subvol_probs):
+    subvol_y = np.asarray(subvol_y).astype(int)
+    subvol_probs = np.asarray(subvol_probs, dtype=np.float64)
+
+    print(f"\n  --- {name} subvolume probability diagnostics ---")
+
+    for label_value, label_name in [(1, "positive subvol"), (0, "negative subvol")]:
+        p = subvol_probs[subvol_y == label_value]
+
+        if p.size == 0:
+            print(f"  {label_name}: no examples")
+            continue
+
+        print(
+            f"  {label_name}: "
+            f"n={p.size} | "
+            f"mean={p.mean():.4f} | "
+            f"std={p.std():.4f} | "
+            f"min={p.min():.4f} | "
+            f"p25={np.percentile(p, 25):.4f} | "
+            f"median={np.median(p):.4f} | "
+            f"p75={np.percentile(p, 75):.4f} | "
+            f"max={p.max():.4f}"
+        )
+
+    pos_probs = subvol_probs[subvol_y == 1]
+    neg_probs = subvol_probs[subvol_y == 0]
+
+    if pos_probs.size > 0 and neg_probs.size > 0:
+        print(
+            f"  separation mean(pos)-mean(neg) = "
+            f"{pos_probs.mean() - neg_probs.mean():.6f}"
+        )
 
 def threshold_stats(y_true, probs, thr):
     y_true = np.asarray(y_true).astype(int)
@@ -2471,7 +2554,27 @@ for epoch in range(start_epoch, num_epochs):
     accum_steps=ACCUM_STEPS,
     )
     
-    val_loss, val_vol_loss, val_sub_loss, val_acc, val_probs, val_logits, val_y, val_attn = evaluate(
+    # val_loss, val_vol_loss, val_sub_loss, val_acc, val_probs, val_logits, val_y, val_attn = evaluate(
+    #     model,
+    #     valid_dataloader,
+    #     criterion,
+    #     device,
+    #     lambda_sub=lambda_sub,
+    #     return_details=True,
+    # )
+    
+    (
+        val_loss,
+        val_vol_loss,
+        val_sub_loss,
+        val_acc,
+        val_probs,
+        val_logits,
+        val_y,
+        val_attn,
+        val_subvol_probs,
+        val_subvol_y,
+    ) = evaluate(
         model,
         valid_dataloader,
         criterion,
@@ -2487,6 +2590,12 @@ for epoch in range(start_epoch, num_epochs):
         
     do_full_val = ((epoch + 1) % FULL_VAL_EVERY == 0) or ((epoch + 1) == num_epochs)
     
+    do_prob_diagnostics = (
+        (epoch + 1) == 1
+        or ((epoch + 1) % 5 == 0)
+        or do_full_val
+    )
+    
     if do_full_val:
         (
             full_val_loss,
@@ -2497,6 +2606,8 @@ for epoch in range(start_epoch, num_epochs):
             full_val_logits,
             full_val_y,
             full_val_attn,
+            full_val_subvol_probs,
+            full_val_subvol_y,
         ) = evaluate(
             model,
             full_valid_dataloader,
@@ -2526,6 +2637,7 @@ for epoch in range(start_epoch, num_epochs):
         )
         
         full_current_fp_over_tp = full_thr_stats["fp"] / (full_thr_stats["tp"] + 1e-12)
+        
         full_current_precision = full_thr_stats["precision"]
         full_current_tp = full_thr_stats["tp"]
         
@@ -2647,6 +2759,17 @@ for epoch in range(start_epoch, num_epochs):
         f"Precision={thr_stats['precision']:.4f} | "
         f"FP/TP={current_fp_over_tp:.4f}"
     )
+    if do_prob_diagnostics:
+        print_volume_probability_diagnostics(
+            "Selected validation",
+            val_y,
+            val_probs,
+        )
+        print_subvolume_probability_diagnostics(
+            "Selected validation",
+            val_subvol_y,
+            val_subvol_probs,
+        )
     if do_full_val:
         print("  --- Full validation: all samples_val before extreme selection ---")
         print(
@@ -2667,6 +2790,16 @@ for epoch in range(start_epoch, num_epochs):
             f"  Full Recall={full_stats['recall']:.4f} | "
             f"Full Precision={full_stats['precision']:.4f} | "
             f"Full FP/TP={full_fp_over_tp:.4f}"
+        )
+        print_volume_probability_diagnostics(
+            "Full validation",
+            full_val_y,
+            full_val_probs,
+        )
+        print_subvolume_probability_diagnostics(
+            "Full validation",
+            full_val_subvol_y,
+            full_val_subvol_probs,
         )
 
 #%%
@@ -2690,6 +2823,8 @@ else:
     full_test_logits,
     full_test_y,
     full_test_attn,
+    full_test_subvol_probs,
+    full_test_subvol_y,
 ) = evaluate(
     model,
     full_test_dataloader,
@@ -2729,7 +2864,17 @@ print(
     f"Precision={full_test_stats['precision']:.4f} | "
     f"FP/TP={full_test_fp_over_tp:.4f}"
 )
+print_volume_probability_diagnostics(
+    "Full test",
+    full_test_y,
+    full_test_probs,
+)
 
+print_subvolume_probability_diagnostics(
+    "Full test",
+    full_test_subvol_y,
+    full_test_subvol_probs,
+)
     
 #%%
 current_fp_over_tp = thr_stats["fp"] / (thr_stats["tp"] + 1e-12)
