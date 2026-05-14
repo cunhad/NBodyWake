@@ -9,12 +9,14 @@ Created on Mon May 27 14:41:50 2024
 #%%
 
 
-print("\n=== Current subvolume-label setup ===")
+print("\n=== Current run setup ===")
 print("global training-set subvolume threshold")
-print("hard 0/1 local labels")
+print("hard 0/1 local subvolume labels")
 print("uniform prior in training/evaluation")
 print("subvolume labels used only through loss_sub")
-print("====================================\n")
+print("POS_WEIGHT = 1.0: neutral BCE for balanced selected train set")
+print("extra diagnostics: wake/no-wake probs and subvolume pos/neg probs")
+print("=========================\n")
 
 # parser
 # Run example:
